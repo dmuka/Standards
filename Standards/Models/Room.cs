@@ -1,4 +1,4 @@
-﻿namespace Standards.Models.Departments
+﻿namespace Standards.Models
 {
     public class Room
     {
