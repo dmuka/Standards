@@ -1,6 +1,6 @@
-﻿namespace Standards.Models.Person
+﻿namespace Standards.Models.Persons
 {
-    public class Category
+    public class Position
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;

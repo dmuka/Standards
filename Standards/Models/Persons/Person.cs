@@ -1,4 +1,4 @@
-﻿namespace Standards.Models.Person
+﻿namespace Standards.Models.Persons
 {
     public class Person
     {
