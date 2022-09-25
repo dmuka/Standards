@@ -1,4 +1,4 @@
-﻿namespace Standards.Models
+﻿namespace Standards.Models.MetrologyControl
 {
     public class Place
     {

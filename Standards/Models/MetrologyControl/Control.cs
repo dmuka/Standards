@@ -1,6 +1,6 @@
-﻿namespace Standards.Models
+﻿namespace Standards.Models.MetrologyControl
 {
-    public class VerificationJournal
+    public abstract class Control
     {
         public int Id { get; set; }
         public int StandardId { get; set; }
