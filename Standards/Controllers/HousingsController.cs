@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Standards.Data;
 using Standards.Models;
@@ -18,18 +19,48 @@ namespace Standards.Controllers
         
         [HttpGet]
         [Route("list")]
-        public IEnumerable<Housing> GetHousings()
+        public IActionResult GetHousings()
         {
-            var result = _repository.Housings.ToList();
-            
-            return result;
+            var rooms = _repository.Rooms.ToList();
+            var sectors = _repository.Sectors.ToList();
+            sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.SectorId == s.Id)));
+            var departments = _repository.Departments.ToList();
+            departments.ForEach(d => d.Sectors.ToList().AddRange(sectors.FindAll(s => s.DepartmentId == d.Id)));
+            var housings = _repository.Housings.ToList();
+            if (housings is null)
+            {
+                return NotFound();
+            }
+
+            housings.ForEach(h => h.Departments.ToList().AddRange(departments.FindAll(d => d.Id == h.Id)));
+
+            return Ok(housings);
         }
 
         [HttpGet]
         [Route("")]
-        public Housing GetHousing(int id)
+        public IActionResult GetHousing(int id = 0)
         {
-            return _repository.Housings.First(h => h.Id == id);
+            if (id == 0)
+            {
+                return BadRequest();
+            }
+
+            var rooms = _repository.Rooms.ToList();
+            var sectors = _repository.Sectors.ToList();
+            sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.SectorId == s.Id)));
+            var departments = _repository.Departments.ToList();
+            var housing = _repository.Housings.FirstOrDefault(h => h.Id == id);
+            departments.ForEach(d => d.Sectors.ToList().AddRange(sectors.FindAll(s => s.DepartmentId == d.Id)));
+
+            if (housing is null)
+            {
+                return NotFound();
+            }
+            
+            housing.Departments.ToList().AddRange(departments.FindAll(d => d.Id == housing.Id));
+            
+            return Ok(housing);
         }
 
         [HttpPost]
