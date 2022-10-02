@@ -1,17 +1,44 @@
-﻿using Duende.IdentityServer.EntityFramework.Options;
-using Microsoft.AspNetCore.ApiAuthorization.IdentityServer;
+﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 using Standards.Models;
+using Standards.Models.Departments;
+using Standards.Models.MetrologyControl;
+using Standards.Models.Persons;
+using Standards.Models.Services;
+using Standards.Models.Standards;
 
 namespace Standards.Data
 {
-    public class ApplicationDbContext : ApiAuthorizationDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<Person>
     {
-        public ApplicationDbContext(DbContextOptions options, IOptions<OperationalStoreOptions> operationalStoreOptions)
-            : base(options, operationalStoreOptions)
+        public ApplicationDbContext(DbContextOptions options) : base(options)
         {
-
         }
+
+        public DbSet<Housing> Housings { get; set; }
+        public DbSet<Quantity> Quantities { get; set; }
+        public DbSet<Room> Rooms { get; set; }
+        public DbSet<Unit> Units { get; set; }
+        public DbSet<WorkPlace> WorkPlaces { get; set; }
+
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Sector> Sectors { get; set; }
+
+        public DbSet<CalibrationJournal> CalibrationsJournal { get; set; }
+        public DbSet<VerificationJournal> VerificationsJournal { get; set; }
+        public DbSet<Place> Places { get; set; }
+
+        public DbSet<Person> Persons { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Position> Positions { get; set; }
+
+        public DbSet<Material> Materials { get; set; }
+        public DbSet<Service> Services { get; set; }
+        public DbSet<ServiceJournal> ServicesJournal { get; set; }
+        public DbSet<ServiceType> ServiceTypes { get; set; }
+
+        public DbSet<Characteristic> Characteristics { get; set; }
+        public DbSet<Grade> Grades { get; set; }
+        public DbSet<Standard> Standards { get; set; }
     }
 }
