@@ -1,12 +1,11 @@
-﻿
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Standards.Data;
 using Standards.Models;
 
 namespace Standards.Controllers
 {
-    [Route("housings")]
+    [Route("api/housings")]
     [ApiController]
     public class HousingsController : ControllerBase
     {
