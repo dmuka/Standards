@@ -1,6 +1,7 @@
-﻿using Standards.Models.Persons;
+﻿using Standards.Models.Departments;
+using Standards.Models.Persons;
 
-namespace Standards.Models
+namespace Standards.Models.Housings
 {
     public class Room
     {

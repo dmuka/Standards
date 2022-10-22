@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Standards.Models;
 using Standards.Models.Departments;
+using Standards.Models.Housings;
 using Standards.Models.MetrologyControl;
 using Standards.Models.Persons;
 using Standards.Models.Services;

@@ -1,8 +1,6 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Standards.Data;
-using Standards.Models;
 using Standards.Models.Departments;
 
 namespace Standards.Controllers
@@ -61,7 +59,8 @@ namespace Standards.Controllers
                 ShortName = sector.ShortName,
                 WorkPlaces = sector.WorkPlaces,
                 Persons = sector.Persons,
-                Rooms = sector.Rooms
+                Rooms = sector.Rooms,
+                Comments = sector.Comments
             });
 
             _repository.SaveChanges();

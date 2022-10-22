@@ -1,6 +1,6 @@
 ﻿using Standards.Models.Persons;
 
-namespace Standards.Models
+namespace Standards.Models.Departments
 {
     public class WorkPlace
     {

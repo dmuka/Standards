@@ -1,6 +1,6 @@
 ﻿using Standards.Models.Departments;
 
-namespace Standards.Models
+namespace Standards.Models.Housings
 {
     public class Housing
     {

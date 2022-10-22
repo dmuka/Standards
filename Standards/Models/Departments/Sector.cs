@@ -1,4 +1,5 @@
-﻿using Standards.Models.Persons;
+﻿using Standards.Models.Housings;
+using Standards.Models.Persons;
 
 namespace Standards.Models.Departments
 {

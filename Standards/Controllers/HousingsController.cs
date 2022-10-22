@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Standards.Data;
-using Standards.Models;
+using Standards.Models.Housings;
 
 namespace Standards.Controllers
 {
@@ -73,6 +73,7 @@ namespace Standards.Controllers
                 Address = housing.Address,
                 FloorsCount = housing.FloorsCount,
                 Departments = housing.Departments,
+                Comments = housing.Comments
             });
 
             _repository.SaveChanges();
