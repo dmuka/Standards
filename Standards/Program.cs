@@ -1,9 +1,6 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Standards.Data;
 using Standards.Models.Persons;
-using Standards.Controllers;
 
 
 namespace Standards
@@ -39,7 +36,7 @@ namespace Standards
 
             app.MapControllerRoute(
                 name: "default",
-                pattern: "{controller}/{action=Index}/{id?}");
+                pattern: "/api/{controller}/{action=Index}/{id?}");
 
             app.MapRazorPages();
 

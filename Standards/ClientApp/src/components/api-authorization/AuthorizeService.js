@@ -17,19 +17,19 @@ export class AuthorizeService {
   }
 
   async getUser() {
-    if (this._user && this._user.profile) {
+    if (this._user?.profile) {
       return this._user.profile;
     }
 
     await this.ensureUserManagerInitialized();
     const user = await this.userManager.getUser();
-    return user && user.profile;
+    return user?.profile;
   }
 
   async getAccessToken() {
     await this.ensureUserManagerInitialized();
     const user = await this.userManager.getUser();
-    return user && user.access_token;
+    return user?.access_token;
   }
 
   // We try to authenticate the user in three different ways:
@@ -83,7 +83,7 @@ export class AuthorizeService {
       await this.ensureUserManagerInitialized();
       const user = await this.userManager.signinCallback(url);
       this.updateState(user);
-      return this.success(user && user.state);
+      return this.success(user?.state);
     } catch (error) {
       console.log('There was an error signing in: ', error);
       return this.error('There was an error signing in.');
@@ -122,7 +122,7 @@ export class AuthorizeService {
     try {
       const response = await this.userManager.signoutCallback(url);
       this.updateState(null);
-      return this.success(response && response.data);
+      return this.success(response?.data);
     } catch (error) {
       console.log(`There was an error trying to log out '${error}'.`);
       return this.error(error);
@@ -152,8 +152,8 @@ export class AuthorizeService {
   }
 
   notifySubscribers() {
-    for (let i = 0; i < this._callbacks.length; i++) {
-      const callback = this._callbacks[i].callback;
+    for (const element of this._callbacks) {
+      const callback = element.callback;
       callback();
     }
   }

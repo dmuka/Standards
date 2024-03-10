@@ -1,6 +1,6 @@
-import ApiAuthorzationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
-import { Counter } from "./components/Counter";
-import { FetchData } from "./components/FetchData";
+import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
+import { Housings } from "./components/Housings/Housings";
+import { Rooms } from "./components/Housings/Rooms";
 import { Home } from "./components/Home";
 
 const AppRoutes = [
@@ -9,15 +9,14 @@ const AppRoutes = [
     element: <Home />
   },
   {
-    path: '/counter',
-    element: <Counter />
+    path: '/api/housings/list',
+    element: <Housings />
   },
   {
-    path: '/fetch-data',
-    requireAuth: true,
-    element: <FetchData />
+    path: '/api/rooms/list',
+    element: <Rooms />
   },
-  ...ApiAuthorzationRoutes
+  ...ApiAuthorizationRoutes
 ];
 
 export default AppRoutes;

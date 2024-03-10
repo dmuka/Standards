@@ -1,5 +1,10 @@
 import React, { Component } from 'react';
-import { Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink } from 'reactstrap';
+import {
+    Collapse, Navbar, NavbarBrand, NavbarToggler, NavItem, NavLink,
+    UncontrolledDropdown,
+    DropdownToggle,
+    DropdownMenu,
+    DropdownItem } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { LoginMenu } from './api-authorization/LoginMenu';
 import './NavMenu.css';
@@ -12,7 +17,7 @@ export class NavMenu extends Component {
 
     this.toggleNavbar = this.toggleNavbar.bind(this);
     this.state = {
-      collapsed: true
+        collapsed: true
     };
   }
 
@@ -33,15 +38,23 @@ export class NavMenu extends Component {
               <NavItem>
                 <NavLink tag={Link} className="text-dark" to="/">Home</NavLink>
               </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/counter">Counter</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/fetch-data">Fetch data</NavLink>
-              </NavItem>
-              <NavItem>
-                <NavLink tag={Link} className="text-dark" to="/housings">Housings</NavLink>
-              </NavItem>
+                        <UncontrolledDropdown nav inNavbar>
+                            <DropdownToggle nav caret>
+                                Housings
+                            </DropdownToggle>
+                            <DropdownMenu end>
+                                <DropdownItem tag={Link} className="text-dark" to="/api/housings/list">
+                                    Housings
+                                </DropdownItem>
+                                <DropdownItem tag={Link} className="text-dark" to="/api/rooms/list">
+                                    Rooms
+                                </DropdownItem>
+                                <DropdownItem divider />
+                                <DropdownItem>
+                                    Reset
+                                </DropdownItem>
+                            </DropdownMenu>
+                        </UncontrolledDropdown>
               <LoginMenu>
               </LoginMenu>
             </ul>

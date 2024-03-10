@@ -1,5 +1,4 @@
-import React from 'react'
-import { Component } from 'react'
+import React, { Component } from 'react'
 import { Navigate } from 'react-router-dom'
 import { ApplicationPaths, QueryParameterNames } from './ApiAuthorizationConstants'
 import authService from './AuthorizeService'
@@ -25,7 +24,7 @@ export default class AuthorizeRoute extends Component {
 
   render() {
     const { ready, authenticated } = this.state;
-    var link = document.createElement("a");
+    let link = document.createElement("a");
     link.href = this.props.path;
     const returnUrl = `${link.protocol}//${link.host}${link.pathname}${link.search}${link.hash}`;
     const redirectUrl = `${ApplicationPaths.Login}?${QueryParameterNames.ReturnUrl}=${encodeURIComponent(returnUrl)}`;

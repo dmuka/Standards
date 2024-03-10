@@ -20,18 +20,18 @@ namespace Standards.Controllers
         [Route("list")]
         public IActionResult GetHousings()
         {
-            var rooms = _repository.Rooms.ToList();
-            var sectors = _repository.Sectors.ToList();
-            sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.SectorId == s.Id)));
-            var departments = _repository.Departments.ToList();
-            departments.ForEach(d => d.Sectors.ToList().AddRange(sectors.FindAll(s => s.DepartmentId == d.Id)));
+            //var rooms = _repository.Rooms.ToList();
+            //var sectors = _repository.Sectors.ToList();
+            //sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.SectorId == s.Id)));
+            //var departments = _repository.Departments.ToList();
+            //departments.ForEach(d => d.Sectors.ToList().AddRange(sectors.FindAll(s => s.DepartmentId == d.Id)));
             var housings = _repository.Housings.ToList();
             if (housings is null)
             {
                 return NotFound();
             }
 
-            housings.ForEach(h => h.Departments.ToList().AddRange(departments.FindAll(d => d.Id == h.Id)));
+            //housings.ForEach(h => h.Departments.ToList().AddRange(departments.FindAll(d => d.Id == h.Id)));
 
             return Ok(housings);
         }
