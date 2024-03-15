@@ -219,7 +219,48 @@ namespace Standards.Migrations
                     b.ToTable("Sectors");
                 });
 
-            modelBuilder.Entity("Standards.Models.Housing", b =>
+            modelBuilder.Entity("Standards.Models.Departments.WorkPlace", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ImagePath")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ResponcibleId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("RoomId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("SectorId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ResponcibleId");
+
+                    b.HasIndex("RoomId");
+
+                    b.HasIndex("SectorId");
+
+                    b.ToTable("WorkPlaces");
+                });
+
+            modelBuilder.Entity("Standards.Models.Housings.Housing", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -249,6 +290,47 @@ namespace Standards.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Housings");
+                });
+
+            modelBuilder.Entity("Standards.Models.Housings.Room", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Floor")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Height")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HousingId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Length")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("SectorId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Width")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SectorId");
+
+                    b.ToTable("Rooms");
                 });
 
             modelBuilder.Entity("Standards.Models.MetrologyControl.CalibrationJournal", b =>
@@ -516,47 +598,6 @@ namespace Standards.Migrations
                     b.ToTable("Quantities");
                 });
 
-            modelBuilder.Entity("Standards.Models.Room", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Comments")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Floor")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Height")
-                        .HasColumnType("int");
-
-                    b.Property<int>("HousingId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Length")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SectorId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Width")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SectorId");
-
-                    b.ToTable("Rooms");
-                });
-
             modelBuilder.Entity("Standards.Models.Services.Material", b =>
                 {
                     b.Property<int>("Id")
@@ -809,47 +850,6 @@ namespace Standards.Migrations
                     b.ToTable("Units");
                 });
 
-            modelBuilder.Entity("Standards.Models.WorkPlace", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
-
-                    b.Property<string>("Comments")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ImagePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("ResponcibleId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int?>("RoomId")
-                        .HasColumnType("int");
-
-                    b.Property<int?>("SectorId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ResponcibleId");
-
-                    b.HasIndex("RoomId");
-
-                    b.HasIndex("SectorId");
-
-                    b.ToTable("WorkPlaces");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -903,7 +903,7 @@ namespace Standards.Migrations
 
             modelBuilder.Entity("Standards.Models.Departments.Department", b =>
                 {
-                    b.HasOne("Standards.Models.Housing", null)
+                    b.HasOne("Standards.Models.Housings.Housing", null)
                         .WithMany("Departments")
                         .HasForeignKey("HousingId");
                 });
@@ -917,9 +917,39 @@ namespace Standards.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("Standards.Models.Departments.WorkPlace", b =>
+                {
+                    b.HasOne("Standards.Models.Persons.Person", "Responcible")
+                        .WithMany()
+                        .HasForeignKey("ResponcibleId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Models.Housings.Room", null)
+                        .WithMany("WorkPlaces")
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Models.Departments.Sector", null)
+                        .WithMany("WorkPlaces")
+                        .HasForeignKey("SectorId");
+
+                    b.Navigation("Responcible");
+                });
+
+            modelBuilder.Entity("Standards.Models.Housings.Room", b =>
+                {
+                    b.HasOne("Standards.Models.Departments.Sector", null)
+                        .WithMany("Rooms")
+                        .HasForeignKey("SectorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("Standards.Models.Persons.Person", b =>
                 {
-                    b.HasOne("Standards.Models.Room", null)
+                    b.HasOne("Standards.Models.Housings.Room", null)
                         .WithMany("Persons")
                         .HasForeignKey("RoomId");
 
@@ -935,15 +965,6 @@ namespace Standards.Migrations
                     b.HasOne("Standards.Models.Services.Service", null)
                         .WithMany("MaterialsQuantities")
                         .HasForeignKey("ServiceId");
-                });
-
-            modelBuilder.Entity("Standards.Models.Room", b =>
-                {
-                    b.HasOne("Standards.Models.Departments.Sector", null)
-                        .WithMany("Rooms")
-                        .HasForeignKey("SectorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
                 });
 
             modelBuilder.Entity("Standards.Models.Services.Material", b =>
@@ -982,25 +1003,6 @@ namespace Standards.Migrations
                         .HasForeignKey("ServiceId");
                 });
 
-            modelBuilder.Entity("Standards.Models.WorkPlace", b =>
-                {
-                    b.HasOne("Standards.Models.Persons.Person", "Responcible")
-                        .WithMany()
-                        .HasForeignKey("ResponcibleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Standards.Models.Room", null)
-                        .WithMany("WorkPlaces")
-                        .HasForeignKey("RoomId");
-
-                    b.HasOne("Standards.Models.Departments.Sector", null)
-                        .WithMany("WorkPlaces")
-                        .HasForeignKey("SectorId");
-
-                    b.Navigation("Responcible");
-                });
-
             modelBuilder.Entity("Standards.Models.Departments.Department", b =>
                 {
                     b.Navigation("Sectors");
@@ -1015,21 +1017,21 @@ namespace Standards.Migrations
                     b.Navigation("WorkPlaces");
                 });
 
-            modelBuilder.Entity("Standards.Models.Housing", b =>
+            modelBuilder.Entity("Standards.Models.Housings.Housing", b =>
                 {
                     b.Navigation("Departments");
+                });
+
+            modelBuilder.Entity("Standards.Models.Housings.Room", b =>
+                {
+                    b.Navigation("Persons");
+
+                    b.Navigation("WorkPlaces");
                 });
 
             modelBuilder.Entity("Standards.Models.Quantity", b =>
                 {
                     b.Navigation("Units");
-                });
-
-            modelBuilder.Entity("Standards.Models.Room", b =>
-                {
-                    b.Navigation("Persons");
-
-                    b.Navigation("WorkPlaces");
                 });
 
             modelBuilder.Entity("Standards.Models.Services.Service", b =>

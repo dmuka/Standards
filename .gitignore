@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/Serts/cert.pem
+/Serts/csr.pem
+/Serts/key.pem
