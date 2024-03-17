@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Standards.Data;
+using Standards.Models.DTOs;
 using Standards.Models.Housings;
 
 namespace Standards.Controllers
@@ -20,18 +21,11 @@ namespace Standards.Controllers
         [Route("list")]
         public IActionResult GetHousings()
         {
-            //var rooms = _repository.Rooms.ToList();
-            //var sectors = _repository.Sectors.ToList();
-            //sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.SectorId == s.Id)));
-            //var departments = _repository.Departments.ToList();
-            //departments.ForEach(d => d.Sectors.ToList().AddRange(sectors.FindAll(s => s.DepartmentId == d.Id)));
             var housings = _repository.Housings.ToList();
             if (housings is null)
             {
                 return NotFound();
             }
-
-            //housings.ForEach(h => h.Departments.ToList().AddRange(departments.FindAll(d => d.Id == h.Id)));
 
             return Ok(housings);
         }
@@ -45,26 +39,19 @@ namespace Standards.Controllers
                 return BadRequest();
             }
 
-            var rooms = _repository.Rooms.ToList();
-            var sectors = _repository.Sectors.ToList();
-            sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.SectorId == s.Id)));
-            var departments = _repository.Departments.ToList();
             var housing = _repository.Housings.FirstOrDefault(h => h.Id == id);
-            departments.ForEach(d => d.Sectors.ToList().AddRange(sectors.FindAll(s => s.DepartmentId == d.Id)));
 
             if (housing is null)
             {
                 return NotFound();
             }
             
-            housing.Departments.ToList().AddRange(departments.FindAll(d => d.Id == housing.Id));
-            
             return Ok(housing);
         }
 
         [HttpPost]
         [Route("add")]
-        public void CreateHousing([FromBody]Housing housing)
+        public void CreateHousing([FromBody] HousingDto housing)
         {
             _repository.Add(new Housing
             {
@@ -72,7 +59,6 @@ namespace Standards.Controllers
                 ShortName = housing.ShortName,
                 Address = housing.Address,
                 FloorsCount = housing.FloorsCount,
-                Departments = housing.Departments,
                 Comments = housing.Comments
             });
 
@@ -80,8 +66,8 @@ namespace Standards.Controllers
         }
 
         [HttpPut]
-        [Route("edit")]
-        public void EditHousing(int id, [FromBody]Housing housing)
+        [Route("edit/{id}")]
+        public void EditHousing(int id, [FromBody]HousingDto housing)
         {
             if (housing.Id == id)
             {

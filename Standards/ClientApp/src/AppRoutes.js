@@ -9,11 +9,11 @@ const AppRoutes = [
     element: <Home />
   },
   {
-    path: '/api/housings/list',
+    path: '/housings/list',
     element: <Housings />
   },
   {
-    path: '/api/rooms/list',
+    path: '/rooms/list',
     element: <Rooms />
   },
   ...ApiAuthorizationRoutes

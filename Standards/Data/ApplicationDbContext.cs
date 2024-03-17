@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Standards.Models;
 using Standards.Models.Departments;
+using Standards.Models.DTOs;
 using Standards.Models.Housings;
 using Standards.Models.MetrologyControl;
 using Standards.Models.Persons;
@@ -16,7 +17,7 @@ namespace Standards.Data
         {
         }
 
-        public DbSet<Housing> Housings { get; set; }
+        public DbSet<HousingDto> Housings { get; set; }
         public DbSet<Quantity> Quantities { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Unit> Units { get; set; }

@@ -43,10 +43,10 @@ export class NavMenu extends Component {
                                 Housings
                             </DropdownToggle>
                             <DropdownMenu end>
-                                <DropdownItem tag={Link} className="text-dark" to="/api/housings/list">
+                                <DropdownItem tag={Link} className="text-dark" to="/housings/list">
                                     Housings
                                 </DropdownItem>
-                                <DropdownItem tag={Link} className="text-dark" to="/api/rooms/list">
+                                <DropdownItem tag={Link} className="text-dark" to="/rooms/list">
                                     Rooms
                                 </DropdownItem>
                                 <DropdownItem divider />
