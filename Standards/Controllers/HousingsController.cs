@@ -53,7 +53,7 @@ namespace Standards.Controllers
         [Route("add")]
         public void CreateHousing([FromBody] HousingDto housing)
         {
-            _repository.Add(new Housing
+            _repository.Add(new HousingDto
             {
                 Name = housing.Name,
                 ShortName = housing.ShortName,
@@ -78,7 +78,7 @@ namespace Standards.Controllers
         }
 
         [HttpDelete]
-        [Route("delete")]
+        [Route("delete/{id}")]
         public void DeleteHousing(int id)
         {
             var housing = _repository.Housings.Find(id);

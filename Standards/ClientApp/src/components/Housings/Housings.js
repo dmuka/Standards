@@ -1,68 +1,48 @@
-import React, { Component } from 'react';
+import React, { useState, useEffect } from 'react';
 import authService from '../api-authorization/AuthorizeService'
 import { Button } from 'react-bootstrap';
 import ModalWindow from '../Modal/ModalWindow';
 
-export class Housings extends Component {
-    static displayName = Housings.name;
+export default function Housings() {
+    const [housings, setHousings] = useState([]);
+    const [showModal, setShowModal] = useState(false);
+    const [action, setAction] = useState('');
+    const [editedHousing, setEditedHousing] = useState({ });
 
-    constructor(props) {
-        super(props);
-        this.state = { housings: [], showModal: false, editedHousing: {} };
+    useEffect(() => {
+        async function fetchData() {
+            setHousings(await getHousingsData());
+        }
+
+        fetchData();
+    }, []);
+
+    function handleAddHousing() {
+        setEditedHousing({});
+        setAction('Add');
+        setShowModal(true);
     }
 
-    componentDidMount() {
-        this.getHousingsData();
+    function handleEditHousing(housing) {
+        setEditedHousing(housing);
+        setAction('Edit');
+        setShowModal(true);
     }
 
-    //async componentDidMount() {
-    //    getHousingsData();
-    //}
-
-    handleAddHousing(){
-        this.setState({ showModal: true });
-    }
-
-    handleEditHousing(housing){
-        this.setState({ editedHousing: { ...housing }, showModal: true });
-    }
-
-    handleDeleteHousing = (id) => {
-        // Implement the logic to handle deleting the housing with the given id
-        console.log("Delete housing with ID:", id);
-    }
-
-    handleCloseModal = () => {
-        this.setState({ showModal: false });
-    }
-
-    handleFieldChange = (e) => {
-        const { name, value } = e.target;
-        this.setState(prevState => ({
-            editedHousing: {
-                ...prevState.editedHousing,
-                [name]: value
-            }
-        }));
-    }
-
-    handleSaveChanges = async (editedEntity, entitiesCollectionName, entitiesCollection) => {
+    async function handleDeleteHousing(id){
         try {
-            const response = await fetch(`/api/housings/edit/${editedEntity.id}`, {
-                method: 'PUT',
+            const response = await fetch(`/api/housings/delete/${id}`, {
+                method: 'DELETE',
                 headers: {
-                    'Content-Type': 'application/json',
+                    //'Content-Type': 'application/json',
                     // Include authorization token if needed
                     // 'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(editedEntity)
+                }
             });
 
             if (response.ok) {
-                const editedEntityIndex = this.state.housings.findIndex(h => h.id === editedEntity.id);
-                const updatedEntities = [...this.state.housings];
-                updatedEntities[editedEntityIndex] = editedEntity;
-                this.setState({ showModal: false, "{ entitiesCollectionName }": updatedEntities });
+                setShowModal(false);
+                setHousings(housings.filter(h => h.id !== id));
             } else {
                 console.error('Failed to save data:', response.statusText);
             }
@@ -71,7 +51,69 @@ export class Housings extends Component {
         }
     }
 
-    async getHousingsData() {
+    function handleCloseModal(){
+        setShowModal(false);
+    }
+
+    function handleFieldChange(e){
+        const { name, value } = e.target;
+        return {
+            editedHousing: {
+                [name]: value
+            }
+        }
+    }
+
+    async function handleEdit(entity){
+        try {
+            const response = await fetch(`/api/housings/edit/${entity.id}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Include authorization token if needed
+                    // 'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(entity)
+            });
+
+            if (response.ok) {
+                const editedEntityIndex = housings.findIndex(h => h.id === entity.id);
+                const updatedEntities = [...housings];
+                updatedEntities[editedEntityIndex] = entity;
+                setShowModal(false);
+                setHousings(updatedEntities);
+            } else {
+                console.error('Failed to save data:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error saving data:', error);
+        }
+    }
+
+    async function handleAdd(addedEntity){
+        try {
+            const response = await fetch(`/api/housings/add/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    // Include authorization token if needed
+                    // 'Authorization': `Bearer ${token}`
+                },
+                body: JSON.stringify(addedEntity)
+            });
+
+            if (response.ok) {
+                setShowModal(false);
+                setHousings(await getHousingsData());
+            } else {
+                console.error('Failed to save data:', response.statusText);
+            }
+        } catch (error) {
+            console.error('Error saving data:', error);
+        }
+    }
+
+    async function getHousingsData() {
         try {
             const response = await fetch('/api/housings/list');
 
@@ -79,64 +121,57 @@ export class Housings extends Component {
                 throw new Error('Failed to fetch housings data');
             }
 
-            const data = await response.json();
-
-            this.setState({ housings: data });
+            return await response.json();
         }
         catch (error) {
             console.error('Error fetching housings data:', error);
         }
     }
 
-    renderHousingsTable(housings) {
+    function renderHousingsTable() {
         return (
-          <div>
-              <div><Button onClick={() => this.handleAddHousing()}>Add</Button></div>
-              <table className='table table-striped' aria-labelledby="tabelLabel">
-              <thead>
-                  <tr>
-                      <th>Name</th>
-                      <th>Short name</th>
-                      <th>Address</th>
-                      <th>Floors count</th>
-                  </tr>
-              </thead>
-              <tbody>
-                  {housings.map((housing) => {
-                      return <tr key={housing.id}>
-                          <td>{housing.name}</td>
-                          <td>{housing.shortName}</td>
-                          <td>{housing.address}</td>
-                          <td>{housing.floorsCount}</td>
-                          <td><Button onClick={() => this.handleEditHousing(housing)}>Edit</Button></td>
-                          <td><Button onClick={() => this.handleDeleteHousing(housing.id)}>Delete</Button></td>
-                      </tr>;
-                  }
-                  )}
-              </tbody>
-              </table>
-          </div>
-    );
+            <div>
+                <div><Button onClick={handleAddHousing}>Add</Button></div>
+                <table className='table table-striped' aria-labelledby="tabelLabel">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Short name</th>
+                            <th>Address</th>
+                            <th>Floors count</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {housings.map((housing) => {
+                            return <tr key={housing.id}>
+                                <td>{housing.name}</td>
+                                <td>{housing.shortName}</td>
+                                <td>{housing.address}</td>
+                                <td>{housing.floorsCount}</td>
+                                <td><Button onClick={() => handleEditHousing(housing)}>Edit</Button></td>
+                                <td><Button onClick={() => handleDeleteHousing(housing.id)}>Delete</Button></td>
+                            </tr>;
+                        }
+                        )}
+                    </tbody>
+                </table>
+            </div>
+        )
     }
 
-    render() {
-        const { housings, showModal, editedHousing } = this.state;
-
-        let contents = this.renderHousingsTable(housings);
-
         return (
-          <div>
+            <div>
               <h1 id="tabelLabel">Housings</h1>
               <p>This component demonstrates housings.</p>
-              {contents}
+              {renderHousingsTable()}
               <ModalWindow
                   show={showModal}
                   editedHousing={editedHousing}
-                  handleClose={this.handleCloseModal}
-                  handleFieldChange={this.handleFieldChange}
-                  handleSaveChanges={this.handleSaveChanges}
+                  action={action}
+                  handleClose={handleCloseModal}
+                  handleFieldChange={handleFieldChange}
+                  handleSaveChanges={action === 'Edit' ? handleEdit : handleAdd }
               />
           </div>
-      );
-    }
+      )
 }

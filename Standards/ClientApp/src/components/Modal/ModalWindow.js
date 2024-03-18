@@ -5,7 +5,7 @@ import FormGroup from './FormGroup';
 class ModalWindow extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {};
+        this.state = {validationError: false};
     }
 
     componentDidUpdate(prevProps) {
@@ -16,6 +16,17 @@ class ModalWindow extends React.Component {
 
     handleFieldChange = (e) => {
         const { name, value } = e.target;
+
+        if (name === 'floorsCount') {
+            if (!Number.isInteger(Number(value)) || Number(value) < 1 || Number(value) > 1000) {
+                this.setState({ validationError: 'Floors count must be a valid.' });
+                return;
+            }
+            else {
+                this.setState({ validationError: false });
+            }
+        }
+
         this.setState(prevState => ({
             editedHousing: {
                 ...prevState.editedHousing,
@@ -25,16 +36,16 @@ class ModalWindow extends React.Component {
     }
 
     render() {
-        const { show, handleClose, handleSaveChanges } = this.props;
-        const { editedHousing } = this.state;
+        const { show, action, handleClose, handleSaveChanges } = this.props;
+        const { editedHousing, validationError } = this.state;
 
         return (
             <Modal show={show} onHide={handleClose}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit Housing</Modal.Title>
+                    <Modal.Title>{action} housing</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
-                    <Form>
+                    <Form noValidate>
                         <FormGroup
                             controlId="formName"
                             label="Name"
@@ -65,6 +76,16 @@ class ModalWindow extends React.Component {
                             type="number"
                             name="floorsCount"
                             value={(editedHousing && editedHousing.floorsCount) || ''}
+                            onChange={this.handleFieldChange}
+                            placeholder="Enter number of floors"
+                            validationError={validationError}
+                        />
+                        <FormGroup
+                            controlId="formComments"
+                            label="Comments"
+                            type="text"
+                            name="comments"
+                            value={(editedHousing && editedHousing.comments) || ''}
                             onChange={this.handleFieldChange}
                         />
                     </Form>

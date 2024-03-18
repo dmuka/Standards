@@ -1,5 +1,5 @@
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
-import { Housings } from "./components/Housings/Housings";
+import Housings from "./components/Housings/Housings";
 import { Rooms } from "./components/Housings/Rooms";
 import { Home } from "./components/Home";
 
