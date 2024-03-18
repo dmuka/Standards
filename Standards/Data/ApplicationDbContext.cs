@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using Standards.Models;
 using Standards.Models.Departments;
@@ -11,9 +12,9 @@ using Standards.Models.Standards;
 
 namespace Standards.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<Person>
+    public class ApplicationDbContext : IdentityDbContext<Person, IdentityRole, string>
     {
-        public ApplicationDbContext(DbContextOptions options) : base(options)
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
         }
 

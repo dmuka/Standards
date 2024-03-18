@@ -7,6 +7,6 @@
         public string ShortName { get; set; } = null!;
         public string Address { get; set; } = null!;
         public int FloorsCount { get; set; }
-        public string Comments { get; set; } = null!;
+        public string? Comments { get; set; }
     }
 }

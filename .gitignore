@@ -364,3 +364,4 @@ FodyWeavers.xsd
 /Serts/cert.pem
 /Serts/csr.pem
 /Serts/key.pem
+*.jwk

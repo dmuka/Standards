@@ -2,13 +2,12 @@ import React, { useState, useEffect } from 'react';
 import ApiRoutes from '../../ApiRoutes';
 import authService from '../api-authorization/AuthorizeService'
 import { Button } from 'react-bootstrap';
-import ModalWindow from '../Modal/ModalWindow';
+import HousingModal from '../Modal/HousingModal';
 
 export default function Housings() {
     const [housings, setHousings] = useState([]);
     const [showModal, setShowModal] = useState(false);
-    const [action, setAction] = useState('');
-    const [editedHousing, setEditedHousing] = useState({ });
+    const [modalData, setModalData] = useState({});
 
     useEffect(() => {
         async function fetchData() {
@@ -19,15 +18,21 @@ export default function Housings() {
     }, []);
 
     function handleAddHousing() {
-        setEditedHousing({});
-        setAction('Add');
         setShowModal(true);
+        setModalData({
+            editedHousing: {},
+            action: 'Add',
+            handleSaveChanges: handleAdd
+        });
     }
 
-    function handleEditHousing(housing) {
-        setEditedHousing(housing);
-        setAction('Edit');
+    function handleEditHousing(housing){
         setShowModal(true);
+        setModalData({
+            editedHousing: housing,
+            action: 'Edit',
+            handleSaveChanges: handleEdit
+        });
     }
 
     async function handleDeleteHousing(id){
@@ -54,15 +59,6 @@ export default function Housings() {
 
     function handleCloseModal(){
         setShowModal(false);
-    }
-
-    function handleFieldChange(e){
-        const { name, value } = e.target;
-        return {
-            editedHousing: {
-                [name]: value
-            }
-        }
     }
 
     async function handleEdit(entity){
@@ -133,7 +129,7 @@ export default function Housings() {
         return (
             <div>
                 <div><Button onClick={handleAddHousing}>Add</Button></div>
-                <table className='table table-striped' aria-labelledby="tabelLabel">
+                <table className='table table-striped' aria-labelledby="tableLabel">
                     <thead>
                         <tr>
                             <th>Name</th>
@@ -160,19 +156,19 @@ export default function Housings() {
         )
     }
 
-        return (
-            <div>
-              <h1 id="tabelLabel">Housings</h1>
-              <p>This component demonstrates housings.</p>
-              {renderHousingsTable()}
-              <ModalWindow
-                  show={showModal}
-                  editedHousing={editedHousing}
-                  action={action}
-                  handleClose={handleCloseModal}
-                  handleFieldChange={handleFieldChange}
-                  handleSaveChanges={action === 'Edit' ? handleEdit : handleAdd }
-              />
-          </div>
-      )
+    return (
+        <div>
+            <h1 id="tableLabel">Housings</h1>
+            {renderHousingsTable()}
+            {showModal &&
+                <HousingModal
+                    showModal={true}
+                    handleClose={handleCloseModal}
+                    editedHousing={modalData.editedHousing}
+                    action={modalData.action}
+                    handleSaveChanges={modalData.handleSaveChanges}
+                />
+            }
+        </div>
+    )
 }
