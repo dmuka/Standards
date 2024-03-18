@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import ApiRoutes from '../../ApiRoutes';
 import authService from '../api-authorization/AuthorizeService'
 import { Button } from 'react-bootstrap';
 import ModalWindow from '../Modal/ModalWindow';
@@ -31,7 +32,7 @@ export default function Housings() {
 
     async function handleDeleteHousing(id){
         try {
-            const response = await fetch(`/api/housings/delete/${id}`, {
+            const response = await fetch(ApiRoutes.HOUSINGS_DELETE + `${id}`, {
                 method: 'DELETE',
                 headers: {
                     //'Content-Type': 'application/json',
@@ -66,7 +67,7 @@ export default function Housings() {
 
     async function handleEdit(entity){
         try {
-            const response = await fetch(`/api/housings/edit/${entity.id}`, {
+            const response = await fetch(ApiRoutes.HOUSINGS_PUT + `${entity.id}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
@@ -92,7 +93,7 @@ export default function Housings() {
 
     async function handleAdd(addedEntity){
         try {
-            const response = await fetch(`/api/housings/add/`, {
+            const response = await fetch(ApiRoutes.HOUSINGS_ADD, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -115,7 +116,7 @@ export default function Housings() {
 
     async function getHousingsData() {
         try {
-            const response = await fetch('/api/housings/list');
+            const response = await fetch(ApiRoutes.HOUSINGS_LIST);
 
             if (!response.ok) {
                 throw new Error('Failed to fetch housings data');
