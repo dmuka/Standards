@@ -2,6 +2,9 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Standards.Data;
+using Standards.Data.Repositories.Implementations;
+using Standards.Data.Repositories.Interfaces;
+using Standards.Models.DTOs;
 using Standards.Models.Persons;
 using Standards.Models.Services;
 
@@ -57,6 +60,8 @@ namespace Standards
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            builder.Services.AddScoped<IRepository<HousingDto>, HousingsRepository>();
 
             builder.Services
                 .AddIdentity<Person, IdentityRole> (options => options.SignIn.RequireConfirmedAccount = true)

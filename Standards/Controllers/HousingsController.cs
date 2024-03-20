@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Standards.Data;
+using Standards.Data.Repositories.Interfaces;
 using Standards.Models.DTOs;
-using Standards.Models.Housings;
 
 namespace Standards.Controllers
 {
@@ -10,18 +8,18 @@ namespace Standards.Controllers
     [ApiController]
     public class HousingsController : ControllerBase
     {
-        readonly ApplicationDbContext _repository;
+        private readonly IRepository<HousingDto> _repository;
 
-        public HousingsController(ApplicationDbContext repository)
+        public HousingsController(IRepository<HousingDto> repository)
         {
             _repository = repository;
         }
         
         [HttpGet]
         [Route("list")]
-        public IActionResult GetHousings()
+        public async Task<IActionResult> GetHousings()
         {
-            var housings = _repository.Housings.ToList();
+            var housings = await _repository.GetAllAsync();
             if (housings is null)
             {
                 return NotFound();
@@ -32,14 +30,14 @@ namespace Standards.Controllers
 
         [HttpGet]
         [Route("")]
-        public IActionResult GetHousing(int id = 0)
+        public async Task<IActionResult> GetHousing(int id = 0)
         {
             if (id == 0)
             {
                 return BadRequest();
             }
 
-            var housing = _repository.Housings.FirstOrDefault(h => h.Id == id);
+            var housing = await _repository.GetByIdAsync(id);
 
             if (housing is null)
             {
@@ -62,7 +60,7 @@ namespace Standards.Controllers
                 Comments = housing.Comments
             });
 
-            _repository.SaveChanges();
+            _repository.SaveAsync();
         }
 
         [HttpPut]
@@ -71,9 +69,9 @@ namespace Standards.Controllers
         {
             if (housing.Id == id)
             {
-                _repository.Entry(housing).State = EntityState.Modified;
+                _repository.Update(housing);
 
-                _repository.SaveChanges();
+                _repository.Save();
             }
         }
 
@@ -81,14 +79,9 @@ namespace Standards.Controllers
         [Route("delete/{id}")]
         public void DeleteHousing(int id)
         {
-            var housing = _repository.Housings.Find(id);
+            _repository.Remove(id);
 
-            if (housing is not null)
-            {
-                _repository.Housings.Remove(housing);
-
-                _repository.SaveChanges();
-            }
+            _repository.Save();
         }
     }
 }

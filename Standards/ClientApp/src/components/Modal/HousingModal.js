@@ -6,11 +6,11 @@ export default function HousingModal({ showModal, editedHousing, action, handleC
     const [housing, setEditedHousing] = useState(editedHousing);
     const [validationError, setValidationError] = useState(false);
 
-    useEffect(() => {
-        if (housing !== editedHousing) {
-            setEditedHousing(editedHousing);
-        }
-    }, [housing, editedHousing])
+    //useEffect(() => {
+    //    if (housing !== editedHousing) {
+    //        setEditedHousing(editedHousing);
+    //    }
+    //}, [housing, editedHousing])
 
     function handleFieldChange(e){
         const { name, value } = e.target;
@@ -27,11 +27,10 @@ export default function HousingModal({ showModal, editedHousing, action, handleC
             }
         }
 
-        return {
-            editedHousing: {
-                [name]: value
-            }
-        };
+        setEditedHousing(prevState => ({
+            ...prevState,
+            [name]: value
+        }));
     }
 
     return (
@@ -46,7 +45,7 @@ export default function HousingModal({ showModal, editedHousing, action, handleC
                         label="Name"
                         type="text"
                         name="name"
-                        value={(editedHousing && editedHousing.name) || ''}
+                        value={(housing && housing.name) || ''}
                         onChange={handleFieldChange}
                     />
                     <FormGroup
@@ -54,7 +53,7 @@ export default function HousingModal({ showModal, editedHousing, action, handleC
                         label="Short Name"
                         type="text"
                         name="shortName"
-                        value={(editedHousing && editedHousing.shortName) || ''}
+                        value={(housing && housing.shortName) || ''}
                         onChange={handleFieldChange}
                     />
                     <FormGroup
@@ -62,7 +61,7 @@ export default function HousingModal({ showModal, editedHousing, action, handleC
                         label="Address"
                         type="text"
                         name="address"
-                        value={(editedHousing && editedHousing.address) || ''}
+                        value={(housing && housing.address) || ''}
                         onChange={handleFieldChange}
                     />
                     <FormGroup
@@ -70,7 +69,7 @@ export default function HousingModal({ showModal, editedHousing, action, handleC
                         label="Floors Count"
                         type="number"
                         name="floorsCount"
-                        value={(editedHousing && editedHousing.floorsCount) || ''}
+                        value={(housing && housing.floorsCount) || ''}
                         onChange={handleFieldChange}
                         placeholder="Enter number of floors"
                         validationError={validationError}
@@ -80,14 +79,14 @@ export default function HousingModal({ showModal, editedHousing, action, handleC
                         label="Comments"
                         type="text"
                         name="comments"
-                        value={(editedHousing && editedHousing.comments) || ''}
+                        value={(housing && housing.comments) || ''}
                         onChange={handleFieldChange}
                     />
                 </Form>
             </Modal.Body>
             <Modal.Footer>
                 <Button variant="secondary" onClick={handleClose}>Close</Button>
-                <Button variant="primary" onClick={() => handleSaveChanges(editedHousing)}>Save Changes</Button>
+                <Button variant="primary" onClick={() => handleSaveChanges(housing)}>Save Changes</Button>
             </Modal.Footer>
         </Modal>
     );
