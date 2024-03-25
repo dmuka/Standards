@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Standards.Models;
 using Standards.Models.Departments;
 using Standards.Models.DTOs;
@@ -9,10 +7,11 @@ using Standards.Models.MetrologyControl;
 using Standards.Models.Persons;
 using Standards.Models.Services;
 using Standards.Models.Standards;
+using Standards.Models.Users;
 
 namespace Standards.Data
 {
-    public class ApplicationDbContext : IdentityDbContext<Person, IdentityRole, string>
+    public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
         {
@@ -32,6 +31,9 @@ namespace Standards.Data
         public DbSet<Place> Places { get; set; }
 
         public DbSet<Person> Persons { get; set; }
+
+        public DbSet<User> Users { get; set; }
+
         public DbSet<Category> Categories { get; set; }
         public DbSet<Position> Positions { get; set; }
 

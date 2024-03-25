@@ -1,12 +1,12 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Standards.Data.Repositories.Interfaces;
 using Standards.Extensions;
-using Standards.Models.Persons;
+using Standards.Models.Users;
 using System.Linq.Expressions;
 
 namespace Standards.Data.Repositories.Implementations
 {
-    public class UsersRepository : IRepository<Person>, IDisposable
+    public class UsersRepository : IRepository<User>, IDisposable
     {
         private readonly ApplicationDbContext _context;
         private bool _disposed = false;
@@ -16,46 +16,46 @@ namespace Standards.Data.Repositories.Implementations
             _context = context;
         }
 
-        public IEnumerable<Person> GetAll() => _context.Persons.ToList();
+        public IEnumerable<User> GetAll() => _context.Users.ToList();
 
-        public Task<List<Person>> GetAllAsync() => _context.Persons.ToListAsync();
+        public Task<List<User>> GetAllAsync() => _context.Users.ToListAsync();
 
-        public Person GetById(int id) => _context.Persons.Find(id);
+        public User? GetById(int id) => _context.Users.Find(id);
 
-        public Person GetByIdWithIncludes(int id)
+        public User? GetByIdWithIncludes(int id)
         {
-            return _context.Persons.Include(person => person.RoleId)
-                .FirstOrDefault(person => int.Parse(person.Id) == id);
+            return _context.Users.Include(user => user.Role)
+                .FirstOrDefault(user => user.Id == id);
         }
 
-        public async Task<Person> GetByIdAsync(int id) => await _context.Persons.FindAsync(id);
+        public async Task<User> GetByIdAsync(int id) => await _context.Users.FindAsync(id);
 
-        public async Task<Person> GetByIdWithIncludesAsync(int id)
+        public async Task<User> GetByIdWithIncludesAsync(int id)
         {
-            return await _context.Persons.Include(person => person.RoleId)
-                .FirstOrDefaultAsync(person => int.Parse(person.Id) == id);
+            return await _context.Users.Include(user => user.Role)
+                .FirstOrDefaultAsync(user => user.Id == id);
         }
 
         public bool Remove(int id)
         {
-            var Person = _context.Persons.Find(id);
-            if (Person is { })
+            var user = _context.Users.Find(id);
+            if (user is { })
             {
-                _context.Persons.Remove(Person);
+                _context.Users.Remove(user);
                 return true;
             }
 
             return false;
         }
 
-        public void Add(in Person sender)
+        public void Add(in User user)
         {
-            _context.Add(sender).State = EntityState.Added;
+            _context.Add(user).State = EntityState.Added;
         }
 
-        public void Update(in Person sender)
+        public void Update(in User user)
         {
-            _context.Entry(sender).State = EntityState.Modified;
+            _context.Entry(user).State = EntityState.Modified;
         }
 
         public int Save()
@@ -68,16 +68,16 @@ namespace Standards.Data.Repositories.Implementations
             return _context.SaveChangesAsync();
         }
 
-        public Person Select(Expression<Func<Person, bool>> predicate)
+        public User Select(Expression<Func<User, bool>> predicate)
         {
-            return _context.Persons.WhereNullSafe(predicate).FirstOrDefault()!;
+            return _context.Users.WhereNullSafe(predicate).FirstOrDefault()!;
         }
 
-        public async Task<Person> SelectAsync(Expression<Func<Person, bool>> predicate)
+        public async Task<User> SelectAsync(Expression<Func<User, bool>> predicate)
         {
             return
                 (
-                    await _context.Persons.WhereNullSafe(predicate).FirstOrDefaultAsync())!;
+                    await _context.Users.WhereNullSafe(predicate).FirstOrDefaultAsync())!;
         }
 
         #region Dispose

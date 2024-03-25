@@ -1,12 +1,18 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Standards.Data;
 using Standards.Data.Repositories.Implementations;
 using Standards.Data.Repositories.Interfaces;
 using Standards.Models.DTOs;
 using Standards.Models.Persons;
 using Standards.Models.Services;
+using Standards.Models.Users;
+using Standards.Services.Implementations;
+using Standards.Services.Interfaces;
+using System.Text;
 
 
 namespace Standards
@@ -56,35 +62,40 @@ namespace Standards
         private static void ConfigureServices(WebApplicationBuilder? builder)
         {
             var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            
+            var connectionStringPasswordSecret = builder.Configuration["Secrets:DefaultConnectionPassword"];
+            connectionString = connectionString.Replace("passwordvalue", connectionStringPasswordSecret);
+
+            // configure jwt authentication
+            var jwtBearerSecret = builder.Configuration["Secrets:JwtBearerKey"];
+            var key = Encoding.ASCII.GetBytes(jwtBearerSecret);
+            builder.Services.AddAuthentication(authOptions =>
+            {
+                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+            })
+            .AddJwtBearer(jwtBearerOptions =>
+            {
+                jwtBearerOptions.RequireHttpsMetadata = false;
+                jwtBearerOptions.SaveToken = true;
+                jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false
+                };
+            });
+
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddScoped<IRepository<HousingDto>, HousingsRepository>();
-
-            builder.Services
-                .AddIdentity<Person, IdentityRole> (options => options.SignIn.RequireConfirmedAccount = true)
-                .AddEntityFrameworkStores<ApplicationDbContext>();
+            builder.Services.AddScoped<IRepository<User>, UsersRepository>();
+            builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IAuthService, AuthService>();
 
             var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
-
-            builder.Services
-                .AddIdentityServer()
-                .AddDeveloperSigningCredential()
-                .AddConfigurationStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString,
-                            sql => sql.MigrationsAssembly(migrationsAssembly));
-                })
-                .AddOperationalStore(options =>
-                {
-                    options.ConfigureDbContext = builder =>
-                        builder.UseSqlServer(connectionString,
-                            sql => sql.MigrationsAssembly(migrationsAssembly));
-                })
-                .AddAspNetIdentity<Person>();
 
             builder.Services.AddControllers();
             builder.Services.AddRazorPages();

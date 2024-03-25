@@ -14,7 +14,7 @@ const AppRoutes = [
         element: <Housings />
     },
     {
-        path: Routes.HOUSINGS_LIST,
+        path: Routes.ROOMS_LIST,
         element: <Rooms />
     },
     ...ApiAuthorizationRoutes

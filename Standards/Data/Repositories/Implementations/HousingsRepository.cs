@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Standards.Data.Repositories.Implementations
 {
-    public class HousingsRepository : IRepository<HousingDto>, IDisposable
+    public class HousingsRepository : IRepository<HousingDto>//, IDisposable
     {
         private readonly ApplicationDbContext _context;
         private bool _disposed = false;
@@ -82,19 +82,19 @@ namespace Standards.Data.Repositories.Implementations
 
         #region Dispose
 
-        protected virtual void Dispose(bool disposing)
-        {
-            if (!_disposed && disposing) _context.Dispose();
+        //protected virtual void Dispose(bool disposing)
+        //{
+        //    if (!_disposed && disposing) _context.Dispose();
 
-            _disposed = true;
-        }
+        //    _disposed = true;
+        //}
 
-        public void Dispose()
-        {
-            Dispose(true);
+        //public void Dispose()
+        //{
+        //    Dispose(true);
 
-            GC.SuppressFinalize(this);
-        }
+        //    GC.SuppressFinalize(this);
+        //}
 
         #endregion
     }

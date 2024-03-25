@@ -1,9 +1,13 @@
-﻿namespace Standards.Services.Interfaces
+﻿using Standards.Models.Users;
+
+namespace Standards.Services.Interfaces
 {
     public interface IUserService
     {
         //User Authenticate(string username, string password);
-        //IEnumerable<User> GetAll();
-        //User GetById(int id);
+
+        Task<IEnumerable<User>> GetAll();
+
+        Task<User> GetById(int id);
     }
 }
