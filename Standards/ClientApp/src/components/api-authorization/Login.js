@@ -56,7 +56,7 @@ export class Login extends Component {
               return (<div>Processing login callback</div>);
           case LoginActions.Profile:
           case LoginActions.Register:
-              return <SignUp />;
+              return <div></div>;
           default:
               throw new Error(`Invalid action '${action}'`);
       }
@@ -110,11 +110,11 @@ export class Login extends Component {
   }
 
   redirectToRegister() {
-    this.redirectToApiAuthorizationPath(`${ApplicationPaths.IdentityRegisterPath}?${QueryParameterNames.ReturnUrl}=${encodeURI(ApplicationPaths.Login)}`);
+    this.redirectToApiAuthorizationPath(`${ApplicationPaths.Register}?${QueryParameterNames.ReturnUrl}=${encodeURI(ApplicationPaths.Login)}`);
   }
 
   redirectToProfile() {
-    this.redirectToApiAuthorizationPath(ApplicationPaths.IdentityManagePath);
+    this.redirectToApiAuthorizationPath(ApplicationPaths.Profile);
   }
 
   redirectToApiAuthorizationPath(apiAuthorizationPath) {

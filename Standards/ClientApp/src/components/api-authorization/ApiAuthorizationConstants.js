@@ -19,7 +19,7 @@ export const LoginActions = {
   Register: 'register'
 };
 
-const prefix = '/auth';
+const prefix = 'auth';
 
 export const ApplicationPaths = {
   DefaultLoginRedirectPath: '/',

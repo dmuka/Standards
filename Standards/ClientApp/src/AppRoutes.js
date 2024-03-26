@@ -3,6 +3,7 @@ import Routes from './Routes';
 import Housings from "./components/Housings/Housings";
 import { Rooms } from "./components/Housings/Rooms";
 import { Home } from "./components/Home";
+import SignUp from "./components/api-authorization/SignUp";
 
 const AppRoutes = [
     {
@@ -16,6 +17,10 @@ const AppRoutes = [
     {
         path: Routes.ROOMS_LIST,
         element: <Rooms />
+    },
+    {
+        path: ApiAuthorizationRoutes.,
+        element: <SignUp />
     },
     ...ApiAuthorizationRoutes
 ];

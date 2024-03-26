@@ -3,7 +3,7 @@ const { createProxyMiddleware } = require('http-proxy-middleware');
 const context = [
     "/swagger",
     "/api",
-    "/authentication"
+    "/auth"
 ];
 const { env } = require('process');
 
