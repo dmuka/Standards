@@ -1,5 +1,6 @@
 ﻿using Standards.Data.Repositories.Interfaces;
 using Standards.Exceptions;
+using Standards.Models.DTOs;
 using Standards.Models.Users;
 using Standards.Services.Interfaces;
 using System.Data;
@@ -23,49 +24,57 @@ namespace Standards.Services.Implementations
             
             return users.Select(user =>
             {
-                user.Password = null;
+                user.PasswordHash = null;
 
                 return user;
             });
         }
 
-        public async Task<User> Create(User requestor, string password)
+        public async Task<User> Create(UserDto userDto)
         {
-            if (string.IsNullOrWhiteSpace(password))
+            if (string.IsNullOrWhiteSpace(userDto.Password))
                 throw new StandardsException("Password is required");
 
-            var userInDB = await _repository.SelectAsync(x => x.Username == requestor.Username);
+            var userInDB = await _repository.SelectAsync(x => x.UserName == userDto.UserName);
 
             if (userInDB is not null)
-                throw new StandardsException("Username \"" + userInDB.Username + "\" is already taken");
+                throw new StandardsException("Username \"" + userInDB.UserName + "\" is already taken");
 
+            _authService.AddPasswordHashAndSalt(userDto);
 
-            _repository.Add(requestor);
+            var user = new User
+            {
+                UserName = userDto.UserName,
+                PasswordHash = userDto.PasswordHash,
+                PasswordSalt = userDto.PasswordSalt,
+                Email = userDto.Email
+            };
+
+            _repository.Add(user);
             await _repository.SaveAsync();
 
-            return requestor;
+            return user;
         }
 
 
-        public async Task Update(User requestor, string? password = null)
+        public async Task Update(UserDto userDto)
         {
-            var userInDB = _repository.GetById(requestor.Id);
+            var userInDB = _repository.GetById(userDto.Id) ?? throw new StandardsException("User not found");
 
-            if (userInDB is null) throw new StandardsException("User not found");
-
-            if (requestor.Username != userInDB.Username)
+            if (userDto.UserName != userInDB.UserName)
             {
-                var isUserNameExist = await _repository.SelectAsync(x => x.Username == requestor.Username) is not null;
+                var isUserNameExist = await _repository.SelectAsync(x => x.UserName == userDto.UserName) is not null;
 
                 if (isUserNameExist)    
-                    throw new StandardsException("Username " + requestor.Username + " is already taken.");
+                    throw new StandardsException("Username " + userDto.UserName + " is already taken.");
             }
 
-            userInDB.FirstName = requestor.FirstName;
-            userInDB.LastName = requestor.LastName;
-            userInDB.Username = requestor.Username;
+            _authService.AddPasswordHashAndSalt(userDto);
 
-            _authService.AddPasswordHashAndSalt(userInDB);
+            userInDB.UserName = userDto.UserName;
+            userInDB.PasswordHash = userDto.PasswordHash;
+            userInDB.PasswordSalt = userDto.PasswordSalt;
+            userInDB.Email = userDto.Email;
 
             _repository.Update(userInDB);
             await _repository.SaveAsync();
@@ -86,7 +95,7 @@ namespace Standards.Services.Implementations
         {
             var user = await _repository.GetByIdAsync(id);
 
-            if (user is not null) user.Password = null;
+            if (user is not null) user.PasswordHash = null;
 
             return user;
         }

@@ -1,4 +1,5 @@
-﻿using Standards.Models.Users;
+﻿using Standards.Models.DTOs;
+using Standards.Models.Users;
 
 namespace Standards.Services.Interfaces
 {
@@ -6,6 +7,6 @@ namespace Standards.Services.Interfaces
     {
         public User Authenticate(string username, string password);
 
-        public void AddPasswordHashAndSalt(User user);
+        public void AddPasswordHashAndSalt(UserDto userDto);
     }
 }

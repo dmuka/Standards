@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Standards.Data.Repositories.Interfaces;
+using Standards.Models.DTOs;
 using Standards.Models.Users;
 using Standards.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -21,9 +22,11 @@ namespace Standards.Services.Implementations
 
         public User Authenticate(string username, string password)
         {
-            var user = _repository.Select(user => user.Username == username && user.Password == password);
+            var user = _repository.Select(user => user.UserName == username);
 
             if (user == null) return null;
+
+            if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt)) return null;
 
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_configuration["Secrets:JwtBearerKey"]);
@@ -31,8 +34,9 @@ namespace Standards.Services.Implementations
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new(ClaimTypes.Name, user.Id.ToString()),
-                    new(ClaimTypes.Role, user.Role.ToString())
+                    new(ClaimTypes.Name, user.UserName),
+                    new(ClaimTypes.Sid, user.Id.ToString()),
+                    new(ClaimTypes.Email, user.Email)
                 }),
                 Expires = DateTime.UtcNow.AddDays(7),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
@@ -41,19 +45,20 @@ namespace Standards.Services.Implementations
             var token = tokenHandler.CreateToken(tokenDescriptor);
             user.Token = tokenHandler.WriteToken(token);
 
-            user.Password = null;
+            user.PasswordHash = null;
 
             return user;
         }
 
-        public void AddPasswordHashAndSalt(User user)
+        public void AddPasswordHashAndSalt(UserDto userDto)
         {
-            if (string.IsNullOrWhiteSpace(user.Password)) throw new ArgumentException("Value can't be null, empty or whitespace only string.", nameof(user.Password));
+            if (string.IsNullOrWhiteSpace(userDto.Password)) 
+                throw new ArgumentException("Value can't be null, empty or whitespace only string.", nameof(userDto.Password));
 
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
-                user.PasswordSalt = hmac.Key;
-                user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(user.Password));
+                userDto.PasswordSalt = hmac.Key;
+                userDto.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(userDto.Password));
             };
         }
 
@@ -74,6 +79,13 @@ namespace Standards.Services.Implementations
             }
 
             return true;
+        }
+
+        private byte[] GetBytes(string value)
+        {
+            var bytes = Encoding.UTF8.GetBytes(value);
+
+            return bytes;
         }
     }
 }

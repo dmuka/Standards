@@ -53,7 +53,7 @@ namespace Standards.Controllers
         [Route("add")]
         public void CreateRoom([FromBody] Room room)
         {
-            var persons = _repository.Persons.Where(person => person.SectorId == room.SectorId).ToList();
+            var persons = _repository.Persons.Where(person => person.Sector.Id == room.SectorId).ToList();
 
             var workplaces = _repository.WorkPlaces.Where(workplace => workplace.RoomId == room.Id).ToList();
             

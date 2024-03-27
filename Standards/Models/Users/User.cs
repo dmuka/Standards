@@ -1,23 +1,33 @@
-﻿namespace Standards.Models.Users
+﻿using Standards.Models.Persons;
+
+namespace Standards.Models.Users
 {
     public class User
     {
         public int Id { get; set; }
 
-        public string FirstName { get; set; }
+        //public int PersonId { get; set; }
 
-        public string LastName { get; set; }
+        //public Person Person { get; set; } = null!;
 
-        public string Username { get; set; }
+        public string UserName { get; set; } = null!;
 
-        public string? Password { get; set; }
+        public string Email { get; set; } = null!;
 
-        public string Role { get; set; }
+        public bool IsEmailConfirmed { get; set; }
 
         public string? Token { get; set; }
 
-        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordHash { get; set; } = null!;
 
-        public byte[] PasswordSalt { get; set; }
+        public byte[] PasswordSalt { get; set; } = null!;
+
+        public bool IsTwoFactorEnabled { get; set; }
+
+        public int AccessFailedCount { get; set; }
+
+        public DateTime LockOutEnd { get; set; }
+
+        public bool IsLockOutEnabled { get; set; }
     }
 }

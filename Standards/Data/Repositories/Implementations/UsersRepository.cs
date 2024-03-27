@@ -24,7 +24,7 @@ namespace Standards.Data.Repositories.Implementations
 
         public User? GetByIdWithIncludes(int id)
         {
-            return _context.Users.Include(user => user.Role)
+            return _context.Users.Include(user => user.UserName)
                 .FirstOrDefault(user => user.Id == id);
         }
 
@@ -32,7 +32,7 @@ namespace Standards.Data.Repositories.Implementations
 
         public async Task<User> GetByIdWithIncludesAsync(int id)
         {
-            return await _context.Users.Include(user => user.Role)
+            return await _context.Users.Include(user => user.UserName)
                 .FirstOrDefaultAsync(user => user.Id == id);
         }
 

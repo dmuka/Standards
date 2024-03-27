@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Standards.Models.DTOs;
 using Standards.Models.Users;
 using Standards.Services.Interfaces;
 
@@ -19,9 +20,9 @@ namespace Standards.Controllers
 
         [AllowAnonymous]
         [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] User requestor)
+        public IActionResult Authenticate([FromBody] UserDto userDto)
         {
-            var user = _authService.Authenticate(requestor.Username, requestor.Password);
+            var user = _authService.Authenticate(userDto.UserName, userDto.Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });

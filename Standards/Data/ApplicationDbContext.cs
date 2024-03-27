@@ -45,5 +45,21 @@ namespace Standards.Data
         public DbSet<Characteristic> Characteristics { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Standard> Standards { get; set; }
+
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    modelBuilder.Entity<Person>()
+        //        .HasOne(person => person.User)
+        //        .WithOne(user => user.Person)
+        //        .HasForeignKey<User>(user => user.PersonId);
+        
+        //    modelBuilder.Entity<Person>()
+        //        .Property(e => e.Id)
+        //        .ValueGeneratedOnAdd();
+
+        //    // Optionally, configure navigation properties if needed
+        //    modelBuilder.Entity<Person>().Navigation(p => p.User).UsePropertyAccessMode(PropertyAccessMode.Property);
+        //    modelBuilder.Entity<User>().Navigation(u => u.Person).UsePropertyAccessMode(PropertyAccessMode.Property);
+        //}
     }
 }

@@ -1,4 +1,5 @@
 import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
+import { ApplicationPaths } from './components/api-authorization/ApiAuthorizationConstants';
 import Routes from './Routes';
 import Housings from "./components/Housings/Housings";
 import { Rooms } from "./components/Housings/Rooms";
@@ -19,7 +20,7 @@ const AppRoutes = [
         element: <Rooms />
     },
     {
-        path: ApiAuthorizationRoutes.,
+        path: ApplicationPaths.Register,
         element: <SignUp />
     },
     ...ApiAuthorizationRoutes

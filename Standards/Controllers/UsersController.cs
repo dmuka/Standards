@@ -1,11 +1,12 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Standards.Models.DTOs;
 using Standards.Models.Users;
 using Standards.Services.Interfaces;
 
 namespace Standards.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
     public class UsersController : ControllerBase
@@ -19,14 +20,17 @@ namespace Standards.Controllers
 
         //[Authorize(Roles = Role.Admin)]
         [HttpPost]
-        public IActionResult Create()
+        [Route("add")]
+        public async Task<IActionResult> Create(UserDto userDto)
         {
-            var users = _userService.GetAll();
-            return Ok(users);
+            var user = await _userService.Create(userDto);
+
+            return Ok(user);
         }
 
         //[Authorize(Roles = Role.Admin)]
         [HttpGet]
+        [Route("list")]
         public IActionResult GetAll()
         {
             var users = _userService.GetAll();

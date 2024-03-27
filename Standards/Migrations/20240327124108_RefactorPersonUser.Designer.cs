@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Standards.Data;
 
@@ -11,9 +12,10 @@ using Standards.Data;
 namespace Standards.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240327124108_RefactorPersonUser")]
+    partial class RefactorPersonUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -351,9 +353,6 @@ namespace Standards.Migrations
                     b.Property<int>("SectorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -365,8 +364,6 @@ namespace Standards.Migrations
                     b.HasIndex("RoomId");
 
                     b.HasIndex("SectorId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Persons");
                 });
@@ -694,12 +691,13 @@ namespace Standards.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<byte[]>("PasswordHash")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PasswordSalt")
-                        .IsRequired()
                         .HasColumnType("varbinary(max)");
+
+                    b.Property<int>("PersonId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Token")
                         .HasColumnType("nvarchar(max)");
@@ -709,6 +707,9 @@ namespace Standards.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PersonId")
+                        .IsUnique();
 
                     b.ToTable("Users");
                 });
@@ -782,12 +783,6 @@ namespace Standards.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Standards.Models.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Category");
 
                     b.Navigation("Department");
@@ -795,8 +790,6 @@ namespace Standards.Migrations
                     b.Navigation("Position");
 
                     b.Navigation("Sector");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Standards.Models.Quantity", b =>
@@ -842,6 +835,17 @@ namespace Standards.Migrations
                         .HasForeignKey("ServiceId");
                 });
 
+            modelBuilder.Entity("Standards.Models.Users.User", b =>
+                {
+                    b.HasOne("Standards.Models.Persons.Person", "Person")
+                        .WithOne("User")
+                        .HasForeignKey("Standards.Models.Users.User", "PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
+                });
+
             modelBuilder.Entity("Standards.Models.Departments.Department", b =>
                 {
                     b.Navigation("Sectors");
@@ -861,6 +865,12 @@ namespace Standards.Migrations
                     b.Navigation("Persons");
 
                     b.Navigation("WorkPlaces");
+                });
+
+            modelBuilder.Entity("Standards.Models.Persons.Person", b =>
+                {
+                    b.Navigation("User")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Standards.Models.Quantity", b =>

@@ -1,10 +1,11 @@
-﻿using Standards.Models.Users;
+﻿using Standards.Models.DTOs;
+using Standards.Models.Users;
 
 namespace Standards.Services.Interfaces
 {
     public interface IUserService
     {
-        //User Authenticate(string username, string password);
+        Task<User> Create(UserDto user);
 
         Task<IEnumerable<User>> GetAll();
 
