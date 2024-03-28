@@ -1,23 +1,25 @@
-import React, { Component } from 'react';
-import { Route, Routes } from 'react-router-dom';
+import React from 'react';
+import ApiAuthorizationRoutes from './components/api-authorization/ApiAuthorizationRoutes';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import AppRoutes from './AppRoutes';
 import AuthorizeRoute from './components/api-authorization/AuthorizeRoute';
-import { Layout } from './components/Layout';
+import Layout from './components/Layout';
 import './custom.css';
 
-export default class App extends Component {
-  static displayName = App.name;
+const router = createBrowserRouter([
+    {
+        // parent
+        element: <Layout />,
+        children: [
+            ...AppRoutes,
+            ...ApiAuthorizationRoutes,
+        ]
+    },
+])
 
-  render() {
-    return (
-      <Layout>
-        <Routes>
-          {AppRoutes.map((route, index) => {
-            const { element, requireAuth, ...rest } = route;
-            return <Route key={index} {...rest} element={requireAuth ? <AuthorizeRoute {...rest} element={element} /> : element} />;
-          })}
-        </Routes>
-      </Layout>
+export default function App() {
+    return (<>
+        <RouterProvider router={router} fallbackElement={<p>Initial Load...</p>} />
+    </>
     );
-  }
 }
