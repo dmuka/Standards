@@ -1,12 +1,18 @@
-﻿using Standards.Models.DTOs;
-using Standards.Models.Users;
+﻿using Standards.Models.Users;
+using System.Security.Claims;
 
 namespace Standards.Services.Interfaces
 {
     public interface IAuthService
     {
-        public User Authenticate(string username, string password);
+        User Authenticate(string username, string password);
 
-        public void AddPasswordHashAndSalt(UserDto userDto);
+        ClaimsPrincipal ValidateRefreshToken(string refreshToken);
+
+        string GenerateAccessToken(int userId);
+
+        string GenerateRefreshToken(int userId);
+
+        (byte[] salt, byte[] hash) GetPasswordHashAndSalt(string password);
     }
 }

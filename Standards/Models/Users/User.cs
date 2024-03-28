@@ -16,7 +16,9 @@ namespace Standards.Models.Users
 
         public bool IsEmailConfirmed { get; set; }
 
-        public string? Token { get; set; }
+        public string? RefreshToken { get; set; }
+
+        public string? AccessToken { get; set; }
 
         public byte[] PasswordHash { get; set; } = null!;
 

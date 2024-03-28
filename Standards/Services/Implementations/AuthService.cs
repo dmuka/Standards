@@ -1,6 +1,5 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Standards.Data.Repositories.Interfaces;
-using Standards.Models.DTOs;
 using Standards.Models.Users;
 using Standards.Services.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -27,39 +26,93 @@ namespace Standards.Services.Implementations
             if (user == null) return null;
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt)) return null;
-
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = Encoding.ASCII.GetBytes(_configuration["Secrets:JwtBearerKey"]);
-            var tokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = new ClaimsIdentity(new Claim[]
-                {
-                    new(ClaimTypes.Name, user.UserName),
-                    new(ClaimTypes.Sid, user.Id.ToString()),
-                    new(ClaimTypes.Email, user.Email)
-                }),
-                Expires = DateTime.UtcNow.AddDays(7),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var token = tokenHandler.CreateToken(tokenDescriptor);
-            user.Token = tokenHandler.WriteToken(token);
+            
+            user.RefreshToken = GenerateRefreshToken(user.Id);
+            user.AccessToken = GenerateAccessToken(user.Id);
 
             user.PasswordHash = null;
+            user.PasswordSalt = null;
 
             return user;
         }
 
-        public void AddPasswordHashAndSalt(UserDto userDto)
+        public (byte[] salt, byte[] hash) GetPasswordHashAndSalt(string password)
         {
-            if (string.IsNullOrWhiteSpace(userDto.Password)) 
-                throw new ArgumentException("Value can't be null, empty or whitespace only string.", nameof(userDto.Password));
+            if (string.IsNullOrWhiteSpace(password)) 
+                throw new ArgumentException("Value can't be null, empty or whitespace only string.", nameof(password));
 
+            byte[] salt;
+            byte[] hash;
+            
             using (var hmac = new System.Security.Cryptography.HMACSHA512())
             {
-                userDto.PasswordSalt = hmac.Key;
-                userDto.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(userDto.Password));
+                salt = hmac.Key;
+                hash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+            }
+
+            return (salt, hash);
+        }
+
+        public ClaimsPrincipal ValidateRefreshToken(string refreshToken)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = GetKey();
+
+                var validationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+                    ClockSkew = TimeSpan.Zero
+                };
+
+                var principal = tokenHandler.ValidateToken(refreshToken, validationParameters, out var validatedToken);
+
+                return principal;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public string GenerateAccessToken(int userId)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = GetKey();
+
+            var user = _repository.GetById(userId);
+
+            var tokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = GetClaimsIdentity(user),
+                Expires = DateTime.UtcNow.AddMinutes(15),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
+
+            var accessToken = tokenHandler.CreateToken(tokenDescriptor);
+            return tokenHandler.WriteToken(accessToken);
+        }
+
+        public string GenerateRefreshToken(int userId)
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var key = GetKey();
+
+            var user = _repository.GetById(userId);
+
+            var refreshTokenDescriptor = new SecurityTokenDescriptor
+            {
+                Subject = GetClaimsIdentity(user),
+                Expires = DateTime.UtcNow.AddMonths(1),
+                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
+            };
+
+            var refreshToken = tokenHandler.CreateToken(refreshTokenDescriptor);
+            return tokenHandler.WriteToken(refreshToken);
         }
 
         private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] storedSalt)
@@ -81,11 +134,19 @@ namespace Standards.Services.Implementations
             return true;
         }
 
-        private byte[] GetBytes(string value)
+        private byte[]? GetKey()
         {
-            var bytes = Encoding.UTF8.GetBytes(value);
+            return Encoding.ASCII.GetBytes(_configuration["Secrets:JwtBearerKey"]);
+        }
 
-            return bytes;
+        private ClaimsIdentity GetClaimsIdentity(User user)
+        {
+            return new ClaimsIdentity(new Claim[]
+                {
+                    new Claim(ClaimTypes.Name, user.UserName),
+                    new Claim(ClaimTypes.Sid, user.Id.ToString()),
+                    new Claim(ClaimTypes.Email, user.Email)
+                });
         }
     }
 }

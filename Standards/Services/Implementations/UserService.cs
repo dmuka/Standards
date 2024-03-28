@@ -40,13 +40,13 @@ namespace Standards.Services.Implementations
             if (userInDB is not null)
                 throw new StandardsException("Username \"" + userInDB.UserName + "\" is already taken");
 
-            _authService.AddPasswordHashAndSalt(userDto);
+            var passwordSecrets = _authService.GetPasswordHashAndSalt(userDto.Password);
 
             var user = new User
             {
                 UserName = userDto.UserName,
-                PasswordHash = userDto.PasswordHash,
-                PasswordSalt = userDto.PasswordSalt,
+                PasswordHash = passwordSecrets.hash,
+                PasswordSalt = passwordSecrets.salt,
                 Email = userDto.Email
             };
 
@@ -69,11 +69,11 @@ namespace Standards.Services.Implementations
                     throw new StandardsException("Username " + userDto.UserName + " is already taken.");
             }
 
-            _authService.AddPasswordHashAndSalt(userDto);
+            var passwordSecrets = _authService.GetPasswordHashAndSalt(userDto.Password);
 
             userInDB.UserName = userDto.UserName;
-            userInDB.PasswordHash = userDto.PasswordHash;
-            userInDB.PasswordSalt = userDto.PasswordSalt;
+            userInDB.PasswordHash = passwordSecrets.hash;
+            userInDB.PasswordSalt = passwordSecrets.salt;
             userInDB.Email = userDto.Email;
 
             _repository.Update(userInDB);
