@@ -18,8 +18,5 @@ const router = createBrowserRouter([
 ])
 
 export default function App() {
-    return (<>
-        <RouterProvider router={router} fallbackElement={<p>Initial Load...</p>} />
-    </>
-    );
+    return <RouterProvider router={router} fallbackElement={<p>Initial Load...</p>} />
 }

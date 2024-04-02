@@ -2,5 +2,8 @@
   "dependencies": {
     "http-proxy-middleware": "^2.0.6",
     "webpack-dev-middleware": "^6.0.1"
+  },
+  "devDependencies": {
+    "@babel/plugin-proposal-private-property-in-object": "^7.21.11"
   }
 }

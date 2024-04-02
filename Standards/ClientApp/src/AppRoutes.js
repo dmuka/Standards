@@ -5,6 +5,7 @@ import Housings from "./components/Housings/Housings";
 import { Rooms } from "./components/Housings/Rooms";
 import { Home } from "./components/Home";
 import Sign from "./components/api-authorization/Sign";
+import { Login } from "./components/api-authorization/Login";
 
 const AppRoutes = [
     {
@@ -21,11 +22,11 @@ const AppRoutes = [
     },
     {
         path: ApplicationPaths.Register,
-        element: <Sign mode="SignUp" />
+        element: <Login action="register" />
     },
     {
         path: ApplicationPaths.Login,
-        element: <Sign mode="SignIn" />
+        element: <Login action="login" />
     },
     ...ApiAuthorizationRoutes
 ];

@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Standards.Data.Repositories.Interfaces;
 using Standards.Models.DTOs;
+using Standards.Models.Users;
 
 namespace Standards.Controllers
 {
@@ -8,9 +9,9 @@ namespace Standards.Controllers
     [ApiController]
     public class HousingsController : ControllerBase
     {
-        private readonly IRepository<HousingDto> _repository;
+        private readonly IRepository _repository;
 
-        public HousingsController(IRepository<HousingDto> repository)
+        public HousingsController(IRepository repository)
         {
             _repository = repository;
         }
@@ -19,7 +20,8 @@ namespace Standards.Controllers
         [Route("list")]
         public async Task<IActionResult> GetHousings()
         {
-            var housings = await _repository.GetAllAsync();
+            var housings = await _repository.GetListAsync<HousingDto>();
+
             if (housings is null)
             {
                 return NotFound();
@@ -37,7 +39,7 @@ namespace Standards.Controllers
                 return BadRequest();
             }
 
-            var housing = await _repository.GetByIdAsync(id);
+            var housing = await _repository.GetByIdAsync<HousingDto>(id);
 
             if (housing is null)
             {
@@ -60,7 +62,7 @@ namespace Standards.Controllers
                 Comments = housing.Comments
             });
 
-            _repository.SaveAsync();
+            _repository.SaveChangesAsync();
         }
 
         [HttpPut]
@@ -71,17 +73,19 @@ namespace Standards.Controllers
             {
                 _repository.Update(housing);
 
-                _repository.Save();
+                _repository.SaveChangesAsync();
             }
         }
 
         [HttpDelete]
         [Route("delete/{id}")]
-        public void DeleteHousing(int id)
+        public async Task DeleteHousing(int id)
         {
-            _repository.Remove(id);
+            var housing = await _repository.GetByIdAsync<HousingDto>(id);
 
-            _repository.Save();
+            await _repository.DeleteAsync(housing);
+
+            await _repository.SaveChangesAsync();
         }
     }
 }

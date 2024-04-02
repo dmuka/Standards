@@ -9,10 +9,10 @@ namespace Standards.Services.Implementations
 {
     public class UserService : IUserService
     {
-        private readonly IRepository<User> _repository;
+        private readonly IRepository _repository;
         private readonly IAuthService _authService;
 
-        public UserService(IAuthService authService, IRepository<User> repository)
+        public UserService(IAuthService authService, IRepository repository)
         {
             _authService = authService;
             _repository = repository;
@@ -20,7 +20,7 @@ namespace Standards.Services.Implementations
 
         public async Task<IEnumerable<User>> GetAll()
         {
-            var users = await _repository.GetAllAsync();
+            var users = await _repository.GetListAsync<User>();
             
             return users.Select(user =>
             {
@@ -35,7 +35,7 @@ namespace Standards.Services.Implementations
             if (string.IsNullOrWhiteSpace(userDto.Password))
                 throw new StandardsException("Password is required");
 
-            var userInDB = await _repository.SelectAsync(x => x.UserName == userDto.UserName);
+            var userInDB = await _repository.GetAsync<User>(x => x.UserName == userDto.UserName);
 
             if (userInDB is not null)
                 throw new StandardsException("Username \"" + userInDB.UserName + "\" is already taken");
@@ -51,7 +51,7 @@ namespace Standards.Services.Implementations
             };
 
             _repository.Add(user);
-            await _repository.SaveAsync();
+            await _repository.SaveChangesAsync();
 
             return user;
         }
@@ -59,11 +59,11 @@ namespace Standards.Services.Implementations
 
         public async Task Update(UserDto userDto)
         {
-            var userInDB = _repository.GetById(userDto.Id) ?? throw new StandardsException("User not found");
+            var userInDB = await _repository.GetByIdAsync<User>(userDto.Id) ?? throw new StandardsException("User not found");
 
             if (userDto.UserName != userInDB.UserName)
             {
-                var isUserNameExist = await _repository.SelectAsync(x => x.UserName == userDto.UserName) is not null;
+                var isUserNameExist = await _repository.GetAsync<User>(user => user.UserName == userDto.UserName) is not null;
 
                 if (isUserNameExist)    
                     throw new StandardsException("Username " + userDto.UserName + " is already taken.");
@@ -77,23 +77,24 @@ namespace Standards.Services.Implementations
             userInDB.Email = userDto.Email;
 
             _repository.Update(userInDB);
-            await _repository.SaveAsync();
+
+            await _repository.SaveChangesAsync();
         }
 
         public async Task Delete(int id)
         {
-            var userInDB = _repository.GetById(id);
+            var userInDB = await _repository.GetByIdAsync<User>(id);
 
             if (userInDB is not null)
             {
-                _repository.Remove(id);
-                await _repository.SaveAsync();
+                await _repository.DeleteAsync(userInDB);
+                await _repository.SaveChangesAsync();
             }
         }
 
         public async Task<User> GetById(int id)
         {
-            var user = await _repository.GetByIdAsync(id);
+            var user = await _repository.GetByIdAsync<User>(id);
 
             if (user is not null) user.PasswordHash = null;
 

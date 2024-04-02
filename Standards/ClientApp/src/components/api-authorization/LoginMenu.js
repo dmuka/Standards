@@ -5,14 +5,14 @@ import authService from './AuthorizeService';
 import { ApplicationPaths } from './ApiAuthorizationConstants';
 
 export class LoginMenu extends Component {
-  constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.state = {
-      isAuthenticated: false,
-      userName: null
-    };
-  }
+      this.state = {
+          isAuthenticated: false,
+          userName: null 
+      };
+    }
 
   componentDidMount() {
     this._subscription = authService.subscribe(() => this.populateState());

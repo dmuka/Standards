@@ -11,24 +11,24 @@ namespace Standards.Services.Implementations
     public class AuthService : IAuthService
     {
         private readonly IConfiguration _configuration;
-        private readonly IRepository<User> _repository;
+        private readonly IRepository _repository;
 
-        public AuthService(IConfiguration configuration, IRepository<User> repository)
+        public AuthService(IConfiguration configuration, IRepository repository)
         {
             _configuration = configuration;
             _repository = repository;
         }
 
-        public User Authenticate(string username, string password)
+        public async Task<User> Authenticate(string username, string password)
         {
-            var user = _repository.Select(user => user.UserName == username);
+            var user = await _repository.GetAsync<User>(user => user.UserName == username);
 
             if (user == null) return null;
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt)) return null;
             
-            user.RefreshToken = GenerateRefreshToken(user.Id);
-            user.AccessToken = GenerateAccessToken(user.Id);
+            user.RefreshToken = await GenerateRefreshToken(user.Id);
+            user.AccessToken = await GenerateAccessToken(user.Id);
 
             user.PasswordHash = null;
             user.PasswordSalt = null;
@@ -79,12 +79,12 @@ namespace Standards.Services.Implementations
             }
         }
 
-        public string GenerateAccessToken(int userId)
+        public async Task<string> GenerateAccessToken(int userId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = GetKey();
 
-            var user = _repository.GetById(userId);
+            var user = await _repository.GetByIdAsync<User>(userId);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -94,15 +94,16 @@ namespace Standards.Services.Implementations
             };
 
             var accessToken = tokenHandler.CreateToken(tokenDescriptor);
+
             return tokenHandler.WriteToken(accessToken);
         }
 
-        public string GenerateRefreshToken(int userId)
+        public async Task<string> GenerateRefreshToken(int userId)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = GetKey();
 
-            var user = _repository.GetById(userId);
+            var user = await _repository.GetByIdAsync<User>(userId);
 
             var refreshTokenDescriptor = new SecurityTokenDescriptor
             {

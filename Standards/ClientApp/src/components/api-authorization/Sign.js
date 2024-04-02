@@ -4,7 +4,7 @@ export default function Sign(props) {
     const [mode, setMode] = useState(props.mode);
 
     function changeMode() {
-        return setMode(mode === 'SignIn' ? 'SignIn' : 'SignUp');
+        return setMode(mode === 'SignIn' ? 'SignUp' : 'SignIn');
     }
 
     return mode === 'SignIn' ?
@@ -55,7 +55,7 @@ export default function Sign(props) {
                         <h3 className="Auth-form-title">Sign up</h3>
                         <div className="text-center">
                             Already registered?{" "}
-                            <span className="link-primary" onClick={() => changeMode}>
+                            <span className="link-primary" onClick={changeMode}>
                                 Sign in
                             </span>
                         </div>
