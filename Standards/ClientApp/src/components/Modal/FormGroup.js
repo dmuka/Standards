@@ -1,8 +1,8 @@
-﻿import React from 'react';
-import { Form } from 'react-bootstrap';
+﻿import React from 'react'
+import { Form } from 'react-bootstrap'
 
 const FormGroupComponent = ({ controlId, label, type, name, value, onChange, placeholder, validationError }) => {
-    return (
+  return (
         <Form.Group controlId={controlId}>
             <Form.Label>{label}</Form.Label>
             <Form.Control type={type} name={name} value={value} onChange={onChange} placeholder={placeholder} isInvalid={validationError} />
@@ -10,7 +10,7 @@ const FormGroupComponent = ({ controlId, label, type, name, value, onChange, pla
                 {validationError}
             </Form.Control.Feedback>
         </Form.Group>
-    );
-};
+  )
+}
 
-export default FormGroupComponent;
+export default FormGroupComponent

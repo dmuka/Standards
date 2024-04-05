@@ -1,132 +1,131 @@
-import React, { useState, useEffect } from 'react';
-import ApiRoutes from '../../ApiRoutes';
+import React, { useState, useEffect } from 'react'
+import ApiRoutes from '../../ApiRoutes'
 import authService from '../api-authorization/AuthorizeService'
-import { Button } from 'react-bootstrap';
-import HousingModal from '../Modal/HousingModal';
+import { Button } from 'react-bootstrap'
+import HousingModal from '../Modal/HousingModal'
 
-export default function Housings() {
-    const [housings, setHousings] = useState([]);
-    const [showModal, setShowModal] = useState(false);
-    const [modalData, setModalData] = useState({});
+export default function Housings () {
+  const [housings, setHousings] = useState([])
+  const [showModal, setShowModal] = useState(false)
+  const [modalData, setModalData] = useState({})
 
-    useEffect(() => {
-        async function fetchData() {
-            setHousings(await getHousingsData());
+  useEffect(() => {
+    async function fetchData () {
+      setHousings(await getHousingsData())
+    }
+
+    fetchData()
+  }, [])
+
+  function handleAddHousing () {
+    setShowModal(true)
+    setModalData({
+      editedHousing: {},
+      action: 'Add',
+      handleSaveChanges: handleAdd
+    })
+  }
+
+  function handleEditHousing (housing) {
+    setShowModal(true)
+    setModalData({
+      editedHousing: housing,
+      action: 'Edit',
+      handleSaveChanges: handleEdit
+    })
+  }
+
+  async function handleDeleteHousing (id) {
+    try {
+      const response = await fetch(ApiRoutes.HOUSINGS_DELETE + `${id}`, {
+        method: 'DELETE',
+        headers: {
+          // 'Content-Type': 'application/json',
+          // Include authorization token if needed
+          // 'Authorization': `Bearer ${token}`
         }
+      })
 
-        fetchData();
-    }, []);
-
-    function handleAddHousing() {
-        setShowModal(true);
-        setModalData({
-            editedHousing: {},
-            action: 'Add',
-            handleSaveChanges: handleAdd
-        });
+      if (response.ok) {
+        setShowModal(false)
+        setHousings(housings.filter(h => h.id !== id))
+      } else {
+        console.error('Failed to save data:', response.statusText)
+      }
+    } catch (error) {
+      console.error('Error saving data:', error)
     }
+  }
 
-    function handleEditHousing(housing){
-        setShowModal(true);
-        setModalData({
-            editedHousing: housing,
-            action: 'Edit',
-            handleSaveChanges: handleEdit
-        });
+  function handleCloseModal () {
+    setShowModal(false)
+  }
+
+  async function handleEdit (entity) {
+    try {
+      const response = await fetch(ApiRoutes.HOUSINGS_PUT + `${entity.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json'
+          // Include authorization token if needed
+          // 'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(entity)
+      })
+
+      if (response.ok) {
+        const editedEntityIndex = housings.findIndex(h => h.id === entity.id)
+        const updatedEntities = [...housings]
+        updatedEntities[editedEntityIndex] = entity
+        setShowModal(false)
+        setHousings(updatedEntities)
+      } else {
+        console.error('Failed to save data:', response.statusText)
+      }
+    } catch (error) {
+      console.error('Error saving data:', error)
     }
+  }
 
-    async function handleDeleteHousing(id){
-        try {
-            const response = await fetch(ApiRoutes.HOUSINGS_DELETE + `${id}`, {
-                method: 'DELETE',
-                headers: {
-                    //'Content-Type': 'application/json',
-                    // Include authorization token if needed
-                    // 'Authorization': `Bearer ${token}`
-                }
-            });
+  async function handleAdd (addedEntity) {
+    try {
+      const response = await fetch(ApiRoutes.HOUSINGS_ADD, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+          // Include authorization token if needed
+          // 'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify(addedEntity)
+      })
 
-            if (response.ok) {
-                setShowModal(false);
-                setHousings(housings.filter(h => h.id !== id));
-            } else {
-                console.error('Failed to save data:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error saving data:', error);
-        }
+      if (response.ok) {
+        setShowModal(false)
+        setHousings(await getHousingsData())
+      } else {
+        console.error('Failed to save data:', response.statusText)
+      }
+    } catch (error) {
+      console.error('Error saving data:', error)
     }
+  }
 
-    function handleCloseModal(){
-        setShowModal(false);
+  async function getHousingsData () {
+    try {
+      const response = await fetch(ApiRoutes.HOUSINGS_LIST)
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch housings data')
+      }
+
+      return await response.json()
+    } catch (error) {
+      console.error('Error fetching housings data:', error)
     }
+  }
 
-    async function handleEdit(entity){
-        try {
-            const response = await fetch(ApiRoutes.HOUSINGS_PUT + `${entity.id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Include authorization token if needed
-                    // 'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(entity)
-            });
-
-            if (response.ok) {
-                const editedEntityIndex = housings.findIndex(h => h.id === entity.id);
-                const updatedEntities = [...housings];
-                updatedEntities[editedEntityIndex] = entity;
-                setShowModal(false);
-                setHousings(updatedEntities);
-            } else {
-                console.error('Failed to save data:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error saving data:', error);
-        }
-    }
-
-    async function handleAdd(addedEntity){
-        try {
-            const response = await fetch(ApiRoutes.HOUSINGS_ADD, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    // Include authorization token if needed
-                    // 'Authorization': `Bearer ${token}`
-                },
-                body: JSON.stringify(addedEntity)
-            });
-
-            if (response.ok) {
-                setShowModal(false);
-                setHousings(await getHousingsData());
-            } else {
-                console.error('Failed to save data:', response.statusText);
-            }
-        } catch (error) {
-            console.error('Error saving data:', error);
-        }
-    }
-
-    async function getHousingsData() {
-        try {
-            const response = await fetch(ApiRoutes.HOUSINGS_LIST);
-
-            if (!response.ok) {
-                throw new Error('Failed to fetch housings data');
-            }
-
-            return await response.json();
-        }
-        catch (error) {
-            console.error('Error fetching housings data:', error);
-        }
-    }
-
-    function renderHousingsTable() {
-        return (
+  function renderHousingsTable () {
+    return (
             <div>
                 <div><Button onClick={handleAddHousing}>Add</Button></div>
                 <table className='table table-striped' aria-labelledby="tableLabel">
@@ -140,23 +139,23 @@ export default function Housings() {
                     </thead>
                     <tbody>
                         {housings.map((housing) => {
-                            return <tr key={housing.id}>
+                          return <tr key={housing.id}>
                                 <td>{housing.name}</td>
                                 <td>{housing.shortName}</td>
                                 <td>{housing.address}</td>
                                 <td>{housing.floorsCount}</td>
                                 <td><Button onClick={() => handleEditHousing(housing)}>Edit</Button></td>
                                 <td><Button onClick={() => handleDeleteHousing(housing.id)}>Delete</Button></td>
-                            </tr>;
+                            </tr>
                         }
                         )}
                     </tbody>
                 </table>
             </div>
-        )
-    }
+    )
+  }
 
-    return (
+  return (
         <div>
             <h1 id="tableLabel">Housings</h1>
             {renderHousingsTable()}
@@ -170,5 +169,5 @@ export default function Housings() {
                 />
             }
         </div>
-    )
+  )
 }

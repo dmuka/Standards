@@ -1,39 +1,38 @@
-﻿import React, { useState, useEffect } from 'react';
-import { Modal, Button, Form } from 'react-bootstrap';
-import FormGroup from './FormGroup';
+﻿import React, { useState, useEffect } from 'react'
+import { Modal, Button, Form } from 'react-bootstrap'
+import FormGroup from './FormGroup'
 
-export default function HousingModal({ showModal, editedHousing, action, handleClose, handleSaveChanges }) {
-    const [housing, setEditedHousing] = useState(editedHousing);
-    const [validationError, setValidationError] = useState(false);
+export default function HousingModal ({ showModal, editedHousing, action, handleClose, handleSaveChanges }) {
+  const [housing, setEditedHousing] = useState(editedHousing)
+  const [validationError, setValidationError] = useState(false)
 
-    //useEffect(() => {
-    //    if (housing !== editedHousing) {
-    //        setEditedHousing(editedHousing);
-    //    }
-    //}, [housing, editedHousing])
+  // useEffect(() => {
+  //    if (housing !== editedHousing) {
+  //        setEditedHousing(editedHousing);
+  //    }
+  // }, [housing, editedHousing])
 
-    function handleFieldChange(e){
-        const { name, value } = e.target;
+  function handleFieldChange (e) {
+    const { name, value } = e.target
 
-        if (name === 'floorsCount') {
-            let number = Number(value);
+    if (name === 'floorsCount') {
+      const number = Number(value)
 
-            if (!Number.isInteger(number) || number < 1 || number > 1000) {
-                setValidationError('Floors count must be a valid.');
-                return;
-            }
-            else {
-                setValidationError(false);
-            }
-        }
-
-        setEditedHousing(prevState => ({
-            ...prevState,
-            [name]: value
-        }));
+      if (!Number.isInteger(number) || number < 1 || number > 1000) {
+        setValidationError('Floors count must be a valid.')
+        return
+      } else {
+        setValidationError(false)
+      }
     }
 
-    return (
+    setEditedHousing(prevState => ({
+      ...prevState,
+      [name]: value
+    }))
+  }
+
+  return (
         <Modal show={showModal} onHide={handleClose}>
             <Modal.Header closeButton>
                 <Modal.Title>{action} housing</Modal.Title>
@@ -89,5 +88,5 @@ export default function HousingModal({ showModal, editedHousing, action, handleC
                 <Button variant="primary" onClick={() => handleSaveChanges(housing)}>Save Changes</Button>
             </Modal.Footer>
         </Modal>
-    );
+  )
 }

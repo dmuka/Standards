@@ -4,11 +4,8 @@ using Microsoft.IdentityModel.Tokens;
 using Standards.Data;
 using Standards.Data.Repositories.Implementations;
 using Standards.Data.Repositories.Interfaces;
-using Standards.Models.DTOs;
-using Standards.Models.Users;
 using Standards.Services.Implementations;
 using Standards.Services.Interfaces;
-using System.Net;
 using System.Text;
 
 
@@ -19,19 +16,8 @@ namespace Standards
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);// new WebApplicationOptions
-            //{
-            //    Args = args,
-            //    WebRootPath = "ClientApp/public"
-            //});
 
             ConfigureServices(builder);
-            //builder.WebHost.ConfigureKestrel((context, serverOptions) =>
-            //{
-            //    serverOptions.Listen(IPAddress.Any, 44447, listenOptions =>
-            //    {
-            //        listenOptions.UseConnectionLogging();
-            //    });
-            //});
 
             var app = builder.Build();
 
@@ -61,7 +47,7 @@ namespace Standards
                 name: "default",
                 pattern: "/api/{controller}/{action=Index}/{id?}");
 
-            app.MapRazorPages();
+            //app.MapRazorPages();
 
             app.MapFallbackToFile("index.html");
 

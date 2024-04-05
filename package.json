@@ -1,7 +1,10 @@
 {
   "dependencies": {
+    "@babel/plugin-transform-private-property-in-object": "^7.24.1",
+    "formik": "^2.4.5",
     "http-proxy-middleware": "^2.0.6",
-    "webpack-dev-middleware": "^6.0.1"
+    "webpack-dev-middleware": "^6.0.1",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11"

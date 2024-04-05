@@ -1,23 +1,29 @@
-const { createProxyMiddleware } = require('http-proxy-middleware');
+const { createProxyMiddleware } = require('http-proxy-middleware')
 
 const context = [
-    "/swagger",
-    "/api",
-    "/auth"
-];
-const { env } = require('process');
+  '/swagger',
+  '/api'
+]
 
-const target = env.ASPNETCORE_HTTPS_PORT ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}` :
-    env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:[IIS-HTTP-PORT]';
+const { env } = require('process')
+
+const target = env.ASPNETCORE_HTTPS_PORT
+  ? `https://localhost:${env.ASPNETCORE_HTTPS_PORT}`
+  : env.ASPNETCORE_URLS ? env.ASPNETCORE_URLS.split(';')[0] : 'http://localhost:44447'
+
+const onError = (err, req, resp, target) => {
+  console.error(`${err.message}`)
+}
 
 module.exports = function (app) {
-    const appProxy = createProxyMiddleware(context, {
-        target: target,
-        secure: false,
-        headers: {
-            Connection: 'Keep-Alive'
-        }
-    });
+  const appProxy = createProxyMiddleware(context, {
+    target,
+    onError,
+    secure: false,
+    headers: {
+      Connection: 'Keep-Alive'
+    }
+  })
 
-    app.use(appProxy);
-};
+  app.use(appProxy)
+}
