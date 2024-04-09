@@ -18,10 +18,10 @@ namespace Standards.Controllers
 
 
         [AllowAnonymous]
-        [HttpPost("authenticate")]
-        public IActionResult Authenticate([FromBody] UserDto userDto)
+        [HttpPost("login")]
+        public async Task<IActionResult> Authenticate([FromBody] UserDto userDto)
         {
-            var user = _authService.Authenticate(userDto.UserName, userDto.Password);
+            var user = await _authService.Authenticate(userDto.UserName, userDto.Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
