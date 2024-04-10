@@ -1,0 +1,63 @@
+﻿using System.Text;
+
+namespace Standards.Infrastructure.Logging
+{
+    public class RequestLoggingMiddleware
+    {
+        private readonly RequestDelegate _next;
+        private readonly ILogger<RequestLoggingMiddleware> _logger;
+
+        public RequestLoggingMiddleware(RequestDelegate next, ILogger<RequestLoggingMiddleware> logger)
+        {
+            _next = next;
+            _logger = logger;
+        }
+
+        public async Task InvokeAsync(HttpContext context)
+        {
+            await LogRequest(context);
+
+            LogResponse(context);
+
+            await _next(context);
+        }
+
+        private async Task LogRequest(HttpContext context)
+        {
+            var request = context.Request;
+            var requestBody = await GetRequestBody(request);
+
+            var logMessage = $"Request Method: {request.Method}, Request Path: {request.Path}, Request Body: {requestBody}";
+
+            _logger.LogInformation($"{logMessage}, {GetHeaders(request.Headers)}");
+        }
+
+        private void LogResponse(HttpContext context)
+        {
+            var response = context.Response;
+
+            _logger.LogInformation($"Response status code: {response.StatusCode}");
+        }
+
+        private static async Task<string> GetRequestBody(HttpRequest request)
+        {
+            using (var reader = new StreamReader(request.Body, Encoding.UTF8, true, 1024, true))
+            {
+                return await reader.ReadToEndAsync();
+            }
+        }
+
+        private string GetHeaders(IHeaderDictionary headers)
+        {
+            var headersText = new StringBuilder();
+
+            foreach (var header in headers)
+            {
+                headersText.AppendLine($"Request Header - {header.Key}: {header.Value}");
+            }
+
+            return headersText.ToString();
+        }
+
+}
+}

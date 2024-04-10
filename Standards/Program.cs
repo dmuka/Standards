@@ -6,6 +6,7 @@ using NLog.Web;
 using Standards.Data;
 using Standards.Data.Repositories.Implementations;
 using Standards.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Logging;
 using Standards.Services.Implementations;
 using Standards.Services.Interfaces;
 using System.Text;
@@ -58,6 +59,8 @@ namespace Standards
                 app.MapControllerRoute(
                     name: "default",
                     pattern: "/api/{controller}/{action=Index}/{id?}");
+
+                app.UseMiddleware<RequestLoggingMiddleware>();
 
                 //app.MapRazorPages();
 
