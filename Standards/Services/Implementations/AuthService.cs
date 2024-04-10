@@ -144,9 +144,9 @@ namespace Standards.Services.Implementations
         {
             return new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.UserName),
-                    new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                    new Claim(ClaimTypes.Email, user.Email)
+                    new(ClaimTypes.Name, user.UserName),
+                    new(ClaimTypes.Sid, user.Id.ToString()),
+                    new(ClaimTypes.Email, user.Email)
                 });
         }
     }

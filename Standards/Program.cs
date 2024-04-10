@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using NLog;
+using NLog.Web;
 using Standards.Data;
 using Standards.Data.Repositories.Implementations;
 using Standards.Data.Repositories.Interfaces;
@@ -8,50 +10,72 @@ using Standards.Services.Implementations;
 using Standards.Services.Interfaces;
 using System.Text;
 
-
 namespace Standards
 {
     public class Program
     {
         public static void Main(string[] args)
         {
-            var builder = WebApplication.CreateBuilder(args);// new WebApplicationOptions
+            // Early init of NLog to allow startup and exception logging, before host is built
+            var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+            logger.Debug("init main");
 
-            ConfigureServices(builder);
-
-            var app = builder.Build();
-
-            if (app.Environment.IsDevelopment())
+            try
             {
-                app.UseDeveloperExceptionPage();
-                app.UseMigrationsEndPoint();
-                app.UseSwagger();
-                app.UseSwaggerUI();
+
+                var builder = WebApplication.CreateBuilder(args);
+
+                ConfigureServices(builder);
+
+                // NLog: Setup NLog for Dependency injection
+                builder.Logging.ClearProviders();
+                builder.Host.UseNLog();
+
+                var app = builder.Build();
+
+                if (app.Environment.IsDevelopment())
+                {
+                    app.UseDeveloperExceptionPage();
+                    app.UseMigrationsEndPoint();
+                    app.UseSwagger();
+                    app.UseSwaggerUI();
+                }
+                else
+                {
+                    app.UseExceptionHandler("/Home/Error");
+                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                    app.UseHsts();
+                }
+
+                app.UseHttpsRedirection();
+                app.UseStaticFiles();
+
+                app.UseRouting();
+
+                app.UseAuthentication();
+                app.UseAuthorization();
+
+                app.MapControllerRoute(
+                    name: "default",
+                    pattern: "/api/{controller}/{action=Index}/{id?}");
+
+                //app.MapRazorPages();
+
+                app.MapFallbackToFile("index.html");
+
+                app.Run();
             }
-            else
+            catch (Exception exception)
             {
-                app.UseExceptionHandler("/Home/Error");
-                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                app.UseHsts();
+                // NLog: catch setup errors
+                logger.Error(exception, "Stopped program because of exception");
+                throw;
             }
-
-            app.UseHttpsRedirection();
-            app.UseStaticFiles();
-
-            app.UseRouting();
-
-            app.UseAuthentication();
-            app.UseAuthorization();
-
-            app.MapControllerRoute(
-                name: "default",
-                pattern: "/api/{controller}/{action=Index}/{id?}");
-
-            //app.MapRazorPages();
-
-            app.MapFallbackToFile("index.html");
-
-            app.Run();
+            finally
+            {
+                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+                LogManager.Shutdown();
+            }
         }
 
         private static void ConfigureServices(WebApplicationBuilder? builder)
@@ -88,8 +112,6 @@ namespace Standards
             builder.Services.AddScoped<IRepository, Repository<ApplicationDbContext>>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
-
-            var migrationsAssembly = typeof(Program).Assembly.GetName().Name;
 
             builder.Services.AddControllers();
             builder.Services.AddRazorPages();
