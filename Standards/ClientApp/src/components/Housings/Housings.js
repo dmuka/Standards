@@ -3,11 +3,21 @@ import ApiRoutes from '../../ApiRoutes'
 import authService from '../api-authorization/AuthorizeService'
 import { Button } from 'react-bootstrap'
 import HousingModal from '../Modal/HousingModal'
+import { useTokens } from '../api-authorization/TokensService'
 
 export default function Housings () {
   const [housings, setHousings] = useState([])
   const [showModal, setShowModal] = useState(false)
   const [modalData, setModalData] = useState({})
+  const { checkTokenExpiration, getAccessToken } = useTokens();
+
+  useEffect(() => {
+    checkTokenExpiration();
+  }, []);
+  
+  useEffect(() => {
+    getAccessToken();
+  }, []);
 
   useEffect(() => {
     async function fetchData () {
@@ -40,9 +50,8 @@ export default function Housings () {
       const response = await fetch(ApiRoutes.HOUSINGS_DELETE + `${id}`, {
         method: 'DELETE',
         headers: {
-          // 'Content-Type': 'application/json',
-          // Include authorization token if needed
-          // 'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAccessToken()}`
         }
       })
 
@@ -66,9 +75,8 @@ export default function Housings () {
       const response = await fetch(ApiRoutes.HOUSINGS_PUT + `${entity.id}`, {
         method: 'PUT',
         headers: {
-          'Content-Type': 'application/json'
-          // Include authorization token if needed
-          // 'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAccessToken()}`
         },
         body: JSON.stringify(entity)
       })
@@ -92,9 +100,8 @@ export default function Housings () {
       const response = await fetch(ApiRoutes.HOUSINGS_ADD, {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
-          // Include authorization token if needed
-          // 'Authorization': `Bearer ${token}`
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAccessToken()}`
         },
         body: JSON.stringify(addedEntity)
       })
@@ -112,7 +119,13 @@ export default function Housings () {
 
   async function getHousingsData () {
     try {
-      const response = await fetch(ApiRoutes.HOUSINGS_LIST)
+      const response = await fetch(ApiRoutes.HOUSINGS_LIST, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${getAccessToken()}`
+        }        
+      })
 
       if (!response.ok) {
         throw new Error('Failed to fetch housings data')
