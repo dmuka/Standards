@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Standards.Models.DTOs;
-using Standards.Services.Interfaces;
+using Standards.Core.Models.DTOs;
+using Standards.Core.Services.Interfaces;
 
 namespace Standards.Controllers
 {

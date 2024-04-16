@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Standards.Core.Models.Persons;
 using Standards.Data;
-using Standards.Models.Persons;
 
 namespace Standards.Controllers
 {

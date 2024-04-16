@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Standards.Core.Models.DTOs;
 using Standards.Data.Repositories.Interfaces;
-using Standards.Models.DTOs;
-using Standards.Models.Users;
+using Standards.Core.Models.Users;
 
 namespace Standards.Controllers
 {

@@ -1,13 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Standards.Models;
-using Standards.Models.Departments;
-using Standards.Models.DTOs;
-using Standards.Models.Housings;
-using Standards.Models.MetrologyControl;
-using Standards.Models.Persons;
-using Standards.Models.Services;
-using Standards.Models.Standards;
-using Standards.Models.Users;
+using Standards.Core.Models;
+using Standards.Core.Models.Departments;
+using Standards.Core.Models.DTOs;
+using Standards.Core.Models.Housings;
+using Standards.Core.Models.MetrologyControl;
+using Standards.Core.Models.Persons;
+using Standards.Core.Models.Services;
+using Standards.Core.Models.Standards;
+using Standards.Core.Models.Users;
 
 namespace Standards.Data
 {

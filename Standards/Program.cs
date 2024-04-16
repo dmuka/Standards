@@ -3,12 +3,12 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
+using Standards.Core.Services.Implementations;
+using Standards.Core.Services.Interfaces;
 using Standards.Data;
 using Standards.Data.Repositories.Implementations;
 using Standards.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Logging;
-using Standards.Services.Implementations;
-using Standards.Services.Interfaces;
 using System.Text;
 
 namespace Standards
@@ -111,6 +111,8 @@ namespace Standards
             builder.Services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(connectionString));
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
             builder.Services.AddScoped<IRepository, Repository<ApplicationDbContext>>();
             builder.Services.AddScoped<IUserService, UserService>();
