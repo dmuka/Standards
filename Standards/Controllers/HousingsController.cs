@@ -2,6 +2,8 @@
 using Standards.Core.Models.DTOs;
 using Standards.Data.Repositories.Interfaces;
 using Standards.Core.Models.Users;
+using Standards.Core.CQRS.Housings;
+using MediatR;
 
 namespace Standards.Controllers
 {
@@ -10,24 +12,23 @@ namespace Standards.Controllers
     public class HousingsController : ControllerBase
     {
         private readonly IRepository _repository;
+        private readonly ISender _sender;
 
-        public HousingsController(IRepository repository)
+        public HousingsController(IRepository repository, ISender sender)
         {
             _repository = repository;
+            _sender = sender;
         }
         
         [HttpGet]
         [Route("list")]
         public async Task<IActionResult> GetHousings()
         {
-            var housings = await _repository.GetListAsync<HousingDto>();
+            var query = new GetAll.Query();
 
-            if (housings is null)
-            {
-                return NotFound();
-            }
+            var result = await _sender.Send(query);
 
-            return Ok(housings);
+            return Ok(result);
         }
 
         [HttpGet]
