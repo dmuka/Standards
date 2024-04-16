@@ -1,5 +1,6 @@
 ﻿using Standards.Data.Repositories.Interfaces;
-using Standards.Exceptions;
+using Standards.Infrastructure.Exceptions;
+using Standards.Infrastructure.Exceptions.Enum;
 using Standards.Models.DTOs;
 using Standards.Models.Users;
 using Standards.Services.Interfaces;
@@ -33,12 +34,12 @@ namespace Standards.Services.Implementations
         public async Task<User> Create(UserDto userDto)
         {
             if (string.IsNullOrWhiteSpace(userDto.Password))
-                throw new StandardsException("Password is required");
+                throw new StandardsException(StatusCodeByError.InternalServerError, "Password is required", null, null);
 
             var userInDB = await _repository.GetAsync<User>(x => x.UserName == userDto.UserName);
 
             if (userInDB is not null)
-                throw new StandardsException("Username \"" + userInDB.UserName + "\" is already taken");
+                throw new StandardsException(StatusCodeByError.InternalServerError, "Username \"" + userInDB.UserName + "\" is already taken", null, null);
 
             var passwordSecrets = _authService.GetPasswordHashAndSalt(userDto.Password);
 
@@ -59,14 +60,14 @@ namespace Standards.Services.Implementations
 
         public async Task Update(UserDto userDto)
         {
-            var userInDB = await _repository.GetByIdAsync<User>(userDto.Id) ?? throw new StandardsException("User not found");
+            var userInDB = await _repository.GetByIdAsync<User>(userDto.Id) ?? throw new StandardsException(StatusCodeByError.NotFound, "User not found", null, null);
 
             if (userDto.UserName != userInDB.UserName)
             {
                 var isUserNameExist = await _repository.GetAsync<User>(user => user.UserName == userDto.UserName) is not null;
 
                 if (isUserNameExist)    
-                    throw new StandardsException("Username " + userDto.UserName + " is already taken.");
+                    throw new StandardsException(StatusCodeByError.Conflict, "Username " + userDto.UserName + " is already taken.", null, null);
             }
 
             var passwordSecrets = _authService.GetPasswordHashAndSalt(userDto.Password);
