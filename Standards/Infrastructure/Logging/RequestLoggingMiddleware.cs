@@ -17,26 +17,19 @@ namespace Standards.Infrastructure.Logging
         {
             await LogRequest(context);
 
-            LogResponse(context);
-
             await _next(context);
         }
 
         private async Task LogRequest(HttpContext context)
         {
             var request = context.Request;
-            var requestBody = await GetRequestBody(request);
-
-            var logMessage = $"Request Method: {request.Method}, Request Path: {request.Path}, Request Body: {requestBody}";
-
-            _logger.LogInformation($"{logMessage}, {GetHeaders(request.Headers)}");
-        }
-
-        private void LogResponse(HttpContext context)
-        {
             var response = context.Response;
 
-            _logger.LogInformation($"Response status code: {response.StatusCode}");
+            var requestBody = await GetRequestBody(request);
+
+            var logMessage = $"Response status code: {response.StatusCode}, Request Method: {request.Method}, Request Path: {request.Path}, Request Body: {requestBody}";
+
+            _logger.LogInformation($"{logMessage}, {GetHeaders(request.Headers)}");
         }
 
         private static async Task<string> GetRequestBody(HttpRequest request)
