@@ -2,12 +2,12 @@
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
-using Standards.Data.Repositories.Models;
+using Standards.Infrastructure.Data.Repositories.Models;
 using System.Data;
 using System.Data.Common;
 using System.Linq.Expressions;
 
-namespace Standards.Data.Repositories.Interfaces
+namespace Standards.Infrastructure.Data.Repositories.Interfaces
 {
     /// <summary>
     /// Contains all the repository methods. If you register the multiple DbContexts, it will use the last one.
@@ -550,7 +550,7 @@ namespace Standards.Data.Repositories.Interfaces
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="sql"/> is <see langword="null"/>.</exception>
         Task<List<T>> GetFromRawSqlAsync<T>(string sql, IEnumerable<object> parameters, CancellationToken cancellationToken = default);
-    
+
         /// <summary>
         /// Execute raw sql command against the configured database asynchronously.
         /// </summary>
@@ -605,7 +605,7 @@ namespace Standards.Data.Repositories.Interfaces
 
         /// <summary>
         /// This method takes an object of <typeparamref name="TEntity"/>, adds it to the change tracker and will
-        /// be inserted into the database when <see cref="IRepository.SaveChangesAsync(CancellationToken)" /> is called.
+        /// be inserted into the database when <see cref="SaveChangesAsync(CancellationToken)" /> is called.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entity">The entity to be inserted.</param>
@@ -615,7 +615,7 @@ namespace Standards.Data.Repositories.Interfaces
 
         /// <summary>
         /// This method takes a collection of <typeparamref name="TEntity"/> object, adds them to the change tracker and will
-        /// be inserted into the database when <see cref="IRepository.SaveChangesAsync(CancellationToken)" /> is called.
+        /// be inserted into the database when <see cref="SaveChangesAsync(CancellationToken)" /> is called.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="entities">The entities to be inserted.</param>
@@ -676,7 +676,7 @@ namespace Standards.Data.Repositories.Interfaces
 
         /// <summary>
         /// This method takes <typeparamref name="TEntity"/> object, adds to the change tracker and will
-        /// be deleted from the database when <see cref="IRepository.SaveChangesAsync(CancellationToken)" /> is called.
+        /// be deleted from the database when <see cref="SaveChangesAsync(CancellationToken)" /> is called.
         /// </summary>
         /// <typeparam name="TEntity">The type of the <paramref name="entity"/> to be marked as deleted.</typeparam>
         /// <param name="entity">The <typeparamref name="TEntity"/> object to be deleted from the database on <see cref="SaveChangesAsync(CancellationToken)"/>.</param>

@@ -1,6 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Standards.Data.Repositories.Interfaces;
-using System.Globalization;
 
 namespace Standards.Controllers
 {

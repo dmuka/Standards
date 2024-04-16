@@ -1,6 +1,6 @@
 ﻿using MediatR;
 using Standards.Core.Models.DTOs;
-using Standards.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace Standards.Core.CQRS.Housings
 {

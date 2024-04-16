@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Query;
 using System.Linq.Expressions;
 
-namespace Standards.Data.Repositories.Models
+namespace Standards.Infrastructure.Data.Repositories.Models
 {
     /// <summary>
     /// This object hold the query details.

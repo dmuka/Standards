@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Standards.Core.Models.DTOs;
-using Standards.Data.Repositories.Interfaces;
 using Standards.Core.Models.Users;
 using Standards.Core.CQRS.Housings;
 using MediatR;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace Standards.Controllers
 {

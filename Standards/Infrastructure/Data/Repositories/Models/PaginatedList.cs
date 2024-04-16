@@ -1,4 +1,4 @@
-﻿namespace Standards.Data.Repositories.Models
+﻿namespace Standards.Infrastructure.Data.Repositories.Models
 {
     /// <summary>
     /// The object contains pagination info and items.

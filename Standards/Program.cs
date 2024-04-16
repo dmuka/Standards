@@ -5,9 +5,9 @@ using NLog;
 using NLog.Web;
 using Standards.Core.Services.Implementations;
 using Standards.Core.Services.Interfaces;
-using Standards.Data;
-using Standards.Data.Repositories.Implementations;
-using Standards.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Data;
+using Standards.Infrastructure.Data.Repositories.Implementations;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Logging;
 using System.Text;
 

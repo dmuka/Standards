@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Standards.Core.Models.Housings;
-using Standards.Data;
+using Standards.Infrastructure.Data;
 
 namespace Standards.Controllers
 {

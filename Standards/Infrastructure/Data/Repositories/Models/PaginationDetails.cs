@@ -1,4 +1,4 @@
-﻿namespace Standards.Data.Repositories.Models
+﻿namespace Standards.Infrastructure.Data.Repositories.Models
 {
     /// <summary>
     /// This object holds the pagination query specifications.

@@ -1,7 +1,7 @@
 ﻿using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Users;
 using Standards.Core.Services.Interfaces;
-using Standards.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Exceptions;
 using Standards.Infrastructure.Exceptions.Enum;
 using System.Data;

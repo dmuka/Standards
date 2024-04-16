@@ -2,7 +2,7 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
-using Standards.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace StandardsCQRSTests.Housings
 {

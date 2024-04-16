@@ -9,7 +9,7 @@ using Standards.Core.Models.Services;
 using Standards.Core.Models.Standards;
 using Standards.Core.Models.Users;
 
-namespace Standards.Data
+namespace Standards.Infrastructure.Data
 {
     public class ApplicationDbContext : DbContext
     {
@@ -52,7 +52,7 @@ namespace Standards.Data
         //        .HasOne(person => person.User)
         //        .WithOne(user => user.Person)
         //        .HasForeignKey<User>(user => user.PersonId);
-        
+
         //    modelBuilder.Entity<Person>()
         //        .Property(e => e.Id)
         //        .ValueGeneratedOnAdd();

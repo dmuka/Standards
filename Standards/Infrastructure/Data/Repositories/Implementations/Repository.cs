@@ -1,15 +1,15 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
-using Standards.Data.Repositories.Extensions;
-using Standards.Data.Repositories.Interfaces;
-using Standards.Data.Repositories.Models;
+using Standards.Infrastructure.Data.Repositories.Extensions;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Data.Repositories.Models;
 using System.Data;
 using System.Data.Common;
 using System.Globalization;
 using System.Linq.Expressions;
 
-namespace Standards.Data.Repositories.Implementations
+namespace Standards.Infrastructure.Data.Repositories.Implementations
 {
     internal sealed class Repository<TDbContext> : IRepository where TDbContext : DbContext
     {
@@ -69,7 +69,7 @@ namespace Standards.Data.Repositories.Implementations
             {
                 query = query.AsNoTracking();
             }
-            
+
             var items = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
 
             return items;
@@ -118,7 +118,7 @@ namespace Standards.Data.Repositories.Implementations
 
         public Task<List<T>> GetListAsync<T>(QueryDetails<T> details, CancellationToken cancellationToken = default) where T : class
         {
-            return GetListAsync<T>(details, false, cancellationToken);
+            return GetListAsync(details, false, cancellationToken);
         }
 
         public async Task<List<T>> GetListAsync<T>(
@@ -651,8 +651,8 @@ namespace Standards.Data.Repositories.Implementations
         }
 
         public async Task<List<T>> GetFromRawSqlAsync<T>(
-            string sql, 
-            object parameter, 
+            string sql,
+            object parameter,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(sql))
@@ -668,8 +668,8 @@ namespace Standards.Data.Repositories.Implementations
         }
 
         public async Task<List<T>> GetFromRawSqlAsync<T>(
-            string sql, 
-            IEnumerable<DbParameter> parameters, 
+            string sql,
+            IEnumerable<DbParameter> parameters,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(sql))
@@ -682,8 +682,8 @@ namespace Standards.Data.Repositories.Implementations
         }
 
         public async Task<List<T>> GetFromRawSqlAsync<T>(
-            string sql, 
-            IEnumerable<object> parameters, 
+            string sql,
+            IEnumerable<object> parameters,
             CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(sql))

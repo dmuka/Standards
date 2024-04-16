@@ -1,7 +1,7 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Standards.Core.Models.Users;
 using Standards.Core.Services.Interfaces;
-using Standards.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;

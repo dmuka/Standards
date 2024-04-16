@@ -1,8 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Standards.Data.Repositories.Models;
+using Standards.Infrastructure.Data.Repositories.Models;
 using System.Linq.Expressions;
 
-namespace Standards.Data.Repositories.Extensions
+namespace Standards.Infrastructure.Data.Repositories.Extensions
 {
     /// <summary>
     /// Contains <see cref="Queryable"/> extension methods for paginated list.
@@ -113,7 +113,7 @@ namespace Standards.Data.Repositories.Extensions
         }
         public static IQueryable<T> GetSpecifiedQuery<T>(this IQueryable<T> inputQuery, QueryDetails<T> details) where T : class
         {
-            var query = GetSpecifiedQuery(inputQuery, (BaseQueryDetails<T>)details);
+            var query = inputQuery.GetSpecifiedQuery((BaseQueryDetails<T>)details);
 
             // Apply paging if enabled
             if (details.Skip != null)
@@ -161,7 +161,7 @@ namespace Standards.Data.Repositories.Extensions
                 throw new ArgumentOutOfRangeException(nameof(details), "The value of specification.PageSize must be greater than 0.");
             }
 
-            var query = GetSpecifiedQuery(inputQuery, (BaseQueryDetails<T>)details);
+            var query = inputQuery.GetSpecifiedQuery((BaseQueryDetails<T>)details);
 
             // Apply paging if enabled
             int skip = (details.PageIndex - 1) * details.PageSize;

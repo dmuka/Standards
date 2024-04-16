@@ -1,11 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Standards.Data.Repositories.Models;
 using System.Data.Common;
 using System.Globalization;
-using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Standards.Data.Repositories.Extensions
+namespace Standards.Infrastructure.Data.Repositories.Extensions
 {
     internal static class QueryExtensions
     {

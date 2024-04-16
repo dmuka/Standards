@@ -1,4 +1,4 @@
-﻿namespace Standards.Data.Repositories.Models
+﻿namespace Standards.Infrastructure.Data.Repositories.Models
 {
     public class QueryDetails<T> : BaseQueryDetails<T> where T : class
     {

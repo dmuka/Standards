@@ -1,6 +1,6 @@
 ﻿using System.Data;
 
-namespace Standards.Data.Repositories.Extensions
+namespace Standards.Infrastructure.Data.Repositories.Extensions
 {
     public static class DataReaderExtensions
     {
