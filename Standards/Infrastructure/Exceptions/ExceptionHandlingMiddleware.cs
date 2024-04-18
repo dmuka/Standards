@@ -1,13 +1,15 @@
-﻿using System.Text.Json;
+﻿using FluentValidation;
+using System.Net;
+using System.Text.Json;
 
 namespace Standards.Infrastructure.Exceptions
 {
     public class ExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
-        private readonly ILogger _logger;
+        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
 
-        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger logger)
+        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
         {
             _next = next;
             _logger = logger;
@@ -19,34 +21,34 @@ namespace Standards.Infrastructure.Exceptions
             {
                 await _next(context);
             }
+            catch (ValidationException validationException)
+            {
+                await HandleException(context, validationException.Message, (int)HttpStatusCode.BadRequest);
+            }
+            catch (StandardsException standardsException)
+            {
+                await HandleException(context, standardsException.Message, (int)standardsException.Error);
+            }
             catch (Exception exception)
             {
-                var response = context.Response;
-                response.ContentType = "application/json";
-
-                //switch (exception)
-                //{
-                //    case StandardsException:
-                //        response.StatusCode = (int)HttpStatusCode.BadRequest;
-                //        _logger.LogError(exception.Message);
-                //        break;
-
-                //    case KeyNotFoundException:
-                //        response.StatusCode = (int)HttpStatusCode.NotFound;
-                //        _logger.LogError(exception.Message);
-                //        break;
-
-                //    default:
-                //        response.StatusCode = (int)HttpStatusCode.InternalServerError;
-                //        _logger.LogError(exception.Message);
-                //        break;
-                //}
-                _logger.LogError(exception.Message);
-
-                var result = JsonSerializer.Serialize(new { message = exception.Message });
-
-                await response.WriteAsync(result);
+                await HandleException(context, exception.Message, (int)HttpStatusCode.InternalServerError);
             }
+        }
+
+        private async Task HandleException(
+            HttpContext context, 
+            string exceptionMessage, 
+            int statusCode)
+        {
+            var response = context.Response;
+            response.ContentType = "application/json";
+            response.StatusCode = statusCode;
+
+            _logger.LogError($"Status code: {statusCode} - exception message: {exceptionMessage}");
+            
+            var result = JsonSerializer.Serialize(new { message = exceptionMessage });
+
+            await response.WriteAsync(result);
         }
     }
 }

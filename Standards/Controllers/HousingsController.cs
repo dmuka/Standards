@@ -32,22 +32,14 @@ namespace Standards.Controllers
         }
 
         [HttpGet]
-        [Route("")]
-        public async Task<IActionResult> GetHousing(int id = 0)
+        [Route("{id}")]
+        public async Task<IActionResult> GetHousing(int id)
         {
-            if (id == 0)
-            {
-                return BadRequest();
-            }
+            var query = new GetById.Query(id);
 
-            var housing = await _repository.GetByIdAsync<HousingDto>(id);
+            var result = await _sender.Send(query);
 
-            if (housing is null)
-            {
-                return NotFound();
-            }
-            
-            return Ok(housing);
+            return Ok(result);
         }
 
         [HttpPost]

@@ -24,7 +24,8 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             IsolationLevel isolationLevel = IsolationLevel.Unspecified,
             CancellationToken cancellationToken = default)
         {
-            IDbContextTransaction dbContextTransaction = await _dbContext.Database.BeginTransactionAsync(isolationLevel, cancellationToken);
+            var dbContextTransaction = await _dbContext.Database.BeginTransactionAsync(isolationLevel, cancellationToken);
+
             return dbContextTransaction;
         }
 
@@ -329,7 +330,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
                 query = query.AsNoTracking();
             }
 
-            var entity = await query.FirstOrDefaultAsync(expressionTree, cancellationToken).ConfigureAwait(false);
+            var entity = await query.FirstOrDefaultAsync(expressionTree, cancellationToken).ConfigureAwait(true);
 
             return entity;
         }

@@ -1,14 +1,19 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using FluentValidation;
+using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
+using Standards.Core.Models.Services;
 using Standards.Core.Services.Implementations;
 using Standards.Core.Services.Interfaces;
 using Standards.Infrastructure.Data;
 using Standards.Infrastructure.Data.Repositories.Implementations;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Exceptions;
 using Standards.Infrastructure.Logging;
+using Standards.Infrastructure.Mediatr;
 using System.Text;
 
 namespace Standards
@@ -61,6 +66,7 @@ namespace Standards
                     pattern: "/api/{controller}/{action=Index}/{id?}");
 
                 app.UseMiddleware<RequestLoggingMiddleware>();
+                app.UseMiddleware<ExceptionHandlingMiddleware>();
 
                 //app.MapRazorPages();
 
@@ -83,7 +89,8 @@ namespace Standards
 
         private static void ConfigureServices(WebApplicationBuilder? builder)
         {
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
             var connectionStringPasswordSecret = builder.Configuration["Secrets:DefaultConnectionPassword"];
             connectionString = connectionString.Replace("passwordvalue", connectionStringPasswordSecret);
 
@@ -108,13 +115,16 @@ namespace Standards
                 };
             });
 
-            builder.Services.AddDbContext<ApplicationDbContext>(
-                options => options.UseSqlServer(connectionString));
+            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
 
-            builder.Services.AddScoped<IRepository, Repository<ApplicationDbContext>>();
+            builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+
+            builder.Services.AddTransient<IRepository, Repository<ApplicationDbContext>>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
 

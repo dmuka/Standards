@@ -40,7 +40,7 @@ namespace Standards.Infrastructure.Logging
             }
         }
 
-        private string GetHeaders(IHeaderDictionary headers)
+        private static string GetHeaders(IHeaderDictionary headers)
         {
             var headersText = new StringBuilder();
 
