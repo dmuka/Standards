@@ -12,6 +12,8 @@ namespace Standards.Infrastructure.Filter.Implementations
 
         private IQueryable<T> _query;
 
+        private TFilter _filter;
+
         public QueryBuilder(
             IRepository repository, 
             IQueryBuilderInitializer<T, TFilter> initializer)
@@ -20,36 +22,45 @@ namespace Standards.Infrastructure.Filter.Implementations
             _query ??= repository.GetQueryable<T>();
         }
 
-        public IQueryable<T> Filter(TFilter filterDto)
+        public IQueryBuilder<T, TFilter> SetFilter(TFilter filterDto)
         {
-            foreach (var filter in _initializer.GetFilters(filterDto))
+            _filter = filterDto;
+
+            return this;
+        }
+
+        public IQueryBuilder<T, TFilter> Filter()
+        {
+            foreach (var filter in _initializer.GetFilters(_filter))
             {
                 _query = filter.Execute(_query);
             }
 
-            return _query;
+            return this;
         }
 
-        public IQueryable<T> Sort(TFilter filterDto)
+        public IQueryBuilder<T, TFilter> Sort()
         {
-            foreach (var sorting in _initializer.GetSortings(filterDto))
+            foreach (var sorting in _initializer.GetSortings(_filter))
             {
                 _query = sorting.Execute(_query);
             }
 
-            return _query;
+            return this;
         }
 
-        public IQueryable<T> Paginate(TFilter filterDto)
+        public IQueryBuilder<T, TFilter> Paginate()
         {
-            if (!filterDto.GetAll())
+            if (!_filter.GetAll())
             {
                 _query = _query
-                    .Skip((filterDto.GetPageNumber() - 1) * filterDto.GetItemsPerPage())
-                    .Take(filterDto.GetItemsPerPage());
+                    .Skip((_filter.GetPageNumber() - 1) * _filter.GetItemsPerPage())
+                    .Take(_filter.GetItemsPerPage());
             }
 
-            return _query;
+            return this;
         }
+
+        public IQueryable<T> GetQuery() => _query;
     }
 }

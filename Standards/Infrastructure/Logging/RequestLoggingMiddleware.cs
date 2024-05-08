@@ -22,10 +22,12 @@ namespace Standards.Infrastructure.Logging
 
         private async Task LogRequest(HttpContext context)
         {
+
+            context.Request.EnableBuffering();
             var request = context.Request;
             var response = context.Response;
-
             var requestBody = await GetRequestBody(request);
+            context.Request.Body.Position = 0;
 
             var logMessage = $"Response status code: {response.StatusCode}, Request Method: {request.Method}, Request Path: {request.Path}, Request Body: {requestBody}";
 

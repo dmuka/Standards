@@ -2,10 +2,14 @@
 {
     public interface IQueryBuilder<out T, TFilter>
     {
-        IQueryable<T> Filter(TFilter filterDto);
+        IQueryBuilder<T, TFilter> SetFilter(TFilter filterDto);
 
-        IQueryable<T> Sort(TFilter filterDto);
+        IQueryBuilder<T, TFilter> Filter();
 
-        IQueryable<T> Paginate(TFilter filterDto);
+        IQueryBuilder<T, TFilter> Sort();
+
+        IQueryBuilder<T, TFilter> Paginate();
+
+        IQueryable<T> GetQuery();
     }
 }

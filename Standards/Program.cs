@@ -5,13 +5,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
-using Standards.Core.Models.Services;
+using Standards.Core.CQRS.Housings.Filters;
+using Standards.Core.Models.DTOs;
+using Standards.Core.Models.DTOs.Filters;
 using Standards.Core.Services.Implementations;
 using Standards.Core.Services.Interfaces;
 using Standards.Infrastructure.Data;
 using Standards.Infrastructure.Data.Repositories.Implementations;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Exceptions;
+using Standards.Infrastructure.Filter.Implementations;
+using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.Logging;
 using Standards.Infrastructure.Mediatr;
 using System.Text;
@@ -127,6 +131,9 @@ namespace Standards
             builder.Services.AddTransient<IRepository, Repository<ApplicationDbContext>>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
+
+            builder.Services.AddScoped<IQueryBuilder<HousingDto, HousingsFilterDto>, QueryBuilder<HousingDto, HousingsFilterDto>>();
+            builder.Services.AddScoped<IQueryBuilderInitializer<HousingDto, HousingsFilterDto>, HousingsQueryBuilderInitializer>();
 
             builder.Services.AddControllers();
             builder.Services.AddRazorPages();

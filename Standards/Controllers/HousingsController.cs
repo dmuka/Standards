@@ -1,15 +1,15 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Standards.Core.Models.DTOs;
-using Standards.Core.Models.Users;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Standards.Core.CQRS.Housings;
-using MediatR;
+using Standards.Core.Models.DTOs;
+using Standards.Core.Models.DTOs.Filters;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace Standards.Controllers
 {
-    [Route("api/housings")]
     [ApiController]
-    public class HousingsController : ControllerBase
+    [Route("api/housings")]
+    public class HousingsController : ApiBaseController
     {
         private readonly IRepository _repository;
         private readonly ISender _sender;
@@ -36,6 +36,17 @@ namespace Standards.Controllers
         public async Task<IActionResult> GetHousing(int id)
         {
             var query = new GetById.Query(id);
+
+            var result = await _sender.Send(query);
+
+            return Ok(result);
+        }
+
+        [HttpPost]
+        [Route("filter")]
+        public async Task<IActionResult> GetHousingsByFilter([FromBody] HousingsFilterDto filter)
+        {
+            var query = new GetFiltered.Query(filter);
 
             var result = await _sender.Send(query);
 
