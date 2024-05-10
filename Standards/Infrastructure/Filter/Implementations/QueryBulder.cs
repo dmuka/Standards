@@ -4,7 +4,7 @@ using Standards.Infrastructure.Filter.Models;
 
 namespace Standards.Infrastructure.Filter.Implementations
 {
-    class QueryBuilder<T, TFilter> : IQueryBuilder<T, TFilter>
+    public class QueryBuilder<T, TFilter> : IQueryBuilder<T, TFilter>
         where TFilter : PaginationItem
         where T : class
     {

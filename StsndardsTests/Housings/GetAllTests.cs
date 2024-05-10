@@ -4,7 +4,7 @@ using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
-namespace StandardsCQRSTests.Housings
+namespace Standards.CQRS.Tests.Housings
 {
     [TestFixture]
     public class GetAllTests

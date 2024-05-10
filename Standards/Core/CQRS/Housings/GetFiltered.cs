@@ -1,10 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Standards.Core.Models;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.DTOs.Filters;
 using Standards.Infrastructure.Filter.Interfaces;
+using Standards.Infrastructure.QueryableWrapper.Interface;
 
 namespace Standards.Core.CQRS.Housings
 {
@@ -23,10 +23,12 @@ namespace Standards.Core.CQRS.Housings
         public class QueryHandler : IRequestHandler<Query, PaginatedListModel<HousingDto>>
         {
             private readonly IQueryBuilder<HousingDto, HousingsFilterDto> _queryBuilder;
+            private readonly IQueryableWrapper<HousingDto> _queryableWrapper;
 
-            public QueryHandler(IQueryBuilder<HousingDto, HousingsFilterDto> queryBuilder)
+            public QueryHandler(IQueryBuilder<HousingDto, HousingsFilterDto> queryBuilder, IQueryableWrapper<HousingDto> queryableWrapper)
             {
                 _queryBuilder = queryBuilder;
+                _queryableWrapper = queryableWrapper;
             }
 
             public async Task<PaginatedListModel<HousingDto>> Handle(Query request, CancellationToken cancellationToken)
@@ -38,7 +40,7 @@ namespace Standards.Core.CQRS.Housings
                     .Paginate()
                     .GetQuery();
 
-                var housings = await query.ToListAsync(cancellationToken);
+                var housings = await _queryableWrapper.ToListAsync(query, cancellationToken);
 
                 var result = new PaginatedListModel<HousingDto>(
                     housings,

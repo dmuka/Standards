@@ -1,6 +1,6 @@
 ﻿namespace Standards.Infrastructure.Filter.Interfaces
 {
-    interface IQueryBuilderInitializer<T, TFilter>
+    public interface IQueryBuilderInitializer<T, TFilter>
     {
         IEnumerable<IQueryBuilderItem<IQueryable<T>>> GetFilters(TFilter filterDto);
 

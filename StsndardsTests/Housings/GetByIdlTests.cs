@@ -4,7 +4,7 @@ using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
-namespace StandardsCQRSTests.Housings
+namespace Standards.CQRS.Tests.Housings
 {
     [TestFixture]
     public class GetByIdTests
@@ -14,7 +14,7 @@ namespace StandardsCQRSTests.Housings
         private Mock<IRepository> _repository;
         private CancellationToken _cancellationToken;
         private List<HousingDto> _housings;
-        private IRequestHandler<GetAll.Query, IEnumerable<HousingDto>> _handler;
+        private IRequestHandler<GetById.Query, HousingDto> _handler;
 
         [SetUp]
         public void Setup()
@@ -55,7 +55,7 @@ namespace StandardsCQRSTests.Housings
             _repository.Setup(_ => _.GetByIdAsync<HousingDto>(_id, _cancellationToken))
                 .Returns(Task.FromResult(_housings.First(_ => _.Id == _id)));
 
-            _handler = new GetAll.QueryHandler(_repository.Object); 
+            _handler = new GetById.QueryHandler(_repository.Object); 
         }
 
         [Test]
@@ -63,12 +63,13 @@ namespace StandardsCQRSTests.Housings
         {
             // Arrange
             var query = new GetById.Query(_id);
+            var expected = _housings.First(_ => _.Id == _id);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
 
             // Assert
-            Assert.That(result, Is.EquivalentTo(_housings));
+            Assert.That(result, Is.EqualTo(expected));
         }
     }
 }

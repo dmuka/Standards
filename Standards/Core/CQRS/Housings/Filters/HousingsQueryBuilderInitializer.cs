@@ -5,7 +5,7 @@ using Standards.Infrastructure.Filter.Interfaces;
 
 namespace Standards.Core.CQRS.Housings.Filters
 {
-    class HousingsQueryBuilderInitializer : IQueryBuilderInitializer<HousingDto, HousingsFilterDto>
+    public class HousingsQueryBuilderInitializer : IQueryBuilderInitializer<HousingDto, HousingsFilterDto>
     {
         private readonly IRepository _repository;
 

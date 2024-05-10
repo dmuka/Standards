@@ -1,6 +1,6 @@
 ﻿namespace Standards.Infrastructure.Filter.Interfaces
 {
-    interface IQueryBuilderItem<T>
+    public interface IQueryBuilderItem<T>
     {
         T Execute(T query);
     }
