@@ -12,12 +12,12 @@
 
         public int GetPageNumber()
         {
-            return PageNumber == default ? DefaultPageNumber : PageNumber;
+            return PageNumber < 1 ? DefaultPageNumber : PageNumber;
         }
 
         public int GetItemsPerPage()
         {
-            return ItemsPerPage == default ? DefaultItemsPerPage : ItemsPerPage;
+            return ItemsPerPage < 1 ? DefaultItemsPerPage : ItemsPerPage;
         }
 
         public bool GetAll()

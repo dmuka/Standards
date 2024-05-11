@@ -2,6 +2,9 @@
 {
     public class PaginatedListModel<T>
     {
+        private const int DefaultItemsPerPage = 10;
+        private const int DefaultPageNumber = 1;
+
         public PaginatedListModel(
             IEnumerable<T> items, 
             int currentPageNumber, 
@@ -9,9 +12,9 @@
             int itemsPerPage)
         {
             Items = items;
-            CurrentPageNumber = currentPageNumber;
+            CurrentPageNumber = currentPageNumber < 1 ? DefaultPageNumber : currentPageNumber;
             CurrentPageSize = currentPageSize;
-            ItemsPerPage = itemsPerPage;
+            ItemsPerPage = itemsPerPage < 1 ? DefaultItemsPerPage : itemsPerPage;
             TotalCount = items.Count();
         }
 
