@@ -139,5 +139,50 @@ namespace Standards.CQRS.Tests.Housings
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.Filter);
         }
+
+        [Test]
+        public void Validator_IfSearchQueryIsNull_ShouldHaveValidationError()
+        {
+            // Arrange
+            _filterDto.SearchQuery = null;
+
+            var query = new GetFiltered.Query(_filterDto);
+            
+            // Act
+            var result = _validator.TestValidate(query);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.Filter.SearchQuery);
+        }
+
+        [Test]
+        public void Validator_IfItemsPerPageIsZero_ShouldHaveValidationError()
+        {
+            // Arrange
+            _filterDto.ItemsPerPage = default;
+
+            var query = new GetFiltered.Query(_filterDto);
+            
+            // Act
+            var result = _validator.TestValidate(query);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.Filter.ItemsPerPage);
+        }
+
+        [Test]
+        public void Validator_IfPageNumberIsZero_ShouldHaveValidationError()
+        {
+            // Arrange
+            _filterDto.PageNumber = default;
+
+            var query = new GetFiltered.Query(_filterDto);
+            
+            // Act
+            var result = _validator.TestValidate(query);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.Filter.PageNumber);
+        }
     }
 }

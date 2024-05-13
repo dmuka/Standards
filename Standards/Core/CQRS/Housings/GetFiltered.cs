@@ -62,9 +62,19 @@ namespace Standards.Core.CQRS.Housings
             public QueryValidator()
             {
                 RuleFor(_ => _.Filter)
-                    .NotEmpty();
+                    .NotEmpty()
+                    .ChildRules(filter =>
+                    {
+                        filter.RuleFor(_ => _.SearchQuery)
+                            .NotNull();
+
+                        filter.RuleFor(_ => _.PageNumber)
+                            .GreaterThan(default(int));
+
+                        filter.RuleFor(_ => _.ItemsPerPage)
+                            .GreaterThan(default(int));
+                    });
             }
         }
-
     }
 }
