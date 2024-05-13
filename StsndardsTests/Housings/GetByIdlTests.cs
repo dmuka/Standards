@@ -71,5 +71,19 @@ namespace Standards.CQRS.Tests.Housings
             // Assert
             Assert.That(result, Is.EqualTo(expected));
         }
+
+        [Test]
+        public void Handler_IfCancellationTokenIsActive_ReturnNull()
+        {
+            // Arrange
+            var query = new GetById.Query(_id);
+            _cancellationToken = new CancellationToken(true);
+
+            // Act
+            var result = _handler.Handle(query, _cancellationToken).Result;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(null));
+        }
     }
 }

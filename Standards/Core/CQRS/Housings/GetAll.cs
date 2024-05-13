@@ -26,7 +26,7 @@ namespace Standards.Core.CQRS.Housings
             {
                 var housings = await _repository.GetListAsync<HousingDto>(cancellationToken);
 
-                return housings;
+                return housings is null ? Array.Empty<HousingDto>() : housings;
             }
         }
     }
