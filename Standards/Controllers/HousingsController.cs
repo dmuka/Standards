@@ -65,15 +65,14 @@ namespace Standards.Controllers
         }
 
         [HttpPut]
-        [Route("edit/{id}")]
-        public void EditHousing(int id, [FromBody]HousingDto housing)
+        [Route("edit")]
+        public async Task<IActionResult> EditHousing([FromBody]HousingDto housing)
         {
-            if (housing.Id == id)
-            {
-                _repository.Update(housing);
+            var query = new Edit.Query(housing);
+            
+            var result = await _sender.Send(query);
 
-                _repository.SaveChangesAsync();
-            }
+            return Ok(result);
         }
 
         [HttpDelete]
