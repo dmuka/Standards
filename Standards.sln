@@ -5,7 +5,7 @@ VisualStudioVersion = 17.3.32901.215
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Standards", "Standards\Standards.csproj", "{EA2C3757-2CAB-40A9-8AFA-AB1494290AF2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Standards.CQRS.Tests", "StsndardsTests\Standards.CQRS.Tests.csproj", "{6334555E-B000-4813-B644-8B0F59548054}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Standards.CQRS.Tests", "StandardsTests\Standards.CQRS.Tests.csproj", "{6334555E-B000-4813-B644-8B0F59548054}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
