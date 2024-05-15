@@ -55,18 +55,13 @@ namespace Standards.Controllers
 
         [HttpPost]
         [Route("add")]
-        public void CreateHousing([FromBody] HousingDto housing)
+        public async Task<IActionResult> CreateHousing([FromBody] HousingDto housing)
         {
-            _repository.Add(new HousingDto
-            {
-                Name = housing.Name,
-                ShortName = housing.ShortName,
-                Address = housing.Address,
-                FloorsCount = housing.FloorsCount,
-                Comments = housing.Comments
-            });
+            var query = new Create.Query(housing);
 
-            _repository.SaveChangesAsync();
+            var result = await _sender.Send(query);
+
+            return Ok(result);
         }
 
         [HttpPut]

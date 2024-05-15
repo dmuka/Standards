@@ -947,6 +947,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             int count = await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+
             return count;
         }
 
