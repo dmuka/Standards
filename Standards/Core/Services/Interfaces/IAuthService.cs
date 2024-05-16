@@ -1,4 +1,5 @@
 ﻿using Standards.Core.Models.Users;
+using Standards.Core.Services.Enums;
 using System.Security.Claims;
 
 namespace Standards.Core.Services.Interfaces
@@ -7,11 +8,9 @@ namespace Standards.Core.Services.Interfaces
     {
         Task<User> Authenticate(string username, string password);
 
-        ClaimsPrincipal ValidateRefreshToken(string refreshToken);
+        ClaimsPrincipal ValidateToken(string token);
 
-        Task<string> GenerateAccessToken(int userId);
-
-        Task<string> GenerateRefreshToken(int userId);
+        Task<string> GenerateToken(int userId, TokenType tokenType);
 
         (byte[] salt, byte[] hash) GetPasswordHashAndSalt(string password);
     }

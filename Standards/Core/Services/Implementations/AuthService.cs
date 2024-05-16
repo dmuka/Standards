@@ -1,5 +1,6 @@
 ﻿using Microsoft.IdentityModel.Tokens;
 using Standards.Core.Models.Users;
+using Standards.Core.Services.Enums;
 using Standards.Core.Services.Interfaces;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
@@ -10,6 +11,9 @@ namespace Standards.Core.Services.Implementations
 {
     public class AuthService : IAuthService
     {
+        private const int AccessTokenExpirationInMinutes = 15;
+        private const int RefreshTokenExpirationInMonths = 1;
+
         private readonly IConfiguration _configuration;
         private readonly IRepository _repository;
 
@@ -27,8 +31,8 @@ namespace Standards.Core.Services.Implementations
 
             if (!VerifyPasswordHash(password, user.PasswordHash, user.PasswordSalt)) return null;
 
-            user.RefreshToken = await GenerateRefreshToken(user.Id);
-            user.AccessToken = await GenerateAccessToken(user.Id);
+            user.RefreshToken = await GenerateToken(user.Id, TokenType.Refresh);
+            user.AccessToken = await GenerateToken(user.Id, TokenType.Access);
 
             user.PasswordHash = null;
             user.PasswordSalt = null;
@@ -53,7 +57,7 @@ namespace Standards.Core.Services.Implementations
             return (salt, hash);
         }
 
-        public ClaimsPrincipal ValidateRefreshToken(string refreshToken)
+        public ClaimsPrincipal ValidateToken(string token)
         {
             try
             {
@@ -69,7 +73,7 @@ namespace Standards.Core.Services.Implementations
                     ClockSkew = TimeSpan.Zero
                 };
 
-                var principal = tokenHandler.ValidateToken(refreshToken, validationParameters, out var validatedToken);
+                var principal = tokenHandler.ValidateToken(token, validationParameters, out var validatedToken);
 
                 return principal;
             }
@@ -79,7 +83,7 @@ namespace Standards.Core.Services.Implementations
             }
         }
 
-        public async Task<string> GenerateAccessToken(int userId)
+        public async Task<string> GenerateToken(int userId, TokenType tokenType)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = GetKey();
@@ -89,31 +93,15 @@ namespace Standards.Core.Services.Implementations
             var tokenDescriptor = new SecurityTokenDescriptor
             {
                 Subject = GetClaimsIdentity(user),
-                Expires = DateTime.UtcNow.AddMinutes(15),
+                Expires = tokenType == TokenType.Access 
+                    ? DateTime.UtcNow.AddMinutes(AccessTokenExpirationInMinutes) 
+                    : DateTime.UtcNow.AddMonths(RefreshTokenExpirationInMonths),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
             };
 
             var accessToken = tokenHandler.CreateToken(tokenDescriptor);
 
             return tokenHandler.WriteToken(accessToken);
-        }
-
-        public async Task<string> GenerateRefreshToken(int userId)
-        {
-            var tokenHandler = new JwtSecurityTokenHandler();
-            var key = GetKey();
-
-            var user = await _repository.GetByIdAsync<User>(userId);
-
-            var refreshTokenDescriptor = new SecurityTokenDescriptor
-            {
-                Subject = GetClaimsIdentity(user),
-                Expires = DateTime.UtcNow.AddMonths(1),
-                SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(key), SecurityAlgorithms.HmacSha256Signature)
-            };
-
-            var refreshToken = tokenHandler.CreateToken(refreshTokenDescriptor);
-            return tokenHandler.WriteToken(refreshToken);
         }
 
         private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] storedSalt)
@@ -140,7 +128,7 @@ namespace Standards.Core.Services.Implementations
             return Encoding.ASCII.GetBytes(_configuration["Secrets:JwtBearerKey"]);
         }
 
-        private ClaimsIdentity GetClaimsIdentity(User user)
+        private static ClaimsIdentity GetClaimsIdentity(User user)
         {
             return new ClaimsIdentity(new Claim[]
                 {
