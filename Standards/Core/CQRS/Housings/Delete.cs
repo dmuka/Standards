@@ -4,19 +4,20 @@ using Standards.Core.Models.DTOs;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Validators;
 using System.Data;
+using System.Linq.Expressions;
 
 namespace Standards.Core.CQRS.Housings
 {
-    public class Edit
+    public class Delete
     {
         public class Query : IRequest<int>
         {
-            public Query(HousingDto housingDto)
+            public Query(int id)
             {
-                HousingDto = housingDto;
+                Id = id;
             }
 
-            public HousingDto HousingDto{ get; set; }
+            public int Id { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, int>
@@ -34,7 +35,9 @@ namespace Standards.Core.CQRS.Housings
                 {
                     try
                     {
-                        _repository.Update(request.HousingDto);
+                        var housing = await _repository.GetByIdAsync<HousingDto>(request.Id, cancellationToken);
+
+                        await _repository.DeleteAsync(housing, cancellationToken);
 
                         var result = await _repository.SaveChangesAsync(cancellationToken);
 
@@ -55,26 +58,9 @@ namespace Standards.Core.CQRS.Housings
             {
                 RuleLevelCascadeMode = CascadeMode.Stop;
 
-                RuleFor(query => query.HousingDto)
-                    .NotEmpty()
-                    .ChildRules(housing =>
-                    {
-                        housing.RuleFor(_ => _.Id)
-                            .GreaterThan(default(int))
-                            .IdValidator(repository);
-
-                        housing.RuleFor(_ => _.Name)
-                            .NotEmpty();
-
-                        housing.RuleFor(_ => _.ShortName)
-                            .NotEmpty();
-
-                        housing.RuleFor(_ => _.FloorsCount)
-                            .GreaterThan(default(int));
-
-                        housing.RuleFor(_ => _.Address)
-                            .NotEmpty();
-                    });
+                RuleFor(query => query.Id)
+                    .GreaterThan(default(int))
+                    .IdValidator<Query, HousingDto>(repository);
             }
         }
     }

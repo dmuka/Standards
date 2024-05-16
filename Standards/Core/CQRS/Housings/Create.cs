@@ -2,6 +2,7 @@
 using MediatR;
 using Standards.Core.Models.DTOs;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using System.Data;
 
 namespace Standards.Core.CQRS.Housings
 {
@@ -14,7 +15,7 @@ namespace Standards.Core.CQRS.Housings
                 HousingDto = housingDto;
             }
 
-            public HousingDto HousingDto{ get; set; }
+            public HousingDto HousingDto { get; set; }
         }
 
         public class QueryHandler : IRequestHandler<Query, int>
@@ -28,11 +29,23 @@ namespace Standards.Core.CQRS.Housings
 
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
-                await _repository.AddAsync(request.HousingDto, cancellationToken);
+                using (var transaction = await _repository.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken))
+                {
+                    try
+                    {
 
-                var result = await _repository.SaveChangesAsync(cancellationToken);
+                        await _repository.AddAsync(request.HousingDto, cancellationToken);
 
-                return result;
+                        var result = await _repository.SaveChangesAsync(cancellationToken);
+
+                        return result;
+                    }
+                    catch
+                    {
+                        transaction.Rollback();
+                        throw;
+                    }
+                }
             }
         }
 
