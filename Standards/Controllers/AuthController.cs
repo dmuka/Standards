@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Standards.Core.Models.DTOs;
+using Standards.Core.Services.Enums;
 using Standards.Core.Services.Interfaces;
 
 namespace Standards.Controllers
@@ -32,14 +33,14 @@ namespace Standards.Controllers
         [HttpPost("/token/refresh")]
         public IActionResult RefreshToken(string refreshToken)
         {
-            var principal = _authService.ValidateRefreshToken(refreshToken);
+            var principal = _authService.ValidateToken(refreshToken);
 
             if (principal != null)
             {
                 var userId = int.Parse(principal.Claims.FirstOrDefault(x => x.Type.Equals("sid", StringComparison.OrdinalIgnoreCase))?.Value);
 
-                var accessToken = _authService.GenerateAccessToken(userId);
-                var newRefreshToken = _authService.GenerateRefreshToken(userId);
+                var accessToken = _authService.GenerateToken(userId, TokenType.Access);
+                var newRefreshToken = _authService.GenerateToken(userId, TokenType.Refresh);
 
                 return Ok(new { AccessToken = accessToken, RefreshToken = newRefreshToken });
             }
@@ -55,7 +56,7 @@ namespace Standards.Controllers
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            var principal = _authService.ValidateAccessToken(token);
+            var principal = _authService.ValidateToken(token);
 
             if (principal != null)
             {

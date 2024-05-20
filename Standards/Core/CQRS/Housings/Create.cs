@@ -1,11 +1,13 @@
 ﻿using FluentValidation;
 using MediatR;
+using Standards.Core.CQRS.Common.Attributes;
 using Standards.Core.Models.DTOs;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using System.Data;
 
 namespace Standards.Core.CQRS.Housings
 {
+    [TransactionScope]
     public class Create
     {
         public class Query : IRequest<int>
@@ -29,23 +31,11 @@ namespace Standards.Core.CQRS.Housings
 
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
-                using (var transaction = await _repository.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken))
-                {
-                    try
-                    {
+                await _repository.AddAsync(request.HousingDto, cancellationToken);
 
-                        await _repository.AddAsync(request.HousingDto, cancellationToken);
+                var result = await _repository.SaveChangesAsync(cancellationToken);
 
-                        var result = await _repository.SaveChangesAsync(cancellationToken);
-
-                        return result;
-                    }
-                    catch
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
+                return result;
             }
         }
 
