@@ -1,13 +1,13 @@
 ﻿using FluentValidation;
 using MediatR;
+using Standards.Core.CQRS.Common.Attributes;
 using Standards.Core.Models.DTOs;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Validators;
-using System.Data;
-using System.Linq.Expressions;
 
 namespace Standards.Core.CQRS.Housings
 {
+    [TransactionScope]
     public class Delete
     {
         public class Query : IRequest<int>
@@ -31,24 +31,13 @@ namespace Standards.Core.CQRS.Housings
 
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
-                using (var transaction = await _repository.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken))
-                {
-                    try
-                    {
-                        var housing = await _repository.GetByIdAsync<HousingDto>(request.Id, cancellationToken);
+                var housing = await _repository.GetByIdAsync<HousingDto>(request.Id, cancellationToken);
 
-                        await _repository.DeleteAsync(housing, cancellationToken);
+                await _repository.DeleteAsync(housing, cancellationToken);
 
-                        var result = await _repository.SaveChangesAsync(cancellationToken);
+                var result = await _repository.SaveChangesAsync(cancellationToken);
 
-                        return result;
-                    }
-                    catch
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
-                }
+                return result;
             }
         }
 
