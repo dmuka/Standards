@@ -365,3 +365,4 @@ FodyWeavers.xsd
 /Serts/csr.pem
 /Serts/key.pem
 *.jwk
+/.idea/.idea.Standards/.idea
