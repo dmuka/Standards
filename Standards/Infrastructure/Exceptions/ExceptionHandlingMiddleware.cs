@@ -44,7 +44,7 @@ namespace Standards.Infrastructure.Exceptions
             response.ContentType = "application/json";
             response.StatusCode = statusCode;
 
-            _logger.LogError($"Status code: {statusCode} - exception message: {exceptionMessage}");
+            _logger.LogError("Status code: {statusCode} - exception message: {exceptionMessage}", statusCode, exceptionMessage);
             
             var result = JsonSerializer.Serialize(new { message = exceptionMessage });
 

@@ -11,7 +11,7 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
                 throw new ArgumentNullException(nameof(reader));
             }
 
-            for (int i = 0; i < reader.FieldCount; i++)
+            for (var i = 0; i < reader.FieldCount; i++)
             {
                 if (reader.GetName(i).Equals(columnName, StringComparison.OrdinalIgnoreCase))
                 {
