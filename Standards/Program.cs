@@ -20,6 +20,8 @@ using Standards.Infrastructure.Logging;
 using Standards.Infrastructure.Mediatr;
 using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
 using System.Text;
+using Standards.Infrastructure.QueryableWrapper.Implementation;
+using Standards.Infrastructure.QueryableWrapper.Interface;
 
 namespace Standards
 {
@@ -137,7 +139,8 @@ namespace Standards
 
             builder.Services.AddScoped<IQueryBuilder<HousingDto, HousingsFilterDto>, QueryBuilder<HousingDto, HousingsFilterDto>>();
             builder.Services.AddScoped<IQueryBuilderInitializer<HousingDto, HousingsFilterDto>, HousingsQueryBuilderInitializer>();
-
+            builder.Services.AddScoped<IQueryableWrapper<HousingDto>, QueryableWrapper<HousingDto>>();
+            
             builder.Services.AddControllers();
             builder.Services.AddRazorPages();
 
