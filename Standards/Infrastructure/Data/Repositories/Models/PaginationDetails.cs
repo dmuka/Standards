@@ -3,7 +3,7 @@
     /// <summary>
     /// This object holds the pagination query specifications.
     /// </summary>
-    /// <typeparam name="T">The database entity i.e an <see cref="DbSet{TEntity}"/> object.</typeparam>
+    /// <typeparam name="T">The database entity i.e. an <see cref="DbSet{TEntity}"/> object.</typeparam>
     public class PaginationDetails<T> : BaseQueryDetails<T> where T : class
     {
         /// <summary>

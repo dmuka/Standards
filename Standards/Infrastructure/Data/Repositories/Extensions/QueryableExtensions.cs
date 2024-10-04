@@ -7,7 +7,7 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
     /// <summary>
     /// Contains <see cref="Queryable"/> extension methods for paginated list.
     /// </summary>
-    public static class IQueryableExtensions
+    public static class QueryableExtensions
     {
         /// <summary>
         /// Convert the <see cref="IQueryable{T}"/> into paginated list.
@@ -28,10 +28,7 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
             CancellationToken cancellationToken = default)
             where T : class
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             if (pageIndex < 1)
             {
@@ -43,11 +40,11 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
                 throw new ArgumentOutOfRangeException(nameof(pageSize), "The value of pageSize must be greater than 0.");
             }
 
-            long count = await source.LongCountAsync(cancellationToken);
+            var count = await source.LongCountAsync(cancellationToken);
 
-            int skip = (pageIndex - 1) * pageSize;
+            var skip = (pageIndex - 1) * pageSize;
 
-            List<T> items = await source.Skip(skip).Take(pageSize).ToListAsync(cancellationToken);
+            var items = await source.Skip(skip).Take(pageSize).ToListAsync(cancellationToken);
 
             var paginatedList = new PaginatedList<T>(items, count, pageIndex, pageSize);
 
@@ -59,26 +56,20 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
         /// </summary>
         /// <typeparam name="T">Type of the <see cref="IQueryable"/>.</typeparam>
         /// <param name="source">The type to be extended.</param>
-        /// <param name="specification">An object of <see cref="PaginationSpecification{T}"/>.</param>
+        /// <param name="details">An object of <see cref="PaginationDetails{T}"/>.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task"/> of <see cref="PaginatedList{T}"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="source"/> is <see langword="null"/>.</exception>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="specification"/> is smaller than 1.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="details"/> is smaller than 1.</exception>
         public static async Task<PaginatedList<T>> ToPaginatedListAsync<T>(
             this IQueryable<T> source,
             PaginationDetails<T> details,
             CancellationToken cancellationToken = default)
             where T : class
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (details == null)
-            {
-                throw new ArgumentNullException(nameof(details));
-            }
+            ArgumentNullException.ThrowIfNull(details);
 
             if (details.PageIndex < 1)
             {
@@ -90,24 +81,24 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
                 throw new ArgumentOutOfRangeException(nameof(details), $"The value of {nameof(details.PageSize)} must be greater than 0.");
             }
 
-            IQueryable<T> countSource = source;
+            var countSource = source;
 
             // modify the IQueryable using the details expression criteria
             if (details.Conditions != null && details.Conditions.Count != 0)
             {
-                foreach (Expression<Func<T, bool>> condition in details.Conditions)
+                foreach (var condition in details.Conditions)
                 {
                     countSource = countSource.Where(condition);
                 }
             }
 
-            long count = await countSource.LongCountAsync(cancellationToken);
+            var count = await countSource.LongCountAsync(cancellationToken);
 
             source = source.GetSpecifiedQuery(details);
 
-            List<T> items = await source.ToListAsync(cancellationToken);
+            var items = await source.ToListAsync(cancellationToken);
 
-            PaginatedList<T> paginatedList = new PaginatedList<T>(items, count, details.PageIndex, details.PageSize);
+            var paginatedList = new PaginatedList<T>(items, count, details.PageIndex, details.PageSize);
 
             return paginatedList;
         }
@@ -141,15 +132,9 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
 
         public static IQueryable<T> GetSpecifiedQuery<T>(this IQueryable<T> inputQuery, PaginationDetails<T> details) where T : class
         {
-            if (inputQuery == null)
-            {
-                throw new ArgumentNullException(nameof(inputQuery));
-            }
+            ArgumentNullException.ThrowIfNull(inputQuery);
 
-            if (details == null)
-            {
-                throw new ArgumentNullException(nameof(details));
-            }
+            ArgumentNullException.ThrowIfNull(details);
 
             if (details.PageIndex < 1)
             {
@@ -164,7 +149,7 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
             var query = inputQuery.GetSpecifiedQuery((BaseQueryDetails<T>)details);
 
             // Apply paging if enabled
-            int skip = (details.PageIndex - 1) * details.PageSize;
+            var skip = (details.PageIndex - 1) * details.PageSize;
 
             query = query.Skip(skip).Take(details.PageSize);
 
@@ -174,22 +159,16 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
         public static IQueryable<T> GetSpecifiedQuery<T>(this IQueryable<T> inputQuery, BaseQueryDetails<T> details)
             where T : class
         {
-            if (inputQuery == null)
-            {
-                throw new ArgumentNullException(nameof(inputQuery));
-            }
+            ArgumentNullException.ThrowIfNull(inputQuery);
 
-            if (details == null)
-            {
-                throw new ArgumentNullException(nameof(details));
-            }
+            ArgumentNullException.ThrowIfNull(details);
 
-            IQueryable<T> query = inputQuery;
+            var query = inputQuery;
 
             // modify the IQueryable using the specification's criteria expression
             if (details.Conditions != null && details.Conditions.Count != 0)
             {
-                foreach (Expression<Func<T, bool>> specificationCondition in details.Conditions)
+                foreach (var specificationCondition in details.Conditions)
                 {
                     query = query.Where(specificationCondition);
                 }

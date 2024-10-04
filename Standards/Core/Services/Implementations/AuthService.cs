@@ -9,23 +9,14 @@ using System.Text;
 
 namespace Standards.Core.Services.Implementations
 {
-    public class AuthService : IAuthService
+    public class AuthService(IConfiguration configuration, IRepository repository) : IAuthService
     {
         private const int AccessTokenExpirationInMinutes = 15;
         private const int RefreshTokenExpirationInMonths = 1;
 
-        private readonly IConfiguration _configuration;
-        private readonly IRepository _repository;
-
-        public AuthService(IConfiguration configuration, IRepository repository)
-        {
-            _configuration = configuration;
-            _repository = repository;
-        }
-
         public async Task<User> Authenticate(string username, string password)
         {
-            var user = await _repository.GetAsync<User>(user => user.UserName == username);
+            var user = await repository.GetAsync<User>(user => user.UserName == username);
 
             if (user == null) return null;
 
@@ -88,7 +79,7 @@ namespace Standards.Core.Services.Implementations
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = GetKey();
 
-            var user = await _repository.GetByIdAsync<User>(userId);
+            var user = await repository.GetByIdAsync<User>(userId);
 
             var tokenDescriptor = new SecurityTokenDescriptor
             {
@@ -125,7 +116,7 @@ namespace Standards.Core.Services.Implementations
 
         private byte[]? GetKey()
         {
-            return Encoding.ASCII.GetBytes(_configuration["Secrets:JwtBearerKey"]);
+            return Encoding.ASCII.GetBytes(configuration["Secrets:JwtBearerKey"]);
         }
 
         private static ClaimsIdentity GetClaimsIdentity(User user)

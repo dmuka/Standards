@@ -11,27 +11,21 @@ using System.Linq.Expressions;
 
 namespace Standards.Infrastructure.Data.Repositories.Implementations
 {
-    internal sealed class Repository<TDbContext> : IRepository where TDbContext : DbContext
+    internal sealed class Repository<TDbContext>(TDbContext dbContext) : IRepository
+        where TDbContext : DbContext
     {
-        private readonly TDbContext _dbContext;
-
-        public Repository(TDbContext dbContext)
-        {
-            _dbContext = dbContext;
-        }
-
         public async Task<IDbContextTransaction> BeginTransactionAsync(
             IsolationLevel isolationLevel = IsolationLevel.Unspecified,
             CancellationToken cancellationToken = default)
         {
-            var dbContextTransaction = await _dbContext.Database.BeginTransactionAsync(isolationLevel, cancellationToken);
+            var dbContextTransaction = await dbContext.Database.BeginTransactionAsync(isolationLevel, cancellationToken);
 
             return dbContextTransaction;
         }
 
         public IQueryable<T> GetQueryable<T>() where T : class
         {
-            return _dbContext.Set<T>();
+            return dbContext.Set<T>();
         }
 
         #region GetListAsync
@@ -59,7 +53,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (includes != null)
             {
@@ -95,7 +89,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (condition != null)
             {
@@ -127,7 +121,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (specification != null)
             {
@@ -147,12 +141,9 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             CancellationToken cancellationToken = default)
             where T : class
         {
-            if (selectExpression == null)
-            {
-                throw new ArgumentNullException(nameof(selectExpression));
-            }
+            ArgumentNullException.ThrowIfNull(selectExpression);
 
-            var entities = await _dbContext.Set<T>()
+            var entities = await dbContext.Set<T>()
                 .Select(selectExpression).ToListAsync(cancellationToken).ConfigureAwait(false);
 
             return entities;
@@ -164,12 +155,9 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             CancellationToken cancellationToken = default)
             where T : class
         {
-            if (selectExpression == null)
-            {
-                throw new ArgumentNullException(nameof(selectExpression));
-            }
+            ArgumentNullException.ThrowIfNull(selectExpression);
 
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (condition != null)
             {
@@ -188,12 +176,9 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             CancellationToken cancellationToken = default)
             where T : class
         {
-            if (selectExpression == null)
-            {
-                throw new ArgumentNullException(nameof(selectExpression));
-            }
+            ArgumentNullException.ThrowIfNull(selectExpression);
 
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (details != null)
             {
@@ -208,12 +193,9 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             PaginationDetails<T> details,
             CancellationToken cancellationToken = default) where T : class
         {
-            if (details == null)
-            {
-                throw new ArgumentNullException(nameof(details));
-            }
+            ArgumentNullException.ThrowIfNull(details);
 
-            var paginatedList = await _dbContext.Set<T>().ToPaginatedListAsync(details, cancellationToken);
+            var paginatedList = await dbContext.Set<T>().ToPaginatedListAsync(details, cancellationToken);
 
             return paginatedList;
         }
@@ -225,17 +207,11 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             where T : class
             where TProjectedType : class
         {
-            if (details == null)
-            {
-                throw new ArgumentNullException(nameof(details));
-            }
+            ArgumentNullException.ThrowIfNull(details);
 
-            if (selectExpression == null)
-            {
-                throw new ArgumentNullException(nameof(selectExpression));
-            }
+            ArgumentNullException.ThrowIfNull(selectExpression);
 
-            var query = _dbContext.Set<T>().GetSpecifiedQuery((BaseQueryDetails<T>)details);
+            var query = dbContext.Set<T>().GetSpecifiedQuery((BaseQueryDetails<T>)details);
 
             var paginatedList = await query.Select(selectExpression)
                 .ToPaginatedListAsync(details.PageIndex, details.PageSize, cancellationToken);
@@ -247,10 +223,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
         #region GetByIdAsync
         public Task<T> GetByIdAsync<T>(object id, CancellationToken cancellationToken = default) where T : class
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+            ArgumentNullException.ThrowIfNull(id);
 
             return GetByIdAsync<T>(id, false, cancellationToken);
         }
@@ -258,10 +231,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
         public Task<T> GetByIdAsync<T>(object id, bool asNoTracking, CancellationToken cancellationToken = default)
             where T : class
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+            ArgumentNullException.ThrowIfNull(id);
 
             return GetByIdAsync<T>(id, null, asNoTracking, cancellationToken);
         }
@@ -271,10 +241,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
             CancellationToken cancellationToken = default) where T : class
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+            ArgumentNullException.ThrowIfNull(id);
 
             return GetByIdAsync(id, includes, false, cancellationToken);
         }
@@ -285,12 +252,9 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             bool asNoTracking = false,
             CancellationToken cancellationToken = default) where T : class
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+            ArgumentNullException.ThrowIfNull(id);
 
-            var entityType = _dbContext.Model.FindEntityType(typeof(T));
+            var entityType = dbContext.Model.FindEntityType(typeof(T));
 
             var primaryKeyProperties = entityType.FindPrimaryKey().Properties;
             var primaryKeyName = primaryKeyProperties.Select(p => p.Name).FirstOrDefault();
@@ -318,7 +282,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             var body = Expression.Equal(member, constant);
             var expressionTree = Expression.Lambda<Func<T, bool>>(body, parameter);
 
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (includes != null)
             {
@@ -340,17 +304,11 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             Expression<Func<T, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default) where T : class
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+            ArgumentNullException.ThrowIfNull(id);
 
-            if (selectExpression == null)
-            {
-                throw new ArgumentNullException(nameof(selectExpression));
-            }
+            ArgumentNullException.ThrowIfNull(selectExpression);
 
-            var entityType = _dbContext.Model.FindEntityType(typeof(T));
+            var entityType = dbContext.Model.FindEntityType(typeof(T));
 
             var primaryKeyProperties = entityType.FindPrimaryKey().Properties;
             var primaryKeyName = primaryKeyProperties.Select(p => p.Name).FirstOrDefault();
@@ -378,7 +336,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             var body = Expression.Equal(member, constant);
             var expressionTree = Expression.Lambda<Func<T, bool>>(body, parameter);
 
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             return await query.Where(expressionTree)
                               .Select(selectExpression)
@@ -419,7 +377,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (condition != null)
             {
@@ -445,12 +403,9 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             CancellationToken cancellationToken = default)
             where T : class
         {
-            if (selectExpression == null)
-            {
-                throw new ArgumentNullException(nameof(selectExpression));
-            }
+            ArgumentNullException.ThrowIfNull(selectExpression);
 
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (condition != null)
             {
@@ -469,7 +424,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
 
         public async Task<T> GetAsync<T>(QueryDetails<T> details, bool asNoTracking, CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (details != null)
             {
@@ -489,12 +444,9 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             Expression<Func<T, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default) where T : class
         {
-            if (selectExpression == null)
-            {
-                throw new ArgumentNullException(nameof(selectExpression));
-            }
+            ArgumentNullException.ThrowIfNull(selectExpression);
 
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (details != null)
             {
@@ -513,7 +465,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
 
         public async Task<bool> ExistsAsync<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (condition == null)
             {
@@ -527,12 +479,9 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
 
         public async Task<bool> ExistsByIdAsync<T>(object id, CancellationToken cancellationToken = default) where T : class
         {
-            if (id == null)
-            {
-                throw new ArgumentNullException(nameof(id));
-            }
+            ArgumentNullException.ThrowIfNull(id);
 
-            var entityType = _dbContext.Model.FindEntityType(typeof(T));
+            var entityType = dbContext.Model.FindEntityType(typeof(T));
 
             var primaryKeyName = entityType.FindPrimaryKey().Properties.Select(p => p.Name).FirstOrDefault();
             var primaryKeyType = entityType.FindPrimaryKey().Properties.Select(p => p.ClrType).FirstOrDefault();
@@ -553,15 +502,15 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
                 throw new ArgumentException($"You can not assign a value of type {id.GetType()} to a property of type {primaryKeyType}");
             }
 
-            ParameterExpression pe = Expression.Parameter(typeof(T), "entity");
-            MemberExpression me = Expression.Property(pe, primaryKeyName);
-            ConstantExpression constant = Expression.Constant(primaryKeyValue, primaryKeyType);
-            BinaryExpression body = Expression.Equal(me, constant);
-            Expression<Func<T, bool>> expressionTree = Expression.Lambda<Func<T, bool>>(body, new[] { pe });
+            var pe = Expression.Parameter(typeof(T), "entity");
+            var me = Expression.Property(pe, primaryKeyName);
+            var constant = Expression.Constant(primaryKeyValue, primaryKeyType);
+            var body = Expression.Equal(me, constant);
+            var expressionTree = Expression.Lambda<Func<T, bool>>(body, new[] { pe });
 
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
-            bool isExistent = await query.AnyAsync(expressionTree, cancellationToken).ConfigureAwait(false);
+            var isExistent = await query.AnyAsync(expressionTree, cancellationToken).ConfigureAwait(false);
 
             return isExistent;
         }
@@ -570,13 +519,14 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
         #region GetCount
         public async Task<int> GetCountAsync<T>(CancellationToken cancellationToken = default) where T : class
         {
-            int count = await _dbContext.Set<T>().CountAsync(cancellationToken).ConfigureAwait(false);
+            var count = await dbContext.Set<T>().CountAsync(cancellationToken).ConfigureAwait(false);
+            
             return count;
         }
 
         public async Task<int> GetCountAsync<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (condition != null)
             {
@@ -588,14 +538,13 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
 
         public async Task<int> GetCountAsync<T>(IEnumerable<Expression<Func<T, bool>>> conditions, CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
-            if (conditions != null)
+            if (conditions == null) return await query.CountAsync(cancellationToken).ConfigureAwait(false);
+            
+            foreach (Expression<Func<T, bool>> expression in conditions)
             {
-                foreach (Expression<Func<T, bool>> expression in conditions)
-                {
-                    query = query.Where(expression);
-                }
+                query = query.Where(expression);
             }
 
             return await query.CountAsync(cancellationToken).ConfigureAwait(false);
@@ -603,14 +552,15 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
 
         public async Task<long> GetLongCountAsync<T>(CancellationToken cancellationToken = default) where T : class
         {
-            long count = await _dbContext.Set<T>().LongCountAsync(cancellationToken).ConfigureAwait(false);
+            var count = await dbContext.Set<T>().LongCountAsync(cancellationToken).ConfigureAwait(false);
+            
             return count;
         }
 
         public async Task<long> GetLongCountAsync<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default)
             where T : class
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
             if (condition != null)
             {
@@ -622,14 +572,13 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
 
         public async Task<long> GetLongCountAsync<T>(IEnumerable<Expression<Func<T, bool>>> conditions, CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = _dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>();
 
-            if (conditions != null)
+            if (conditions == null) return await query.LongCountAsync(cancellationToken).ConfigureAwait(false);
+            
+            foreach (Expression<Func<T, bool>> expression in conditions)
             {
-                foreach (Expression<Func<T, bool>> expression in conditions)
-                {
-                    query = query.Where(expression);
-                }
+                query = query.Where(expression);
             }
 
             return await query.LongCountAsync(cancellationToken).ConfigureAwait(false);
@@ -646,7 +595,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
 
             var parameters = new List<object>();
 
-            var items = await _dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
+            var items = await dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
 
             return items;
         }
@@ -663,7 +612,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
 
             var parameters = new List<object>() { parameter };
 
-            var items = await _dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
+            var items = await dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
 
             return items;
         }
@@ -678,7 +627,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
                 throw new ArgumentNullException(nameof(sql));
             }
 
-            List<T> items = await _dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
+            List<T> items = await dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
             return items;
         }
 
@@ -692,7 +641,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
                 throw new ArgumentNullException(nameof(sql));
             }
 
-            var items = await _dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
+            var items = await dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
 
             return items;
         }
@@ -701,13 +650,10 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
         #region Insert
         public async Task<object[]> InsertAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
-            var entityEntry = await _dbContext.Set<TEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
-            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            var entityEntry = await dbContext.Set<TEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             var primaryKeyValue = entityEntry.Metadata.FindPrimaryKey().Properties.
                 Select(p => entityEntry.Property(p.Name).CurrentValue).ToArray();
@@ -717,137 +663,112 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
 
         public async Task InsertAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : class
         {
-            if (entities == null)
-            {
-                throw new ArgumentNullException(nameof(entities));
-            }
+            ArgumentNullException.ThrowIfNull(entities);
 
-            await _dbContext.Set<TEntity>().AddRangeAsync(entities, cancellationToken).ConfigureAwait(false);
-            await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            await dbContext.Set<TEntity>().AddRangeAsync(entities, cancellationToken).ConfigureAwait(false);
+            await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
         #region Raw SQL - returns the number of affected rows
         public Task<int> ExecuteSqlCommandAsync(string sql, CancellationToken cancellationToken = default)
         {
-            return _dbContext.Database.ExecuteSqlRawAsync(sql, cancellationToken);
+            return dbContext.Database.ExecuteSqlRawAsync(sql, cancellationToken);
         }
 
         public Task<int> ExecuteSqlCommandAsync(string sql, params object[] parameters)
         {
-            return _dbContext.Database.ExecuteSqlRawAsync(sql, parameters);
+            return dbContext.Database.ExecuteSqlRawAsync(sql, parameters);
         }
 
         public Task<int> ExecuteSqlCommandAsync(string sql, IEnumerable<object> parameters, CancellationToken cancellationToken = default)
         {
-            return _dbContext.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
+            return dbContext.Database.ExecuteSqlRawAsync(sql, parameters, cancellationToken);
         }
         #endregion
 
         #region Add
         public void Add<TEntity>(TEntity entity) where TEntity : class
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
-            _dbContext.Set<TEntity>().Add(entity);
+            dbContext.Set<TEntity>().Add(entity);
         }
 
         public void Add<TEntity>(IEnumerable<TEntity> entities)
             where TEntity : class
         {
-            if (entities == null)
-            {
-                throw new ArgumentNullException(nameof(entities));
-            }
+            ArgumentNullException.ThrowIfNull(entities);
 
-            _dbContext.Set<TEntity>().AddRange(entities);
+            dbContext.Set<TEntity>().AddRange(entities);
         }
 
         public async Task AddAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
-            await _dbContext.Set<TEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
+            await dbContext.Set<TEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
         }
 
         public async Task AddAsync<TEntity>(IEnumerable<TEntity> entities, CancellationToken cancellationToken = default) where TEntity : class
         {
-            if (entities == null)
-            {
-                throw new ArgumentNullException(nameof(entities));
-            }
+            ArgumentNullException.ThrowIfNull(entities);
 
-            await _dbContext.Set<TEntity>().AddRangeAsync(entities, cancellationToken).ConfigureAwait(false);
+            await dbContext.Set<TEntity>().AddRangeAsync(entities, cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
         #region Update
         public void Update<TEntity>(TEntity entity) where TEntity : class
         {
-            if (entity == null)
+            ArgumentNullException.ThrowIfNull(entity);
+
+            var trackedEntity = dbContext.ChangeTracker.Entries<TEntity>().FirstOrDefault(x => x.Entity == entity);
+
+            if (trackedEntity != null) return;
+            
+            var entityType = dbContext.Model.FindEntityType(typeof(TEntity));
+
+            if (entityType == null)
             {
-                throw new ArgumentNullException(nameof(entity));
+                throw new InvalidOperationException($"{typeof(TEntity).Name} is not part of EF Core DbContext model");
             }
 
-            var trackedEntity = _dbContext.ChangeTracker.Entries<TEntity>().FirstOrDefault(x => x.Entity == entity);
+            var primaryKeyName = entityType.FindPrimaryKey().Properties.Select(p => p.Name).FirstOrDefault();
 
-            if (trackedEntity == null)
+            if (primaryKeyName != null)
             {
-                var entityType = _dbContext.Model.FindEntityType(typeof(TEntity));
+                var primaryKeyType = entityType.FindPrimaryKey().Properties.Select(p => p.ClrType).FirstOrDefault();
 
-                if (entityType == null)
+                var primaryKeyDefaultValue = primaryKeyType.IsValueType ? Activator.CreateInstance(primaryKeyType) : null;
+
+                var primaryValue = entity.GetType().GetProperty(primaryKeyName).GetValue(entity, null);
+
+                if (primaryKeyDefaultValue.Equals(primaryValue))
                 {
-                    throw new InvalidOperationException($"{typeof(TEntity).Name} is not part of EF Core DbContext model");
+                    throw new InvalidOperationException("The primary key value of the entity to be updated is not valid.");
                 }
-
-                var primaryKeyName = entityType.FindPrimaryKey().Properties.Select(p => p.Name).FirstOrDefault();
-
-                if (primaryKeyName != null)
-                {
-                    var primaryKeyType = entityType.FindPrimaryKey().Properties.Select(p => p.ClrType).FirstOrDefault();
-
-                    var primaryKeyDefaultValue = primaryKeyType.IsValueType ? Activator.CreateInstance(primaryKeyType) : null;
-
-                    var primaryValue = entity.GetType().GetProperty(primaryKeyName).GetValue(entity, null);
-
-                    if (primaryKeyDefaultValue.Equals(primaryValue))
-                    {
-                        throw new InvalidOperationException("The primary key value of the entity to be updated is not valid.");
-                    }
-                }
-
-                _dbContext.Set<TEntity>().Update(entity);
             }
+
+            dbContext.Set<TEntity>().Update(entity);
         }
 
         public void Update<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
         {
-            if (entities == null)
-            {
-                throw new ArgumentNullException(nameof(entities));
-            }
+            ArgumentNullException.ThrowIfNull(entities);
 
-            _dbContext.Set<TEntity>().UpdateRange(entities);
+            dbContext.Set<TEntity>().UpdateRange(entities);
         }
 
         public async Task<int> UpdateAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
-            var trackedEntity = _dbContext.ChangeTracker.Entries<TEntity>().FirstOrDefault(x => x.Entity == entity);
+            var trackedEntity = dbContext.ChangeTracker.Entries<TEntity>().FirstOrDefault(x => x.Entity == entity);
 
             if (trackedEntity == null)
             {
-                var entityType = _dbContext.Model.FindEntityType(typeof(TEntity)) ?? throw new InvalidOperationException($"{typeof(TEntity).Name} is not part of EF Core DbContext model");
+                var entityType = dbContext.Model.FindEntityType(typeof(TEntity)) ?? throw new InvalidOperationException($"{typeof(TEntity).Name} is not part of EF Core DbContext model");
                 var primaryKeyName = entityType.FindPrimaryKey().Properties.Select(p => p.Name).FirstOrDefault();
 
                 if (primaryKeyName != null)
@@ -864,23 +785,21 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
                     }
                 }
 
-                _dbContext.Set<TEntity>().Update(entity);
+                dbContext.Set<TEntity>().Update(entity);
             }
 
-            var count = await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            var count = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return count;
         }
 
         public async Task<int> UpdateAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default) where T : class
         {
-            if (entities == null)
-            {
-                throw new ArgumentNullException(nameof(entities));
-            }
+            ArgumentNullException.ThrowIfNull(entities);
 
-            _dbContext.Set<T>().UpdateRange(entities);
-            int count = await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            dbContext.Set<T>().UpdateRange(entities);
+            var count = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            
             return count;
         }
         #endregion
@@ -888,72 +807,61 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
         #region Delete
         public async Task<int> DeleteAsync<T>(T entity, CancellationToken cancellationToken = default) where T : class
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
-            _dbContext.Set<T>().Remove(entity);
-            int count = await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            dbContext.Set<T>().Remove(entity);
+            var count = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return count;
         }
 
         public async Task<int> DeleteAsync<T>(IEnumerable<T> entities, CancellationToken cancellationToken = default) where T : class
         {
-            if (entities == null)
-            {
-                throw new ArgumentNullException(nameof(entities));
-            }
+            ArgumentNullException.ThrowIfNull(entities);
 
-            _dbContext.Set<T>().RemoveRange(entities);
-            int count = await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            dbContext.Set<T>().RemoveRange(entities);
+            var count = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            
             return count;
         }
 
         public void Delete<TEntity>(TEntity entity) where TEntity : class
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
-            _dbContext.Set<TEntity>().Remove(entity);
+            dbContext.Set<TEntity>().Remove(entity);
         }
 
-        public void Delete<TEntity>(int entityId) where TEntity : class
+        public async void Delete<TEntity>(int entityId) where TEntity : class
         {
-            var entity = _dbContext.Set<TEntity>().FindAsync(entityId).GetAwaiter().GetResult();
+            var entity = await dbContext.Set<TEntity>().FindAsync(entityId);
             if (entity == null)
             {
                 throw new ArgumentOutOfRangeException(nameof(entityId), "The entity id value of the entity to be deleted is not valid.");
             }
 
-            _dbContext.Set<TEntity>().Remove(entity);
-            _dbContext.SaveChangesAsync();
+            dbContext.Set<TEntity>().Remove(entity);
+            await dbContext.SaveChangesAsync();
         }
 
         public void Delete<TEntity>(IEnumerable<TEntity> entities) where TEntity : class
         {
-            if (entities == null)
-            {
-                throw new ArgumentNullException(nameof(entities));
-            }
+            ArgumentNullException.ThrowIfNull(entities);
 
-            _dbContext.Set<TEntity>().RemoveRange(entities);
+            dbContext.Set<TEntity>().RemoveRange(entities);
         }
         #endregion
 
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
-            int count = await _dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
+            var count = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
             return count;
         }
 
         public void ClearChangeTracker()
         {
-            _dbContext.ChangeTracker.Clear();
+            dbContext.ChangeTracker.Clear();
         }
     }
 }

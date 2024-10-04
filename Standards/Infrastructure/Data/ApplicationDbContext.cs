@@ -11,12 +11,8 @@ using Standards.Core.Models.Users;
 
 namespace Standards.Infrastructure.Data
 {
-    public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
-        {
-        }
-
         public DbSet<HousingDto> Housings { get; set; }
         public DbSet<Quantity> Quantities { get; set; }
         public DbSet<Room> Rooms { get; set; }

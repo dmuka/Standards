@@ -5,21 +5,15 @@ using Standards.Infrastructure.Filter.Models;
 
 namespace Standards.Core.CQRS.Housings.Filters
 {
-    public class SearchFilter : PaginationItem, IQueryBuilderItem<IQueryable<HousingDto>>
+    public class SearchFilter(HousingsFilterDto filterDto) : PaginationItem, IQueryBuilderItem<IQueryable<HousingDto>>
     {
         private const int MinLengthToSearch = 3;
-        private readonly HousingsFilterDto _filterDto;
-
-        public SearchFilter(HousingsFilterDto filterDto)
-        {
-            _filterDto = filterDto;
-        }
 
         public IQueryable<HousingDto> Execute(IQueryable<HousingDto> query)
         {
-            if (!string.IsNullOrEmpty(_filterDto.SearchQuery) && _filterDto.SearchQuery.Length >= MinLengthToSearch)
+            if (!string.IsNullOrEmpty(filterDto.SearchQuery) && filterDto.SearchQuery.Length >= MinLengthToSearch)
             {
-                query = query.Where(housing => housing.Name.Contains(_filterDto.SearchQuery));
+                query = query.Where(housing => housing.Name.Contains(filterDto.SearchQuery));
             }
 
             return query;

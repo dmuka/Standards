@@ -11,7 +11,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
 {
     /// <summary>
     /// Contains all the repository methods. If you register the multiple DbContexts, it will use the last one.
-    /// To use specific <see cref="DbContext"/> please use <see cref="IRepository{TDbContext}"/>.
+    /// To use specific <see cref="DbContext"/> please use <see cref="IRepository"/>.
     /// </summary>
     public interface IRepository
     {
@@ -120,10 +120,10 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
             CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
-        /// This method takes an object of <see cref="Specification{TEntity}"/> as parameter and returns <see cref="List{TEntity}"/>.
+        /// This method takes an object of <see cref="QueryDetails{TEntity}"/> as parameter and returns <see cref="List{TEntity}"/>.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
-        /// <param name="details">A <see cref="Specification{TEntity}"/> <see cref="object"/> which contains all the conditions and criteria
+        /// <param name="details">A <see cref="QueryDetails{TEntity}"/> <see cref="object"/> which contains all the conditions and criteria
         /// on which data will be returned.
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
@@ -175,12 +175,12 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
             CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
-        /// This method takes an <see cref="object"/> of <see cref="Specification{T}"/> and <paramref name="selectExpression"/> as parameters and
+        /// This method takes an <see cref="object"/> of <see cref="QueryDetails{TEntity}"/> and <paramref name="selectExpression"/> as parameters and
         /// returns <see cref="List{TProjectedType}"/>.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <typeparam name="TProjectedType">The projected type.</typeparam>
-        /// <param name="specification">A <see cref="Specification{TEntity}"/> object which contains all the conditions and criteria
+        /// <param name="details">A <see cref="QueryDetails{TEntity}"/> object which contains all the conditions and criteria
         /// on which data will be returned.
         /// </param>
         /// <param name="selectExpression">The <see cref="System.Linq"/> select query.</param>
@@ -196,10 +196,10 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// This method returns a <see cref="PaginatedList{T}"/>.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
-        /// <param name="details">An object of <see cref="PaginationSpecification{T}"/>.</param>
+        /// <param name="details">An object of <see cref="PaginationDetails{T}"/>.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="PaginatedList{T}"/>.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="specification"/> is smaller than 1.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="details"/> is smaller than 1.</exception>
         Task<PaginatedList<TEntity>> GetListAsync<TEntity>(
             PaginationDetails<TEntity> details,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -209,11 +209,11 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <typeparam name="TProjectedType">The projected type.</typeparam>
-        /// <param name="details">An object of <see cref="PaginationSpecification{T}"/>.</param>
+        /// <param name="details">An object of <see cref="PaginationDetails{T}"/>.</param>
         /// <param name="selectExpression">The <see cref="System.Linq"/> select query.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="specification"/> is smaller than 1.</exception>
+        /// <exception cref="ArgumentNullException">Thrown if <paramref name="details"/> is smaller than 1.</exception>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="selectExpression"/> is smaller than 1.</exception>
         Task<PaginatedList<TProjectedType>> GetListAsync<TEntity, TProjectedType>(
             PaginationDetails<TEntity> details,
@@ -241,7 +241,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="id">The primary key value of the entity.</param>
         /// <param name="asNoTracking">A <see cref="bool"/> value which determines whether the return entity will be tracked by
-        /// EF Core context or not. Default value is false i.e tracking is enabled by default.
+        /// EF Core context or not. Default value is false i.e. tracking is enabled by default.
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
@@ -312,7 +312,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="condition">The condition on which entity will be returned.</param>
         /// <param name="asNoTracking">A <see cref="bool"/> value which determines whether the return entity will be tracked by
-        /// EF Core context or not. Default value is false i.e tracking is enabled by default.
+        /// EF Core context or not. Default value is false i.e. tracking is enabled by default.
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <typeparamref name="TEntity"/>.</returns>
@@ -341,7 +341,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// <param name="condition">The condition on which entity will be returned.</param>
         /// <param name="includes">Navigation properties to be loaded.</param>
         /// <param name="asNoTracking">A <see cref="bool"/> value which determines whether the return entity will be tracked by
-        /// EF Core context or not. Default value is false i.e tracking is enabled by default.
+        /// EF Core context or not. Default value is false i.e. tracking is enabled by default.
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <typeparamref name="TEntity"/>.</returns>
@@ -370,7 +370,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// on which data will be returned.
         /// </param>
         /// <param name="asNoTracking">A <see cref="bool"/> value which determines whether the return entity will be tracked by
-        /// EF Core context or not. Default value is false i.e tracking is enabled by default.
+        /// EF Core context or not. Default value is false i.e. tracking is enabled by default.
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
@@ -400,7 +400,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <typeparam name="TProjectedType">The type of the projected entity.</typeparam>
-        /// <param name="details">A <see cref="Specification{TEntity}"/> object which contains all the conditions and criteria
+        /// <param name="details">A <see cref="QueryDetails{TEntity}"/> object which contains all the conditions and criteria
         /// on which data will be returned.
         /// </param>
         /// <param name="selectExpression">The <see cref="System.Linq"/> select  query.</param>
@@ -658,9 +658,9 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         void Delete<TEntity>(TEntity entity) where TEntity : class;
 
         /// <summary>
-        /// This method takes an <typeparamref name="entityId"/>, mark the object as <see cref="EntityState.Deleted"/> to the <see cref="ChangeTracker"/> of the <see cref="DbContext"/>.
+        /// This method takes an <typeparamref name="TEntity"/>, mark the object as <see cref="EntityState.Deleted"/> to the <see cref="ChangeTracker"/> of the <see cref="DbContext"/>.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the <paramref name="entity"/> to be marked as deleted.</typeparam>
+        /// <typeparam name="TEntity">The type of the <paramref name="entityId"/> to be marked as deleted.</typeparam>
         /// <param name="entityId">The primary key value of the entity.</param>
         void Delete<TEntity>(int entityId) where TEntity : class;
 
@@ -687,7 +687,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// <summary>
         /// This method takes <see cref="IEnumerable{TEntity}"/> objects, mark the objects as <see cref="EntityState.Deleted"/> to the <see cref="ChangeTracker"/> of the <see cref="DbContext"/>.
         /// </summary>
-        /// <typeparam name="TEntity">The type of the <paramref name="entity"/> to be marked as deleted.</typeparam>
+        /// <typeparam name="TEntity">The type of the <paramref name="entities"/> to be marked as deleted.</typeparam>
         /// <param name="entities">The entity objects to be deleted in the database on <see cref="SaveChangesAsync(CancellationToken)"/>.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>A <see cref="Task"/> that represents the asynchronous save operation. The task result contains the number of state entries written to the database.</returns>

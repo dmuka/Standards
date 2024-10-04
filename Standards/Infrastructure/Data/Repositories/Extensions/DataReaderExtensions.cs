@@ -6,10 +6,7 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
     {
         public static bool ColumnExists(this IDataReader reader, string columnName)
         {
-            if (reader == null)
-            {
-                throw new ArgumentNullException(nameof(reader));
-            }
+            ArgumentNullException.ThrowIfNull(reader);
 
             for (var i = 0; i < reader.FieldCount; i++)
             {

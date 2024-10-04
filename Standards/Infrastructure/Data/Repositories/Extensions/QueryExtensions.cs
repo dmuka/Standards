@@ -1,7 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Data.Common;
 using System.Globalization;
-using System.Reflection;
 
 namespace Standards.Infrastructure.Data.Repositories.Extensions
 {
@@ -13,24 +12,21 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
             IEnumerable<object> parameters,
             CancellationToken cancellationToken = default)
         {
-            if (dbContext == null)
-            {
-                throw new ArgumentNullException(nameof(dbContext));
-            }
+            ArgumentNullException.ThrowIfNull(dbContext);
 
             if (string.IsNullOrWhiteSpace(sql))
             {
                 throw new ArgumentNullException(nameof(sql));
             }
 
-            using DbCommand command = dbContext.Database.GetDbConnection().CreateCommand();
+            await using var command = dbContext.Database.GetDbConnection().CreateCommand();
             command.CommandText = sql;
 
             if (parameters != null)
             {
-                int index = 0;
+                var index = 0;
 
-                foreach (object item in parameters)
+                foreach (var item in parameters)
                 {
                     var dbParameter = command.CreateParameter();
                     dbParameter.ParameterName = "@p" + index;
@@ -44,24 +40,25 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
             {
                 await dbContext.Database.OpenConnectionAsync(cancellationToken);
 
-                using DbDataReader result = await command.ExecuteReaderAsync(cancellationToken);
+                await using var result = await command.ExecuteReaderAsync(cancellationToken);
 
                 var list = new List<T>();
-                T obj = default;
 
                 while (await result.ReadAsync(cancellationToken))
                 {
+                    T obj;
+                    
                     if (!(typeof(T).IsPrimitive || typeof(T).Equals(typeof(string))))
                     {
                         obj = Activator.CreateInstance<T>();
-                        foreach (PropertyInfo prop in obj.GetType().GetProperties())
+                        foreach (var prop in obj.GetType().GetProperties())
                         {
-                            string propertyName = prop.Name;
-                            bool isColumnExistent = result.ColumnExists(propertyName);
+                            var propertyName = prop.Name;
+                            var isColumnExistent = result.ColumnExists(propertyName);
 
                             if (isColumnExistent)
                             {
-                                object columnValue = result[propertyName];
+                                var columnValue = result[propertyName];
 
                                 if (!Equals(columnValue, DBNull.Value))
                                 {
@@ -93,17 +90,14 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
             IEnumerable<DbParameter> parameters,
             CancellationToken cancellationToken = default)
         {
-            if (dbContext == null)
-            {
-                throw new ArgumentNullException(nameof(dbContext));
-            }
+            ArgumentNullException.ThrowIfNull(dbContext);
 
             if (string.IsNullOrWhiteSpace(sql))
             {
                 throw new ArgumentNullException(nameof(sql));
             }
 
-            using DbCommand command = dbContext.Database.GetDbConnection().CreateCommand();
+            await using var command = dbContext.Database.GetDbConnection().CreateCommand();
             command.CommandText = sql;
 
             if (parameters != null)
@@ -118,21 +112,21 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
             {
                 await dbContext.Database.OpenConnectionAsync(cancellationToken);
 
-                using DbDataReader result = await command.ExecuteReaderAsync(cancellationToken);
+                await using var result = await command.ExecuteReaderAsync(cancellationToken);
 
-                List<T> list = new List<T>();
-                T obj = default;
+                var list = new List<T>();
 
                 while (await result.ReadAsync(cancellationToken))
                 {
+                    T obj;
                     if (!(typeof(T).IsPrimitive || typeof(T).Equals(typeof(string))))
                     {
                         obj = Activator.CreateInstance<T>();
 
-                        foreach (PropertyInfo prop in obj.GetType().GetProperties())
+                        foreach (var prop in obj.GetType().GetProperties())
                         {
-                            string propertyName = prop.Name;
-                            bool isColumnExistent = result.ColumnExists(propertyName);
+                            var propertyName = prop.Name;
+                            var isColumnExistent = result.ColumnExists(propertyName);
 
                             if (isColumnExistent)
                             {

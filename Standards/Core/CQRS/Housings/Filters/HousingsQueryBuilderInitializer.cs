@@ -5,15 +5,9 @@ using Standards.Infrastructure.Filter.Interfaces;
 
 namespace Standards.Core.CQRS.Housings.Filters
 {
-    public class HousingsQueryBuilderInitializer : IQueryBuilderInitializer<HousingDto, HousingsFilterDto>
+    public class HousingsQueryBuilderInitializer(IRepository repository)
+        : IQueryBuilderInitializer<HousingDto, HousingsFilterDto>
     {
-        private readonly IRepository _repository;
-
-        public HousingsQueryBuilderInitializer(IRepository repository)
-        {
-            _repository = repository;
-        }
-
         public IEnumerable<IQueryBuilderItem<IQueryable<HousingDto>>> GetFilters(HousingsFilterDto filter)
         {
             return new IQueryBuilderItem<IQueryable<HousingDto>>[]
