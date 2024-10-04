@@ -9,21 +9,14 @@ namespace Standards.Controllers
     //[Authorize]
     [ApiController]
     [Route("api/[controller]")]
-    public class UsersController : ControllerBase
+    public class UsersController(IUserService userService) : ControllerBase
     {
-        private readonly IUserService _userService;
-
-        public UsersController(IUserService userService)
-        {
-            _userService = userService;
-        }
-
         //[Authorize(Roles = Role.Admin)]
         [HttpPost]
         [Route("add")]
         public async Task<IActionResult> Create(UserDto userDto)
         {
-            var user = await _userService.Create(userDto);
+            var user = await userService.Create(userDto);
 
             return Ok(user);
         }
@@ -33,14 +26,14 @@ namespace Standards.Controllers
         [Route("list")]
         public IActionResult GetAll()
         {
-            var users = _userService.GetAll();
+            var users = userService.GetAll();
             return Ok(users);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var user = _userService.GetById(id);
+            var user = userService.GetById(id);
 
             if (user == null)
             {

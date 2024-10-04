@@ -7,20 +7,13 @@ namespace Standards.Controllers
 {
     [Route("api/rooms")]
     [ApiController]
-    public class RoomsController : ControllerBase
+    public class RoomsController(ApplicationDbContext repository) : ControllerBase
     {
-        readonly ApplicationDbContext _repository;
-
-        public RoomsController(ApplicationDbContext repository)
-        {
-            _repository = repository;
-        }
-
         [HttpGet]
         [Route("list")]
         public IActionResult GetRooms()
         {
-            var rooms = _repository.Rooms.ToList();
+            var rooms = repository.Rooms.ToList();
 
             if (rooms is null)
             {
@@ -39,7 +32,7 @@ namespace Standards.Controllers
                 return BadRequest();
             }
 
-            var room = _repository.Rooms.FirstOrDefault(r => r.Id == id);
+            var room = repository.Rooms.FirstOrDefault(r => r.Id == id);
 
             if (room is null)
             {
@@ -53,11 +46,11 @@ namespace Standards.Controllers
         [Route("add")]
         public void CreateRoom([FromBody] Room room)
         {
-            var persons = _repository.Persons.Where(person => person.Sector.Id == room.SectorId).ToList();
+            var persons = repository.Persons.Where(person => person.Sector.Id == room.SectorId).ToList();
 
-            var workplaces = _repository.WorkPlaces.Where(workplace => workplace.RoomId == room.Id).ToList();
+            var workplaces = repository.WorkPlaces.Where(workplace => workplace.RoomId == room.Id).ToList();
             
-            _repository.Add(new Room
+            repository.Add(new Room
             {
                 Name = room.Name,
                 SectorId = room.SectorId,
@@ -71,33 +64,31 @@ namespace Standards.Controllers
                 Comments = room.Comments
             });
 
-            _repository.SaveChanges();
+            repository.SaveChanges();
         }
 
         [HttpPut]
         [Route("edit")]
         public void EditRoom(int id, [FromBody] Room room)
         {
-            if (room.Id == id)
-            {
-                _repository.Entry(room).State = EntityState.Modified;
+            if (room.Id != id) return;
+            
+            repository.Entry(room).State = EntityState.Modified;
 
-                _repository.SaveChanges();
-            }
+            repository.SaveChanges();
         }
 
         [HttpDelete]
         [Route("delete")]
         public void DeleteRoom(int id)
         {
-            var room = _repository.Rooms.Find(id);
+            var room = repository.Rooms.Find(id);
 
-            if (room is not null)
-            {
-                _repository.Rooms.Remove(room);
+            if (room is null) return;
+            
+            repository.Rooms.Remove(room);
 
-                _repository.SaveChanges();
-            }
+            repository.SaveChanges();
         }
     }
 }

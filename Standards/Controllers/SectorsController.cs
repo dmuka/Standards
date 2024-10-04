@@ -7,21 +7,14 @@ namespace Standards.Controllers
 {
     [Route("api/sectors")]
     [ApiController]
-    public class SectorsController : ControllerBase
+    public class SectorsController(ApplicationDbContext repository) : ControllerBase
     {
-        readonly ApplicationDbContext _repository;
-
-        public SectorsController(ApplicationDbContext repository)
-        {
-            _repository = repository;
-        }
-
         [HttpGet]
         [Route("list")]
         public IActionResult GetSectors()
         {
-            var rooms = _repository.Rooms.ToList();
-            var sectors = _repository.Sectors.ToList();
+            var rooms = repository.Rooms.ToList();
+            var sectors = repository.Sectors.ToList();
             sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.SectorId == s.Id)));
 
             return Ok(sectors);
@@ -36,8 +29,8 @@ namespace Standards.Controllers
                 return BadRequest();
             }
 
-            var rooms = _repository.Rooms.ToList();
-            var sector = _repository.Sectors.FirstOrDefault(s => s.Id == id);
+            var rooms = repository.Rooms.ToList();
+            var sector = repository.Sectors.FirstOrDefault(s => s.Id == id);
 
             if (sector is null)
             {
@@ -53,7 +46,7 @@ namespace Standards.Controllers
         [Route("add")]
         public void CreateSector([FromBody] Sector sector)
         {
-            _repository.Add(new Sector
+            repository.Add(new Sector
             {
                 Name = sector.Name,
                 ShortName = sector.ShortName,
@@ -63,33 +56,31 @@ namespace Standards.Controllers
                 Comments = sector.Comments
             });
 
-            _repository.SaveChanges();
+            repository.SaveChanges();
         }
 
         [HttpPut]
         [Route("edit")]
         public void EditSector(int id, [FromBody] Sector sector)
         {
-            if (sector.Id == id)
-            {
-                _repository.Entry(sector).State = EntityState.Modified;
+            if (sector.Id != id) return;
+            
+            repository.Entry(sector).State = EntityState.Modified;
 
-                _repository.SaveChanges();
-            }
+            repository.SaveChanges();
         }
 
         [HttpDelete]
         [Route("delete")]
         public void DeleteSector(int id)
         {
-            var sector = _repository.Sectors.Find(id);
+            var sector = repository.Sectors.Find(id);
 
-            if (sector is not null)
-            {
-                _repository.Sectors.Remove(sector);
+            if (sector is null) return;
+            
+            repository.Sectors.Remove(sector);
 
-                _repository.SaveChanges();
-            }
+            repository.SaveChanges();
         }
     }
 }

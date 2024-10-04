@@ -8,21 +8,13 @@ namespace Standards.Controllers
 {
     [ApiController]
     [Route("api/[controller]")]
-    public class AuthController : ApiBaseController
+    public class AuthController(IAuthService authService) : ApiBaseController
     {
-        private readonly IAuthService _authService;
-
-        public AuthController(IAuthService authService) 
-        {
-            _authService = authService;
-        }
-
-
         [AllowAnonymous]
         [HttpPost("login")]
         public async Task<IActionResult> Authenticate([FromBody] UserDto userDto)
         {
-            var user = await _authService.Authenticate(userDto.UserName, userDto.Password);
+            var user = await authService.Authenticate(userDto.UserName, userDto.Password);
 
             if (user == null)
                 return BadRequest(new { message = "Username or password is incorrect" });
@@ -33,14 +25,14 @@ namespace Standards.Controllers
         [HttpPost("/token/refresh")]
         public IActionResult RefreshToken(string refreshToken)
         {
-            var principal = _authService.ValidateToken(refreshToken);
+            var principal = authService.ValidateToken(refreshToken);
 
             if (principal != null)
             {
                 var userId = int.Parse(principal.Claims.FirstOrDefault(x => x.Type.Equals("sid", StringComparison.OrdinalIgnoreCase))?.Value);
 
-                var accessToken = _authService.GenerateToken(userId, TokenType.Access);
-                var newRefreshToken = _authService.GenerateToken(userId, TokenType.Refresh);
+                var accessToken = authService.GenerateToken(userId, TokenType.Access);
+                var newRefreshToken = authService.GenerateToken(userId, TokenType.Refresh);
 
                 return Ok(new { AccessToken = accessToken, RefreshToken = newRefreshToken });
             }
@@ -56,7 +48,7 @@ namespace Standards.Controllers
         {
             var token = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
 
-            var principal = _authService.ValidateToken(token);
+            var principal = authService.ValidateToken(token);
 
             if (principal != null)
             {

@@ -7,20 +7,13 @@ namespace Standards.Controllers
 {
     [Route("api/workplaces")]
     [ApiController]
-    public class WorkPlacesController : ControllerBase
+    public class WorkPlacesController(ApplicationDbContext repository) : ControllerBase
     {
-        readonly ApplicationDbContext _repository;
-
-        public WorkPlacesController(ApplicationDbContext repository)
-        {
-            _repository = repository;
-        }
-
         [HttpGet]
         [Route("list")]
         public IActionResult GetWorkPlaces()
         {
-            var workPlaces = _repository.WorkPlaces.ToList();
+            var workPlaces = repository.WorkPlaces.ToList();
 
             return Ok(workPlaces);
         }
@@ -34,7 +27,7 @@ namespace Standards.Controllers
                 return BadRequest();
             }
 
-            var workPlace = _repository.WorkPlaces.FirstOrDefault(w => w.Id == id);
+            var workPlace = repository.WorkPlaces.FirstOrDefault(w => w.Id == id);
 
             if (workPlace is null)
             {
@@ -48,7 +41,7 @@ namespace Standards.Controllers
         [Route("add")]
         public void CreateWorkPlace([FromBody] WorkPlace workPlace)
         {
-            _repository.Add(new WorkPlace
+            repository.Add(new WorkPlace
             {
                 Name = workPlace.Name,
                 Responcible = workPlace.Responcible,
@@ -56,33 +49,29 @@ namespace Standards.Controllers
                 Comments = workPlace.Comments
             });
 
-            _repository.SaveChanges();
+            repository.SaveChanges();
         }
 
         [HttpPut]
         [Route("edit")]
         public void EditWorkPlace(int id, [FromBody] WorkPlace workPlace)
         {
-            if (workPlace.Id == id)
-            {
-                _repository.Entry(workPlace).State = EntityState.Modified;
+            if (workPlace.Id != id) return;
+            repository.Entry(workPlace).State = EntityState.Modified;
 
-                _repository.SaveChanges();
-            }
+            repository.SaveChanges();
         }
 
         [HttpDelete]
         [Route("delete")]
         public void DeleteWorkPlace(int id)
         {
-            var workPlace = _repository.WorkPlaces.Find(id);
+            var workPlace = repository.WorkPlaces.Find(id);
 
-            if (workPlace is not null)
-            {
-                _repository.WorkPlaces.Remove(workPlace);
+            if (workPlace is null) return;
+            repository.WorkPlaces.Remove(workPlace);
 
-                _repository.SaveChanges();
-            }
+            repository.SaveChanges();
         }
     }
 

@@ -9,24 +9,15 @@ namespace Standards.Controllers
 {
     [ApiController]
     [Route("api/housings")]
-    public class HousingsController : ApiBaseController
+    public class HousingsController(IRepository repository, ISender sender) : ApiBaseController
     {
-        private readonly IRepository _repository;
-        private readonly ISender _sender;
-
-        public HousingsController(IRepository repository, ISender sender)
-        {
-            _repository = repository;
-            _sender = sender;
-        }
-        
         [HttpGet]
         [Route("list")]
         public async Task<IActionResult> GetHousings()
         {
             var query = new GetAll.Query();
 
-            var result = await _sender.Send(query);
+            var result = await sender.Send(query);
 
             return Ok(result);
         }
@@ -37,7 +28,7 @@ namespace Standards.Controllers
         {
             var query = new GetById.Query(id);
 
-            var result = await _sender.Send(query);
+            var result = await sender.Send(query);
 
             return Ok(result);
         }
@@ -48,7 +39,7 @@ namespace Standards.Controllers
         {
             var query = new GetFiltered.Query(filter);
 
-            var result = await _sender.Send(query);
+            var result = await sender.Send(query);
 
             return Ok(result);
         }
@@ -59,7 +50,7 @@ namespace Standards.Controllers
         {
             var query = new Create.Query(housing);
 
-            var result = await _sender.Send(query);
+            var result = await sender.Send(query);
 
             return Ok(result);
         }
@@ -70,7 +61,7 @@ namespace Standards.Controllers
         {
             var query = new Edit.Query(housing);
             
-            var result = await _sender.Send(query);
+            var result = await sender.Send(query);
 
             return Ok(result);
         }
@@ -79,11 +70,11 @@ namespace Standards.Controllers
         [Route("delete/{id}")]
         public async Task DeleteHousing(int id)
         {
-            var housing = await _repository.GetByIdAsync<HousingDto>(id);
+            var housing = await repository.GetByIdAsync<HousingDto>(id);
 
-            await _repository.DeleteAsync(housing);
+            await repository.DeleteAsync(housing);
 
-            await _repository.SaveChangesAsync();
+            await repository.SaveChangesAsync();
         }
     }
 }
