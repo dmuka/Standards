@@ -10,37 +10,26 @@ namespace Standards.Core.CQRS.Housings
 {
     public class GetFiltered
     {
-        public class Query : IRequest<PaginatedListModel<HousingDto>>
+        public class Query(HousingsFilterDto filter) : IRequest<PaginatedListModel<HousingDto>>
         {
-            public Query(HousingsFilterDto filter)
-            {
-                Filter = filter;
-            }
-
-            public HousingsFilterDto Filter { get; set; }
+            public HousingsFilterDto Filter { get; set; } = filter;
         }
 
-        public class QueryHandler : IRequestHandler<Query, PaginatedListModel<HousingDto>>
+        public class QueryHandler(
+            IQueryBuilder<HousingDto, HousingsFilterDto> queryBuilder,
+            IQueryableWrapper<HousingDto> queryableWrapper)
+            : IRequestHandler<Query, PaginatedListModel<HousingDto>>
         {
-            private readonly IQueryBuilder<HousingDto, HousingsFilterDto> _queryBuilder;
-            private readonly IQueryableWrapper<HousingDto> _queryableWrapper;
-
-            public QueryHandler(IQueryBuilder<HousingDto, HousingsFilterDto> queryBuilder, IQueryableWrapper<HousingDto> queryableWrapper)
-            {
-                _queryBuilder = queryBuilder;
-                _queryableWrapper = queryableWrapper;
-            }
-
             public async Task<PaginatedListModel<HousingDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var query = _queryBuilder
+                var query = queryBuilder
                     .SetFilter(request.Filter)
                     .Filter()
                     .Sort()
                     .Paginate()
                     .GetQuery();
 
-                var housings = await _queryableWrapper.ToListAsync(query, cancellationToken);
+                var housings = await queryableWrapper.ToListAsync(query, cancellationToken);
 
                 PaginatedListModel<HousingDto> result = null;
 

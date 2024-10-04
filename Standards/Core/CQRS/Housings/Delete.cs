@@ -10,32 +10,20 @@ namespace Standards.Core.CQRS.Housings
     [TransactionScope]
     public class Delete
     {
-        public class Query : IRequest<int>
+        public class Query(int id) : IRequest<int>
         {
-            public Query(int id)
-            {
-                Id = id;
-            }
-
-            public int Id { get; set; }
+            public int Id { get; set; } = id;
         }
 
-        public class QueryHandler : IRequestHandler<Query, int>
+        public class QueryHandler(IRepository repository) : IRequestHandler<Query, int>
         {
-            private readonly IRepository _repository;
-
-            public QueryHandler(IRepository repository)
-            {
-                _repository = repository;
-            }
-
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
-                var housing = await _repository.GetByIdAsync<HousingDto>(request.Id, cancellationToken);
+                var housing = await repository.GetByIdAsync<HousingDto>(request.Id, cancellationToken);
 
-                await _repository.DeleteAsync(housing, cancellationToken);
+                await repository.DeleteAsync(housing, cancellationToken);
 
-                var result = await _repository.SaveChangesAsync(cancellationToken);
+                var result = await repository.SaveChangesAsync(cancellationToken);
 
                 return result;
             }

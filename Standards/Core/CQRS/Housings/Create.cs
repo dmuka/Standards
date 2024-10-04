@@ -10,30 +10,18 @@ namespace Standards.Core.CQRS.Housings
     [TransactionScope]
     public class Create
     {
-        public class Query : IRequest<int>
+        public class Query(HousingDto housingDto) : IRequest<int>
         {
-            public Query(HousingDto housingDto)
-            {
-                HousingDto = housingDto;
-            }
-
-            public HousingDto HousingDto { get; set; }
+            public HousingDto HousingDto { get; set; } = housingDto;
         }
 
-        public class QueryHandler : IRequestHandler<Query, int>
+        public class QueryHandler(IRepository repository) : IRequestHandler<Query, int>
         {
-            private readonly IRepository _repository;
-
-            public QueryHandler(IRepository repository)
-            {
-                _repository = repository;
-            }
-
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
-                await _repository.AddAsync(request.HousingDto, cancellationToken);
+                await repository.AddAsync(request.HousingDto, cancellationToken);
 
-                var result = await _repository.SaveChangesAsync(cancellationToken);
+                var result = await repository.SaveChangesAsync(cancellationToken);
 
                 return result;
             }
@@ -49,16 +37,16 @@ namespace Standards.Core.CQRS.Housings
                     .NotEmpty()
                     .ChildRules(filter =>
                     {
-                        filter.RuleFor(_ => _.Name)
+                        filter.RuleFor(housing => housing.Name)
                             .NotEmpty();
 
-                        filter.RuleFor(_ => _.ShortName)
+                        filter.RuleFor(housing => housing.ShortName)
                             .NotEmpty();
 
-                        filter.RuleFor(_ => _.FloorsCount)
+                        filter.RuleFor(housing => housing.FloorsCount)
                             .GreaterThan(default(int));
 
-                        filter.RuleFor(_ => _.Address)
+                        filter.RuleFor(housing => housing.Address)
                             .NotEmpty();
                     });
             }

@@ -122,7 +122,7 @@ namespace Standards.CQRS.Tests.Housings
 
         [TestCase(null)]
         [TestCase("")]
-        public void Validator_IfNameIsNull_ShouldHaveValidationError(string name)
+        public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
         {
             // Arrange
             _housing.Name = name;
@@ -138,7 +138,7 @@ namespace Standards.CQRS.Tests.Housings
 
         [TestCase(null)]
         [TestCase("")]
-        public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string shortName)
+        public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
         {
             // Arrange
             _housing.ShortName = shortName;
@@ -154,7 +154,7 @@ namespace Standards.CQRS.Tests.Housings
 
         [TestCase(null)]
         [TestCase("")]
-        public void Validator_IfAddressIsNull_ShouldHaveValidationError(string address)
+        public void Validator_IfAddressIsNull_ShouldHaveValidationError(string? address)
         {
             // Arrange
             _housing.Address = address;

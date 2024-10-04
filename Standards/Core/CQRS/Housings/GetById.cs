@@ -8,28 +8,16 @@ namespace Standards.Core.CQRS.Housings
 {
     public class GetById
     {
-        public class Query : IRequest<HousingDto>
+        public class Query(int id) : IRequest<HousingDto>
         {
-            public Query(int id)
-            {
-                Id = id;
-            }
-
-            public int Id { get; set; }
+            public int Id { get; set; } = id;
         }
 
-        public class QueryHandler : IRequestHandler<Query, HousingDto>
+        public class QueryHandler(IRepository repository) : IRequestHandler<Query, HousingDto>
         {
-            private readonly IRepository _repository;
-
-            public QueryHandler(IRepository repository)
-            {
-                _repository = repository;
-            }
-
             public async Task<HousingDto> Handle(Query request, CancellationToken cancellationToken)
             {
-                var housing = await _repository.GetByIdAsync<HousingDto>(request.Id, cancellationToken);
+                var housing = await repository.GetByIdAsync<HousingDto>(request.Id, cancellationToken);
 
                 return housing;
             }
