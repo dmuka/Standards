@@ -852,6 +852,38 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
         }
         #endregion
 
+        #region Where
+
+        public async Task<List<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default) where T : class
+        {
+            IQueryable<T> query = dbContext.Set<T>();
+
+            if (condition != null)
+            {
+                query = query.Where(condition);
+            }
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
+        public async Task<List<TProjectedType>> SelectEntitiesByCondition<T, TProjectedType>(
+            Expression<Func<T, bool>> condition,
+            Expression<Func<T, TProjectedType>> selectExpression,
+            CancellationToken cancellationToken = default) 
+            where T : class
+            where TProjectedType : class
+        {
+            IQueryable<T> query = dbContext.Set<T>();
+
+            if (condition != null)
+            {
+                query = query.Where(condition);
+            }
+
+            return await query.Select(selectExpression).ToListAsync(cancellationToken);
+        }
+
+        #endregion
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
         {
             var count = await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);

@@ -7,15 +7,10 @@ namespace Standards.Infrastructure.Mediatr
 {
     namespace Standards.Core.CQRS.Common.Behaviors
     {
-        public class TransactionBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+        public class TransactionBehavior<TRequest, TResponse>(IRepository repository)
+            : IPipelineBehavior<TRequest, TResponse>
+            where TRequest : notnull
         {
-            private readonly IRepository _repository;
-
-            public TransactionBehavior(IRepository repository)
-            {
-                _repository = repository;
-            }
-
             public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
             {
                 var requestType = request.GetType();
@@ -26,21 +21,19 @@ namespace Standards.Infrastructure.Mediatr
                     return await next();
                 }
 
-                using (var transaction = await _repository.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken))
+                await using var transaction = await repository.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
+                try
                 {
-                    try
-                    {
-                        var response = await next();
-                        await _repository.SaveChangesAsync(cancellationToken);
-                        transaction.Commit();
+                    var response = await next();
+                    await repository.SaveChangesAsync(cancellationToken);
+                    await transaction.CommitAsync(cancellationToken);
 
-                        return response;
-                    }
-                    catch
-                    {
-                        transaction.Rollback();
-                        throw;
-                    }
+                    return response;
+                }
+                catch
+                {
+                    await transaction.RollbackAsync(cancellationToken);
+                    throw;
                 }
             }
         }

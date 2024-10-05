@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Standards.Core.CQRS.Rooms;
+using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data;
 
@@ -7,20 +10,17 @@ namespace Standards.Controllers
 {
     [Route("api/rooms")]
     [ApiController]
-    public class RoomsController(ApplicationDbContext repository) : ControllerBase
+    public class RoomsController(ApplicationDbContext repository, ISender sender) : ControllerBase
     {
         [HttpGet]
         [Route("list")]
-        public IActionResult GetRooms()
+        public async Task<IActionResult> GetRooms()
         {
-            var rooms = repository.Rooms.ToList();
+            var query = new GetAll.Query();
 
-            if (rooms is null)
-            {
-                return NotFound();
-            }
+            var result = await sender.Send(query);
 
-            return Ok(rooms);
+            return Ok(result);
         }
 
         [HttpGet]
@@ -44,27 +44,13 @@ namespace Standards.Controllers
 
         [HttpPost]
         [Route("add")]
-        public void CreateRoom([FromBody] Room room)
+        public async Task<IActionResult> CreateRoom([FromBody] RoomDto room)
         {
-            var persons = repository.Persons.Where(person => person.Sector.Id == room.SectorId).ToList();
+            var query = new Create.Query(room);
 
-            var workplaces = repository.WorkPlaces.Where(workplace => workplace.RoomId == room.Id).ToList();
-            
-            repository.Add(new Room
-            {
-                Name = room.Name,
-                SectorId = room.SectorId,
-                HousingId = room.HousingId,
-                Persons = persons,
-                WorkPlaces = workplaces,
-                Floor = room.Floor,
-                Height = room.Height,
-                Width = room.Width,
-                Length = room.Length,
-                Comments = room.Comments
-            });
+            var result = await sender.Send(query);
 
-            repository.SaveChanges();
+            return Ok(result);
         }
 
         [HttpPut]

@@ -703,5 +703,35 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// </returns>
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
         #endregion
+
+        #region Where
+
+        /// <summary>
+        /// This method takes <see> <cref>Expression{Func{T, bool}}</cref> </see> predicate and return result of filtering by this predicate.
+        /// </summary>
+        /// <param name="condition">The condition based on which filter of items will be done.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <typeparam name="T">The type of the items to be returned.</typeparam>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous save operation. The task result contains the list of items that represent result of filtering.</returns>
+        public Task<List<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>> condition,
+            CancellationToken cancellationToken = default) where T : class;
+
+        /// <summary>
+        /// This method takes <see> <cref>Expression{Func{T, bool}}</cref> </see> and <see> <cref>Expression{Func{T, TProjectedType}}</cref> </see> predicates and return result of filtering and projecting by these predicates.
+        /// </summary>
+        /// <param name="condition">The condition based on which filter of items will be done.</param>
+        /// <param name="selectExpression">The condition based on which project of items will be done.</param>
+        /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
+        /// <typeparam name="T">The type of the items to be filtered.</typeparam>
+        /// <typeparam name="TProjectedType">The type of the items to be returned.</typeparam>
+        /// <returns>A <see cref="Task"/> that represents the asynchronous save operation. The task result contains the list of items that represent result of filtering and projecting.</returns>
+        public Task<List<TProjectedType>> SelectEntitiesByCondition<T, TProjectedType>(
+            Expression<Func<T, bool>> condition,
+            Expression<Func<T, TProjectedType>> selectExpression,
+            CancellationToken cancellationToken = default)
+            where T : class
+            where TProjectedType : class;
+
+        #endregion
     }
 }
