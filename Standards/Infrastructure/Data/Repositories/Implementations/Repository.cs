@@ -869,6 +869,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
         public async Task<List<TProjectedType>> SelectEntitiesByCondition<T, TProjectedType>(
             Expression<Func<T, bool>> condition,
             Expression<Func<T, TProjectedType>> selectExpression,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
             CancellationToken cancellationToken = default) 
             where T : class
             where TProjectedType : class
@@ -878,6 +879,11 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             if (condition != null)
             {
                 query = query.Where(condition);
+            }    
+            
+            if (include != null)
+            {
+                query = include(query);
             }
 
             return await query.Select(selectExpression).ToListAsync(cancellationToken);

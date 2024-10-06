@@ -27,10 +27,7 @@ namespace Standards.Controllers
         [Route("")]
         public IActionResult GetRoom(int id = 0)
         {
-            if (id == 0)
-            {
-                return BadRequest();
-            }
+            if (id == 0) return BadRequest();
 
             var room = repository.Rooms.FirstOrDefault(r => r.Id == id);
 

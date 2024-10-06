@@ -15,7 +15,7 @@ namespace Standards.Controllers
         {
             var rooms = repository.Rooms.ToList();
             var sectors = repository.Sectors.ToList();
-            sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.SectorId == s.Id)));
+            sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.Sector.Id == s.Id)));
             var departments = repository.Departments.ToList();
             departments.ForEach(d => d.Sectors.ToList().AddRange(sectors.FindAll(s => s.DepartmentId == d.Id)));
 
@@ -30,7 +30,7 @@ namespace Standards.Controllers
 
             var rooms = repository.Rooms.ToList();
             var sectors = repository.Sectors.ToList();
-            sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.SectorId == s.Id)));
+            sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.Sector.Id == s.Id)));
 
             var department = repository.Departments.FirstOrDefault(d => d.Id == id);
 

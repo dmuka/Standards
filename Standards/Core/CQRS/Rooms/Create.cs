@@ -29,7 +29,16 @@ public class Create
                 .Where(workplace => workplace.RoomId == request.Room.Id)
                 .ToList();
 
+            var sector = await repository.GetByIdAsync<Sector>(request.Room.SectorId, cancellationToken);
+            
+            var housing = await repository.GetByIdAsync<Housing>(request.Room.HousingId, cancellationToken);
+
             var room = GetRoom(request.Room, persons, workplaces);
+
+            room.Persons = persons;
+            room.WorkPlaces = workplaces;
+            room.Sector = sector;
+            room.Housing = housing;
             
             await repository.AddAsync(room, cancellationToken);
 
@@ -46,10 +55,6 @@ public class Create
             var room = new Room
             {
                 Name = roomDto.Name,
-                SectorId = roomDto.SectorId,
-                HousingId = roomDto.HousingId,
-                Persons = persons,
-                WorkPlaces = workplaces,
                 Floor = roomDto.Floor,
                 Height = roomDto.Height,
                 Width = roomDto.Width,

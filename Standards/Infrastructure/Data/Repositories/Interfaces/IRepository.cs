@@ -721,6 +721,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// </summary>
         /// <param name="condition">The condition based on which filter of items will be done.</param>
         /// <param name="selectExpression">The condition based on which project of items will be done.</param>
+        /// <param name="include">The condition based on which adding of related items will be done.</param>
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <typeparam name="T">The type of the items to be filtered.</typeparam>
         /// <typeparam name="TProjectedType">The type of the items to be returned.</typeparam>
@@ -728,6 +729,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         public Task<List<TProjectedType>> SelectEntitiesByCondition<T, TProjectedType>(
             Expression<Func<T, bool>> condition,
             Expression<Func<T, TProjectedType>> selectExpression,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
             CancellationToken cancellationToken = default)
             where T : class
             where TProjectedType : class;
