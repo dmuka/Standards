@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
 using Standards.Core.CQRS.Common.Attributes;
+using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
+using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace Standards.Core.CQRS.Housings;
@@ -20,6 +22,18 @@ public class Create
         {
             await repository.AddAsync(request.HousingDto, cancellationToken);
 
+            var housing = new Housing()
+            {
+                Name = request.HousingDto.Name,
+                ShortName = request.HousingDto.ShortName,
+                FloorsCount = request.HousingDto.FloorsCount,
+                Address = request.HousingDto.Address
+            };
+
+            if (request.HousingDto.Comments is not null) housing.Comments = request.HousingDto.Comments;
+            
+            await repository.AddAsync(housing, cancellationToken);
+            
             var result = await repository.SaveChangesAsync(cancellationToken);
 
             return result;
