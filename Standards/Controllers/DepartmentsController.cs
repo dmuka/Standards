@@ -17,7 +17,7 @@ namespace Standards.Controllers
             var sectors = repository.Sectors.ToList();
             sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.Sector.Id == s.Id)));
             var departments = repository.Departments.ToList();
-            departments.ForEach(d => d.Sectors.ToList().AddRange(sectors.FindAll(s => s.DepartmentId == d.Id)));
+            departments.ForEach(d => d.Sectors.ToList().AddRange(sectors.FindAll(s => s.Department.Id == d.Id)));
 
             return Ok(departments);
         }
@@ -39,7 +39,7 @@ namespace Standards.Controllers
                 return NotFound($"Not found department with id: {id}");
             }
 
-            department.Sectors = sectors.FindAll(s => s.DepartmentId == department.Id);
+            department.Sectors = sectors.FindAll(s => s.Department.Id == department.Id);
 
             return Ok(department);
         }

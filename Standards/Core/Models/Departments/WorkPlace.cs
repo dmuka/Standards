@@ -1,4 +1,5 @@
-﻿using Standards.Core.Models.Persons;
+﻿using Standards.Core.Models.Housings;
+using Standards.Core.Models.Persons;
 
 namespace Standards.Core.Models.Departments
 {
@@ -6,7 +7,7 @@ namespace Standards.Core.Models.Departments
     {
         public int Id { get; set; }
         public string Name { get; set; } = null!;
-        public int RoomId { get; set; }
+        public Room Room { get; set; }
         public Person Responcible { get; set; } = new Person();
         public string ImagePath { get; set; } = null!;
         public string Comments { get; set; } = null!;

@@ -262,6 +262,10 @@ namespace Standards.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("StandardId");
+
                     b.ToTable("CalibrationsJournal");
                 });
 
@@ -319,6 +323,10 @@ namespace Standards.Migrations
                         .HasColumnType("datetime2");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("StandardId");
 
                     b.ToTable("VerificationsJournal");
                 });
@@ -479,6 +487,8 @@ namespace Standards.Migrations
 
                     b.HasIndex("ServiceId");
 
+                    b.HasIndex("UnitId");
+
                     b.ToTable("Materials");
                 });
 
@@ -498,13 +508,15 @@ namespace Standards.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("ServiceTypeId")
+                        .HasColumnType("int");
+
                     b.Property<int?>("StandardId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ServiceTypeId");
 
                     b.HasIndex("StandardId");
 
@@ -536,6 +548,12 @@ namespace Standards.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("PersonId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("StandardId");
 
                     b.ToTable("ServicesJournal");
                 });
@@ -603,7 +621,11 @@ namespace Standards.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GradeId");
+
                     b.HasIndex("StandardId");
+
+                    b.HasIndex("UnitId");
 
                     b.ToTable("Characteristics");
                 });
@@ -652,7 +674,8 @@ namespace Standards.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("ResponcibleId")
+                    b.Property<int?>("ResponsibleId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<int>("VerificationInterval")
@@ -662,6 +685,10 @@ namespace Standards.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("ResponsibleId");
+
+                    b.HasIndex("WorkPlaceId");
 
                     b.ToTable("Standards");
                 });
@@ -764,11 +791,13 @@ namespace Standards.Migrations
 
             modelBuilder.Entity("Standards.Core.Models.Departments.Sector", b =>
                 {
-                    b.HasOne("Standards.Core.Models.Departments.Department", null)
+                    b.HasOne("Standards.Core.Models.Departments.Department", "Department")
                         .WithMany("Sectors")
                         .HasForeignKey("DepartmentId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Department");
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Departments.WorkPlace", b =>
@@ -779,7 +808,7 @@ namespace Standards.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Standards.Core.Models.Housings.Room", null)
+                    b.HasOne("Standards.Core.Models.Housings.Room", "Room")
                         .WithMany("WorkPlaces")
                         .HasForeignKey("RoomId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -790,6 +819,8 @@ namespace Standards.Migrations
                         .HasForeignKey("SectorId");
 
                     b.Navigation("Responcible");
+
+                    b.Navigation("Room");
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Housings.Room", b =>
@@ -809,6 +840,44 @@ namespace Standards.Migrations
                     b.Navigation("Housing");
 
                     b.Navigation("Sector");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.MetrologyControl.CalibrationJournal", b =>
+                {
+                    b.HasOne("Standards.Core.Models.MetrologyControl.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Standards.Standard", "Standard")
+                        .WithMany()
+                        .HasForeignKey("StandardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Standard");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.MetrologyControl.VerificationJournal", b =>
+                {
+                    b.HasOne("Standards.Core.Models.MetrologyControl.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Standards.Standard", "Standard")
+                        .WithMany()
+                        .HasForeignKey("StandardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Standard");
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Persons.Person", b =>
@@ -870,27 +939,107 @@ namespace Standards.Migrations
                     b.HasOne("Standards.Core.Models.Services.Service", null)
                         .WithMany("Materials")
                         .HasForeignKey("ServiceId");
+
+                    b.HasOne("Standards.Core.Models.Unit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Unit");
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Services.Service", b =>
                 {
+                    b.HasOne("Standards.Core.Models.Services.ServiceType", "ServiceType")
+                        .WithMany()
+                        .HasForeignKey("ServiceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Standards.Core.Models.Standards.Standard", null)
                         .WithMany("Services")
                         .HasForeignKey("StandardId");
+
+                    b.Navigation("ServiceType");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.Services.ServiceJournal", b =>
+                {
+                    b.HasOne("Standards.Core.Models.Persons.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Services.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Standards.Standard", "Standard")
+                        .WithMany()
+                        .HasForeignKey("StandardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Service");
+
+                    b.Navigation("Standard");
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Standards.Characteristic", b =>
                 {
-                    b.HasOne("Standards.Core.Models.Standards.Standard", null)
+                    b.HasOne("Standards.Core.Models.Standards.Grade", "Grade")
+                        .WithMany()
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Standards.Standard", "Standard")
                         .WithMany("Characteristics")
                         .HasForeignKey("StandardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Unit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grade");
+
+                    b.Navigation("Standard");
+
+                    b.Navigation("Unit");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.Standards.Standard", b =>
+                {
+                    b.HasOne("Standards.Core.Models.Persons.Person", "Responsible")
+                        .WithMany()
+                        .HasForeignKey("ResponsibleId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Departments.WorkPlace", "WorkPlace")
+                        .WithMany()
+                        .HasForeignKey("WorkPlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Responsible");
+
+                    b.Navigation("WorkPlace");
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Unit", b =>
                 {
-                    b.HasOne("Standards.Core.Models.Quantity", null)
+                    b.HasOne("Standards.Core.Models.Quantity", "Quantity")
                         .WithMany("Units")
                         .HasForeignKey("QuantityId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -899,6 +1048,8 @@ namespace Standards.Migrations
                     b.HasOne("Standards.Core.Models.Services.Service", null)
                         .WithMany("MaterialsUnits")
                         .HasForeignKey("ServiceId");
+
+                    b.Navigation("Quantity");
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Departments.Department", b =>

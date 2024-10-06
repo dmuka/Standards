@@ -26,7 +26,7 @@ public class Create
                 .ToList();
 
             var workplaces = repository.GetQueryable<WorkPlace>()
-                .Where(workplace => workplace.RoomId == request.Room.Id)
+                .Where(workplace => workplace.Room.Id == request.Room.Id)
                 .ToList();
 
             var sector = await repository.GetByIdAsync<Sector>(request.Room.SectorId, cancellationToken);

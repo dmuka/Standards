@@ -41,7 +41,15 @@ namespace Standards.Infrastructure.Data
         public DbSet<Characteristic> Characteristics { get; set; }
         public DbSet<Grade> Grades { get; set; }
         public DbSet<Standard> Standards { get; set; }
-
+        
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Standard>()
+                .HasOne(s => s.Responsible)
+                .WithMany()
+                .HasForeignKey(s => s.ResponsibleId)
+                .OnDelete(DeleteBehavior.NoAction);
+        }
         //protected override void OnModelCreating(ModelBuilder modelBuilder)
         //{
         //    modelBuilder.Entity<Person>()

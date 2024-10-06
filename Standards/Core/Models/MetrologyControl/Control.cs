@@ -1,10 +1,12 @@
-﻿namespace Standards.Core.Models.MetrologyControl
+﻿using Standards.Core.Models.Standards;
+
+namespace Standards.Core.Models.MetrologyControl
 {
     public abstract class Control
     {
         public int Id { get; set; }
-        public int StandardId { get; set; }
-        public int PlaceId { get; set; }
+        public Standard Standard { get; set; }
+        public Place Place { get; set; }
         public DateTime Date { get; set; }
         public DateTime ValidTo { get; set; }
         public string SertificateId { get; set; } = null!;
