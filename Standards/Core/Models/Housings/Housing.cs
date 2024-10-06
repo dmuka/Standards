@@ -10,6 +10,7 @@ namespace Standards.Core.Models.Housings
         public string Address { get; set; } = null!;
         public int FloorsCount { get; set; }
         public IList<Department> Departments { get; set; } = null!;
+        public IList<Room> Rooms { get; set; } = null!;
         public string Comments { get; set; } = null!;
     }
 }
