@@ -2,6 +2,7 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
+using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
@@ -11,13 +12,13 @@ namespace Standards.CQRS.Tests.Housings
     {
         private Mock<IRepository> _repository;
         private CancellationToken _cancellationToken;
-        private List<HousingDto> _housings;
-        private IRequestHandler<GetAll.Query, IEnumerable<HousingDto>> _handler;
+        private List<Housing> _housings;
+        private IRequestHandler<GetAll.Query, IEnumerable<Housing>> _handler;
 
         [SetUp]
         public void Setup()
         {
-            _housings = new List<HousingDto>
+            _housings = new List<Housing>
             {
                 new() {
                     Id = 1,
@@ -48,7 +49,7 @@ namespace Standards.CQRS.Tests.Housings
             _cancellationToken = new CancellationToken();
 
             _repository = new Mock<IRepository>();
-            _repository.Setup(_ => _.GetListAsync<HousingDto>(_cancellationToken)).Returns(Task.FromResult(_housings));
+            _repository.Setup(repository => repository.GetListAsync<Housing>(_cancellationToken)).Returns(Task.FromResult(_housings));
 
             _handler = new GetAll.QueryHandler(_repository.Object); 
         }
