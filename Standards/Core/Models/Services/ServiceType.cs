@@ -1,9 +1,6 @@
 ﻿namespace Standards.Core.Models.Services
 {
-    public class ServiceType
+    public class ServiceType : BaseEntity
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string Comments { get; set; } = null!;
     }
 }

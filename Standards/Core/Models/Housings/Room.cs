@@ -3,10 +3,8 @@ using Standards.Core.Models.Persons;
 
 namespace Standards.Core.Models.Housings
 {
-    public class Room
+    public class Room : BaseEntity
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
         public Housing Housing { get; set; }
         public int Floor { get; set; }
         public int Length { get; set; }
@@ -15,6 +13,5 @@ namespace Standards.Core.Models.Housings
         public IList<WorkPlace> WorkPlaces { get; set; } = new List<WorkPlace>();
         public IList<Person> Persons { get; set; } = new List<Person>();
         public Sector Sector { get; set; }
-        public string Comments { get; set; } = null!;
     }
 }

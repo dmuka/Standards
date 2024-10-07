@@ -1,16 +1,15 @@
-﻿using Standards.Core.Models.Departments;
+﻿using System.ComponentModel.DataAnnotations;
+using Standards.Core.Constants;
+using Standards.Core.Models.Departments;
 
 namespace Standards.Core.Models.Housings
 {
-    public class Housing
+    public class Housing : BaseEntity
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string ShortName { get; set; } = null!;
+        [MaxLength(Lengths.Address)]
         public string Address { get; set; } = null!;
         public int FloorsCount { get; set; }
-        public IList<Department> Departments { get; set; } = null!;
-        public IList<Room> Rooms { get; set; } = null!;
-        public string Comments { get; set; } = null!;
+        public IList<Department> Departments { get; set; } = new List<Department>();
+        public IList<Room> Rooms { get; set; } = new List<Room>();
     }
 }

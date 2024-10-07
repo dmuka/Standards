@@ -1,9 +1,6 @@
 ﻿namespace Standards.Core.Models.Standards
 {
-    public class Grade
+    public class Grade : BaseEntity
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string Comments { get; set; } = null!;
     }
 }

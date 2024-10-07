@@ -1,4 +1,7 @@
-﻿namespace Standards.Core.Models.Interfaces
+﻿using System.ComponentModel.DataAnnotations;
+using Standards.Core.Constants;
+
+namespace Standards.Core.Models.Interfaces
 {
     public interface IEntity<out TId>
     {

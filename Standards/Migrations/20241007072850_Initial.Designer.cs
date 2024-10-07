@@ -12,8 +12,8 @@ using Standards.Infrastructure.Data;
 namespace Standards.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240327124108_RefactorPersonUser")]
-    partial class RefactorPersonUser
+    [Migration("20241007072850_Initial")]
+    partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -24,7 +24,22 @@ namespace Standards.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
 
-            modelBuilder.Entity("Standards.Models.Departments.Department", b =>
+            modelBuilder.Entity("DepartmentHousing", b =>
+                {
+                    b.Property<int>("DepartmentsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("HousingsId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DepartmentsId", "HousingsId");
+
+                    b.HasIndex("HousingsId");
+
+                    b.ToTable("DepartmentHousing");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.Departments.Department", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -34,22 +49,25 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ShortName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
                 });
 
-            modelBuilder.Entity("Standards.Models.Departments.Sector", b =>
+            modelBuilder.Entity("Standards.Core.Models.Departments.Sector", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -59,18 +77,21 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("DepartmentId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ShortName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -79,7 +100,7 @@ namespace Standards.Migrations
                     b.ToTable("Sectors");
                 });
 
-            modelBuilder.Entity("Standards.Models.Departments.WorkPlace", b =>
+            modelBuilder.Entity("Standards.Core.Models.Departments.WorkPlace", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -89,15 +110,16 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("ImagePath")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("ResponcibleId")
                         .HasColumnType("int");
@@ -107,6 +129,11 @@ namespace Standards.Migrations
 
                     b.Property<int?>("SectorId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -119,7 +146,7 @@ namespace Standards.Migrations
                     b.ToTable("WorkPlaces");
                 });
 
-            modelBuilder.Entity("Standards.Models.DTOs.HousingDto", b =>
+            modelBuilder.Entity("Standards.Core.Models.Housings.Housing", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -129,28 +156,33 @@ namespace Standards.Migrations
 
                     b.Property<string>("Address")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("Comments")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("FloorsCount")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<string>("ShortName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Housings");
+                    b.ToTable("Housings", (string)null);
                 });
 
-            modelBuilder.Entity("Standards.Models.Housings.Room", b =>
+            modelBuilder.Entity("Standards.Core.Models.Housings.Room", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -160,7 +192,8 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("Floor")
                         .HasColumnType("int");
@@ -176,22 +209,30 @@ namespace Standards.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int>("SectorId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("Width")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
+                    b.HasIndex("HousingId");
+
                     b.HasIndex("SectorId");
 
                     b.ToTable("Rooms");
                 });
 
-            modelBuilder.Entity("Standards.Models.MetrologyControl.CalibrationJournal", b =>
+            modelBuilder.Entity("Standards.Core.Models.MetrologyControl.CalibrationJournal", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -225,10 +266,14 @@ namespace Standards.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("StandardId");
+
                     b.ToTable("CalibrationsJournal");
                 });
 
-            modelBuilder.Entity("Standards.Models.MetrologyControl.Place", b =>
+            modelBuilder.Entity("Standards.Core.Models.MetrologyControl.Place", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -238,18 +283,25 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Places");
                 });
 
-            modelBuilder.Entity("Standards.Models.MetrologyControl.VerificationJournal", b =>
+            modelBuilder.Entity("Standards.Core.Models.MetrologyControl.VerificationJournal", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -283,10 +335,14 @@ namespace Standards.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PlaceId");
+
+                    b.HasIndex("StandardId");
+
                     b.ToTable("VerificationsJournal");
                 });
 
-            modelBuilder.Entity("Standards.Models.Persons.Category", b =>
+            modelBuilder.Entity("Standards.Core.Models.Persons.Category", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -296,18 +352,25 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
                 });
 
-            modelBuilder.Entity("Standards.Models.Persons.Person", b =>
+            modelBuilder.Entity("Standards.Core.Models.Persons.Person", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -323,29 +386,31 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("DepartmentId")
-                        .HasColumnType("int");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("FirstName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("LastName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("MiddleName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("PositionId")
                         .HasColumnType("int");
 
                     b.Property<string>("Role")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(15)
+                        .HasColumnType("nvarchar(15)");
 
                     b.Property<int?>("RoomId")
                         .HasColumnType("int");
@@ -353,11 +418,12 @@ namespace Standards.Migrations
                     b.Property<int>("SectorId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
-
-                    b.HasIndex("DepartmentId");
 
                     b.HasIndex("PositionId");
 
@@ -365,10 +431,12 @@ namespace Standards.Migrations
 
                     b.HasIndex("SectorId");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Persons");
                 });
 
-            modelBuilder.Entity("Standards.Models.Persons.Position", b =>
+            modelBuilder.Entity("Standards.Core.Models.Persons.Position", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -378,18 +446,25 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Positions");
                 });
 
-            modelBuilder.Entity("Standards.Models.Quantity", b =>
+            modelBuilder.Entity("Standards.Core.Models.Quantity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -411,7 +486,7 @@ namespace Standards.Migrations
                     b.ToTable("Quantities");
                 });
 
-            modelBuilder.Entity("Standards.Models.Services.Material", b =>
+            modelBuilder.Entity("Standards.Core.Models.Services.Material", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -421,14 +496,21 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int?>("ServiceId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("UnitId")
                         .HasColumnType("int");
@@ -437,10 +519,12 @@ namespace Standards.Migrations
 
                     b.HasIndex("ServiceId");
 
+                    b.HasIndex("UnitId");
+
                     b.ToTable("Materials");
                 });
 
-            modelBuilder.Entity("Standards.Models.Services.Service", b =>
+            modelBuilder.Entity("Standards.Core.Models.Services.Service", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -450,26 +534,35 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<int>("ServiceTypeId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("StandardId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TypeId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
+
+                    b.HasIndex("ServiceTypeId");
 
                     b.HasIndex("StandardId");
 
                     b.ToTable("Services");
                 });
 
-            modelBuilder.Entity("Standards.Models.Services.ServiceJournal", b =>
+            modelBuilder.Entity("Standards.Core.Models.Services.ServiceJournal", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -495,10 +588,16 @@ namespace Standards.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("PersonId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("StandardId");
+
                     b.ToTable("ServicesJournal");
                 });
 
-            modelBuilder.Entity("Standards.Models.Services.ServiceType", b =>
+            modelBuilder.Entity("Standards.Core.Models.Services.ServiceType", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -508,18 +607,25 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.ToTable("ServiceTypes");
                 });
 
-            modelBuilder.Entity("Standards.Models.Standards.Characteristic", b =>
+            modelBuilder.Entity("Standards.Core.Models.Standards.Characteristic", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -529,7 +635,8 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<int>("GradeId")
                         .HasColumnType("int");
@@ -545,13 +652,19 @@ namespace Standards.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<double>("RangeEnd")
                         .HasColumnType("float");
 
                     b.Property<double>("RangeStart")
                         .HasColumnType("float");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("StandardId")
                         .HasColumnType("int");
@@ -561,12 +674,16 @@ namespace Standards.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("GradeId");
+
                     b.HasIndex("StandardId");
+
+                    b.HasIndex("UnitId");
 
                     b.ToTable("Characteristics");
                 });
 
-            modelBuilder.Entity("Standards.Models.Standards.Grade", b =>
+            modelBuilder.Entity("Standards.Core.Models.Standards.Grade", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -576,18 +693,25 @@ namespace Standards.Migrations
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Grades");
                 });
 
-            modelBuilder.Entity("Standards.Models.Standards.Standard", b =>
+            modelBuilder.Entity("Standards.Core.Models.Standards.Standard", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -595,12 +719,13 @@ namespace Standards.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<int>("CalibrationInterval")
+                    b.Property<int?>("CalibrationInterval")
                         .HasColumnType("int");
 
                     b.Property<string>("Comments")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
 
                     b.Property<string>("ImagePath")
                         .IsRequired()
@@ -608,10 +733,16 @@ namespace Standards.Migrations
 
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("ResponcibleId")
+                    b.Property<int?>("ResponsibleId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("VerificationInterval")
                         .HasColumnType("int");
@@ -621,10 +752,14 @@ namespace Standards.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("ResponsibleId");
+
+                    b.HasIndex("WorkPlaceId");
+
                     b.ToTable("Standards");
                 });
 
-            modelBuilder.Entity("Standards.Models.Unit", b =>
+            modelBuilder.Entity("Standards.Core.Models.Unit", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -663,7 +798,7 @@ namespace Standards.Migrations
                     b.ToTable("Units");
                 });
 
-            modelBuilder.Entity("Standards.Models.Users.User", b =>
+            modelBuilder.Entity("Standards.Core.Models.Users.User", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -673,6 +808,9 @@ namespace Standards.Migrations
 
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("int");
+
+                    b.Property<string>("AccessToken")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -691,15 +829,14 @@ namespace Standards.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<byte[]>("PasswordHash")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
                     b.Property<byte[]>("PasswordSalt")
+                        .IsRequired()
                         .HasColumnType("varbinary(max)");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Token")
+                    b.Property<string>("RefreshToken")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserName")
@@ -708,150 +845,284 @@ namespace Standards.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("PersonId")
-                        .IsUnique();
-
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("Standards.Models.Departments.Sector", b =>
+            modelBuilder.Entity("DepartmentHousing", b =>
                 {
-                    b.HasOne("Standards.Models.Departments.Department", null)
-                        .WithMany("Sectors")
-                        .HasForeignKey("DepartmentId")
+                    b.HasOne("Standards.Core.Models.Departments.Department", null)
+                        .WithMany()
+                        .HasForeignKey("DepartmentsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Housings.Housing", null)
+                        .WithMany()
+                        .HasForeignKey("HousingsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Standards.Models.Departments.WorkPlace", b =>
+            modelBuilder.Entity("Standards.Core.Models.Departments.Sector", b =>
                 {
-                    b.HasOne("Standards.Models.Persons.Person", "Responcible")
+                    b.HasOne("Standards.Core.Models.Departments.Department", "Department")
+                        .WithMany("Sectors")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Department");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.Departments.WorkPlace", b =>
+                {
+                    b.HasOne("Standards.Core.Models.Persons.Person", "Responcible")
                         .WithMany()
                         .HasForeignKey("ResponcibleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Standards.Models.Housings.Room", null)
+                    b.HasOne("Standards.Core.Models.Housings.Room", "Room")
                         .WithMany("WorkPlaces")
                         .HasForeignKey("RoomId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
-                    b.HasOne("Standards.Models.Departments.Sector", null)
+                    b.HasOne("Standards.Core.Models.Departments.Sector", null)
                         .WithMany("WorkPlaces")
                         .HasForeignKey("SectorId");
 
                     b.Navigation("Responcible");
+
+                    b.Navigation("Room");
                 });
 
-            modelBuilder.Entity("Standards.Models.Housings.Room", b =>
+            modelBuilder.Entity("Standards.Core.Models.Housings.Room", b =>
                 {
-                    b.HasOne("Standards.Models.Departments.Sector", null)
+                    b.HasOne("Standards.Core.Models.Housings.Housing", "Housing")
+                        .WithMany("Rooms")
+                        .HasForeignKey("HousingId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Departments.Sector", "Sector")
                         .WithMany("Rooms")
                         .HasForeignKey("SectorId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Housing");
+
+                    b.Navigation("Sector");
                 });
 
-            modelBuilder.Entity("Standards.Models.Persons.Person", b =>
+            modelBuilder.Entity("Standards.Core.Models.MetrologyControl.CalibrationJournal", b =>
                 {
-                    b.HasOne("Standards.Models.Persons.Category", "Category")
+                    b.HasOne("Standards.Core.Models.MetrologyControl.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Standards.Standard", "Standard")
+                        .WithMany()
+                        .HasForeignKey("StandardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Standard");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.MetrologyControl.VerificationJournal", b =>
+                {
+                    b.HasOne("Standards.Core.Models.MetrologyControl.Place", "Place")
+                        .WithMany()
+                        .HasForeignKey("PlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Standards.Standard", "Standard")
+                        .WithMany()
+                        .HasForeignKey("StandardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Place");
+
+                    b.Navigation("Standard");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.Persons.Person", b =>
+                {
+                    b.HasOne("Standards.Core.Models.Persons.Category", "Category")
                         .WithMany()
                         .HasForeignKey("CategoryId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Standards.Models.Departments.Department", "Department")
-                        .WithMany()
-                        .HasForeignKey("DepartmentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Standards.Models.Persons.Position", "Position")
+                    b.HasOne("Standards.Core.Models.Persons.Position", "Position")
                         .WithMany()
                         .HasForeignKey("PositionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Standards.Models.Housings.Room", null)
+                    b.HasOne("Standards.Core.Models.Housings.Room", null)
                         .WithMany("Persons")
                         .HasForeignKey("RoomId");
 
-                    b.HasOne("Standards.Models.Departments.Sector", "Sector")
+                    b.HasOne("Standards.Core.Models.Departments.Sector", "Sector")
                         .WithMany("Persons")
                         .HasForeignKey("SectorId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Users.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
 
-                    b.Navigation("Department");
-
                     b.Navigation("Position");
 
                     b.Navigation("Sector");
+
+                    b.Navigation("User");
                 });
 
-            modelBuilder.Entity("Standards.Models.Quantity", b =>
+            modelBuilder.Entity("Standards.Core.Models.Quantity", b =>
                 {
-                    b.HasOne("Standards.Models.Services.Service", null)
+                    b.HasOne("Standards.Core.Models.Services.Service", null)
                         .WithMany("MaterialsQuantities")
                         .HasForeignKey("ServiceId");
                 });
 
-            modelBuilder.Entity("Standards.Models.Services.Material", b =>
+            modelBuilder.Entity("Standards.Core.Models.Services.Material", b =>
                 {
-                    b.HasOne("Standards.Models.Services.Service", null)
+                    b.HasOne("Standards.Core.Models.Services.Service", null)
                         .WithMany("Materials")
                         .HasForeignKey("ServiceId");
+
+                    b.HasOne("Standards.Core.Models.Unit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Unit");
                 });
 
-            modelBuilder.Entity("Standards.Models.Services.Service", b =>
+            modelBuilder.Entity("Standards.Core.Models.Services.Service", b =>
                 {
-                    b.HasOne("Standards.Models.Standards.Standard", null)
+                    b.HasOne("Standards.Core.Models.Services.ServiceType", "ServiceType")
+                        .WithMany()
+                        .HasForeignKey("ServiceTypeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Standards.Standard", null)
                         .WithMany("Services")
                         .HasForeignKey("StandardId");
+
+                    b.Navigation("ServiceType");
                 });
 
-            modelBuilder.Entity("Standards.Models.Standards.Characteristic", b =>
+            modelBuilder.Entity("Standards.Core.Models.Services.ServiceJournal", b =>
                 {
-                    b.HasOne("Standards.Models.Standards.Standard", null)
+                    b.HasOne("Standards.Core.Models.Persons.Person", "Person")
+                        .WithMany()
+                        .HasForeignKey("PersonId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Services.Service", "Service")
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Standards.Standard", "Standard")
+                        .WithMany()
+                        .HasForeignKey("StandardId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Person");
+
+                    b.Navigation("Service");
+
+                    b.Navigation("Standard");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.Standards.Characteristic", b =>
+                {
+                    b.HasOne("Standards.Core.Models.Standards.Grade", "Grade")
+                        .WithMany()
+                        .HasForeignKey("GradeId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Standards.Standard", "Standard")
                         .WithMany("Characteristics")
                         .HasForeignKey("StandardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Unit", "Unit")
+                        .WithMany()
+                        .HasForeignKey("UnitId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Grade");
+
+                    b.Navigation("Standard");
+
+                    b.Navigation("Unit");
                 });
 
-            modelBuilder.Entity("Standards.Models.Unit", b =>
+            modelBuilder.Entity("Standards.Core.Models.Standards.Standard", b =>
                 {
-                    b.HasOne("Standards.Models.Quantity", null)
+                    b.HasOne("Standards.Core.Models.Persons.Person", "Responsible")
+                        .WithMany()
+                        .HasForeignKey("ResponsibleId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
+                    b.HasOne("Standards.Core.Models.Departments.WorkPlace", "WorkPlace")
+                        .WithMany()
+                        .HasForeignKey("WorkPlaceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Responsible");
+
+                    b.Navigation("WorkPlace");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.Unit", b =>
+                {
+                    b.HasOne("Standards.Core.Models.Quantity", "Quantity")
                         .WithMany("Units")
                         .HasForeignKey("QuantityId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Standards.Models.Services.Service", null)
+                    b.HasOne("Standards.Core.Models.Services.Service", null)
                         .WithMany("MaterialsUnits")
                         .HasForeignKey("ServiceId");
+
+                    b.Navigation("Quantity");
                 });
 
-            modelBuilder.Entity("Standards.Models.Users.User", b =>
-                {
-                    b.HasOne("Standards.Models.Persons.Person", "Person")
-                        .WithOne("User")
-                        .HasForeignKey("Standards.Models.Users.User", "PersonId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Person");
-                });
-
-            modelBuilder.Entity("Standards.Models.Departments.Department", b =>
+            modelBuilder.Entity("Standards.Core.Models.Departments.Department", b =>
                 {
                     b.Navigation("Sectors");
                 });
 
-            modelBuilder.Entity("Standards.Models.Departments.Sector", b =>
+            modelBuilder.Entity("Standards.Core.Models.Departments.Sector", b =>
                 {
                     b.Navigation("Persons");
 
@@ -860,25 +1131,24 @@ namespace Standards.Migrations
                     b.Navigation("WorkPlaces");
                 });
 
-            modelBuilder.Entity("Standards.Models.Housings.Room", b =>
+            modelBuilder.Entity("Standards.Core.Models.Housings.Housing", b =>
+                {
+                    b.Navigation("Rooms");
+                });
+
+            modelBuilder.Entity("Standards.Core.Models.Housings.Room", b =>
                 {
                     b.Navigation("Persons");
 
                     b.Navigation("WorkPlaces");
                 });
 
-            modelBuilder.Entity("Standards.Models.Persons.Person", b =>
-                {
-                    b.Navigation("User")
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("Standards.Models.Quantity", b =>
+            modelBuilder.Entity("Standards.Core.Models.Quantity", b =>
                 {
                     b.Navigation("Units");
                 });
 
-            modelBuilder.Entity("Standards.Models.Services.Service", b =>
+            modelBuilder.Entity("Standards.Core.Models.Services.Service", b =>
                 {
                     b.Navigation("Materials");
 
@@ -887,7 +1157,7 @@ namespace Standards.Migrations
                     b.Navigation("MaterialsUnits");
                 });
 
-            modelBuilder.Entity("Standards.Models.Standards.Standard", b =>
+            modelBuilder.Entity("Standards.Core.Models.Standards.Standard", b =>
                 {
                     b.Navigation("Characteristics");
 

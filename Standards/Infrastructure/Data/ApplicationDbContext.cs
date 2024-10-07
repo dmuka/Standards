@@ -13,7 +13,6 @@ namespace Standards.Infrastructure.Data
 {
     public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
-        public DbSet<HousingDto> Housings { get; set; }
         public DbSet<Quantity> Quantities { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Unit> Units { get; set; }
@@ -47,23 +46,32 @@ namespace Standards.Infrastructure.Data
             modelBuilder.Entity<Standard>()
                 .HasOne(s => s.Responsible)
                 .WithMany()
-                .HasForeignKey(s => s.ResponsibleId)
                 .OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<Person>()
+                .HasOne(p => p.Sector)
+                .WithMany(s => s.Persons)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<WorkPlace>()
+                .HasOne(wp => wp.Room)
+                .WithMany(room => room.WorkPlaces)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<ServiceJournal>()
+                .HasOne(sj => sj.Standard)
+                .WithMany()
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<Room>()
+                .HasOne(r => r.Housing)
+                .WithMany(h => h.Rooms)
+                .OnDelete(DeleteBehavior.NoAction);
+            
+            modelBuilder.Entity<Housing>()
+                .ToTable("Housings")
+                .HasMany(h => h.Departments)
+                .WithMany(d => d.Housings);
         }
-        //protected override void OnModelCreating(ModelBuilder modelBuilder)
-        //{
-        //    modelBuilder.Entity<Person>()
-        //        .HasOne(person => person.User)
-        //        .WithOne(user => user.Person)
-        //        .HasForeignKey<User>(user => user.PersonId);
-
-        //    modelBuilder.Entity<Person>()
-        //        .Property(e => e.Id)
-        //        .ValueGeneratedOnAdd();
-
-        //    // Optionally, configure navigation properties if needed
-        //    modelBuilder.Entity<Person>().Navigation(p => p.User).UsePropertyAccessMode(PropertyAccessMode.Property);
-        //    modelBuilder.Entity<User>().Navigation(u => u.Person).UsePropertyAccessMode(PropertyAccessMode.Property);
-        //}
     }
 }

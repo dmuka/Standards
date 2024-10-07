@@ -1,9 +1,6 @@
 ﻿namespace Standards.Core.Models.Persons
 {
-    public class Category
+    public class Category : BaseEntity
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
-        public string Comments { get; set; } = null!;
     }
 }
