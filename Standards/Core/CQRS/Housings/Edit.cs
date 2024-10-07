@@ -1,7 +1,9 @@
 ﻿using FluentValidation;
 using MediatR;
 using Standards.Core.CQRS.Common.Attributes;
+using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
+using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Validators;
 
@@ -19,7 +21,25 @@ namespace Standards.Core.CQRS.Housings
         {
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
-                repository.Update(request.HousingDto);
+                var departments = repository.GetQueryable<Department>()
+                    .Where(department => department.Housings
+                        .SelectMany(h => h.Departments.Select(d => d.Id))
+                        .Intersect(request.HousingDto.DepartmentIds).Any());
+
+                var rooms = repository.GetQueryable<Room>()
+                    .Where(room => room.Housing.Id == request.HousingDto.Id);
+                
+                var housing = new Housing()
+                {
+                    Name = request.HousingDto.Name,
+                    ShortName = request.HousingDto.ShortName,
+                    FloorsCount = request.HousingDto.FloorsCount,
+                    Address = request.HousingDto.Address,
+                    Departments = departments.ToList(),
+                    Rooms = rooms.ToList()
+                };
+                
+                repository.Update(housing);
 
                 var result = await repository.SaveChangesAsync(cancellationToken);
 

@@ -20,8 +20,6 @@ public class Create
     {
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
-            await repository.AddAsync(request.HousingDto, cancellationToken);
-
             var housing = new Housing()
             {
                 Name = request.HousingDto.Name,

@@ -72,7 +72,7 @@ export default function Housings () {
 
   async function handleEdit (entity) {
     try {
-      const response = await fetch(ApiRoutes.HOUSINGS_PUT + `${entity.id}`, {
+      const response = await fetch(ApiRoutes.HOUSINGS_PUT, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -143,26 +143,30 @@ export default function Housings () {
                 <div><Button onClick={handleAddHousing}>Add</Button></div>
                 <table className='table table-striped' aria-labelledby="tableLabel">
                     <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Short name</th>
-                            <th>Address</th>
-                            <th>Floors count</th>
-                        </tr>
+                    <tr>
+                      <th>Name</th>
+                      <th>Short name</th>
+                      <th>Address</th>
+                      <th>Floors count</th>
+                      <th>Departments</th>
+                      <th>Rooms</th>
+                    </tr>
                     </thead>
-                    <tbody>
+                  <tbody>
                         {housings.map((housing) => {
                           return <tr key={housing.id}>
-                                <td>{housing.name}</td>
-                                <td>{housing.shortName}</td>
-                                <td>{housing.address}</td>
-                                <td>{housing.floorsCount}</td>
-                                <td><Button onClick={() => handleEditHousing(housing)}>Edit</Button></td>
-                                <td><Button onClick={() => handleDeleteHousing(housing.id)}>Delete</Button></td>
-                            </tr>
-                        }
+                            <td>{housing.name}</td>
+                            <td>{housing.shortName}</td>
+                            <td>{housing.address}</td>
+                            <td>{housing.floorsCount}</td>
+                            <td>{housing.floorsCount}</td>
+                            <td>{housing.floorsCount}</td>
+                            <td><Button onClick={() => handleEditHousing(housing)}>Edit</Button></td>
+                            <td><Button onClick={() => handleDeleteHousing(housing.id)}>Delete</Button></td>
+                          </tr>
+                            }
                         )}
-                    </tbody>
+                  </tbody>
                 </table>
             </div>
     )
