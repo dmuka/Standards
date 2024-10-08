@@ -1,6 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
-using Standards.Core.Models.DTOs;
+using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Validators;
 
@@ -8,18 +8,18 @@ namespace Standards.Core.CQRS.Rooms
 {
     public class GetById
     {
-        public class Query(int id) : IRequest<HousingDto>
+        public class Query(int id) : IRequest<Room>
         {
             public int Id { get; set; } = id;
         }
 
-        public class QueryHandler(IRepository repository) : IRequestHandler<Query, HousingDto>
+        public class QueryHandler(IRepository repository) : IRequestHandler<Query, Room>
         {
-            public async Task<HousingDto> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Room> Handle(Query request, CancellationToken cancellationToken)
             {
-                var housing = await repository.GetByIdAsync<HousingDto>(request.Id, cancellationToken);
+                var room = await repository.GetByIdAsync<Room>(request.Id, cancellationToken);
 
-                return housing;
+                return room;
             }
         }
 
@@ -31,7 +31,7 @@ namespace Standards.Core.CQRS.Rooms
 
                 RuleFor(query => query.Id)
                     .GreaterThan(default(int))
-                    .IdValidator<Query, HousingDto>(repository);
+                    .SetValidator(new IdValidator<Room>(repository));
             }
         }
     }

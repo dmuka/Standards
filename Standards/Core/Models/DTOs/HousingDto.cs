@@ -1,15 +1,10 @@
-﻿using Standards.Core.Models.Interfaces;
+﻿namespace Standards.Core.Models.DTOs;
 
-namespace Standards.Core.Models.DTOs;
-
-public class HousingDto : IEntity
+public class HousingDto : BaseEntity
 {
-    public int Id { get; set; }
-    public string Name { get; set; } = null!;
     public string ShortName { get; set; } = null!;
     public string Address { get; set; } = null!;
     public int FloorsCount { get; set; }
     public IList<int> DepartmentIds { get; set; }
     public IList<int> RoomIds { get; set; }
-    public string? Comments { get; set; } = null;
 }

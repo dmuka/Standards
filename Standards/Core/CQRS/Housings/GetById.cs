@@ -1,6 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
 using Standards.Core.Models.DTOs;
+using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Validators;
 
@@ -31,7 +32,7 @@ namespace Standards.Core.CQRS.Housings
 
                 RuleFor(query => query.Id)
                     .GreaterThan(default(int))
-                    .IdValidator<Query, HousingDto>(repository);
+                    .SetValidator(new IdValidator<Housing>(repository));
             }
         }
     }

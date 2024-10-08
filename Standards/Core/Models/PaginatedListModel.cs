@@ -11,11 +11,12 @@
             int currentPageSize, 
             int itemsPerPage)
         {
-            Items = items;
+            var enumerable = items as T[] ?? items.ToArray();
+            Items = enumerable;
             CurrentPageNumber = currentPageNumber < 1 ? DefaultPageNumber : currentPageNumber;
             CurrentPageSize = currentPageSize;
             ItemsPerPage = itemsPerPage < 1 ? DefaultItemsPerPage : itemsPerPage;
-            TotalCount = items.Count();
+            TotalCount = enumerable.Length;
         }
 
         public IEnumerable<T> Items { get; set; }

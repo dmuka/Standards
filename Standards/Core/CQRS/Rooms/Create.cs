@@ -6,6 +6,7 @@ using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Core.Models.Persons;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Validators;
 
 namespace Standards.Core.CQRS.Rooms;
 
@@ -69,7 +70,7 @@ public class Create
 
     public class QueryValidator : AbstractValidator<Query>
     {
-        public QueryValidator()
+        public QueryValidator(IRepository repository)
         {
             RuleLevelCascadeMode = CascadeMode.Stop;
 
@@ -79,9 +80,13 @@ public class Create
                 {
                     filter.RuleFor(room => room.Name)
                         .NotEmpty();
+                    
+                    filter.RuleFor(room => room.ShortName)
+                        .NotEmpty();
 
                     filter.RuleFor(room => room.HousingId)
-                        .GreaterThan(default(int));
+                        .GreaterThan(default(int))
+                        .SetValidator(new IdValidator<Housing>(repository));
 
                     filter.RuleFor(room => room.Width)
                         .GreaterThan(default(int));
@@ -96,7 +101,8 @@ public class Create
                         .GreaterThan(default(int));
 
                     filter.RuleFor(room => room.SectorId)
-                        .GreaterThan(default(int));
+                        .GreaterThan(default(int))
+                        .SetValidator(new IdValidator<Sector>(repository));
                 });
         }
     }

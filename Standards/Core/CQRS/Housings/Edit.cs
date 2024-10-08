@@ -59,7 +59,7 @@ namespace Standards.Core.CQRS.Housings
                     {
                         housing.RuleFor(housingDto => housingDto.Id)
                             .GreaterThan(default(int))
-                            .IdValidator(repository);
+                            .SetValidator(new IdValidator<Housing>(repository));;
 
                         housing.RuleFor(housingDto => housingDto.Name)
                             .NotEmpty();

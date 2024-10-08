@@ -1,35 +1,18 @@
 ﻿using FluentValidation;
-using Standards.Core.Models.Interfaces;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
-namespace Standards.Infrastructure.Validators
+namespace Standards.Infrastructure.Validators;
+
+public class IdValidator<T> : AbstractValidator<int> where T : class
 {
-    public static class CustomValidators
+    public IdValidator(IRepository repository) 
     {
-        public static IRuleBuilderOptions<T, int> IdValidator<T, TEntity>(
-            this IRuleBuilder<T, int> ruleBuilder,
-            IRepository repository)
-            where TEntity : class, IEntity
-        {
-            return ruleBuilder.MustAsync(async (id, cancellationToken) =>
+        RuleFor<int>(id => id)
+            .MustAsync(async (id, cancellationToken) =>
             {
-                var entity = await repository.GetByIdAsync<TEntity>(id, cancellationToken);
+                var entity = await repository.GetByIdAsync<T>(id, cancellationToken);
 
                 return entity is not null;
-                }).WithMessage($"{nameof(TEntity)} with such id doesn't exist.");
-        }        
-        
-        public static IRuleBuilderOptions<TEntity, int> IdValidator<TEntity>(
-            this IRuleBuilder<TEntity, int> ruleBuilder,
-            IRepository repository)
-            where TEntity : class, IEntity
-        {
-            return ruleBuilder.MustAsync(async (id, cancellationToken) =>
-            {
-                var entity = await repository.GetByIdAsync<TEntity>(id, cancellationToken);
-
-                return entity is not null;
-                }).WithMessage($"{nameof(TEntity)} with such id doesn't exist.");
-        }
+            }).WithMessage($"{nameof(T)} with such id doesn't exist.");
     }
 }
