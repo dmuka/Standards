@@ -5,7 +5,7 @@ using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Validators;
 
-namespace Standards.Core.CQRS.Housings
+namespace Standards.Core.CQRS.Rooms
 {
     [TransactionScope]
     public class Delete
@@ -19,9 +19,9 @@ namespace Standards.Core.CQRS.Housings
         {
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
-                var housing = await repository.GetByIdAsync<Housing>(request.Id, cancellationToken);
+                var room = await repository.GetByIdAsync<Room>(request.Id, cancellationToken);
 
-                await repository.DeleteAsync(housing, cancellationToken);
+                await repository.DeleteAsync(room, cancellationToken);
 
                 var result = await repository.SaveChangesAsync(cancellationToken);
 
@@ -37,7 +37,7 @@ namespace Standards.Core.CQRS.Housings
 
                 RuleFor(query => query.Id)
                     .GreaterThan(default(int))
-                    .SetValidator(new IdValidator<Housing>(repository));
+                    .SetValidator(new IdValidator<Room>(repository));
             }
         }
     }

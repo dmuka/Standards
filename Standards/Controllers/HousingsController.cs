@@ -23,7 +23,7 @@ namespace Standards.Controllers
         }
 
         [HttpGet]
-        [Route("{id}")]
+        [Route("{id:int}")]
         public async Task<IActionResult> GetHousing(int id)
         {
             var query = new GetById.Query(id);
@@ -67,7 +67,7 @@ namespace Standards.Controllers
         }
 
         [HttpDelete]
-        [Route("delete/{id}")]
+        [Route("delete/{id:int}")]
         public async Task DeleteHousing(int id)
         {
             var housing = await repository.GetByIdAsync<HousingDto>(id);

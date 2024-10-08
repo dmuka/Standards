@@ -6,13 +6,13 @@ using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
-namespace Standards.CQRS.Tests.Housings
+namespace Standards.CQRS.Tests.Rooms
 {
     public class DeleteTests
     {
         private int _idInDB;
         private int _idNotInDB;
-        private Housing _housing;
+        private Room _room;
         private CancellationToken _cancellationToken;
 
         private Mock<IRepository> _repository;
@@ -26,22 +26,20 @@ namespace Standards.CQRS.Tests.Housings
             _idInDB = 1;
             _idNotInDB = 2;
 
-            _housing = new Housing
+            _room = new Room
             {
                 Id = 1,
-                Address = "Address 1",
                 Name = "Name 1",
                 ShortName = "Short name 1",
-                FloorsCount = 1,
                 Comments = "Comments 1"
             };
 
             _cancellationToken = new CancellationToken();
 
             _repository = new Mock<IRepository>();
-            _repository.Setup(_ => _.GetByIdAsync<Housing>(_idInDB, _cancellationToken))
-                .Returns(Task.FromResult(_housing));
-            _repository.Setup(_ => _.DeleteAsync(_housing, _cancellationToken));
+            _repository.Setup(_ => _.GetByIdAsync<Room>(_idInDB, _cancellationToken))
+                .Returns(Task.FromResult(_room));
+            _repository.Setup(_ => _.DeleteAsync(_room, _cancellationToken));
             _repository.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
             _handler = new Delete.QueryHandler(_repository.Object);

@@ -24,19 +24,14 @@ namespace Standards.Controllers
         }
 
         [HttpGet]
-        [Route("")]
-        public IActionResult GetRoom(int id = 0)
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetRoom(int id)
         {
-            if (id == 0) return BadRequest();
+            var query = new GetById.Query(id);
 
-            var room = repository.Rooms.FirstOrDefault(r => r.Id == id);
+            var result = await sender.Send(query);
 
-            if (room is null)
-            {
-                return NotFound();
-            }
-
-            return Ok(room);
+            return Ok(result);
         }
 
         [HttpPost]
