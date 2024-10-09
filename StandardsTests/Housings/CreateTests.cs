@@ -4,6 +4,7 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
+using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
@@ -86,8 +87,8 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto);
         }
 
-        [TestCase(null)]
-        [TestCase("")]
+        [TestCase(Cases.Null)]
+        [TestCase(Cases.EmptyString)]
         public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
         {
             // Arrange
@@ -102,8 +103,8 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
         }
 
-        [TestCase(null)]
-        [TestCase("")]
+        [TestCase(Cases.Null)]
+        [TestCase(Cases.EmptyString)]
         public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
         {
             // Arrange
@@ -118,8 +119,8 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.ShortName);
         }
 
-        [TestCase(null)]
-        [TestCase("")]
+        [TestCase(Cases.Null)]
+        [TestCase(Cases.EmptyString)]
         public void Validator_IfAddressIsNull_ShouldHaveValidationError(string? address)
         {
             // Arrange

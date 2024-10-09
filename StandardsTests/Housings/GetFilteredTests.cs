@@ -7,6 +7,7 @@ using Standards.Core.CQRS.Housings;
 using Standards.Core.Models;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.DTOs.Filters;
+using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.QueryableWrapper.Interface;
 
@@ -62,6 +63,7 @@ namespace Standards.CQRS.Tests.Housings
                 ItemsPerPage = 10,
                 SearchQuery = string.Empty
             };
+            
             _cancellationToken = new CancellationToken();
 
             _queryBuilderMock = new Mock<IQueryBuilder<HousingDto, HousingsFilterDto>>();
@@ -155,11 +157,12 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.Filter.SearchQuery);
         }
 
-        [Test]
-        public void Validator_IfItemsPerPageIsZero_ShouldHaveValidationError()
+        [TestCase(Cases.Zero)]
+        [TestCase(Cases.Negative)]
+        public void Validator_IfItemsPerPageIsZero_ShouldHaveValidationError(int itemsPerPage)
         {
             // Arrange
-            _filterDto.ItemsPerPage = default;
+            _filterDto.ItemsPerPage = itemsPerPage;
 
             var query = new GetFiltered.Query(_filterDto);
             
@@ -170,11 +173,12 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.Filter.ItemsPerPage);
         }
 
-        [Test]
-        public void Validator_IfPageNumberIsZero_ShouldHaveValidationError()
+        [TestCase(Cases.Zero)]
+        [TestCase(Cases.Negative)]
+        public void Validator_IfPageNumberIsZero_ShouldHaveValidationError(int pageNumber)
         {
             // Arrange
-            _filterDto.PageNumber = default;
+            _filterDto.PageNumber = pageNumber;
 
             var query = new GetFiltered.Query(_filterDto);
             

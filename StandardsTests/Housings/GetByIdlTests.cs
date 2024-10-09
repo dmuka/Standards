@@ -1,32 +1,35 @@
+using FluentValidation;
+using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
+using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Create = Standards.Core.CQRS.Rooms.Create;
 
 namespace Standards.CQRS.Tests.Housings
 {
     [TestFixture]
     public class GetByIdTests
     {
-        private int _id;
-        private const int InvalidId = 10;
+        private const int IdInDb = 1;
+        private const int IdNotInDb = 10;
 
         private Mock<IRepository> _repository;
         private CancellationToken _cancellationToken;
         private List<HousingDto> _housings;
         private IRequestHandler<GetById.Query, HousingDto> _handler;
+        private IValidator<GetById.Query> _validator;
 
         [SetUp]
         public void Setup()
         {
-            _id = 1;
-
             _housings =
             [
                 new HousingDto
                 {
-                    Id = 1,
+                    Id = IdInDb,
                     Address = "Address 1",
                     Name = "Name 1",
                     ShortName = "Short name 1",
@@ -58,18 +61,19 @@ namespace Standards.CQRS.Tests.Housings
             _cancellationToken = new CancellationToken();
 
             _repository = new Mock<IRepository>();
-            _repository.Setup(_ => _.GetByIdAsync<HousingDto>(_id, _cancellationToken))
-                .Returns(Task.FromResult(_housings.First(_ => _.Id == _id)));
+            _repository.Setup(_ => _.GetByIdAsync<HousingDto>(IdInDb, _cancellationToken))
+                .Returns(Task.FromResult(_housings.First(_ => _.Id == IdInDb)));
 
-            _handler = new GetById.QueryHandler(_repository.Object); 
+            _handler = new GetById.QueryHandler(_repository.Object);
+            _validator = new GetById.QueryValidator(_repository.Object); 
         }
 
         [Test]
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new GetById.Query(_id);
-            var expected = _housings.First(_ => _.Id == _id);
+            var query = new GetById.Query(IdInDb);
+            var expected = _housings.First(_ => _.Id == IdInDb);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -78,24 +82,26 @@ namespace Standards.CQRS.Tests.Housings
             Assert.That(result, Is.EqualTo(expected));
         }
 
-        [Test]
-        public void Handler_IfIdIsInvalid_ReturnResult()
+        [TestCase(Cases.Zero)]
+        [TestCase(Cases.Negative)]
+        [TestCase(IdNotInDb)]
+        public void Validator_IfIdIsInvalid_ReturnResult(int id)
         {
             // Arrange
-            var query = new GetById.Query(InvalidId);
+            var query = new GetById.Query(id);
 
             // Act
-            var result = _handler.Handle(query, _cancellationToken).Result;
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
-            Assert.That(result, Is.EqualTo(null));
+            result.ShouldHaveValidationErrorFor(_ => _.Id);
         }
 
         [Test]
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new GetById.Query(_id);
+            var query = new GetById.Query(IdInDb);
             _cancellationToken = new CancellationToken(true);
 
             // Act

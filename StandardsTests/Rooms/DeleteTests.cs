@@ -4,14 +4,15 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Housings;
+using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace Standards.CQRS.Tests.Rooms
 {
     public class DeleteTests
     {
-        private int _idInDB;
-        private int _idNotInDB;
+        private const int IdInDb = 1;
+        private const int IdNotInDb = 2;
         private Room _room;
         private CancellationToken _cancellationToken;
 
@@ -23,12 +24,9 @@ namespace Standards.CQRS.Tests.Rooms
         [SetUp]
         public void Setup()
         {
-            _idInDB = 1;
-            _idNotInDB = 2;
-
             _room = new Room
             {
-                Id = 1,
+                Id = IdInDb,
                 Name = "Name 1",
                 ShortName = "Short name 1",
                 Comments = "Comments 1"
@@ -37,7 +35,7 @@ namespace Standards.CQRS.Tests.Rooms
             _cancellationToken = new CancellationToken();
 
             _repository = new Mock<IRepository>();
-            _repository.Setup(_ => _.GetByIdAsync<Room>(_idInDB, _cancellationToken))
+            _repository.Setup(_ => _.GetByIdAsync<Room>(IdInDb, _cancellationToken))
                 .Returns(Task.FromResult(_room));
             _repository.Setup(_ => _.DeleteAsync(_room, _cancellationToken));
             _repository.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
@@ -50,7 +48,7 @@ namespace Standards.CQRS.Tests.Rooms
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new Delete.Query(_idInDB);
+            var query = new Delete.Query(IdInDb);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -63,7 +61,7 @@ namespace Standards.CQRS.Tests.Rooms
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new Delete.Query(_idInDB);
+            var query = new Delete.Query(IdInDb);
             _cancellationToken = new CancellationToken(true);
 
             // Act
@@ -72,25 +70,14 @@ namespace Standards.CQRS.Tests.Rooms
             // Assert
             Assert.That(result, Is.EqualTo(0));
         }
-
-        [Test]
-        public void Validator_IfIdNotInDB_ShouldHaveValidationError()
+        
+        [TestCase(Cases.Zero)]
+        [TestCase(Cases.Negative)]
+        [TestCase(IdNotInDb)]
+        public void Validator_IfIdNotInDB_ShouldHaveValidationError(int id)
         {
             // Arrange
-            var query = new Delete.Query(_idNotInDB);
-
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Id);
-        }
-
-        [Test]
-        public void Validator_IfIdIsZero_ShouldHaveValidationError()
-        {
-            // Arrange
-            var query = new Delete.Query(default);
+            var query = new Delete.Query(id);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
