@@ -31,6 +31,7 @@ namespace Standards.Core.CQRS.Housings
                 
                 var housing = new Housing()
                 {
+                    Id = request.HousingDto.Id,
                     Name = request.HousingDto.Name,
                     ShortName = request.HousingDto.ShortName,
                     FloorsCount = request.HousingDto.FloorsCount,
@@ -59,7 +60,7 @@ namespace Standards.Core.CQRS.Housings
                     {
                         housing.RuleFor(housingDto => housingDto.Id)
                             .GreaterThan(default(int))
-                            .SetValidator(new IdValidator<Housing>(repository));;
+                            .SetValidator(new IdValidator<Housing>(repository));
 
                         housing.RuleFor(housingDto => housingDto.Name)
                             .NotEmpty();
@@ -71,6 +72,12 @@ namespace Standards.Core.CQRS.Housings
                             .GreaterThan(default(int));
 
                         housing.RuleFor(housingDto => housingDto.Address)
+                            .NotEmpty();
+
+                        housing.RuleFor(housingDto => housingDto.DepartmentIds)
+                            .NotEmpty();
+
+                        housing.RuleFor(housingDto => housingDto.RoomIds)
                             .NotEmpty();
                     });
             }

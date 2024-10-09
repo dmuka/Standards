@@ -3,7 +3,10 @@ using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Housings;
+using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
+using Standards.Core.Models.Housings;
+using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
@@ -11,8 +14,10 @@ namespace Standards.CQRS.Tests.Housings
     [TestFixture]
     public class EditTests
     {
+        private const int ValidId = 1;
+        private const int IdNotInDb = 2;
+        
         private CancellationToken _cancellationToken;
-        private int _id;
         private HousingDto _housing;
 
         private Mock<IRepository> _repositoryMock;
@@ -23,11 +28,9 @@ namespace Standards.CQRS.Tests.Housings
         [SetUp]
         public void Setup()
         {
-            _id = 1;
-
             _housing = new HousingDto
             {
-                Id = _id,
+                Id = ValidId,
                 Address = "Address 1",
                 Name = "Name 1",
                 ShortName = "Short name 1",
@@ -38,7 +41,7 @@ namespace Standards.CQRS.Tests.Housings
             _cancellationToken = new CancellationToken();
 
             _repositoryMock = new Mock<IRepository>();
-            _repositoryMock.Setup(_ => _.GetByIdAsync<HousingDto>(_id, _cancellationToken)).Returns(Task.FromResult(_housing));
+            _repositoryMock.Setup(_ => _.GetByIdAsync<HousingDto>(ValidId, _cancellationToken)).Returns(Task.FromResult(_housing));
             _repositoryMock.Setup(_ => _.Update(_housing));
             _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
@@ -58,6 +61,22 @@ namespace Standards.CQRS.Tests.Housings
 
             // Assert
             Assert.That(result, Is.EqualTo(expected));
+        }
+
+        [Test]
+        public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
+        {
+            // Arrange
+            var query = new Edit.Query(_housing);
+
+            // Act
+            var result = _handler.Handle(query, _cancellationToken).Result;
+
+            // Assert
+            _repositoryMock.Verify(repository => repository.GetQueryable<Department>(), Times.Once);
+            _repositoryMock.Verify(repository => repository.GetQueryable<Room>(), Times.Once);
+            _repositoryMock.Verify(repository => repository.Update(It.IsAny<Housing>()), Times.Once);
+            _repositoryMock.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
         }
 
         [Test]
@@ -84,14 +103,16 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Edit.Query(_housing);
 
             // Act
-            var result = _validator.TestValidate(query);
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto);
         }
 
-        [Test]
-        public void Validator_IfIdIsZero_ShouldHaveValidationError()
+        [TestCase(Cases.Negative)]
+        [TestCase(Cases.Zero)]
+        [TestCase(IdNotInDb)]
+        public void Validator_IfIdIsInvalid_ShouldHaveValidationError(int id)
         {
             // Arrange
             _housing.Id = default;
@@ -99,29 +120,14 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Edit.Query(_housing);
 
             // Act
-            var result = _validator.TestValidateAsync(query).Result;
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Id);
         }
 
-        [Test]
-        public void Validator_IfIdNotInDB_ShouldHaveValidationError()
-        {
-            // Arrange
-            _housing.Id = 2;
-
-            var query = new Edit.Query(_housing);
-
-            // Act
-            var result = _validator.TestValidateAsync(query).Result;
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Id);
-        }
-
-        [TestCase(null)]
-        [TestCase("")]
+        [TestCase(Cases.Null)]
+        [TestCase(Cases.EmptyString)]
         public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
         {
             // Arrange
@@ -130,14 +136,14 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Edit.Query(_housing);
 
             // Act
-            var result = _validator.TestValidateAsync(query).Result;
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
         }
 
-        [TestCase(null)]
-        [TestCase("")]
+        [TestCase(Cases.Null)]
+        [TestCase(Cases.EmptyString)]
         public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
         {
             // Arrange
@@ -146,14 +152,14 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Edit.Query(_housing);
 
             // Act
-            var result = _validator.TestValidateAsync(query).Result;
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.ShortName);
         }
 
-        [TestCase(null)]
-        [TestCase("")]
+        [TestCase(Cases.Null)]
+        [TestCase(Cases.EmptyString)]
         public void Validator_IfAddressIsNull_ShouldHaveValidationError(string? address)
         {
             // Arrange
@@ -162,7 +168,7 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Edit.Query(_housing);
 
             // Act
-            var result = _validator.TestValidateAsync(query).Result;
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Address);
@@ -177,10 +183,40 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Edit.Query(_housing);
 
             // Act
-            var result = _validator.TestValidateAsync(query).Result;
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.FloorsCount);
+        }
+
+        [Test]
+        public void Validator_IfDepartmentIdsIsEmpty_ShouldHaveValidationError()
+        {
+            // Arrange
+            _housing.DepartmentIds = new List<int>();
+
+            var query = new Edit.Query(_housing);
+
+            // Act
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.HousingDto.DepartmentIds);
+        }
+
+        [Test]
+        public void Validator_IfRoomIdsIsEmpty_ShouldHaveValidationError()
+        {
+            // Arrange
+            _housing.RoomIds = new List<int>();
+
+            var query = new Edit.Query(_housing);
+
+            // Act
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.HousingDto.RoomIds);
         }
     }
 }

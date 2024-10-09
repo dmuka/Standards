@@ -7,9 +7,9 @@ namespace Standards.Core.Models.Housings
     {
         public Housing Housing { get; set; }
         public int Floor { get; set; }
-        public int Length { get; set; }
-        public int Height { get; set; }
-        public int Width { get; set; }
+        public double Length { get; set; }
+        public double Height { get; set; }
+        public double Width { get; set; }
         public IList<WorkPlace> WorkPlaces { get; set; } = new List<WorkPlace>();
         public IList<Person> Persons { get; set; } = new List<Person>();
         public Sector Sector { get; set; }

@@ -6,6 +6,7 @@ using Standards.Core.CQRS.Rooms;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
+using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace Standards.CQRS.Tests.Rooms
@@ -21,7 +22,7 @@ namespace Standards.CQRS.Tests.Rooms
         private Sector _sector;
 
         private const int ValidId = 1;
-        private const int InvalidId = 2;
+        private const int IdNotInDb = 2;
         
         private Mock<IRepository> _repositoryMock;
 
@@ -157,8 +158,8 @@ namespace Standards.CQRS.Tests.Rooms
             result.ShouldHaveValidationErrorFor(_ => _.Room.ShortName);
         }
 
-        [TestCase(-1)]
-        [TestCase(0)]
+        [TestCase(Cases.Negative)]
+        [TestCase(Cases.Zero)]
         public void Validator_IfWidthIsInvalid_ShouldHaveValidationError(int width)
         {
             // Arrange
@@ -173,8 +174,8 @@ namespace Standards.CQRS.Tests.Rooms
             result.ShouldHaveValidationErrorFor(_ => _.Room.Width);
         }
 
-        [TestCase(-1)]
-        [TestCase(0)]
+        [TestCase(Cases.Negative)]
+        [TestCase(Cases.Zero)]
         public void Validator_IfLengthIsInvalid_ShouldHaveValidationError(int length)
         {
             // Arrange
@@ -189,8 +190,8 @@ namespace Standards.CQRS.Tests.Rooms
             result.ShouldHaveValidationErrorFor(_ => _.Room.Length);
         }
 
-        [TestCase(-1)]
-        [TestCase(0)]
+        [TestCase(Cases.Negative)]
+        [TestCase(Cases.Zero)]
         public void Validator_IfHeightIsInvalid_ShouldHaveValidationError(int height)
         {
             // Arrange
@@ -205,9 +206,9 @@ namespace Standards.CQRS.Tests.Rooms
             result.ShouldHaveValidationErrorFor(_ => _.Room.Height);
         }
 
-        [TestCase(-1)]
-        [TestCase(0)]
-        [TestCase(InvalidId)]
+        [TestCase(Cases.Negative)]
+        [TestCase(Cases.Zero)]
+        [TestCase(IdNotInDb)]
         public void Validator_IfHousingIdIsInvalid_ShouldHaveValidationError(int housingId)
         {
             // Arrange
@@ -222,9 +223,9 @@ namespace Standards.CQRS.Tests.Rooms
             result.ShouldHaveValidationErrorFor(_ => _.Room.HousingId);
         }
 
-        [TestCase(-1)]
-        [TestCase(0)]
-        [TestCase(InvalidId)]
+        [TestCase(Cases.Negative)]
+        [TestCase(Cases.Zero)]
+        [TestCase(IdNotInDb)]
         public void Validator_IfSectorIdIsInvalid_ShouldHaveValidationError(int sectorId)
         {
             // Arrange
@@ -239,8 +240,8 @@ namespace Standards.CQRS.Tests.Rooms
             result.ShouldHaveValidationErrorFor(_ => _.Room.SectorId);
         }
 
-        [TestCase(-1)]
-        [TestCase(0)]
+        [TestCase(Cases.Negative)]
+        [TestCase(Cases.Zero)]
         public void Validator_IfFloorIsInvalid_ShouldHaveValidationError(int floor)
         {
             // Arrange

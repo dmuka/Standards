@@ -35,7 +35,6 @@ namespace Standards
 
             try
             {
-
                 var builder = WebApplication.CreateBuilder(args);
 
                 ConfigureServices(builder);
