@@ -196,14 +196,14 @@ namespace Standards.Migrations
                     b.Property<int>("Floor")
                         .HasColumnType("int");
 
-                    b.Property<int>("Height")
-                        .HasColumnType("int");
+                    b.Property<double>("Height")
+                        .HasColumnType("float");
 
                     b.Property<int>("HousingId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Length")
-                        .HasColumnType("int");
+                    b.Property<double>("Length")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -218,8 +218,8 @@ namespace Standards.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Width")
-                        .HasColumnType("int");
+                    b.Property<double>("Width")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 

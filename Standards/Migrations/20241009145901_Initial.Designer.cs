@@ -12,7 +12,7 @@ using Standards.Infrastructure.Data;
 namespace Standards.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241007072850_Initial")]
+    [Migration("20241009145901_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -198,14 +198,14 @@ namespace Standards.Migrations
                     b.Property<int>("Floor")
                         .HasColumnType("int");
 
-                    b.Property<int>("Height")
-                        .HasColumnType("int");
+                    b.Property<double>("Height")
+                        .HasColumnType("float");
 
                     b.Property<int>("HousingId")
                         .HasColumnType("int");
 
-                    b.Property<int>("Length")
-                        .HasColumnType("int");
+                    b.Property<double>("Length")
+                        .HasColumnType("float");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -220,8 +220,8 @@ namespace Standards.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Width")
-                        .HasColumnType("int");
+                    b.Property<double>("Width")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
