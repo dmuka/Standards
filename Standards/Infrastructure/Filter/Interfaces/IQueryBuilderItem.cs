@@ -1,7 +1,6 @@
-﻿namespace Standards.Infrastructure.Filter.Interfaces
+﻿namespace Standards.Infrastructure.Filter.Interfaces;
+
+public interface IQueryBuilderItem<TEntity>
 {
-    public interface IQueryBuilderItem<T>
-    {
-        T Execute(T query);
-    }
+    IQueryable<TEntity> Execute(IQueryable<TEntity> query);
 }

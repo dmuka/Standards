@@ -1,15 +1,16 @@
-﻿namespace Standards.Infrastructure.Filter.Interfaces
+﻿namespace Standards.Infrastructure.Filter.Interfaces;
+
+public interface IQueryBuilder<T>
+    where T : class
 {
-    public interface IQueryBuilder<out T, TFilter>
-    {
-        IQueryBuilder<T, TFilter> SetFilter(TFilter filterDto);
+    IQueryBuilder<T> AddFilter(IFilter<T> filter);
+    IQueryBuilder<T> AddSorter(IFilter<T> sorter);
 
-        IQueryBuilder<T, TFilter> Filter();
+    IQueryBuilder<T> Filter();
 
-        IQueryBuilder<T, TFilter> Sort();
+    IQueryBuilder<T> Sort();
 
-        IQueryBuilder<T, TFilter> Paginate();
+    IQueryBuilder<T> Paginate();
 
-        IQueryable<T> GetQuery();
-    }
+    IQueryable<T> GetQuery();
 }

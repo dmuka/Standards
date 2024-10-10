@@ -2,8 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
-using Standards.Core.Models.DTOs.Filters;
+using Standards.Core.Models.Filters;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Filter.Models;
 
 namespace Standards.Controllers
 {
@@ -35,7 +36,7 @@ namespace Standards.Controllers
 
         [HttpPost]
         [Route("filter")]
-        public async Task<IActionResult> GetHousingsByFilter([FromBody] HousingsFilterDto filter)
+        public async Task<IActionResult> GetHousingsByFilter([FromBody] FilterDto filter)
         {
             var query = new GetFiltered.Query(filter);
 

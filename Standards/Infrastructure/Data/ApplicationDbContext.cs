@@ -72,6 +72,27 @@ namespace Standards.Infrastructure.Data
                 .ToTable("Housings")
                 .HasMany(h => h.Departments)
                 .WithMany(d => d.Housings);
+
+            // Seeding data
+            var housing1 = new Housing
+            {
+                Id = 1, Name = "Housing1", ShortName = "h1", FloorsCount = 2, Address = "Address1", Comments = "Comments1"
+            };
+            var housing2 = new Housing
+            {
+                Id = 2, Name = "Housing2", ShortName = "h2", FloorsCount = 1, Address = "Address2", Comments = "Comments2"
+            };
+            var housing3 = new Housing
+            {
+                Id = 3, Name = "Housing3", ShortName = "h3", FloorsCount = 2, Address = "Address3", Comments = "Comments3"
+            };
+            
+            modelBuilder.Entity<Housing>().HasData(housing1, housing2, housing3);
+            
+            modelBuilder.Entity<Room>().OwnsOne(r => r.Housing).HasData(
+                new Room { Id = 1, Name = "Room1", ShortName = "r1", Floor = 2, Housing = housing1, Length = 4, Height = 3, Width = 5, Comments = "Comments1" },
+                new Room { Id = 2, Name = "Room2", ShortName = "r2", Floor = 1, Housing = housing2, Length = 5, Height = 3, Width = 5,Comments = "Comments2" },
+                new Room { Id = 3, Name = "Room3", ShortName = "r3", Floor = 2, Housing = housing3, Length = 6, Height = 3, Width = 5,Comments = "Comments3" });
         }
     }
 }

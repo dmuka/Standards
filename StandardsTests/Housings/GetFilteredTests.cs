@@ -2,13 +2,18 @@
 using FluentValidation;
 using FluentValidation.TestHelper;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models;
 using Standards.Core.Models.DTOs;
-using Standards.Core.Models.DTOs.Filters;
+using Standards.Core.Models.Filters;
+using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Constants;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Interfaces;
+using Standards.Infrastructure.Filter.Models;
 using Standards.Infrastructure.QueryableWrapper.Interface;
 
 namespace Standards.CQRS.Tests.Housings
@@ -16,20 +21,25 @@ namespace Standards.CQRS.Tests.Housings
     [TestFixture]
     public class GetFilteredTests
     {
-        private HousingsFilterDto _filterDto;
+        private const string SearchQuery = "Name"; 
+        
+        private FilterDto _filter;
         private CancellationToken _cancellationToken;
-        private IList<HousingDto> _housings;
+        private IList<Housing> _housings;
+        private IQueryBuilder<Housing> _queryBuilder;
 
-        private Mock<IQueryBuilder<HousingDto, HousingsFilterDto>> _queryBuilderMock;
-        private Mock<IQueryableWrapper<HousingDto>> _queryWrapperMock;
+        private Mock<IRepository> _repositoryMock;
+        private Mock<IQueryBuilder<Housing>> _queryBuilderMock;
+        private Mock<IQueryableWrapper<Housing>> _queryWrapperMock;
+        private Mock<IQueryable<Housing>> _queryMock;
 
-        private IRequestHandler<GetFiltered.Query, PaginatedListModel<HousingDto>> _handler;
+        private IRequestHandler<GetFiltered.Query, PaginatedListModel<Housing>> _handler;
         private IValidator<GetFiltered.Query> _validator;
 
         [SetUp]
         public void Setup()
         {
-            _housings = new List<HousingDto>
+            _housings = new List<Housing>
             {
                 new() {
                     Id = 1,
@@ -57,22 +67,29 @@ namespace Standards.CQRS.Tests.Housings
                 }
             };
 
-            _filterDto = new HousingsFilterDto
+            _filter = new FilterDto()
             {
-                PageNumber = 1,
+                Page = 1,
                 ItemsPerPage = 10,
                 SearchQuery = string.Empty
             };
+
+            _repositoryMock = new Mock<IRepository>();
+
+            _queryBuilder = new QueryBuilder<Housing>(_repositoryMock.Object);
             
             _cancellationToken = new CancellationToken();
 
-            _queryBuilderMock = new Mock<IQueryBuilder<HousingDto, HousingsFilterDto>>();
+            _queryBuilderMock = new Mock<IQueryBuilder<Housing>>();
 
-            _queryWrapperMock = new Mock<IQueryableWrapper<HousingDto>>();
-            _queryWrapperMock.Setup(m => m.ToListAsync(_housings.AsQueryable(), _cancellationToken))
-                  .Returns(Task.FromResult(_housings));
+             _queryWrapperMock = new Mock<IQueryableWrapper<Housing>>();
+             _queryWrapperMock.Setup(m => m.ToListAsync(_housings.AsQueryable(), _cancellationToken))
+                   .Returns(Task.FromResult(_housings));
 
-            _queryBuilderMock.Setup(_ => _.SetFilter(_filterDto)).Returns(_queryBuilderMock.Object);
+            _queryMock = new Mock<IQueryable<Housing>>();
+
+            _queryBuilderMock.Setup(_ => _.AddFilter(It.IsAny<IFilter<Housing>>())).Returns(_queryBuilderMock.Object);
+            _queryBuilderMock.Setup(_ => _.AddSorter(It.IsAny<IFilter<Housing>>())).Returns(_queryBuilderMock.Object);
             _queryBuilderMock.Setup(_ => _.Filter()).Returns(_queryBuilderMock.Object);
             _queryBuilderMock.Setup(_ => _.Sort()).Returns(_queryBuilderMock.Object);
             _queryBuilderMock.Setup(_ => _.Paginate()).Returns(_queryBuilderMock.Object);
@@ -86,8 +103,8 @@ namespace Standards.CQRS.Tests.Housings
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new GetFiltered.Query(_filterDto);
-            var expected = new PaginatedListModel<HousingDto>(_housings, 1, 3, 10);
+            var query = new GetFiltered.Query(_filter);
+            var expected = new PaginatedListModel<Housing>(_housings, 1, 3, 10);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -100,7 +117,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new GetFiltered.Query(_filterDto);
+            var query = new GetFiltered.Query(_filter);
             _cancellationToken = new CancellationToken(true);
 
             // Act
@@ -114,11 +131,11 @@ namespace Standards.CQRS.Tests.Housings
         public void Handler_IfNonvalidPagePaginateValues_ReturnResultWithDefaultValues()
         {
             // Arrange
-            _filterDto.ItemsPerPage = default;
-            _filterDto.PageNumber = default;
+            _filter.ItemsPerPage = default;
+            _filter.Page = default;
 
-            var query = new GetFiltered.Query(_filterDto);
-            var expected = new PaginatedListModel<HousingDto>(_housings, 1, 3, 10);
+            var query = new GetFiltered.Query(_filter);
+            var expected = new PaginatedListModel<Housing>(_housings, 1, 3, 10);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -131,9 +148,9 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfFilterDtoIsNull_ShouldHaveValidationError()
         {
             // Arrange
-            _filterDto = null;
+            _filter = null;
 
-            var query = new GetFiltered.Query(_filterDto);
+            var query = new GetFiltered.Query(_filter);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -146,9 +163,9 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfSearchQueryIsNull_ShouldHaveValidationError()
         {
             // Arrange
-            _filterDto.SearchQuery = null;
+            _filter.SearchQuery = null;
 
-            var query = new GetFiltered.Query(_filterDto);
+            var query = new GetFiltered.Query(_filter);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -162,9 +179,9 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfItemsPerPageIsZero_ShouldHaveValidationError(int itemsPerPage)
         {
             // Arrange
-            _filterDto.ItemsPerPage = itemsPerPage;
+            _filter.ItemsPerPage = itemsPerPage;
 
-            var query = new GetFiltered.Query(_filterDto);
+            var query = new GetFiltered.Query(_filter);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -178,15 +195,15 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfPageNumberIsZero_ShouldHaveValidationError(int pageNumber)
         {
             // Arrange
-            _filterDto.PageNumber = pageNumber;
+            _filter.Page = pageNumber;
 
-            var query = new GetFiltered.Query(_filterDto);
+            var query = new GetFiltered.Query(_filter);
             
             // Act
             var result = _validator.TestValidate(query);
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Filter.PageNumber);
+            result.ShouldHaveValidationErrorFor(_ => _.Filter.Page);
         }
     }
 }

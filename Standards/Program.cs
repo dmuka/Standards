@@ -5,9 +5,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
-using Standards.Core.CQRS.Housings.Filters;
 using Standards.Core.Models.DTOs;
-using Standards.Core.Models.DTOs.Filters;
 using Standards.Core.Services.Implementations;
 using Standards.Core.Services.Interfaces;
 using Standards.Infrastructure.Data;
@@ -20,8 +18,7 @@ using Standards.Infrastructure.Logging;
 using Standards.Infrastructure.Mediatr;
 using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
 using System.Text;
-using Standards.Infrastructure.QueryableWrapper.Implementation;
-using Standards.Infrastructure.QueryableWrapper.Interface;
+using Standards.Core.Models.Housings;
 
 namespace Standards
 {
@@ -136,9 +133,9 @@ namespace Standards
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
 
-            builder.Services.AddScoped<IQueryBuilder<HousingDto, HousingsFilterDto>, QueryBuilder<HousingDto, HousingsFilterDto>>();
-            builder.Services.AddScoped<IQueryBuilderInitializer<HousingDto, HousingsFilterDto>, HousingsQueryBuilderInitializer>();
-            builder.Services.AddScoped<IQueryableWrapper<HousingDto>, QueryableWrapper<HousingDto>>();
+            builder.Services.AddScoped<IQueryBuilder<HousingDto>, QueryBuilder<HousingDto>>();
+            builder.Services.AddScoped<IQueryBuilder<Housing>, QueryBuilder<Housing>>();
+            builder.Services.AddScoped<IQueryBuilder<Room>, QueryBuilder<Room>>();
             
             builder.Services.AddControllers();
             builder.Services.AddRazorPages();

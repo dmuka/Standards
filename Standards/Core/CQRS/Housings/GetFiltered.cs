@@ -1,29 +1,55 @@
-﻿using FluentValidation;
+﻿using System.Linq.Expressions;
+using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Standards.Core.Models;
 using Standards.Core.Models.DTOs;
-using Standards.Core.Models.DTOs.Filters;
+using Standards.Core.Models.Filters;
+using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Filter.Interfaces;
+using Standards.Infrastructure.Filter.Models;
+using Standards.Infrastructure.QueryableWrapper.Implementation;
 using Standards.Infrastructure.QueryableWrapper.Interface;
 
-namespace Standards.Core.CQRS.Housings
-{
+namespace Standards.Core.CQRS.Housings;
+
     public class GetFiltered
     {
-        public class Query(HousingsFilterDto filter) : IRequest<PaginatedListModel<HousingDto>>
+        public class Query(FilterDto filter) : IRequest<PaginatedListModel<Housing>>
         {
-            public HousingsFilterDto Filter { get; set; } = filter;
+            public FilterDto Filter { get; set; } = filter;
         }
 
-        public class QueryHandler(
-            IQueryBuilder<HousingDto, HousingsFilterDto> queryBuilder,
-            IQueryableWrapper<HousingDto> queryableWrapper)
-            : IRequestHandler<Query, PaginatedListModel<HousingDto>>
+        public class QueryHandler(IQueryBuilder<Housing> queryBuilder, IQueryableWrapper<Housing> queryableWrapper)
+            : IRequestHandler<Query, PaginatedListModel<Housing>>
         {
-            public async Task<PaginatedListModel<HousingDto>> Handle(Query request, CancellationToken cancellationToken)
+            
+            public async Task<PaginatedListModel<Housing>> Handle(Query request, CancellationToken cancellationToken)
             {
+                var filterFunc = (Housing h) =>
+                {
+                    var result = h.Name.Contains(request.Filter.SearchQuery);
+                    
+                    return result;
+                };
+                
+                Expression<Func<Housing, bool>> expression = h => filterFunc(h);
+                
+                var filter = new Filter<Housing>(expression)
+                {
+                    PageNumber = request.Filter.Page,
+                    ItemsPerPage = request.Filter.ItemsPerPage
+                };
+                
+                var sorter = new Sorter<Housing, string>(h => h.Name)
+                {
+                    PageNumber = request.Filter.Page,
+                    ItemsPerPage = request.Filter.ItemsPerPage
+                };
+
                 var query = queryBuilder
-                    .SetFilter(request.Filter)
+                    .AddFilter(filter)
+                    .AddSorter(sorter)
                     .Filter()
                     .Sort()
                     .Paginate()
@@ -31,13 +57,13 @@ namespace Standards.Core.CQRS.Housings
 
                 var housings = await queryableWrapper.ToListAsync(query, cancellationToken);
 
-                PaginatedListModel<HousingDto> result = null;
-
+                PaginatedListModel<Housing> result = null;
+                
                 if (housings is not null)
                 {
-                    result = new PaginatedListModel<HousingDto>(
+                    result = new PaginatedListModel<Housing>(
                         housings,
-                        request.Filter.PageNumber,
+                        request.Filter.Page,
                         housings.Count,
                         request.Filter.ItemsPerPage);
                 }
@@ -57,7 +83,7 @@ namespace Standards.Core.CQRS.Housings
                         filter.RuleFor(_ => _.SearchQuery)
                             .NotNull();
 
-                        filter.RuleFor(_ => _.PageNumber)
+                        filter.RuleFor(_ => _.Page)
                             .GreaterThan(default(int));
 
                         filter.RuleFor(_ => _.ItemsPerPage)
@@ -66,4 +92,3 @@ namespace Standards.Core.CQRS.Housings
             }
         }
     }
-}

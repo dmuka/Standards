@@ -1,10 +1,9 @@
-﻿namespace Standards.Core.Models
+﻿using Standards.Infrastructure.Filter.Constants;
+
+namespace Standards.Core.Models
 {
     public class PaginatedListModel<T>
     {
-        private const int DefaultItemsPerPage = 10;
-        private const int DefaultPageNumber = 1;
-
         public PaginatedListModel(
             IEnumerable<T> items, 
             int currentPageNumber, 
@@ -13,9 +12,9 @@
         {
             var enumerable = items as T[] ?? items.ToArray();
             Items = enumerable;
-            CurrentPageNumber = currentPageNumber < 1 ? DefaultPageNumber : currentPageNumber;
+            CurrentPageNumber = currentPageNumber < 1 ? Pagination.FirstPage : currentPageNumber;
             CurrentPageSize = currentPageSize;
-            ItemsPerPage = itemsPerPage < 1 ? DefaultItemsPerPage : itemsPerPage;
+            ItemsPerPage = itemsPerPage < 1 ? Pagination.MinItemsPerPage : itemsPerPage;
             TotalCount = enumerable.Length;
         }
 

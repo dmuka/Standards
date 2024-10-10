@@ -1,57 +1,58 @@
 ﻿using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Filter.Interfaces;
-using Standards.Infrastructure.Filter.Models;
 
 namespace Standards.Infrastructure.Filter.Implementations
 {
-    public class QueryBuilder<T, TFilter> : IQueryBuilder<T, TFilter>
-        where TFilter : PaginationItem
+    public class QueryBuilder<T> : IQueryBuilder<T>
         where T : class
     {
-        private readonly IQueryBuilderInitializer<T, TFilter> _initializer;
+        private IFilter<T>? _filter;
+        private IFilter<T>? _sorter;
 
         private IQueryable<T> _query;
 
-        private TFilter _filter;
-
-        public QueryBuilder(
-            IRepository repository, 
-            IQueryBuilderInitializer<T, TFilter> initializer)
+        public QueryBuilder(IRepository repository)
         {
-            _initializer = initializer;
-            _query ??= repository.GetQueryable<T>();
+            _query =  repository.GetQueryable<T>();
         }
 
-        public IQueryBuilder<T, TFilter> SetFilter(TFilter filterDto)
+        public IQueryBuilder<T> AddFilter(IFilter<T> filter)
         {
-            _filter = filterDto;
+            _filter = filter;
 
             return this;
         }
 
-        public IQueryBuilder<T, TFilter> Filter()
+        public IQueryBuilder<T> AddSorter(IFilter<T> sorter)
         {
-            foreach (var filter in _initializer.GetFilters(_filter))
+            _sorter = sorter;
+
+            return this;
+        }
+
+        public IQueryBuilder<T> Filter()
+        {
+            if (_filter is not null)
             {
-                _query = filter.Execute(_query);
+                _query = _filter.Execute(_query);
             }
 
             return this;
         }
 
-        public IQueryBuilder<T, TFilter> Sort()
+        public IQueryBuilder<T> Sort()
         {
-            foreach (var sorting in _initializer.GetSortings(_filter))
+            if (_sorter is not null)
             {
-                _query = sorting.Execute(_query);
+                _query = _sorter.Execute(_query);
             }
 
             return this;
         }
 
-        public IQueryBuilder<T, TFilter> Paginate()
+        public IQueryBuilder<T> Paginate()
         {
-            if (!_filter.GetAll())
+            if (_filter is not null && !_filter.GetAll())
             {
                 _query = _query
                     .Skip((_filter.GetPageNumber() - 1) * _filter.GetItemsPerPage())
