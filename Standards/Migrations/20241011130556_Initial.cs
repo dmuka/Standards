@@ -213,16 +213,14 @@ namespace Standards.Migrations
                         name: "FK_Rooms_Sectors_SectorId",
                         column: x => x.SectorId,
                         principalTable: "Sectors",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 });
 
             migrationBuilder.CreateTable(
                 name: "Persons",
                 columns: table => new
                 {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Id = table.Column<int>(type: "int", nullable: false),
                     FirstName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     MiddleName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     LastName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
@@ -231,7 +229,6 @@ namespace Standards.Migrations
                     BirthdayDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     SectorId = table.Column<int>(type: "int", nullable: false),
                     Role = table.Column<string>(type: "nvarchar(15)", maxLength: 15, nullable: false),
-                    UserId = table.Column<int>(type: "int", nullable: false),
                     Comments = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false),
                     RoomId = table.Column<int>(type: "int", nullable: true)
                 },
@@ -261,8 +258,8 @@ namespace Standards.Migrations
                         principalTable: "Sectors",
                         principalColumn: "Id");
                     table.ForeignKey(
-                        name: "FK_Persons_Users_UserId",
-                        column: x => x.UserId,
+                        name: "FK_Persons_Users_Id",
+                        column: x => x.Id,
                         principalTable: "Users",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -575,6 +572,93 @@ namespace Standards.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Categories",
+                columns: new[] { "Id", "Comments", "Name", "ShortName" },
+                values: new object[,]
+                {
+                    { 1, "Comments1", "Без категории", "" },
+                    { 2, "Comments1", "Вторая квалификационная категория", "2 категория" },
+                    { 3, "Comments1", "Первая квалификационная категория", "1 категория" },
+                    { 4, "Comments1", "Ведущий", "Ведущий" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Departments",
+                columns: new[] { "Id", "Comments", "Name", "ShortName" },
+                values: new object[,]
+                {
+                    { 1, "Comments1", "Department1", "d1" },
+                    { 2, "Comments2", "Department2", "d2" },
+                    { 3, "Comments3", "Department3", "d3" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Housings",
+                columns: new[] { "Id", "Address", "Comments", "FloorsCount", "Name", "ShortName" },
+                values: new object[,]
+                {
+                    { 1, "Address1", "Comments1", 2, "Housing1", "h1" },
+                    { 2, "Address2", "Comments2", 1, "Housing2", "h2" },
+                    { 3, "Address3", "Comments3", 2, "Housing3", "h3" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Positions",
+                columns: new[] { "Id", "Comments", "Name", "ShortName" },
+                values: new object[,]
+                {
+                    { 1, "Comments1", "Техник", "Техник" },
+                    { 2, "Comments1", "Инженер", "Инженер" },
+                    { 3, "Comments1", "Начальник сектора", "Нач. сектора" },
+                    { 4, "Comments1", "Начальник отдела", "Нач. отдела" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "DepartmentHousing",
+                columns: new[] { "DepartmentsId", "HousingsId" },
+                values: new object[,]
+                {
+                    { 1, 1 },
+                    { 1, 3 },
+                    { 2, 1 },
+                    { 2, 2 },
+                    { 3, 3 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Sectors",
+                columns: new[] { "Id", "Comments", "DepartmentId", "Name", "ShortName" },
+                values: new object[,]
+                {
+                    { 1, "Comments1", 1, "Sector1", "s1" },
+                    { 2, "Comments2", 1, "Sector2", "s2" },
+                    { 3, "Comments3", 1, "Sector3", "s3" },
+                    { 4, "Comments4", 2, "Sector4", "s4" },
+                    { 5, "Comments5", 2, "Sector5", "s5" },
+                    { 6, "Comments6", 3, "Sector6", "s6" },
+                    { 7, "Comments7", 3, "Sector7", "s7" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Rooms",
+                columns: new[] { "Id", "Comments", "Floor", "Height", "HousingId", "Length", "Name", "SectorId", "ShortName", "Width" },
+                values: new object[,]
+                {
+                    { 1, "Comments1", 2, 3.0, 1, 4.0, "Room1", 1, "r1", 5.0 },
+                    { 2, "Comments2", 1, 3.0, 2, 5.0, "Room2", 1, "r2", 5.0 },
+                    { 3, "Comments3", 2, 3.0, 3, 6.0, "Room3", 3, "r3", 5.0 },
+                    { 4, "Comments4", 1, 3.0, 1, 5.0, "Room4", 2, "r4", 5.0 },
+                    { 5, "Comments5", 2, 3.0, 3, 6.0, "Room5", 3, "r5", 5.0 },
+                    { 6, "Comments6", 1, 3.0, 3, 3.0, "Room6", 2, "r6", 4.0 },
+                    { 7, "Comments7", 2, 3.0, 1, 6.0, "Room7", 4, "r7", 5.0 },
+                    { 8, "Comments8", 1, 3.0, 2, 3.0, "Room8", 5, "r8", 4.0 },
+                    { 9, "Comments9", 1, 3.0, 2, 6.0, "Room9", 4, "r9", 5.0 },
+                    { 10, "Comments10", 1, 3.0, 2, 3.0, "Room10", 5, "r10", 4.0 },
+                    { 11, "Comments11", 2, 3.0, 3, 6.0, "Room11", 6, "r11", 7.0 },
+                    { 12, "Comments12", 2, 3.0, 3, 6.0, "Room12", 7, "r12", 5.0 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_CalibrationsJournal_PlaceId",
                 table: "CalibrationsJournal",
@@ -634,11 +718,6 @@ namespace Standards.Migrations
                 name: "IX_Persons_SectorId",
                 table: "Persons",
                 column: "SectorId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_Persons_UserId",
-                table: "Persons",
-                column: "UserId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Quantities_ServiceId",

@@ -12,7 +12,7 @@ using Standards.Infrastructure.Data;
 namespace Standards.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241009145901_Initial")]
+    [Migration("20241011130556_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,6 +37,33 @@ namespace Standards.Migrations
                     b.HasIndex("HousingsId");
 
                     b.ToTable("DepartmentHousing");
+
+                    b.HasData(
+                        new
+                        {
+                            DepartmentsId = 1,
+                            HousingsId = 1
+                        },
+                        new
+                        {
+                            DepartmentsId = 2,
+                            HousingsId = 1
+                        },
+                        new
+                        {
+                            DepartmentsId = 2,
+                            HousingsId = 2
+                        },
+                        new
+                        {
+                            DepartmentsId = 1,
+                            HousingsId = 3
+                        },
+                        new
+                        {
+                            DepartmentsId = 3,
+                            HousingsId = 3
+                        });
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Departments.Department", b =>
@@ -65,6 +92,29 @@ namespace Standards.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Departments");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Comments = "Comments1",
+                            Name = "Department1",
+                            ShortName = "d1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Comments = "Comments2",
+                            Name = "Department2",
+                            ShortName = "d2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Comments = "Comments3",
+                            Name = "Department3",
+                            ShortName = "d3"
+                        });
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Departments.Sector", b =>
@@ -98,6 +148,64 @@ namespace Standards.Migrations
                     b.HasIndex("DepartmentId");
 
                     b.ToTable("Sectors");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Comments = "Comments1",
+                            DepartmentId = 1,
+                            Name = "Sector1",
+                            ShortName = "s1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Comments = "Comments2",
+                            DepartmentId = 1,
+                            Name = "Sector2",
+                            ShortName = "s2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Comments = "Comments3",
+                            DepartmentId = 1,
+                            Name = "Sector3",
+                            ShortName = "s3"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Comments = "Comments4",
+                            DepartmentId = 2,
+                            Name = "Sector4",
+                            ShortName = "s4"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Comments = "Comments5",
+                            DepartmentId = 2,
+                            Name = "Sector5",
+                            ShortName = "s5"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Comments = "Comments6",
+                            DepartmentId = 3,
+                            Name = "Sector6",
+                            ShortName = "s6"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Comments = "Comments7",
+                            DepartmentId = 3,
+                            Name = "Sector7",
+                            ShortName = "s7"
+                        });
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Departments.WorkPlace", b =>
@@ -180,6 +288,35 @@ namespace Standards.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Housings", (string)null);
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Address = "Address1",
+                            Comments = "Comments1",
+                            FloorsCount = 2,
+                            Name = "Housing1",
+                            ShortName = "h1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Address = "Address2",
+                            Comments = "Comments2",
+                            FloorsCount = 1,
+                            Name = "Housing2",
+                            ShortName = "h2"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Address = "Address3",
+                            Comments = "Comments3",
+                            FloorsCount = 2,
+                            Name = "Housing3",
+                            ShortName = "h3"
+                        });
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Housings.Room", b =>
@@ -230,6 +367,164 @@ namespace Standards.Migrations
                     b.HasIndex("SectorId");
 
                     b.ToTable("Rooms");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Comments = "Comments1",
+                            Floor = 2,
+                            Height = 3.0,
+                            HousingId = 1,
+                            Length = 4.0,
+                            Name = "Room1",
+                            SectorId = 1,
+                            ShortName = "r1",
+                            Width = 5.0
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Comments = "Comments2",
+                            Floor = 1,
+                            Height = 3.0,
+                            HousingId = 2,
+                            Length = 5.0,
+                            Name = "Room2",
+                            SectorId = 1,
+                            ShortName = "r2",
+                            Width = 5.0
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Comments = "Comments3",
+                            Floor = 2,
+                            Height = 3.0,
+                            HousingId = 3,
+                            Length = 6.0,
+                            Name = "Room3",
+                            SectorId = 3,
+                            ShortName = "r3",
+                            Width = 5.0
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Comments = "Comments4",
+                            Floor = 1,
+                            Height = 3.0,
+                            HousingId = 1,
+                            Length = 5.0,
+                            Name = "Room4",
+                            SectorId = 2,
+                            ShortName = "r4",
+                            Width = 5.0
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Comments = "Comments5",
+                            Floor = 2,
+                            Height = 3.0,
+                            HousingId = 3,
+                            Length = 6.0,
+                            Name = "Room5",
+                            SectorId = 3,
+                            ShortName = "r5",
+                            Width = 5.0
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Comments = "Comments6",
+                            Floor = 1,
+                            Height = 3.0,
+                            HousingId = 3,
+                            Length = 3.0,
+                            Name = "Room6",
+                            SectorId = 2,
+                            ShortName = "r6",
+                            Width = 4.0
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Comments = "Comments7",
+                            Floor = 2,
+                            Height = 3.0,
+                            HousingId = 1,
+                            Length = 6.0,
+                            Name = "Room7",
+                            SectorId = 4,
+                            ShortName = "r7",
+                            Width = 5.0
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Comments = "Comments8",
+                            Floor = 1,
+                            Height = 3.0,
+                            HousingId = 2,
+                            Length = 3.0,
+                            Name = "Room8",
+                            SectorId = 5,
+                            ShortName = "r8",
+                            Width = 4.0
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Comments = "Comments9",
+                            Floor = 1,
+                            Height = 3.0,
+                            HousingId = 2,
+                            Length = 6.0,
+                            Name = "Room9",
+                            SectorId = 4,
+                            ShortName = "r9",
+                            Width = 5.0
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Comments = "Comments10",
+                            Floor = 1,
+                            Height = 3.0,
+                            HousingId = 2,
+                            Length = 3.0,
+                            Name = "Room10",
+                            SectorId = 5,
+                            ShortName = "r10",
+                            Width = 4.0
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Comments = "Comments11",
+                            Floor = 2,
+                            Height = 3.0,
+                            HousingId = 3,
+                            Length = 6.0,
+                            Name = "Room11",
+                            SectorId = 6,
+                            ShortName = "r11",
+                            Width = 7.0
+                        },
+                        new
+                        {
+                            Id = 12,
+                            Comments = "Comments12",
+                            Floor = 2,
+                            Height = 3.0,
+                            HousingId = 3,
+                            Length = 6.0,
+                            Name = "Room12",
+                            SectorId = 7,
+                            ShortName = "r12",
+                            Width = 5.0
+                        });
                 });
 
             modelBuilder.Entity("Standards.Core.Models.MetrologyControl.CalibrationJournal", b =>
@@ -368,15 +663,42 @@ namespace Standards.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Comments = "Comments1",
+                            Name = "Без категории",
+                            ShortName = ""
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Comments = "Comments1",
+                            Name = "Вторая квалификационная категория",
+                            ShortName = "2 категория"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Comments = "Comments1",
+                            Name = "Первая квалификационная категория",
+                            ShortName = "1 категория"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Comments = "Comments1",
+                            Name = "Ведущий",
+                            ShortName = "Ведущий"
+                        });
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Persons.Person", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("BirthdayDate")
                         .HasColumnType("datetime2");
@@ -418,9 +740,6 @@ namespace Standards.Migrations
                     b.Property<int>("SectorId")
                         .HasColumnType("int");
 
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -430,8 +749,6 @@ namespace Standards.Migrations
                     b.HasIndex("RoomId");
 
                     b.HasIndex("SectorId");
-
-                    b.HasIndex("UserId");
 
                     b.ToTable("Persons");
                 });
@@ -462,6 +779,36 @@ namespace Standards.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Positions");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Comments = "Comments1",
+                            Name = "Техник",
+                            ShortName = "Техник"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Comments = "Comments1",
+                            Name = "Инженер",
+                            ShortName = "Инженер"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Comments = "Comments1",
+                            Name = "Начальник сектора",
+                            ShortName = "Нач. сектора"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Comments = "Comments1",
+                            Name = "Начальник отдела",
+                            ShortName = "Нач. отдела"
+                        });
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Quantity", b =>
@@ -908,7 +1255,7 @@ namespace Standards.Migrations
                     b.HasOne("Standards.Core.Models.Departments.Sector", "Sector")
                         .WithMany("Rooms")
                         .HasForeignKey("SectorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Housing");
@@ -962,6 +1309,12 @@ namespace Standards.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Standards.Core.Models.Users.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Standards.Core.Models.Persons.Person", "Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("Standards.Core.Models.Persons.Position", "Position")
                         .WithMany()
                         .HasForeignKey("PositionId")
@@ -970,18 +1323,13 @@ namespace Standards.Migrations
 
                     b.HasOne("Standards.Core.Models.Housings.Room", null)
                         .WithMany("Persons")
-                        .HasForeignKey("RoomId");
+                        .HasForeignKey("RoomId")
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.HasOne("Standards.Core.Models.Departments.Sector", "Sector")
                         .WithMany("Persons")
                         .HasForeignKey("SectorId")
                         .OnDelete(DeleteBehavior.NoAction)
-                        .IsRequired();
-
-                    b.HasOne("Standards.Core.Models.Users.User", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");
