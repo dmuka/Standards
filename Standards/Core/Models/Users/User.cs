@@ -18,15 +18,15 @@
 
         public string? AccessToken { get; set; }
 
-        public byte[] PasswordHash { get; set; } = null!;
+        public byte[]? PasswordHash { get; set; } = null!;
 
-        public byte[] PasswordSalt { get; set; } = null!;
+        public byte[]? PasswordSalt { get; set; } = null!;
 
         public bool IsTwoFactorEnabled { get; set; }
 
         public int AccessFailedCount { get; set; }
 
-        public DateTime LockOutEnd { get; set; }
+        public DateTime? LockOutEnd { get; set; }
 
         public bool IsLockOutEnabled { get; set; }
     }
