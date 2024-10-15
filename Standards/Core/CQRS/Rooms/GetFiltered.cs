@@ -30,10 +30,7 @@ namespace Standards.Core.CQRS.Rooms
                     .AddPaginator(paginator)
                     .AddFilter(filter)
                     .AddSorter(sorter)
-                    .Filter()
-                    .Sort()
-                    .Paginate()
-                    .GetQuery();
+                    .Execute();
 
                 var rooms = await query.ToListAsync(cancellationToken);
 

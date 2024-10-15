@@ -7,11 +7,5 @@ public interface IQueryBuilder<T>
     IQueryBuilder<T> AddFilter(IFilter<T> filter);
     IQueryBuilder<T> AddSorter(IFilter<T> sorter);
 
-    IQueryBuilder<T> Filter();
-
-    IQueryBuilder<T> Sort();
-
-    IQueryBuilder<T> Paginate();
-
-    IQueryable<T> GetQuery();
+    IQueryable<T> Execute();
 }

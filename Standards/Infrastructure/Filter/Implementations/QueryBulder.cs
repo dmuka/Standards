@@ -3,19 +3,14 @@ using Standards.Infrastructure.Filter.Interfaces;
 
 namespace Standards.Infrastructure.Filter.Implementations
 {
-    public class QueryBuilder<T> : IQueryBuilder<T>
+    public class QueryBuilder<T>(IRepository repository) : IQueryBuilder<T>
         where T : class
     {
         private IPaginator? _paginator;
         private IFilter<T>? _filter;
         private IFilter<T>? _sorter;
 
-        private IQueryable<T> _query;
-
-        public QueryBuilder(IRepository repository)
-        {
-            _query =  repository.GetQueryable<T>();
-        }
+        private IQueryable<T> _query = repository.GetQueryable<T>();
 
         public IQueryBuilder<T> AddPaginator(IPaginator paginator)
         {
@@ -38,28 +33,18 @@ namespace Standards.Infrastructure.Filter.Implementations
             return this;
         }
 
-        public IQueryBuilder<T> Filter()
+        public IQueryable<T> Execute()
         {
             if (_filter is not null)
             {
                 _query = _filter.Execute(_query);
             }
 
-            return this;
-        }
-
-        public IQueryBuilder<T> Sort()
-        {
             if (_sorter is not null)
             {
                 _query = _sorter.Execute(_query);
             }
 
-            return this;
-        }
-
-        public IQueryBuilder<T> Paginate()
-        {
             if (_paginator is not null && !_paginator.GetAll())
             {
                 _query = _query
@@ -67,9 +52,7 @@ namespace Standards.Infrastructure.Filter.Implementations
                     .Take(_paginator.GetItemsPerPage());
             }
 
-            return this;
+            return _query;
         }
-
-        public IQueryable<T> GetQuery() => _query;
     }
 }

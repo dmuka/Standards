@@ -32,10 +32,7 @@ namespace Standards.Core.CQRS.Housings;
                     .AddPaginator(paginator)
                     .AddFilter(filter)
                     .AddSorter(sorter)
-                    .Filter()
-                    .Sort()
-                    .Paginate()
-                    .GetQuery();
+                    .Execute();
 
                 var housings = await queryableWrapper.ToListAsync(query, cancellationToken);
 
