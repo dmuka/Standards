@@ -1,3 +1,5 @@
+using Standards.Infrastructure.Filter.Models;
+
 namespace Standards.Infrastructure.Filter.Constants;
 
 public static class Pagination
