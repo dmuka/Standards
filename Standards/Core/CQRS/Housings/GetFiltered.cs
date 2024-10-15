@@ -1,19 +1,18 @@
-﻿using System.Linq.Expressions;
-using FluentValidation;
+﻿using FluentValidation;
 using MediatR;
 using Standards.Core.Models;
 using Standards.Core.Models.Housings;
+using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Interfaces;
-using Standards.Infrastructure.Filter.Models;
 using Standards.Infrastructure.QueryableWrapper.Interface;
 
 namespace Standards.Core.CQRS.Housings;
 
     public class GetFiltered
     {
-        public class Query(FilterDto filter) : IRequest<PaginatedListModel<Housing>>
+        public class Query(QueryParameters parameters) : IRequest<PaginatedListModel<Housing>>
         {
-            public FilterDto Filter { get; set; } = filter;
+            public QueryParameters Parameters { get; set; } = parameters;
         }
 
         public class QueryHandler(IQueryBuilder<Housing> queryBuilder, IQueryableWrapper<Housing> queryableWrapper)
@@ -22,17 +21,7 @@ namespace Standards.Core.CQRS.Housings;
             
             public async Task<PaginatedListModel<Housing>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var paginator = new Paginator(request.Filter.Page, request.Filter.ItemsPerPage);
-
-                var filter = new Filter<Housing>(h => h.Name.Contains(request.Filter.SearchQuery));
-
-                var sorter = new Sorter<Housing, string>(h => h.Name);
-
-                var query = queryBuilder
-                    .AddPaginator(paginator)
-                    .AddFilter(filter)
-                    .AddSorter(sorter)
-                    .Execute();
+                var query = queryBuilder.Execute(request.Parameters);
 
                 var housings = await queryableWrapper.ToListAsync(query, cancellationToken);
 
@@ -42,9 +31,9 @@ namespace Standards.Core.CQRS.Housings;
                 {
                     result = new PaginatedListModel<Housing>(
                         housings,
-                        request.Filter.Page,
+                        request.Parameters.PageNumber,
                         housings.Count,
-                        request.Filter.ItemsPerPage);
+                        request.Parameters.ItemsOnPage);
                 }
 
                 return result;
@@ -55,17 +44,23 @@ namespace Standards.Core.CQRS.Housings;
         {
             public QueryValidator()
             {
-                RuleFor(_ => _.Filter)
+                RuleFor(_ => _.Parameters)
                     .NotEmpty()
                     .ChildRules(filter =>
                     {
-                        filter.RuleFor(_ => _.SearchQuery)
+                        filter.RuleFor(_ => _.SearchString)
+                            .NotNull();
+                        
+                        filter.RuleFor(_ => _.SearchBy)
+                            .NotNull();
+                        
+                        filter.RuleFor(_ => _.SortBy)
                             .NotNull();
 
-                        filter.RuleFor(_ => _.Page)
+                        filter.RuleFor(_ => _.PageNumber)
                             .GreaterThan(default(int));
 
-                        filter.RuleFor(_ => _.ItemsPerPage)
+                        filter.RuleFor(_ => _.ItemsOnPage)
                             .GreaterThan(default(int));
                     });
             }
