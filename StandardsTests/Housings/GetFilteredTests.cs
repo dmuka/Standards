@@ -2,12 +2,9 @@
 using FluentValidation;
 using FluentValidation.TestHelper;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models;
-using Standards.Core.Models.DTOs;
-using Standards.Core.Models.Filters;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
@@ -83,13 +80,14 @@ namespace Standards.CQRS.Tests.Housings
             _queryBuilderMock = new Mock<IQueryBuilder<Housing>>();
 
              _queryWrapperMock = new Mock<IQueryableWrapper<Housing>>();
-             _queryWrapperMock.Setup(m => m.ToListAsync(_housings.AsQueryable(), _cancellationToken))
+             _queryWrapperMock.Setup(m => m.ToListAsync(It.IsAny<IQueryable<Housing>>(), _cancellationToken))
                    .Returns(Task.FromResult(_housings));
 
             _queryMock = new Mock<IQueryable<Housing>>();
 
             _queryBuilderMock.Setup(_ => _.AddFilter(It.IsAny<IFilter<Housing>>())).Returns(_queryBuilderMock.Object);
             _queryBuilderMock.Setup(_ => _.AddSorter(It.IsAny<IFilter<Housing>>())).Returns(_queryBuilderMock.Object);
+            _queryBuilderMock.Setup(_ => _.AddPaginator(It.IsAny<IPaginator>())).Returns(_queryBuilderMock.Object);
             _queryBuilderMock.Setup(_ => _.Filter()).Returns(_queryBuilderMock.Object);
             _queryBuilderMock.Setup(_ => _.Sort()).Returns(_queryBuilderMock.Object);
             _queryBuilderMock.Setup(_ => _.Paginate()).Returns(_queryBuilderMock.Object);

@@ -2,8 +2,6 @@
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Standards.Core.Models;
-using Standards.Core.Models.DTOs;
-using Standards.Core.Models.Filters;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.Filter.Models;
@@ -12,9 +10,9 @@ namespace Standards.Core.CQRS.Rooms
 {
     public class GetFiltered
     {
-        public class Query(RoomsFilter filter) : IRequest<PaginatedListModel<Room>>
+        public class Query(FilterDto filter) : IRequest<PaginatedListModel<Room>>
         {
-            public RoomsFilter Filter { get; set; } = filter;
+            public FilterDto Filter { get; set; } = filter;
         }
 
         public class QueryHandler(IQueryBuilder<Room> queryBuilder)
@@ -22,19 +20,14 @@ namespace Standards.Core.CQRS.Rooms
         {
             public async Task<PaginatedListModel<Room>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var filter = new Filter<Room>(r => r.Name.Contains(request.Filter.SearchQuery))
-                {
-                    PageNumber = request.Filter.PageNumber,
-                    ItemsPerPage = request.Filter.ItemsPerPage
-                };
-                
-                var sorter = new Sorter<Room, string>(h => h.Name)
-                {
-                    PageNumber = request.Filter.PageNumber,
-                    ItemsPerPage = request.Filter.ItemsPerPage
-                };
-            
+                var paginator = new Paginator(request.Filter.Page, request.Filter.ItemsPerPage);
+
+                var filter = new Filter<Room>(r => r.Name.Contains(request.Filter.SearchQuery));
+
+                var sorter = new Sorter<Room, string>(r => r.Name);
+
                 var query = queryBuilder
+                    .AddPaginator(paginator)
                     .AddFilter(filter)
                     .AddSorter(sorter)
                     .Filter()
@@ -46,7 +39,7 @@ namespace Standards.Core.CQRS.Rooms
 
                 var result = new PaginatedListModel<Room>(
                     rooms,
-                    request.Filter.PageNumber,
+                    request.Filter.Page,
                     rooms.Count,
                     request.Filter.ItemsPerPage);
 
@@ -65,7 +58,7 @@ namespace Standards.Core.CQRS.Rooms
                         filter.RuleFor(_ => _.SearchQuery)
                             .NotNull();
 
-                        filter.RuleFor(_ => _.PageNumber)
+                        filter.RuleFor(_ => _.Page)
                             .GreaterThan(default(int));
 
                         filter.RuleFor(_ => _.ItemsPerPage)

@@ -6,6 +6,7 @@ namespace Standards.Infrastructure.Filter.Implementations
     public class QueryBuilder<T> : IQueryBuilder<T>
         where T : class
     {
+        private IPaginator? _paginator;
         private IFilter<T>? _filter;
         private IFilter<T>? _sorter;
 
@@ -14,6 +15,13 @@ namespace Standards.Infrastructure.Filter.Implementations
         public QueryBuilder(IRepository repository)
         {
             _query =  repository.GetQueryable<T>();
+        }
+
+        public IQueryBuilder<T> AddPaginator(IPaginator paginator)
+        {
+            _paginator = paginator;
+
+            return this;
         }
 
         public IQueryBuilder<T> AddFilter(IFilter<T> filter)
@@ -52,11 +60,11 @@ namespace Standards.Infrastructure.Filter.Implementations
 
         public IQueryBuilder<T> Paginate()
         {
-            if (_filter is not null && !_filter.GetAll())
+            if (_paginator is not null && !_paginator.GetAll())
             {
                 _query = _query
-                    .Skip((_filter.GetPageNumber() - 1) * _filter.GetItemsPerPage())
-                    .Take(_filter.GetItemsPerPage());
+                    .Skip((_paginator.GetPageNumber() - 1) * _paginator.GetItemsPerPage())
+                    .Take(_paginator.GetItemsPerPage());
             }
 
             return this;

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
-using Standards.Core.Models.Filters;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Filter.Models;
 

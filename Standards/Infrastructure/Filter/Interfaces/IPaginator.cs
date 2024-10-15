@@ -2,7 +2,7 @@ using Standards.Infrastructure.Filter.Constants;
 
 namespace Standards.Infrastructure.Filter.Interfaces;
 
-public interface IPaginationItem
+public interface IPaginator
 {
     private const int AllPages = 0;
 
