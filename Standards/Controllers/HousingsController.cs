@@ -36,7 +36,7 @@ namespace Standards.Controllers
 
         [HttpPost]
         [Route("filter")]
-        public async Task<IActionResult> GetHousingsByFilter([FromBody] QueryParameters parameters)
+        public async Task<IActionResult> GetHousingsByFilter(QueryParameters parameters)
         {
             var query = new GetFiltered.Query(parameters);
 

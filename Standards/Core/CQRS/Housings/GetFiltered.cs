@@ -5,6 +5,7 @@ using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.QueryableWrapper.Interface;
+using Standards.Infrastructure.Validators.Constants;
 
 namespace Standards.Core.CQRS.Housings;
 
@@ -52,10 +53,10 @@ namespace Standards.Core.CQRS.Housings;
                             .NotNull();
                         
                         filter.RuleFor(_ => _.SearchBy)
-                            .NotNull();
+                            .NotNull().WithMessage(ValidationErrors.WrongEnumValue);
                         
                         filter.RuleFor(_ => _.SortBy)
-                            .NotNull();
+                            .NotNull().WithMessage(ValidationErrors.WrongEnumValue);
 
                         filter.RuleFor(_ => _.PageNumber)
                             .GreaterThan(default(int));

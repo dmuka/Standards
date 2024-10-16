@@ -15,7 +15,7 @@ namespace Standards.Infrastructure.Filter.Implementations
         {
             if (parameters.SearchBy != FilterBy.None)
             {
-                var expression = Expressions.GetContainsLambda<T>(Enum.GetName(parameters.SearchBy), parameters.SearchString);
+                var expression = Expressions.GetContainsLambda<T>(Enum.GetName(parameters.SearchBy.Value), parameters.SearchString);
                 
                 _query = _query.Where(expression);
             }
@@ -23,8 +23,8 @@ namespace Standards.Infrastructure.Filter.Implementations
             if (parameters.SortBy != SortBy.None)
             {
                 _query = parameters.SortDescending
-                    ? _query.OrderByDescending(entity => EF.Property<object>(entity, Enum.GetName(parameters.SortBy)))
-                    : _query.OrderBy(entity => EF.Property<object>(entity, Enum.GetName(parameters.SortBy)));
+                    ? _query.OrderByDescending(entity => EF.Property<object>(entity, Enum.GetName(parameters.SortBy.Value)))
+                    : _query.OrderBy(entity => EF.Property<object>(entity, Enum.GetName(parameters.SortBy.Value)));
             }
         
             _query = _query
