@@ -26,16 +26,11 @@ namespace Standards.Core.CQRS.Housings;
 
                 var housings = await queryableWrapper.ToListAsync(query, cancellationToken);
 
-                PaginatedListModel<Housing> result = null;
+                var result = PaginatedListModel<Housing>.ApplyPagination(
+                    housings, 
+                    request.Parameters.PageNumber, 
+                    request.Parameters.ItemsOnPage);
                 
-                if (housings is not null)
-                {
-                    result = new PaginatedListModel<Housing>(
-                        housings,
-                        request.Parameters.PageNumber,
-                        request.Parameters.ItemsOnPage);
-                }
-
                 return result;
             }
         }

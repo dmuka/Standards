@@ -1,4 +1,5 @@
-﻿using Standards.Infrastructure.Filter.Constants;
+﻿using System.Collections;
+using Standards.Infrastructure.Filter.Constants;
 
 namespace Standards.Core.Models
 {
@@ -28,5 +29,20 @@ namespace Standards.Core.Models
         public int ItemsPerPage { get; set; }
 
         public bool IsLastPage => CurrentPageNumber * ItemsPerPage >= TotalCount || CurrentPageSize == TotalCount;
+
+        public static PaginatedListModel<TEntity> ApplyPagination<TEntity>(
+            IEnumerable<TEntity> entities,
+            int pageNumber,
+            int itemsOnPage) where TEntity : BaseEntity
+        {
+            PaginatedListModel<TEntity> result = null;
+                
+            if (entities is not null)
+            {
+                result = new PaginatedListModel<TEntity>(entities, pageNumber, itemsOnPage);
+            }
+
+            return result;
+        }
     }
 }

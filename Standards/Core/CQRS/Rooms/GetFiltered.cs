@@ -25,15 +25,10 @@ namespace Standards.Core.CQRS.Rooms
 
                 var rooms = await queryableWrapper.ToListAsync(query, cancellationToken);
                 
-                PaginatedListModel<Room> result = null;
-
-                if (rooms is not null)
-                {
-                    result = new PaginatedListModel<Room>(
-                        rooms,
-                        request.Parameters.PageNumber,
-                        request.Parameters.ItemsOnPage);
-                }
+                var result = PaginatedListModel<Room>.ApplyPagination(
+                    rooms, 
+                    request.Parameters.PageNumber, 
+                    request.Parameters.ItemsOnPage);
 
                 return result;
             }
