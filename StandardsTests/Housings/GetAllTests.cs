@@ -1,12 +1,15 @@
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.Configuration;
 using Moq;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Cache.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
 {
@@ -14,6 +17,8 @@ namespace Standards.CQRS.Tests.Housings
     public class GetAllTests
     {
         private Mock<IRepository> _repository;
+        private Mock<ICacheService> _cacheService;
+        
         private CancellationToken _cancellationToken;
         private List<Housing> _housings;
         private List<HousingDto> _dtos;
@@ -36,6 +41,14 @@ namespace Standards.CQRS.Tests.Housings
         [SetUp]
         public void Setup()
         {
+            var inMemoryConfig = new Dictionary<string, string?> {
+                {"Cache:AbsoluteExpiration", "5"},
+                {"Cache:SlidingExpiration", "2"}
+            }.AsEnumerable();
+            
+            var configuration = new ConfigurationBuilder()
+                .AddInMemoryCollection(inMemoryConfig)
+                .Build();
             
             _department1 = new Department()
             {
@@ -196,7 +209,11 @@ namespace Standards.CQRS.Tests.Housings
             _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Housing>,IIncludableQueryable<Housing,object>>>(), _cancellationToken))
                 .Returns(Task.FromResult(_housings));
 
-            _handler = new GetAll.QueryHandler(_repository.Object); 
+            _cacheService = new Mock<ICacheService>();
+            _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Housings, It.IsAny<Func<CancellationToken, Task<List<Housing>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+                .Returns(Task.FromResult(_housings));
+
+            _handler = new GetAll.QueryHandler(_repository.Object, _cacheService.Object, configuration); 
         }
 
         [Test]

@@ -1,8 +1,10 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Cache.Interfaces;
 
 namespace Standards.Core.CQRS.Housings
 {
@@ -12,15 +14,28 @@ namespace Standards.Core.CQRS.Housings
         {
         }
 
-        public class QueryHandler(IRepository repository) : IRequestHandler<Query, IList<HousingDto>>
+        public class QueryHandler(IRepository repository, ICacheService cache, IConfiguration configuration) : IRequestHandler<Query, IList<HousingDto>>
         {
             public async Task<IList<HousingDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var housings = await repository.GetListAsync<Housing>(
-                    query => query
-                        .Include(h => h.Departments)
-                        .Include(h => h.Rooms), 
-                    cancellationToken);
+                var absoluteExpiration = int.Parse(configuration[Cache.AbsoluteExpirationConfigurationSectionKey]);
+                var slidingExpiration = int.Parse(configuration[Cache.SlidingExpirationConfigurationSectionKey]);
+                
+                var housings = await cache.GetOrCreateAsync(
+                    Cache.Housings,
+                    async (token) =>
+                    {
+                        var result = await repository.GetListAsync<Housing>(
+                            query => query
+                                .Include(h => h.Departments)
+                                .Include(h => h.Rooms),
+                            token);
+
+                        return result;
+                    },
+                    cancellationToken,
+                    TimeSpan.FromMinutes(absoluteExpiration),
+                    TimeSpan.FromMinutes(slidingExpiration));
 
                 if (housings is null) return [];
                 

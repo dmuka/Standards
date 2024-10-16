@@ -18,15 +18,13 @@ using Standards.Infrastructure.Logging;
 using Standards.Infrastructure.Mediatr;
 using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Converters;
 using Standards.Infrastructure.Filter.Models;
 using Standards.Infrastructure.QueryableWrapper.Implementation;
 using Standards.Infrastructure.QueryableWrapper.Interface;
+using Standards.Infrastructure.Services.Cache.IImplimentations;
+using Standards.Infrastructure.Services.Cache.Interfaces;
 
 namespace Standards
 {
@@ -140,12 +138,16 @@ namespace Standards
             builder.Services.AddTransient<IRepository, Repository<ApplicationDbContext>>();
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
-
+            
+            builder.Services.AddMemoryCache();
+            builder.Services.AddScoped<ICacheService, CacheService>();
+            
             builder.Services.AddScoped<IQueryBuilder<HousingDto>, QueryBuilder<HousingDto>>();
             builder.Services.AddScoped<IQueryBuilder<Housing>, QueryBuilder<Housing>>();
             builder.Services.AddScoped<IQueryBuilder<Room>, QueryBuilder<Room>>();
             
             builder.Services.AddScoped<IQueryableWrapper<Housing>, QueryableWrapper<Housing>>();
+            builder.Services.AddScoped<IQueryableWrapper<Room>, QueryableWrapper<Room>>();
             
             builder.Services.AddControllers()
                 .AddJsonOptions(opt =>
