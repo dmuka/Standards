@@ -3,7 +3,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
-using Standards.Core.CQRS.Housings;
+using Standards.Core.CQRS.Rooms;
 using Standards.Core.Models;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Constants;
@@ -12,7 +12,7 @@ using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.QueryableWrapper.Interface;
 
-namespace Standards.CQRS.Tests.Housings
+namespace Standards.CQRS.Tests.Rooms
 {
     [TestFixture]
     public class GetFilteredTests
@@ -21,44 +21,38 @@ namespace Standards.CQRS.Tests.Housings
         
         private QueryParameters _parameters;
         private CancellationToken _cancellationToken;
-        private IList<Housing> _housings;
-        private IQueryBuilder<Housing> _queryBuilder;
+        private IList<Room> _rooms;
+        private IQueryBuilder<Room> _queryBuilder;
 
         private Mock<IRepository> _repositoryMock;
-        private Mock<IQueryBuilder<Housing>> _queryBuilderMock;
-        private Mock<IQueryableWrapper<Housing>> _queryWrapperMock;
-        private Mock<IQueryable<Housing>> _queryMock;
+        private Mock<IQueryBuilder<Room>> _queryBuilderMock;
+        private Mock<IQueryableWrapper<Room>> _queryWrapperMock;
+        private Mock<IQueryable<Room>> _queryMock;
 
-        private IRequestHandler<GetFiltered.Query, PaginatedListModel<Housing>> _handler;
+        private IRequestHandler<GetFiltered.Query, PaginatedListModel<Room>> _handler;
         private IValidator<GetFiltered.Query> _validator;
 
         [SetUp]
         public void Setup()
         {
-            _housings = new List<Housing>
+            _rooms = new List<Room>
             {
                 new() {
                     Id = 1,
-                    Address = "Address 1",
                     Name = "Name 1",
                     ShortName = "Short name 1",
-                    FloorsCount = 1,
                     Comments = "Comments 1"
                 },
                 new() {
                     Id = 2,
-                    Address = "Address 2",
                     Name = "Name 2",
                     ShortName = "Short name 2",
-                    FloorsCount = 2,
                     Comments = "Comments 2"
                 },
                 new() {
                     Id = 3,
-                    Address = "Address 3",
                     Name = "Name 3",
                     ShortName = "Short name 3",
-                    FloorsCount = 3,
                     Comments = "Comments 3"
                 }
             };
@@ -67,19 +61,19 @@ namespace Standards.CQRS.Tests.Housings
 
             _repositoryMock = new Mock<IRepository>();
 
-            _queryBuilder = new QueryBuilder<Housing>(_repositoryMock.Object);
+            _queryBuilder = new QueryBuilder<Room>(_repositoryMock.Object);
             
             _cancellationToken = new CancellationToken();
 
-            _queryBuilderMock = new Mock<IQueryBuilder<Housing>>();
+            _queryBuilderMock = new Mock<IQueryBuilder<Room>>();
 
-             _queryWrapperMock = new Mock<IQueryableWrapper<Housing>>();
-             _queryWrapperMock.Setup(m => m.ToListAsync(It.IsAny<IQueryable<Housing>>(), _cancellationToken))
-                   .Returns(Task.FromResult(_housings));
+             _queryWrapperMock = new Mock<IQueryableWrapper<Room>>();
+             _queryWrapperMock.Setup(m => m.ToListAsync(It.IsAny<IQueryable<Room>>(), _cancellationToken))
+                   .Returns(Task.FromResult(_rooms));
 
-            _queryMock = new Mock<IQueryable<Housing>>();
+            _queryMock = new Mock<IQueryable<Room>>();
 
-            _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_housings.AsQueryable());
+            _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_rooms.AsQueryable());
 
             _handler = new GetFiltered.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
             _validator = new GetFiltered.QueryValidator();
@@ -90,7 +84,7 @@ namespace Standards.CQRS.Tests.Housings
         {
             // Arrange
             var query = new GetFiltered.Query(_parameters);
-            var expected = new PaginatedListModel<Housing>(_housings, 1, 10);
+            var expected = new PaginatedListModel<Room>(_rooms, 1, 10);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -121,7 +115,7 @@ namespace Standards.CQRS.Tests.Housings
             _parameters.PageNumber = default;
 
             var query = new GetFiltered.Query(_parameters);
-            var expected = new PaginatedListModel<Housing>(_housings, 1, 10);
+            var expected = new PaginatedListModel<Room>(_rooms,1, 10);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;

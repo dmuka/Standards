@@ -33,7 +33,6 @@ namespace Standards.Core.CQRS.Housings;
                     result = new PaginatedListModel<Housing>(
                         housings,
                         request.Parameters.PageNumber,
-                        housings.Count,
                         request.Parameters.ItemsOnPage);
                 }
 

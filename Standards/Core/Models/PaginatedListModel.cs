@@ -6,14 +6,13 @@ namespace Standards.Core.Models
     {
         public PaginatedListModel(
             IEnumerable<T> items, 
-            int currentPageNumber, 
-            int currentPageSize, 
+            int currentPageNumber,
             int itemsPerPage)
         {
             var enumerable = items as T[] ?? items.ToArray();
             Items = enumerable;
             CurrentPageNumber = currentPageNumber < 1 ? Pagination.FirstPage : currentPageNumber;
-            CurrentPageSize = currentPageSize;
+            CurrentPageSize = enumerable.Length;
             ItemsPerPage = itemsPerPage < 1 ? Pagination.MinItemsPerPage : itemsPerPage;
             TotalCount = enumerable.Length;
         }
