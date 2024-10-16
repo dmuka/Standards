@@ -18,8 +18,13 @@ using Standards.Infrastructure.Logging;
 using Standards.Infrastructure.Mediatr;
 using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
 using System.Text;
+using System.Text.Json;
 using System.Text.Json.Serialization;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Standards.Core.Models.Housings;
+using Standards.Infrastructure.Converters;
+using Standards.Infrastructure.Filter.Models;
 using Standards.Infrastructure.QueryableWrapper.Implementation;
 using Standards.Infrastructure.QueryableWrapper.Interface;
 
@@ -143,7 +148,11 @@ namespace Standards
             builder.Services.AddScoped<IQueryableWrapper<Housing>, QueryableWrapper<Housing>>();
             
             builder.Services.AddControllers()
-                .AddJsonOptions(opt=> { opt.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter()); });;
+                .AddJsonOptions(opt =>
+                {
+                    opt.JsonSerializerOptions.Converters.Add(new NullableEnumConverter<FilterBy>());
+                    opt.JsonSerializerOptions.Converters.Add(new NullableEnumConverter<SortBy>());
+                });
             builder.Services.AddRazorPages();
 
             builder.Services.AddEndpointsApiExplorer();

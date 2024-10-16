@@ -63,7 +63,7 @@ namespace Standards.CQRS.Tests.Housings
                 }
             };
 
-            _parameters = new QueryParameters(SearchString: string.Empty, ItemsOnPage: 10, PageNumber: 1);
+            _parameters = new QueryParameters(searchString: string.Empty, itemsOnPage: 10, pageNumber: 1);
 
             _repositoryMock = new Mock<IRepository>();
 
@@ -117,7 +117,8 @@ namespace Standards.CQRS.Tests.Housings
         public void Handler_IfInvalidPagePaginateValues_ReturnResultWithDefaultValues()
         {
             // Arrange
-            _parameters = _parameters with { ItemsOnPage = default, PageNumber = default };
+            _parameters.ItemsOnPage = default;
+            _parameters.PageNumber = default;
 
             var query = new GetFiltered.Query(_parameters);
             var expected = new PaginatedListModel<Housing>(_housings, 1, 3, 10);
@@ -148,7 +149,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfSearchStringIsNull_ShouldHaveValidationError()
         {
             // Arrange
-            _parameters = _parameters with { SearchString = null };
+            _parameters.SearchString = null;
 
             var query = new GetFiltered.Query(_parameters);
             
@@ -163,7 +164,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfSearchByIsNull_ShouldHaveValidationError()
         {
             // Arrange
-            _parameters = _parameters with { SearchBy = null };
+            _parameters.SearchBy = null;
 
             var query = new GetFiltered.Query(_parameters);
             
@@ -178,7 +179,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfSortByIsNull_ShouldHaveValidationError()
         {
             // Arrange
-            _parameters = _parameters with { SortBy = null };
+            _parameters.SortBy = null;
 
             var query = new GetFiltered.Query(_parameters);
             
@@ -194,7 +195,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfItemsPerPageIsZero_ShouldHaveValidationError(int itemsPerPage)
         {
             // Arrange
-            _parameters = _parameters with { ItemsOnPage = itemsPerPage };
+            _parameters.ItemsOnPage = itemsPerPage;
 
             var query = new GetFiltered.Query(_parameters);
             
@@ -210,7 +211,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfPageNumberIsZero_ShouldHaveValidationError(int pageNumber)
         {
             // Arrange
-            _parameters = _parameters with { PageNumber = pageNumber };
+            _parameters.PageNumber = pageNumber;
 
             var query = new GetFiltered.Query(_parameters);
             
