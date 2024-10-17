@@ -13,22 +13,21 @@ namespace Standards.Infrastructure.Exceptions
         }
 
         public StandardsException(
-            StatusCodeByError typeError,
+            StatusCodeByError error,
             string messageForLog,
             string messageForUser,
-            Exception exception) : base(typeError, messageForLog, messageForUser, exception)
+            Exception exception) : base(error, messageForLog, messageForUser, exception)
         {
 
         }
 
         public StandardsException(
-            StatusCodeByError typeError,
+            StatusCodeByError error,
             string messageForLog,
             string messageForUser,
-            bool isHandled) : base(typeError, messageForLog, messageForUser)
+            bool isHandled) : base(error, messageForLog, messageForUser)
         {
             IsHandled = isHandled;
         }
-
     }
 }

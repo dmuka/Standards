@@ -13,6 +13,7 @@
     "jquery": "^3.6.0",
     "merge": "^2.1.1",
     "micromatch": "^4.0.8",
+    "nth": "^1.1.0",
     "nth-check": "^2.1.1",
     "oidc-client": "^1.11.5",
     "path-to-regexp": "^8.2.0",

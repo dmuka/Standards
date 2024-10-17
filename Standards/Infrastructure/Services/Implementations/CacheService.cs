@@ -1,7 +1,7 @@
 using Microsoft.Extensions.Caching.Memory;
-using Standards.Infrastructure.Services.Cache.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 
-namespace Standards.Infrastructure.Services.Cache.IImplimentations;
+namespace Standards.Infrastructure.Services.Implementations;
 
 public class CacheService(IMemoryCache cache) : ICacheService
 {

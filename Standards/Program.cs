@@ -23,8 +23,8 @@ using Standards.Infrastructure.Converters;
 using Standards.Infrastructure.Filter.Models;
 using Standards.Infrastructure.QueryableWrapper.Implementation;
 using Standards.Infrastructure.QueryableWrapper.Interface;
-using Standards.Infrastructure.Services.Cache.IImplimentations;
-using Standards.Infrastructure.Services.Cache.Interfaces;
+using Standards.Infrastructure.Services.Implementations;
+using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards
 {

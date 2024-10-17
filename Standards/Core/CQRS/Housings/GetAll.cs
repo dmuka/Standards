@@ -4,7 +4,7 @@ using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
-using Standards.Infrastructure.Services.Cache.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.Core.CQRS.Housings
 {
@@ -14,12 +14,15 @@ namespace Standards.Core.CQRS.Housings
         {
         }
 
-        public class QueryHandler(IRepository repository, ICacheService cache, IConfiguration configuration) : IRequestHandler<Query, IList<HousingDto>>
+        public class QueryHandler(
+            IRepository repository, 
+            ICacheService cache, 
+            IConfigService configService) : IRequestHandler<Query, IList<HousingDto>>
         {
             public async Task<IList<HousingDto>> Handle(Query request, CancellationToken cancellationToken)
             {
-                var absoluteExpiration = int.Parse(configuration[Cache.AbsoluteExpirationConfigurationSectionKey]);
-                var slidingExpiration = int.Parse(configuration[Cache.SlidingExpirationConfigurationSectionKey]);
+                var absoluteExpiration = configService.GetValue<int>(Cache.AbsoluteExpirationConfigurationSectionKey);
+                var slidingExpiration = configService.GetValue<int>(Cache.SlidingExpirationConfigurationSectionKey);
                 
                 var housings = await cache.GetOrCreateAsync(
                     Cache.Housings,
