@@ -1,10 +1,12 @@
 ﻿using FluentValidation;
 using MediatR;
 using Standards.Core.CQRS.Common.Attributes;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 using Standards.Infrastructure.Validators;
 
 namespace Standards.Core.CQRS.Housings
@@ -17,7 +19,7 @@ namespace Standards.Core.CQRS.Housings
             public HousingDto HousingDto{ get; set; } = housingDto;
         }
 
-        public class QueryHandler(IRepository repository) : IRequestHandler<Query, int>
+        public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>
         {
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
@@ -43,6 +45,8 @@ namespace Standards.Core.CQRS.Housings
                 repository.Update(housing);
 
                 var result = await repository.SaveChangesAsync(cancellationToken);
+                
+                cacheService.Remove(Cache.Housings);
 
                 return result;
             }

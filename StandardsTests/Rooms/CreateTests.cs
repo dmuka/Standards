@@ -8,6 +8,7 @@ using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Rooms
 {
@@ -25,6 +26,7 @@ namespace Standards.CQRS.Tests.Rooms
         private const int IdNotInDb = 2;
         
         private Mock<IRepository> _repositoryMock;
+        private Mock<ICacheService> _cacheMock;
 
         private IRequestHandler<Create.Query, int> _handler;
         private IValidator<Create.Query> _validator;
@@ -77,8 +79,10 @@ namespace Standards.CQRS.Tests.Rooms
             _repositoryMock.Setup(repository => repository.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
             _repositoryMock.Setup(repository => repository.GetByIdAsync<Housing>(ValidId, _cancellationToken)).ReturnsAsync(_housing);
             _repositoryMock.Setup(repository => repository.GetByIdAsync<Sector>(ValidId, _cancellationToken)).ReturnsAsync(_sector);
+
+            _cacheMock = new Mock<ICacheService>();
             
-            _handler = new Create.QueryHandler(_repositoryMock.Object);
+            _handler = new Create.QueryHandler(_repositoryMock.Object, _cacheMock.Object);
             _validator = new Create.QueryValidator(_repositoryMock.Object);
         }
 

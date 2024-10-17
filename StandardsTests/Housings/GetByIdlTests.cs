@@ -4,9 +4,10 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
+using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
-using Create = Standards.Core.CQRS.Rooms.Create;
+using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
 {
@@ -17,9 +18,11 @@ namespace Standards.CQRS.Tests.Housings
         private const int IdNotInDb = 10;
 
         private Mock<IRepository> _repository;
+        private Mock<ICacheService> _cacheService;
+        
         private CancellationToken _cancellationToken;
-        private List<HousingDto> _housings;
-        private IRequestHandler<GetById.Query, HousingDto> _handler;
+        private List<Housing> _housings;
+        private IRequestHandler<GetById.Query, Housing> _handler;
         private IValidator<GetById.Query> _validator;
 
         [SetUp]
@@ -27,7 +30,7 @@ namespace Standards.CQRS.Tests.Housings
         {
             _housings =
             [
-                new HousingDto
+                new Housing
                 {
                     Id = IdInDb,
                     Address = "Address 1",
@@ -37,7 +40,7 @@ namespace Standards.CQRS.Tests.Housings
                     Comments = "Comments 1"
                 },
 
-                new HousingDto
+                new Housing
                 {
                     Id = 2,
                     Address = "Address 2",
@@ -47,7 +50,7 @@ namespace Standards.CQRS.Tests.Housings
                     Comments = "Comments 2"
                 },
 
-                new HousingDto
+                new Housing
                 {
                     Id = 3,
                     Address = "Address 3",
@@ -61,10 +64,12 @@ namespace Standards.CQRS.Tests.Housings
             _cancellationToken = new CancellationToken();
 
             _repository = new Mock<IRepository>();
-            _repository.Setup(_ => _.GetByIdAsync<HousingDto>(IdInDb, _cancellationToken))
+            _repository.Setup(_ => _.GetByIdAsync<Housing>(IdInDb, _cancellationToken))
                 .Returns(Task.FromResult(_housings.First(_ => _.Id == IdInDb)));
 
-            _handler = new GetById.QueryHandler(_repository.Object);
+            _cacheService = new Mock<ICacheService>();
+
+            _handler = new GetById.QueryHandler(_repository.Object, _cacheService.Object);
             _validator = new GetById.QueryValidator(_repository.Object); 
         }
 

@@ -1,3 +1,5 @@
+using Standards.Core;
+
 namespace Standards.Infrastructure.Services.Interfaces;
 
 public interface ICacheService
@@ -8,4 +10,8 @@ public interface ICacheService
         CancellationToken cancellationToken,
         TimeSpan? absoluteExpiration = null,
         TimeSpan? slidingExpiration = null);
+
+    public T? GetById<T>(string cacheKey, int id) where T : BaseEntity;
+
+    public void Remove(string cacheKey);
 }

@@ -9,6 +9,7 @@ using Standards.Core.Models.Housings;
 using Standards.Core.Models.Persons;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Rooms
 {
@@ -25,6 +26,7 @@ namespace Standards.CQRS.Tests.Rooms
         private Sector _sector;
 
         private Mock<IRepository> _repositoryMock;
+        private Mock<ICacheService> _cacheMock;
 
         private IRequestHandler<Edit.Query, int> _handler;
         private IValidator<Edit.Query> _validator;
@@ -74,7 +76,9 @@ namespace Standards.CQRS.Tests.Rooms
             _repositoryMock.Setup(_ => _.Update(_room));
             _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
-            _handler = new Edit.QueryHandler(_repositoryMock.Object);
+            _cacheMock = new Mock<ICacheService>();
+
+            _handler = new Edit.QueryHandler(_repositoryMock.Object, _cacheMock.Object);
             _validator = new Edit.QueryValidator(_repositoryMock.Object);
         }
 

@@ -1,24 +1,29 @@
 ﻿using FluentValidation;
 using MediatR;
-using Standards.Core.Models.DTOs;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 using Standards.Infrastructure.Validators;
 
 namespace Standards.Core.CQRS.Housings
 {
     public class GetById
     {
-        public class Query(int id) : IRequest<HousingDto>
+        public class Query(int id) : IRequest<Housing>
         {
             public int Id { get; set; } = id;
         }
 
-        public class QueryHandler(IRepository repository) : IRequestHandler<Query, HousingDto>
+        public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, Housing>
         {
-            public async Task<HousingDto> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<Housing> Handle(Query request, CancellationToken cancellationToken)
             {
-                var housing = await repository.GetByIdAsync<HousingDto>(request.Id, cancellationToken);
+                var housing = cacheService.GetById<Housing>(Cache.Housings, request.Id);
+
+                if (housing is not null) return housing;
+                
+                housing = await repository.GetByIdAsync<Housing>(request.Id, cancellationToken);
 
                 return housing;
             }

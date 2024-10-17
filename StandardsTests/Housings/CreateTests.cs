@@ -6,6 +6,7 @@ using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
 {
@@ -16,6 +17,7 @@ namespace Standards.CQRS.Tests.Housings
         private HousingDto _housing;
 
         private Mock<IRepository> _repositoryMock;
+        private Mock<ICacheService> _cacheService;
 
         private IRequestHandler<Create.Query, int> _handler;
         private IValidator<Create.Query> _validator;
@@ -39,7 +41,9 @@ namespace Standards.CQRS.Tests.Housings
             _repositoryMock.Setup(_ => _.AddAsync(_housing, _cancellationToken));
             _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
-            _handler = new Create.QueryHandler(_repositoryMock.Object);
+            _cacheService = new Mock<ICacheService>();
+
+            _handler = new Create.QueryHandler(_repositoryMock.Object, _cacheService.Object);
             _validator = new Create.QueryValidator();
         }
 

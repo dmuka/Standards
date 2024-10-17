@@ -6,6 +6,7 @@ using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
 {
@@ -17,6 +18,7 @@ namespace Standards.CQRS.Tests.Housings
         private CancellationToken _cancellationToken;
 
         private Mock<IRepository> _repository;
+        private Mock<ICacheService> _cacheService;
 
         private IRequestHandler<Delete.Query, int> _handler;
         private IValidator<Delete.Query> _validator;
@@ -42,7 +44,9 @@ namespace Standards.CQRS.Tests.Housings
             _repository.Setup(_ => _.DeleteAsync(_housing, _cancellationToken));
             _repository.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
-            _handler = new Delete.QueryHandler(_repository.Object);
+            _cacheService = new Mock<ICacheService>();
+
+            _handler = new Delete.QueryHandler(_repository.Object, _cacheService.Object);
             _validator = new Delete.QueryValidator(_repository.Object);
         }
 
@@ -57,6 +61,22 @@ namespace Standards.CQRS.Tests.Housings
 
             // Assert
             Assert.That(result, Is.EqualTo(1));
+        }
+        
+        [Test]
+        public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
+        {
+            // Arrange
+            var query = new Delete.Query(IdInDb);
+
+            // Act
+            var result = _handler.Handle(query, _cancellationToken).Result;
+
+            // Assert
+            _repository.Verify(repository => repository.GetByIdAsync<Housing>(IdInDb, _cancellationToken), Times.Once);
+            _repository.Verify(repository => repository.DeleteAsync(It.IsAny<Housing>(), _cancellationToken), Times.Once);
+            _repository.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
+            _cacheService.Verify(cache => cache.Remove(It.IsAny<string>()), Times.Once);
         }
 
         [Test]

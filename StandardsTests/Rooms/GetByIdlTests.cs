@@ -4,6 +4,7 @@ using Standards.Core.CQRS.Rooms;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Rooms
 {
@@ -14,7 +15,10 @@ namespace Standards.CQRS.Tests.Rooms
         private const int InvalidId = 10;
 
         private Mock<IRepository> _repository;
+        private Mock<ICacheService> _cacheMock;
+        
         private CancellationToken _cancellationToken;
+        
         private List<Room> _rooms;
         private IRequestHandler<GetById.Query, Room> _handler;
 
@@ -51,7 +55,9 @@ namespace Standards.CQRS.Tests.Rooms
             _repository.Setup(_ => _.GetByIdAsync<Room>(_id, _cancellationToken))
                 .Returns(Task.FromResult(_rooms.First(_ => _.Id == _id)));
 
-            _handler = new GetById.QueryHandler(_repository.Object); 
+            _cacheMock = new Mock<ICacheService>();
+
+            _handler = new GetById.QueryHandler(_repository.Object, _cacheMock.Object); 
         }
 
         [Test]

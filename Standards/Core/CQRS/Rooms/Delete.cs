@@ -1,8 +1,10 @@
 ﻿using FluentValidation;
 using MediatR;
 using Standards.Core.CQRS.Common.Attributes;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 using Standards.Infrastructure.Validators;
 
 namespace Standards.Core.CQRS.Rooms
@@ -15,7 +17,7 @@ namespace Standards.Core.CQRS.Rooms
             public int Id { get; set; } = id;
         }
 
-        public class QueryHandler(IRepository repository) : IRequestHandler<Query, int>
+        public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>
         {
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
@@ -24,6 +26,8 @@ namespace Standards.Core.CQRS.Rooms
                 await repository.DeleteAsync(room, cancellationToken);
 
                 var result = await repository.SaveChangesAsync(cancellationToken);
+                
+                cacheService.Remove(Cache.Rooms);
 
                 return result;
             }

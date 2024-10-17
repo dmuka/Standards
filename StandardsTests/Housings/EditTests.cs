@@ -8,6 +8,7 @@ using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
 {
@@ -21,6 +22,7 @@ namespace Standards.CQRS.Tests.Housings
         private HousingDto _housing;
 
         private Mock<IRepository> _repositoryMock;
+        private Mock<ICacheService> _cacheService;
 
         private IRequestHandler<Edit.Query, int> _handler;
         private IValidator<Edit.Query> _validator;
@@ -45,7 +47,9 @@ namespace Standards.CQRS.Tests.Housings
             _repositoryMock.Setup(_ => _.Update(_housing));
             _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
-            _handler = new Edit.QueryHandler(_repositoryMock.Object);
+            _cacheService = new Mock<ICacheService>();
+            
+            _handler = new Edit.QueryHandler(_repositoryMock.Object, _cacheService.Object);
             _validator = new Edit.QueryValidator(_repositoryMock.Object);
         }
 
@@ -77,6 +81,7 @@ namespace Standards.CQRS.Tests.Housings
             _repositoryMock.Verify(repository => repository.GetQueryable<Room>(), Times.Once);
             _repositoryMock.Verify(repository => repository.Update(It.IsAny<Housing>()), Times.Once);
             _repositoryMock.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
+            _cacheService.Verify(cache => cache.Remove(It.IsAny<string>()), Times.Once);
         }
 
         [Test]
