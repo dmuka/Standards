@@ -6,7 +6,7 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
 {
     internal static class QueryExtensions
     {
-        public static async Task<List<T>> GetFromQueryAsync<T>(
+        public static async Task<IList<T>> GetFromQueryAsync<T>(
             this DbContext dbContext,
             string sql,
             IEnumerable<object> parameters,
@@ -84,7 +84,7 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
             }
         }
 
-        public static async Task<List<T>> GetFromQueryAsync<T>(
+        public static async Task<IList<T>> GetFromQueryAsync<T>(
             this DbContext dbContext,
             string sql,
             IEnumerable<DbParameter> parameters,

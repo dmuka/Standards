@@ -29,26 +29,26 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
         }
 
         #region GetListAsync
-        public Task<List<T>> GetListAsync<T>(CancellationToken cancellationToken = default) where T : class
+        public Task<IList<T>> GetListAsync<T>(CancellationToken cancellationToken = default) where T : class
         {
             return GetListAsync<T>(false, cancellationToken);
         }
 
-        public Task<List<T>> GetListAsync<T>(bool asNoTracking, CancellationToken cancellationToken = default) where T : class
+        public Task<IList<T>> GetListAsync<T>(bool asNoTracking, CancellationToken cancellationToken = default) where T : class
         {
             Func<IQueryable<T>, IIncludableQueryable<T, object>> nullValue = null;
 
             return GetListAsync(nullValue, asNoTracking, cancellationToken);
         }
 
-        public Task<List<T>> GetListAsync<T>(
+        public Task<IList<T>> GetListAsync<T>(
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
             CancellationToken cancellationToken = default) where T : class
         {
             return GetListAsync(includes, false, cancellationToken);
         }
 
-        public async Task<List<T>> GetListAsync<T>(
+        public async Task<IList<T>> GetListAsync<T>(
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
@@ -70,12 +70,12 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             return items;
         }
 
-        public Task<List<T>> GetListAsync<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default) where T : class
+        public Task<IList<T>> GetListAsync<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default) where T : class
         {
             return GetListAsync(condition, false, cancellationToken);
         }
 
-        public Task<List<T>> GetListAsync<T>(
+        public Task<IList<T>> GetListAsync<T>(
             Expression<Func<T, bool>> condition,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
@@ -83,7 +83,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             return GetListAsync(condition, null, asNoTracking, cancellationToken);
         }
 
-        public async Task<List<T>> GetListAsync<T>(
+        public async Task<IList<T>> GetListAsync<T>(
             Expression<Func<T, bool>> condition,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
             bool asNoTracking,
@@ -111,12 +111,12 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             return items;
         }
 
-        public Task<List<T>> GetListAsync<T>(QueryDetails<T> details, CancellationToken cancellationToken = default) where T : class
+        public Task<IList<T>> GetListAsync<T>(QueryDetails<T> details, CancellationToken cancellationToken = default) where T : class
         {
             return GetListAsync(details, false, cancellationToken);
         }
 
-        public async Task<List<T>> GetListAsync<T>(
+        public async Task<IList<T>> GetListAsync<T>(
             QueryDetails<T> specification,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
@@ -586,7 +586,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
         #endregion
 
         #region Raw SQL - returns items
-        public async Task<List<T>> GetFromRawSqlAsync<T>(string sql, CancellationToken cancellationToken = default)
+        public async Task<IList<T>> GetFromRawSqlAsync<T>(string sql, CancellationToken cancellationToken = default)
         {
             if (string.IsNullOrWhiteSpace(sql))
             {
@@ -600,7 +600,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             return items;
         }
 
-        public async Task<List<T>> GetFromRawSqlAsync<T>(
+        public async Task<IList<T>> GetFromRawSqlAsync<T>(
             string sql,
             object parameter,
             CancellationToken cancellationToken = default)
@@ -617,7 +617,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
             return items;
         }
 
-        public async Task<List<T>> GetFromRawSqlAsync<T>(
+        public async Task<IList<T>> GetFromRawSqlAsync<T>(
             string sql,
             IEnumerable<DbParameter> parameters,
             CancellationToken cancellationToken = default)
@@ -627,11 +627,12 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
                 throw new ArgumentNullException(nameof(sql));
             }
 
-            List<T> items = await dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
+            var items = await dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
+            
             return items;
         }
 
-        public async Task<List<T>> GetFromRawSqlAsync<T>(
+        public async Task<IList<T>> GetFromRawSqlAsync<T>(
             string sql,
             IEnumerable<object> parameters,
             CancellationToken cancellationToken = default)
@@ -854,7 +855,7 @@ namespace Standards.Infrastructure.Data.Repositories.Implementations
 
         #region Where
 
-        public async Task<List<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default) where T : class
+        public async Task<IList<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default) where T : class
         {
             IQueryable<T> query = dbContext.Set<T>();
 

@@ -24,7 +24,7 @@ namespace Standards.Core.CQRS.Housings
                 var absoluteExpiration = configService.GetValue<int>(Cache.AbsoluteExpirationConfigurationSectionKey);
                 var slidingExpiration = configService.GetValue<int>(Cache.SlidingExpirationConfigurationSectionKey);
                 
-                var housings = await cache.GetOrCreateAsync(
+                var housings = await cache.GetOrCreateAsync<Housing>(
                     Cache.Housings,
                     async (token) =>
                     {

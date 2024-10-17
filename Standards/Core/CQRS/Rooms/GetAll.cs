@@ -23,7 +23,7 @@ namespace Standards.Core.CQRS.Rooms
                 var absoluteExpiration = configService.GetValue<int>(Cache.AbsoluteExpirationConfigurationSectionKey);
                 var slidingExpiration = configService.GetValue<int>(Cache.SlidingExpirationConfigurationSectionKey);
 
-                var rooms = await cache.GetOrCreateAsync(
+                var rooms = await cache.GetOrCreateAsync<Room>(
                     Cache.Rooms,
                     async (token) =>
                     {

@@ -5,14 +5,14 @@ namespace Standards.Infrastructure.Services.Implementations;
 
 public class CacheService(IMemoryCache cache) : ICacheService
 {
-    public async Task<T> GetOrCreateAsync<T>(
+    public async Task<IList<T>> GetOrCreateAsync<T>(
         string cacheKey, 
-        Func<CancellationToken, Task<T>> retrieveData,
+        Func<CancellationToken, Task<IList<T>>> retrieveData,
         CancellationToken cancellationToken,
         TimeSpan? absoluteExpiration = null,
         TimeSpan? slidingExpiration = null)
     {
-        if (!cache.TryGetValue(cacheKey, out T cachedData))
+        if (!cache.TryGetValue(cacheKey, out IList<T> cachedData))
         {
             cachedData = await retrieveData(cancellationToken);
             

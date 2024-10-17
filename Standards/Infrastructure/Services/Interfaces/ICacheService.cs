@@ -2,9 +2,9 @@ namespace Standards.Infrastructure.Services.Interfaces;
 
 public interface ICacheService
 {
-    Task<T> GetOrCreateAsync<T>(
+    Task<IList<T>> GetOrCreateAsync<T>(
         string cacheKey, 
-        Func<CancellationToken, Task<T>> retrieveData,
+        Func<CancellationToken, Task<IList<T>>> retrieveData,
         CancellationToken cancellationToken,
         TimeSpan? absoluteExpiration = null,
         TimeSpan? slidingExpiration = null);

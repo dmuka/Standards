@@ -102,6 +102,7 @@ namespace Standards.Infrastructure.Data.Repositories.Extensions
 
             return paginatedList;
         }
+        
         public static IQueryable<T> GetSpecifiedQuery<T>(this IQueryable<T> inputQuery, QueryDetails<T> details) where T : class
         {
             var query = inputQuery.GetSpecifiedQuery((BaseQueryDetails<T>)details);

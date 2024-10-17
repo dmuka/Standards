@@ -34,37 +34,37 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
 
         #region Get list
         /// <summary>
-        /// This method returns <see cref="List{T}"/> without any filter. Call only when you want to pull all the data from the source.
+        /// This method returns <see cref="IList{T}"/> without any filter. Call only when you want to pull all the data from the source.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>Returns <see cref="Task"/> of <see cref="List{T}"/>.</returns>
-        Task<List<TEntity>> GetListAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class;
+        /// <returns>Returns <see cref="Task"/> of <see cref="IList{T}"/>.</returns>
+        Task<IList<TEntity>> GetListAsync<TEntity>(CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
-        /// This method returns <see cref="List{T}"/> without any filter. Call only when you want to pull all the data from the source.
+        /// This method returns <see cref="IList{T}"/> without any filter. Call only when you want to pull all the data from the source.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="asNoTracking">A <see cref="bool"/> value which determines whether the return entity will be tracked by
         /// EF Core context or not. Default value is false i.e tracking is enabled by default.
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>Returns <see cref="Task"/> of <see cref="List{T}"/>.</returns>
-        Task<List<TEntity>> GetListAsync<TEntity>(bool asNoTracking, CancellationToken cancellationToken = default) where TEntity : class;
+        /// <returns>Returns <see cref="Task"/> of <see cref="IList{T}"/>.</returns>
+        Task<IList<TEntity>> GetListAsync<TEntity>(bool asNoTracking, CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
-        /// This method returns <see cref="List{T}"/> without any filter. Call only when you want to pull all the data from the source.
+        /// This method returns <see cref="IList{T}"/> without any filter. Call only when you want to pull all the data from the source.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="includes">Navigation properties to be loaded.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>Returns <see cref="Task"/> of <see cref="List{T}"/>.</returns>
-        Task<List<TEntity>> GetListAsync<TEntity>(
+        /// <returns>Returns <see cref="Task"/> of <see cref="IList{T}"/>.</returns>
+        Task<IList<TEntity>> GetListAsync<TEntity>(
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
-        /// This method returns <see cref="List{T}"/> without any filter. Call only when you want to pull all the data from the source.
+        /// This method returns <see cref="IList{T}"/> without any filter. Call only when you want to pull all the data from the source.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="includes">Navigation properties to be loaded.</param>
@@ -72,8 +72,8 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// EF Core context or not. Default value is false i.e tracking is enabled by default.
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
-        /// <returns>Returns <see cref="Task"/> of <see cref="List{T}"/>.</returns>
-        Task<List<TEntity>> GetListAsync<TEntity>(
+        /// <returns>Returns <see cref="Task"/> of <see cref="IList{T}"/>.</returns>
+        Task<IList<TEntity>> GetListAsync<TEntity>(
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -85,7 +85,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// <param name="condition">The condition on which entity list will be returned.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="List{TEntity}"/>.</returns>
-        Task<List<TEntity>> GetListAsync<TEntity>(Expression<Func<TEntity, bool>> condition, CancellationToken cancellationToken = default) where TEntity : class;
+        Task<IList<TEntity>> GetListAsync<TEntity>(Expression<Func<TEntity, bool>> condition, CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
         /// This method takes a <see cref="Expression{Func}"/> as parameter and returns <see cref="List{TEntity}"/>.
@@ -97,7 +97,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="List{TEntity}"/>.</returns>
-        Task<List<TEntity>> GetListAsync<TEntity>(
+        Task<IList<TEntity>> GetListAsync<TEntity>(
             Expression<Func<TEntity, bool>> condition,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -113,7 +113,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="List{TEntity}"/>.</returns>
-        Task<List<TEntity>> GetListAsync<TEntity>(
+        Task<IList<TEntity>> GetListAsync<TEntity>(
             Expression<Func<TEntity, bool>> condition,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             bool asNoTracking = false,
@@ -128,7 +128,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="List{TEntity}"/>.</returns>
-        Task<List<TEntity>> GetListAsync<TEntity>(QueryDetails<TEntity> details, CancellationToken cancellationToken = default) where TEntity : class;
+        Task<IList<TEntity>> GetListAsync<TEntity>(QueryDetails<TEntity> details, CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
         /// This method takes an object of <see cref="QueryDetails{TEntity}"/> as parameter and returns <see cref="List{TEntity}"/>.
@@ -142,7 +142,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="List{TEntity}"/>.</returns>
-        Task<List<TEntity>> GetListAsync<TEntity>(
+        Task<IList<TEntity>> GetListAsync<TEntity>(
             QueryDetails<TEntity> details,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -507,7 +507,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="sql"/> is <see langword="null"/>.</exception>
-        Task<List<T>> GetFromRawSqlAsync<T>(string sql, CancellationToken cancellationToken = default);
+        Task<IList<T>> GetFromRawSqlAsync<T>(string sql, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// This method takes <paramref name="sql"/> string and the value of <paramref name="parameter"/> mentioned in the sql query as parameters
@@ -519,7 +519,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="sql"/> is <see langword="null"/>.</exception>
-        Task<List<T>> GetFromRawSqlAsync<T>(string sql, object parameter, CancellationToken cancellationToken = default);
+        Task<IList<T>> GetFromRawSqlAsync<T>(string sql, object parameter, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// This method takes <paramref name="sql"/> string and values of the <paramref name="parameters"/> mentioned in the sql query as parameters
@@ -531,7 +531,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="sql"/> is <see langword="null"/>.</exception>
-        Task<List<T>> GetFromRawSqlAsync<T>(
+        Task<IList<T>> GetFromRawSqlAsync<T>(
             string sql,
             IEnumerable<DbParameter> parameters,
             CancellationToken cancellationToken = default);
@@ -549,7 +549,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="sql"/> is <see langword="null"/>.</exception>
-        Task<List<T>> GetFromRawSqlAsync<T>(string sql, IEnumerable<object> parameters, CancellationToken cancellationToken = default);
+        Task<IList<T>> GetFromRawSqlAsync<T>(string sql, IEnumerable<object> parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// Execute raw sql command against the configured database asynchronously.
@@ -713,7 +713,7 @@ namespace Standards.Infrastructure.Data.Repositories.Interfaces
         /// <param name="cancellationToken">A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <typeparam name="T">The type of the items to be returned.</typeparam>
         /// <returns>A <see cref="Task"/> that represents the asynchronous save operation. The task result contains the list of items that represent result of filtering.</returns>
-        public Task<List<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>> condition,
+        public Task<IList<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>> condition,
             CancellationToken cancellationToken = default) where T : class;
 
         /// <summary>

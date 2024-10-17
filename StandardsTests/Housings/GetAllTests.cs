@@ -25,7 +25,7 @@ namespace Standards.CQRS.Tests.Housings
         private readonly string _absoluteExpirationPath = "Cache:AbsoluteExpiration";
         private readonly string _slidingExpirationPath = "Cache:SlidingExpiration";
         
-        private List<Housing> _housings;
+        private IList<Housing> _housings;
         private List<HousingDto> _dtos;
         private Department _department1;
         private Department _department2;
@@ -210,7 +210,7 @@ namespace Standards.CQRS.Tests.Housings
                 .Returns(Task.FromResult(_housings));
 
             _cacheService = new Mock<ICacheService>();
-            _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Housings, It.IsAny<Func<CancellationToken, Task<List<Housing>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+            _cacheService.Setup(cache => cache.GetOrCreateAsync<Housing>(Cache.Housings, It.IsAny<Func<CancellationToken, Task<IList<Housing>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromResult(_housings));
 
             _handler = new GetAll.QueryHandler(_repository.Object, _cacheService.Object, _configService.Object); 

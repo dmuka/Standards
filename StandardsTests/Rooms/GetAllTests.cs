@@ -22,7 +22,7 @@ namespace Standards.CQRS.Tests.Rooms
         private readonly string _absoluteExpirationPath = "Cache:AbsoluteExpiration";
         private readonly string _slidingExpirationPath = "Cache:SlidingExpiration";
         
-        private List<Room> _rooms;
+        private IList<Room> _rooms;
         private Room _room1;
         private Room _room2;
         private Room _room3;
@@ -89,7 +89,7 @@ namespace Standards.CQRS.Tests.Rooms
             _configService.Setup(config => config.GetValue<int>(_slidingExpirationPath)).Returns(2);
 
             _cacheService = new Mock<ICacheService>();
-            _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Rooms, It.IsAny<Func<CancellationToken, Task<List<Room>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+            _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Rooms, It.IsAny<Func<CancellationToken, Task<IList<Room>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromResult(_rooms));
 
             _repository = new Mock<IRepository>();
