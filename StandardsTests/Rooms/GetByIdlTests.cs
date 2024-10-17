@@ -1,7 +1,6 @@
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Rooms;
-using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;

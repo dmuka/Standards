@@ -1,4 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using System.Linq.Expressions;
+using Microsoft.EntityFrameworkCore;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.ExpressionTrees;
 using Standards.Infrastructure.Filter.Interfaces;
@@ -19,12 +20,18 @@ namespace Standards.Infrastructure.Filter.Implementations
                 
                 _query = _query.Where(expression);
             }
-
+            
+            var propertyName = Enum.GetName(parameters.SortBy.Value);
+            var property = typeof(T).GetProperty(propertyName);
+            Func<T, object?> func = entity => property.GetValue(entity);
+            Expression<Func<T, object?>> sortExpression = a => func(a);
+            //var sortExpression = Expression.Lambda<Func<T, object?>>(Expression.Call(func.Method));
+            
             if (parameters.SortBy != SortBy.None)
             {
                 _query = parameters.SortDescending
-                    ? _query.OrderByDescending(entity => EF.Property<object>(entity, Enum.GetName(parameters.SortBy.Value)))
-                    : _query.OrderBy(entity => EF.Property<object>(entity, Enum.GetName(parameters.SortBy.Value)));
+                    ? _query.OrderByDescending(sortExpression)
+                    : _query.OrderBy(sortExpression);
             }
         
             _query = _query

@@ -136,6 +136,9 @@ namespace Standards
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
 
             builder.Services.AddTransient<IRepository, Repository<ApplicationDbContext>>();
+
+            builder.Services.AddScoped<IConfigService, ConfigService>();
+            
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             
