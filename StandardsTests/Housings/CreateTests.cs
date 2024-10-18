@@ -4,14 +4,14 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
-using Standards.CQRS.Tests.Constants;
+using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
 {
     [TestFixture]
-    public class CreateTests
+    public class CreateTests : BaseTestFixture
     {
         private CancellationToken _cancellationToken;
         private HousingDto _housing;
@@ -91,8 +91,7 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto);
         }
 
-        [TestCase(Cases.Null)]
-        [TestCase(Cases.EmptyString)]
+        [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
         {
             // Arrange
@@ -107,8 +106,7 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
         }
 
-        [TestCase(Cases.Null)]
-        [TestCase(Cases.EmptyString)]
+        [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
         {
             // Arrange
@@ -123,8 +121,7 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.ShortName);
         }
 
-        [TestCase(Cases.Null)]
-        [TestCase(Cases.EmptyString)]
+        [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfAddressIsNull_ShouldHaveValidationError(string? address)
         {
             // Arrange

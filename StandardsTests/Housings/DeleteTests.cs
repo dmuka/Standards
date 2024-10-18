@@ -4,13 +4,13 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Housings;
-using Standards.CQRS.Tests.Constants;
+using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
 {
-    public class DeleteTests
+    public class DeleteTests : BaseTestFixture
     {
         private const int IdInDb = 1;
         private const int IdNotInDb = 2;
@@ -26,15 +26,7 @@ namespace Standards.CQRS.Tests.Housings
         [SetUp]
         public void Setup()
         {
-            _housing = new Housing
-            {
-                Id = IdInDb,
-                Address = "Address 1",
-                Name = "Name 1",
-                ShortName = "Short name 1",
-                FloorsCount = 1,
-                Comments = "Comments 1"
-            };
+            _housing = Housings[0];
 
             _cancellationToken = new CancellationToken();
 
@@ -93,8 +85,7 @@ namespace Standards.CQRS.Tests.Housings
             Assert.That(result, Is.EqualTo(0));
         }
 
-        [TestCase(Cases.Zero)]
-        [TestCase(Cases.Negative)]
+        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
         [TestCase(IdNotInDb)]
         public void Validator_IfIdInvalid_ShouldHaveValidationError(int id)
         {

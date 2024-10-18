@@ -1,6 +1,7 @@
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
+using Standards.CQRS.Tests.Constants;
 
 namespace Standards.CQRS.Tests.Common;
 
@@ -70,7 +71,7 @@ public abstract class BaseTestFixture
         }
     ];
 
-    protected static List<Housing> Housings { get; } =
+    protected static IList<Housing> Housings { get; } =
     [
         new Housing
         {
@@ -150,5 +151,17 @@ public abstract class BaseTestFixture
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
+    }
+    
+    protected static IEnumerable<TestCaseData> NullOrEmptyString()
+    {
+        yield return new TestCaseData(Cases.Null);
+        yield return new TestCaseData(Cases.EmptyString);
+    }
+    
+    protected static IEnumerable<TestCaseData> ZeroOrNegativeId()
+    {
+        yield return new TestCaseData(Cases.Zero);
+        yield return new TestCaseData(Cases.Negative);
     }
 }
