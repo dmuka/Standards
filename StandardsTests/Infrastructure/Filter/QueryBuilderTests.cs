@@ -15,6 +15,7 @@ public class QueryBuilderTests
 {
     private QueryParameters _parameters;
     private IList<Housing> _housings;
+    private string searchString = "Housing1";
 
     private IQueryBuilder<Housing> _queryBuilder;
     
@@ -115,12 +116,43 @@ public class QueryBuilderTests
     }
 
     [Test]
-    public void Execute_IfSortDescendingIsTrue_ShouldReturnValidResult()
+    public void Execute_IfSortDescendingIsTrue_ShouldReturnCollectionInReverseOrder()
     {
         // Arrange
         _parameters.SortDescending = true;
         var query = _queryBuilder.Execute(_parameters);
         var expected = _housings.OrderByDescending<Housing, string>(housing => housing.Name);
+        
+        // Act
+        var result = query.AsEnumerable().ToList();
+        
+        // Assert
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
+    public void Execute_IfSearchStringIsNotEmpty_ShouldReturnValidResult()
+    {
+        // Arrange
+        _parameters.SearchString = searchString;
+        var query = _queryBuilder.Execute(_parameters);
+        var expected = _housings.Where(housing => housing.Name == searchString);
+        
+        // Act
+        var result = query.AsEnumerable().ToList();
+        
+        // Assert
+        result.Should().BeEquivalentTo(expected);
+    }
+
+    [Test]
+    public void Execute_IfPaginationValuesAreSet_ShouldReturnValidResult()
+    {
+        // Arrange
+        _parameters.PageNumber = 3;
+        _parameters.ItemsOnPage = 1;
+        var query = _queryBuilder.Execute(_parameters);
+        var expected = _housings.Where(housing => housing.Id == 3);
         
         // Act
         var result = query.AsEnumerable().ToList();
