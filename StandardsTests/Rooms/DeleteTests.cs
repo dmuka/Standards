@@ -4,21 +4,20 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Rooms;
 using Standards.Core.Models.Housings;
-using Standards.CQRS.Tests.Constants;
+using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Rooms
 {
-    public class DeleteTests
+    public class DeleteTests : BaseTestFixture
     {
         private const int IdInDb = 1;
         private const int IdNotInDb = 2;
         private Room _room;
         
-        private CancellationToken _cancellationToken;
-
         private Mock<IRepository> _repository;
+        private CancellationToken _cancellationToken;
         private Mock<ICacheService> _cacheService;
 
         private IRequestHandler<Delete.Query, int> _handler;
@@ -27,13 +26,7 @@ namespace Standards.CQRS.Tests.Rooms
         [SetUp]
         public void Setup()
         {
-            _room = new Room
-            {
-                Id = IdInDb,
-                Name = "Name 1",
-                ShortName = "Short name 1",
-                Comments = "Comments 1"
-            };
+            _room = Rooms[0];
 
             _cancellationToken = new CancellationToken();
 
@@ -92,8 +85,7 @@ namespace Standards.CQRS.Tests.Rooms
             Assert.That(result, Is.EqualTo(0));
         }
         
-        [TestCase(Cases.Zero)]
-        [TestCase(Cases.Negative)]
+        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
         [TestCase(IdNotInDb)]
         public void Validator_IfIdNotInDB_ShouldHaveValidationError(int id)
         {

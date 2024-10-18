@@ -6,7 +6,7 @@ using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models;
 using Standards.Core.Models.Housings;
-using Standards.CQRS.Tests.Constants;
+using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Interfaces;
@@ -15,16 +15,16 @@ using Standards.Infrastructure.QueryableWrapper.Interface;
 namespace Standards.CQRS.Tests.Housings
 {
     [TestFixture]
-    public class GetFilteredTests
+    public class GetFilteredTests : BaseTestFixture
     {
         private const string SearchQuery = "Name"; 
         
         private QueryParameters _parameters;
-        private CancellationToken _cancellationToken;
         private IList<Housing> _housings;
         private IQueryBuilder<Housing> _queryBuilder;
 
         private Mock<IRepository> _repositoryMock;
+        private CancellationToken _cancellationToken;
         private Mock<IQueryBuilder<Housing>> _queryBuilderMock;
         private Mock<IQueryableWrapper<Housing>> _queryWrapperMock;
         private Mock<IQueryable<Housing>> _queryMock;
@@ -35,35 +35,10 @@ namespace Standards.CQRS.Tests.Housings
         [SetUp]
         public void Setup()
         {
-            _housings = new List<Housing>
-            {
-                new() {
-                    Id = 1,
-                    Address = "Address 1",
-                    Name = "Name 1",
-                    ShortName = "Short name 1",
-                    FloorsCount = 1,
-                    Comments = "Comments 1"
-                },
-                new() {
-                    Id = 2,
-                    Address = "Address 2",
-                    Name = "Name 2",
-                    ShortName = "Short name 2",
-                    FloorsCount = 2,
-                    Comments = "Comments 2"
-                },
-                new() {
-                    Id = 3,
-                    Address = "Address 3",
-                    Name = "Name 3",
-                    ShortName = "Short name 3",
-                    FloorsCount = 3,
-                    Comments = "Comments 3"
-                }
-            };
+            _housings = Housings;
 
-            _parameters = new QueryParameters(searchString: string.Empty, itemsOnPage: 10, pageNumber: 1);
+            _parameters = new QueryParameters(
+                searchString: string.Empty, itemsOnPage: 10, pageNumber: 1);
 
             _repositoryMock = new Mock<IRepository>();
 
@@ -190,8 +165,7 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.Parameters.SortBy);
         }
 
-        [TestCase(Cases.Zero)]
-        [TestCase(Cases.Negative)]
+        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
         public void Validator_IfItemsPerPageIsZero_ShouldHaveValidationError(int itemsPerPage)
         {
             // Arrange
@@ -206,8 +180,7 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.Parameters.ItemsOnPage);
         }
 
-        [TestCase(Cases.Zero)]
-        [TestCase(Cases.Negative)]
+        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
         public void Validator_IfPageNumberIsZero_ShouldHaveValidationError(int pageNumber)
         {
             // Arrange

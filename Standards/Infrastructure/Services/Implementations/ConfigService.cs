@@ -16,10 +16,10 @@ public class ConfigService(IConfiguration configuration) : IConfigService
         {
             return value;
         }
-        else
-        {
-            throw new StandardsConfigValueNotFoundException(StatusCodeByError.NotFound,
-                $"Wrong configuration value path ({valuePath}) or no such value.", null);
-        }
+        
+        throw new StandardsConfigValueNotFoundException(
+            StatusCodeByError.NotFound,
+            $"Wrong configuration value path ({valuePath}) or no such value.",
+            null);
     }
 }

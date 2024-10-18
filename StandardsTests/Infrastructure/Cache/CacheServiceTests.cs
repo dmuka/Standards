@@ -19,12 +19,12 @@ public class CacheServiceTests : BaseTestFixture
     private const int InvalidId = 10;
     
     private ICacheService _cacheService;
+    private IMemoryCache _memoryCache;
 
     private IList<Housing> _housings;
-    private CancellationToken _cancellationToken;
     
-    private IMemoryCache _memoryCache;
     private Mock<IRepository> _repositoryMock;
+    private CancellationToken _cancellationToken;
     
     [SetUp]
     public void Setup()

@@ -6,22 +6,22 @@ using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
-using Standards.CQRS.Tests.Constants;
+using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
 {
     [TestFixture]
-    public class EditTests
+    public class EditTests : BaseTestFixture
     {
         private const int ValidId = 1;
         private const int IdNotInDb = 2;
-        
-        private CancellationToken _cancellationToken;
+
         private HousingDto _housing;
 
         private Mock<IRepository> _repositoryMock;
+        private CancellationToken _cancellationToken;
         private Mock<ICacheService> _cacheService;
 
         private IRequestHandler<Edit.Query, int> _handler;
@@ -30,15 +30,7 @@ namespace Standards.CQRS.Tests.Housings
         [SetUp]
         public void Setup()
         {
-            _housing = new HousingDto
-            {
-                Id = ValidId,
-                Address = "Address 1",
-                Name = "Name 1",
-                ShortName = "Short name 1",
-                FloorsCount = 1,
-                Comments = "Comments 1"
-            };
+            _housing = HousingDtos[0];
 
             _cancellationToken = new CancellationToken();
 
@@ -74,7 +66,7 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Edit.Query(_housing);
 
             // Act
-            var result = _handler.Handle(query, _cancellationToken).Result;
+            _handler.Handle(query, _cancellationToken);
 
             // Assert
             _repositoryMock.Verify(repository => repository.GetQueryable<Department>(), Times.Once);
@@ -114,8 +106,7 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto);
         }
 
-        [TestCase(Cases.Negative)]
-        [TestCase(Cases.Zero)]
+        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
         [TestCase(IdNotInDb)]
         public void Validator_IfIdIsInvalid_ShouldHaveValidationError(int id)
         {
@@ -131,8 +122,7 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Id);
         }
 
-        [TestCase(Cases.Null)]
-        [TestCase(Cases.EmptyString)]
+        [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
         {
             // Arrange
@@ -147,8 +137,7 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
         }
 
-        [TestCase(Cases.Null)]
-        [TestCase(Cases.EmptyString)]
+        [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
         {
             // Arrange
@@ -163,8 +152,7 @@ namespace Standards.CQRS.Tests.Housings
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.ShortName);
         }
 
-        [TestCase(Cases.Null)]
-        [TestCase(Cases.EmptyString)]
+        [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfAddressIsNull_ShouldHaveValidationError(string? address)
         {
             // Arrange

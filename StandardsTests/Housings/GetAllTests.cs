@@ -1,11 +1,9 @@
 using FluentAssertions;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Query;
-using Microsoft.Extensions.Configuration;
 using Moq;
 using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Housings;
-using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Common;
@@ -17,26 +15,24 @@ namespace Standards.CQRS.Tests.Housings
     [TestFixture]
     public class GetAllTests : BaseTestFixture
     {
-        private Mock<IRepository> _repository;
-        private Mock<ICacheService> _cacheService;
-        private Mock<IConfigService> _configService;
-        
-        private CancellationToken _cancellationToken;
-
         private readonly string _absoluteExpirationPath = "Cache:AbsoluteExpiration";
         private readonly string _slidingExpirationPath = "Cache:SlidingExpiration";
         
         private IList<Housing> _housings;
         private List<HousingDto> _dtos;
         
+        private Mock<IRepository> _repository;
+        private CancellationToken _cancellationToken;
+        private Mock<ICacheService> _cacheService;
+        private Mock<IConfigService> _configService;
+        
         private IRequestHandler<GetAll.Query, IList<HousingDto>> _handler;
 
         [SetUp]
         public void Setup()
         {
-            _housings = Housings;
-            
             _dtos = HousingDtos;
+            _housings = Housings;
 
             _cancellationToken = new CancellationToken();
 

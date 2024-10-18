@@ -12,11 +12,11 @@ namespace Standards.CQRS.Tests.Infrastructure.Filter;
 [TestFixture]
 public class QueryBuilderTests
 {
+    private IQueryBuilder<Housing> _queryBuilder;
+    
     private QueryParameters _parameters;
     private IList<Housing> _housings;
     private string searchString = "Housing1";
-
-    private IQueryBuilder<Housing> _queryBuilder;
     
     private Mock<IRepository> _repositoryMock;
     

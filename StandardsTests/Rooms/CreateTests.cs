@@ -6,258 +6,218 @@ using Standards.Core.CQRS.Rooms;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
-using Standards.CQRS.Tests.Constants;
+using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
-namespace Standards.CQRS.Tests.Rooms
+namespace Standards.CQRS.Tests.Rooms;
+
+[TestFixture]
+public class CreateTests : BaseTestFixture
 {
-    [TestFixture]
-    public class CreateTests
+    private const int ValidId = 1;
+    private const int IdNotInDb = 2;
+    
+    private Room _room;
+    private RoomDto _roomDto;
+    private Housing _housing;
+    private Sector _sector;
+    
+    private Mock<IRepository> _repositoryMock;
+    private CancellationToken _cancellationToken;
+    private Mock<ICacheService> _cacheMock;
+
+    private IRequestHandler<Create.Query, int> _handler;
+    private IValidator<Create.Query> _validator;
+
+    [SetUp]
+    public void Setup()
     {
-        private CancellationToken _cancellationToken;
-        private Room _room;
-        private RoomDto _roomDto;
-
-        private Housing _housing;
-        private Sector _sector;
-
-        private const int ValidId = 1;
-        private const int IdNotInDb = 2;
+        _room = Rooms[0];
         
-        private Mock<IRepository> _repositoryMock;
-        private Mock<ICacheService> _cacheMock;
+        _roomDto = RoomDtos[0];
 
-        private IRequestHandler<Create.Query, int> _handler;
-        private IValidator<Create.Query> _validator;
+        _housing = Housings[0];
 
-        [SetUp]
-        public void Setup()
-        {
-            _room = new Room
-            {
-                Id = ValidId,
-                Name = "Name 1",
-                ShortName = "Short name 1",
-                Floor = 1,
-                Height = 1,
-                Length = 1,
-                Width = 1,
-                Comments = "Comments 1"
-            };
-            
-            _roomDto = new RoomDto
-            {
-                Id = ValidId,
-                Name = "Name 1",
-                ShortName = "Short name 1",
-                Floor = 1,
-                Height = 1,
-                Length = 1,
-                Width = 1,
-                Comments = "Comments 1",
-                HousingId = ValidId,
-                SectorId = ValidId
-            };
+        _sector = Sectors[0];
 
-            _housing = new Housing()
-            {
-                Id = ValidId,
-                Name = "Housing"
-            };
+        _cancellationToken = new CancellationToken();
 
-            _sector = new Sector()
-            {
-                Id = ValidId,
-                Name = "Sector"
-            };
+        _repositoryMock = new Mock<IRepository>();
+        _repositoryMock.Setup(repository => repository.AddAsync(_room, _cancellationToken));
+        _repositoryMock.Setup(repository => repository.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(repository => repository.GetByIdAsync<Housing>(ValidId, _cancellationToken)).ReturnsAsync(_housing);
+        _repositoryMock.Setup(repository => repository.GetByIdAsync<Sector>(ValidId, _cancellationToken)).ReturnsAsync(_sector);
 
-            _cancellationToken = new CancellationToken();
+        _cacheMock = new Mock<ICacheService>();
+        
+        _handler = new Create.QueryHandler(_repositoryMock.Object, _cacheMock.Object);
+        _validator = new Create.QueryValidator(_repositoryMock.Object);
+    }
 
-            _repositoryMock = new Mock<IRepository>();
-            _repositoryMock.Setup(repository => repository.AddAsync(_room, _cancellationToken));
-            _repositoryMock.Setup(repository => repository.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
-            _repositoryMock.Setup(repository => repository.GetByIdAsync<Housing>(ValidId, _cancellationToken)).ReturnsAsync(_housing);
-            _repositoryMock.Setup(repository => repository.GetByIdAsync<Sector>(ValidId, _cancellationToken)).ReturnsAsync(_sector);
+    [Test]
+    public void Handler_IfAllDataIsValid_ReturnResult()
+    {
+        // Arrange
+        var query = new Create.Query(_roomDto);
+        var expected = 1;
 
-            _cacheMock = new Mock<ICacheService>();
-            
-            _handler = new Create.QueryHandler(_repositoryMock.Object, _cacheMock.Object);
-            _validator = new Create.QueryValidator(_repositoryMock.Object);
-        }
+        // Act
+        var result = _handler.Handle(query, _cancellationToken).Result;
 
-        [Test]
-        public void Handler_IfAllDataIsValid_ReturnResult()
-        {
-            // Arrange
-            var query = new Create.Query(_roomDto);
-            var expected = 1;
+        // Assert
+        Assert.That(result, Is.EqualTo(expected));
+    }
 
-            // Act
-            var result = _handler.Handle(query, _cancellationToken).Result;
+    [Test]
+    public void Handler_IfCancellationTokenIsActive_ReturnNull()
+    {
+        // Arrange
+        var query = new Create.Query(_roomDto);
+        _cancellationToken = new CancellationToken(true);
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
 
-            // Assert
-            Assert.That(result, Is.EqualTo(expected));
-        }
+        // Act
+        var result = _handler.Handle(query, _cancellationToken).Result;
 
-        [Test]
-        public void Handler_IfCancellationTokenIsActive_ReturnNull()
-        {
-            // Arrange
-            var query = new Create.Query(_roomDto);
-            _cancellationToken = new CancellationToken(true);
-            _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
+        // Assert
+        Assert.That(result, Is.EqualTo(default(int)));
+    }
 
-            // Act
-            var result = _handler.Handle(query, _cancellationToken).Result;
+    [Test]
+    public void Validator_IfHousingDtoIsNull_ShouldHaveValidationError()
+    {
+        // Arrange
+        _roomDto = null;
 
-            // Assert
-            Assert.That(result, Is.EqualTo(default(int)));
-        }
+        var query = new Create.Query(_roomDto);
 
-        [Test]
-        public void Validator_IfHousingDtoIsNull_ShouldHaveValidationError()
-        {
-            // Arrange
-            _roomDto = null;
+        // Act
+        var result = _validator.TestValidate(query);
 
-            var query = new Create.Query(_roomDto);
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Room);
+    }
 
-            // Act
-            var result = _validator.TestValidate(query);
+    [Test, TestCaseSource(nameof(NullOrEmptyString))]
+    public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
+    {
+        // Arrange
+        _roomDto.Name = name;
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Room);
-        }
+        var query = new Create.Query(_roomDto);
 
-        [TestCase(null)]
-        [TestCase("")]
-        public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
-        {
-            // Arrange
-            _roomDto.Name = name;
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-            var query = new Create.Query(_roomDto);
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Room.Name);
+    }
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+    [Test, TestCaseSource(nameof(NullOrEmptyString))]
+    public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
+    {
+        // Arrange
+        _roomDto.ShortName = shortName;
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Room.Name);
-        }
+        var query = new Create.Query(_roomDto);
 
-        [TestCase(null)]
-        [TestCase("")]
-        public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
-        {
-            // Arrange
-            _roomDto.ShortName = shortName;
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-            var query = new Create.Query(_roomDto);
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Room.ShortName);
+    }
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    public void Validator_IfWidthIsInvalid_ShouldHaveValidationError(int width)
+    {
+        // Arrange
+        _roomDto.Width = width;
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Room.ShortName);
-        }
+        var query = new Create.Query(_roomDto);
 
-        [TestCase(Cases.Negative)]
-        [TestCase(Cases.Zero)]
-        public void Validator_IfWidthIsInvalid_ShouldHaveValidationError(int width)
-        {
-            // Arrange
-            _roomDto.Width = width;
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-            var query = new Create.Query(_roomDto);
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Room.Width);
+    }
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    public void Validator_IfLengthIsInvalid_ShouldHaveValidationError(int length)
+    {
+        // Arrange
+        _roomDto.Length = length;
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Room.Width);
-        }
+        var query = new Create.Query(_roomDto);
 
-        [TestCase(Cases.Negative)]
-        [TestCase(Cases.Zero)]
-        public void Validator_IfLengthIsInvalid_ShouldHaveValidationError(int length)
-        {
-            // Arrange
-            _roomDto.Length = length;
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-            var query = new Create.Query(_roomDto);
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Room.Length);
+    }
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    public void Validator_IfHeightIsInvalid_ShouldHaveValidationError(int height)
+    {
+        // Arrange
+        _roomDto.Height = height;
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Room.Length);
-        }
+        var query = new Create.Query(_roomDto);
 
-        [TestCase(Cases.Negative)]
-        [TestCase(Cases.Zero)]
-        public void Validator_IfHeightIsInvalid_ShouldHaveValidationError(int height)
-        {
-            // Arrange
-            _roomDto.Height = height;
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-            var query = new Create.Query(_roomDto);
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Room.Height);
+    }
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    [TestCase(IdNotInDb)]
+    public void Validator_IfHousingIdIsInvalid_ShouldHaveValidationError(int housingId)
+    {
+        // Arrange
+        _roomDto.HousingId = housingId;
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Room.Height);
-        }
+        var query = new Create.Query(_roomDto);
 
-        [TestCase(Cases.Negative)]
-        [TestCase(Cases.Zero)]
-        [TestCase(IdNotInDb)]
-        public void Validator_IfHousingIdIsInvalid_ShouldHaveValidationError(int housingId)
-        {
-            // Arrange
-            _roomDto.HousingId = housingId;
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-            var query = new Create.Query(_roomDto);
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Room.HousingId);
+    }
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    [TestCase(IdNotInDb)]
+    public void Validator_IfSectorIdIsInvalid_ShouldHaveValidationError(int sectorId)
+    {
+        // Arrange
+        _roomDto.SectorId = sectorId;
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Room.HousingId);
-        }
+        var query = new Create.Query(_roomDto);
 
-        [TestCase(Cases.Negative)]
-        [TestCase(Cases.Zero)]
-        [TestCase(IdNotInDb)]
-        public void Validator_IfSectorIdIsInvalid_ShouldHaveValidationError(int sectorId)
-        {
-            // Arrange
-            _roomDto.SectorId = sectorId;
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-            var query = new Create.Query(_roomDto);
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Room.SectorId);
+    }
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    public void Validator_IfFloorIsInvalid_ShouldHaveValidationError(int floor)
+    {
+        // Arrange
+        _roomDto.Floor = floor;
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Room.SectorId);
-        }
+        var query = new Create.Query(_roomDto);
 
-        [TestCase(Cases.Negative)]
-        [TestCase(Cases.Zero)]
-        public void Validator_IfFloorIsInvalid_ShouldHaveValidationError(int floor)
-        {
-            // Arrange
-            _roomDto.Floor = floor;
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-            var query = new Create.Query(_roomDto);
-
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Room.Floor);
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Room.Floor);
     }
 }

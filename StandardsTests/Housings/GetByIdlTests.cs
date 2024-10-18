@@ -3,63 +3,32 @@ using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Housings;
-using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
-using Standards.CQRS.Tests.Constants;
+using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.CQRS.Tests.Housings
 {
     [TestFixture]
-    public class GetByIdTests
+    public class GetByIdTests : BaseTestFixture
     {
         private const int IdInDb = 1;
         private const int IdNotInDb = 10;
+        
+        private IList<Housing> _housings;
 
         private Mock<IRepository> _repository;
+        private CancellationToken _cancellationToken;
         private Mock<ICacheService> _cacheService;
         
-        private CancellationToken _cancellationToken;
-        private List<Housing> _housings;
         private IRequestHandler<GetById.Query, Housing> _handler;
         private IValidator<GetById.Query> _validator;
 
         [SetUp]
         public void Setup()
         {
-            _housings =
-            [
-                new Housing
-                {
-                    Id = IdInDb,
-                    Address = "Address 1",
-                    Name = "Name 1",
-                    ShortName = "Short name 1",
-                    FloorsCount = 1,
-                    Comments = "Comments 1"
-                },
-
-                new Housing
-                {
-                    Id = 2,
-                    Address = "Address 2",
-                    Name = "Name 2",
-                    ShortName = "Short name 2",
-                    FloorsCount = 2,
-                    Comments = "Comments 2"
-                },
-
-                new Housing
-                {
-                    Id = 3,
-                    Address = "Address 3",
-                    Name = "Name 3",
-                    ShortName = "Short name 3",
-                    FloorsCount = 3,
-                    Comments = "Comments 3"
-                }
-            ];
+            _housings = Housings;
 
             _cancellationToken = new CancellationToken();
 
@@ -87,8 +56,7 @@ namespace Standards.CQRS.Tests.Housings
             Assert.That(result, Is.EqualTo(expected));
         }
 
-        [TestCase(Cases.Zero)]
-        [TestCase(Cases.Negative)]
+        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
         [TestCase(IdNotInDb)]
         public void Validator_IfIdIsInvalid_ReturnResult(int id)
         {

@@ -13,10 +13,10 @@ namespace Standards.CQRS.Tests.Housings
     [TestFixture]
     public class CreateTests : BaseTestFixture
     {
-        private CancellationToken _cancellationToken;
         private HousingDto _housing;
 
         private Mock<IRepository> _repositoryMock;
+        private CancellationToken _cancellationToken;
         private Mock<ICacheService> _cacheService;
 
         private IRequestHandler<Create.Query, int> _handler;
@@ -25,15 +25,7 @@ namespace Standards.CQRS.Tests.Housings
         [SetUp]
         public void Setup()
         {
-            _housing = new HousingDto
-            {
-                Id = 1,
-                Address = "Address 1",
-                Name = "Name 1",
-                ShortName = "Short name 1",
-                FloorsCount = 1,
-                Comments = "Comments 1"
-            };
+            _housing = HousingDtos[0];
 
             _cancellationToken = new CancellationToken();
 
