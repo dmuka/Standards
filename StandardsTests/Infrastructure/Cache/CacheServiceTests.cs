@@ -17,10 +17,13 @@ public class CacheServiceTests : BaseTestFixture
     private const string CacheKey = "CacheKey";
     private const int ValidId = 1;
     private const int InvalidId = 10;
+    private readonly TimeSpan AbsoluteExpiration = new TimeSpan(0, 5, 0);
+    private readonly TimeSpan SlidingExpiration = new TimeSpan(0, 2, 0);
+
     
     private ICacheService _cacheService;
     private IMemoryCache _memoryCache;
-
+    
     private IList<Housing> _housings;
     
     private Mock<IRepository> _repositoryMock;
@@ -45,6 +48,29 @@ public class CacheServiceTests : BaseTestFixture
     public void TearDown()
     {
         _memoryCache.Dispose();
+    }
+
+    [Test]
+    public void GetOrCreateAsync_IfInputDataValidWithExpirations_ShouldReturnResult()
+    {
+        // Arrange
+        // Act
+        var result = _cacheService.GetOrCreateAsync(CacheKey,
+            async (token) =>
+            {
+                var result = await _repositoryMock.Object.GetListAsync<Housing>(
+                    query => query
+                        .Include(h => h.Departments)
+                        .Include(h => h.Rooms),
+                    token);
+
+                return result;
+            }, _cancellationToken,
+            AbsoluteExpiration,
+            SlidingExpiration).Result;
+
+        // Assert
+        Assert.That(result, Has.Count.EqualTo(3));
     }
 
     [Test]
@@ -127,5 +153,42 @@ public class CacheServiceTests : BaseTestFixture
 
         // Assert
         Assert.That(_memoryCache.TryGetValue(CacheKey, out _), Is.False);
+    }
+
+    [Test]
+    public void Create_IfAllDataIsValid_ShouldSetCache()
+    {
+        // Arrange
+        _memoryCache.Remove(CacheKey);
+        
+        // Act
+        _cacheService.Create(CacheKey, Housings);
+
+        // Assert
+        Assert.That(_memoryCache.TryGetValue(CacheKey, out _), Is.True);
+    }
+
+    [Test]
+    public void Create_IfAllDataIsValidWithExpirations_ShouldSetCache()
+    {
+        // Arrange
+        _memoryCache.Remove(CacheKey);
+        
+        // Act
+        _cacheService.Create(CacheKey, Housings, AbsoluteExpiration, SlidingExpiration);
+
+        // Assert
+        Assert.That(_memoryCache.TryGetValue(CacheKey, out _), Is.True);
+    }
+    
+    [Test]
+    public void Create_IfCacheAlreadyExist_ShouldNotSetCache()
+    {
+        // Arrange
+        // Act
+        _cacheService.Create(CacheKey, Housings, AbsoluteExpiration, SlidingExpiration);
+
+        // Assert
+        Assert.That(_memoryCache.TryGetValue(CacheKey, out _), Is.True);
     }
 }

@@ -34,7 +34,8 @@ public class CacheService(IMemoryCache cache) : ICacheService
         return entity;
     }
 
-    public void Create<T>(string cacheKey,
+    public void Create<T>(
+        string cacheKey,
         T value,
         TimeSpan? absoluteExpiration = null,
         TimeSpan? slidingExpiration = null)
