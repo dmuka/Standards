@@ -2,6 +2,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Common;
@@ -37,6 +38,7 @@ namespace Standards.CQRS.Tests.Housings
                 .Returns(Task.FromResult(_housings.First(_ => _.Id == IdInDb)));
 
             _cacheService = new Mock<ICacheService>();
+            _cacheService.Setup(cache => cache.GetById<Housing>(Cache.Housings, IdInDb)).Returns(Housings[0]);
 
             _handler = new GetById.QueryHandler(_repository.Object, _cacheService.Object);
             _validator = new GetById.QueryValidator(_repository.Object); 
@@ -68,6 +70,20 @@ namespace Standards.CQRS.Tests.Housings
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.Id);
+        }
+
+        [Test]
+        public void Handler_IfHousingInCache_ReturnCachedValue()
+        {
+            // Arrange
+            var query = new GetById.Query(IdInDb);
+
+            // Act
+            var result = _handler.Handle(query, _cancellationToken).Result;
+
+            // Assert
+            Assert.That(result, Is.EqualTo(Housings[0]));
+            _repository.Verify(repository => repository.GetByIdAsync<Housing>(IdInDb, _cancellationToken), Times.Never);
         }
 
         [Test]

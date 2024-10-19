@@ -17,11 +17,7 @@ public class CacheService(IMemoryCache cache) : ICacheService
         {
             cachedData = await retrieveData(cancellationToken);
             
-            var cacheEntryOptions = new MemoryCacheEntryOptions
-            {
-                SlidingExpiration = slidingExpiration ?? TimeSpan.FromMinutes(60),
-                AbsoluteExpirationRelativeToNow = absoluteExpiration ?? TimeSpan.FromMinutes(5)
-            };
+            var cacheEntryOptions = GetOptions(absoluteExpiration, slidingExpiration);
             
             cache.Set(cacheKey, cachedData, cacheEntryOptions);
         }
@@ -38,11 +34,37 @@ public class CacheService(IMemoryCache cache) : ICacheService
         return entity;
     }
 
+    public void Create<T>(string cacheKey,
+        T value,
+        TimeSpan? absoluteExpiration = null,
+        TimeSpan? slidingExpiration = null)
+    {
+        if (!cache.TryGetValue(cacheKey, out _))
+        {
+            var cacheEntryOptions = GetOptions(absoluteExpiration, slidingExpiration);
+            
+            cache.Set(cacheKey, value, cacheEntryOptions);
+        }
+    }
+
     public void Remove(string cacheKey)
     {
         if (cache.TryGetValue(cacheKey, out _))
         {
             cache.Remove(cacheKey);
         }
+    }
+
+    private MemoryCacheEntryOptions GetOptions(
+        TimeSpan? absoluteExpiration = null,
+        TimeSpan? slidingExpiration = null)
+    {
+        var cacheEntryOptions = new MemoryCacheEntryOptions
+        {
+            SlidingExpiration = slidingExpiration ?? TimeSpan.FromMinutes(2),
+            AbsoluteExpirationRelativeToNow = absoluteExpiration ?? TimeSpan.FromMinutes(5)
+        };
+
+        return cacheEntryOptions;
     }
 }

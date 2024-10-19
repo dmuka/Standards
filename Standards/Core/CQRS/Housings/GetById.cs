@@ -21,7 +21,7 @@ namespace Standards.Core.CQRS.Housings
             {
                 var housing = cacheService.GetById<Housing>(Cache.Housings, request.Id);
 
-                if (housing is not null) return housing;
+                if (!cancellationToken.IsCancellationRequested && housing is not null) return housing;
                 
                 housing = await repository.GetByIdAsync<Housing>(request.Id, cancellationToken);
 

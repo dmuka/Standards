@@ -11,6 +11,12 @@ public interface ICacheService
         TimeSpan? absoluteExpiration = null,
         TimeSpan? slidingExpiration = null);
 
+    public void Create<T>(
+        string cacheKey,
+        T value,
+        TimeSpan? absoluteExpiration = null,
+        TimeSpan? slidingExpiration = null);
+
     public T? GetById<T>(string cacheKey, int id) where T : BaseEntity;
 
     public void Remove(string cacheKey);

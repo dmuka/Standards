@@ -19,9 +19,9 @@ namespace Standards.Core.CQRS.Rooms
         {
             public async Task<Room> Handle(Query request, CancellationToken cancellationToken)
             {
-                var room = cacheService.GetById<Room>(Cache.Housings, request.Id);
+                var room = cacheService.GetById<Room>(Cache.Rooms, request.Id);
 
-                if (room is not null) return room;
+                if (!cancellationToken.IsCancellationRequested && room is not null) return room;
                 
                 room = await repository.GetByIdAsync<Room>(request.Id, cancellationToken);
 
