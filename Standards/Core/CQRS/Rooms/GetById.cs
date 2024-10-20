@@ -12,7 +12,7 @@ namespace Standards.Core.CQRS.Rooms
     {
         public class Query(int id) : IRequest<Room>
         {
-            public int Id { get; set; } = id;
+            public int Id { get; } = id;
         }
 
         public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, Room>

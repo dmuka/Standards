@@ -15,8 +15,8 @@ namespace Standards.CQRS.Tests.Housings
     [TestFixture]
     public class GetAllTests : BaseTestFixture
     {
-        private readonly string _absoluteExpirationPath = "Cache:AbsoluteExpiration";
-        private readonly string _slidingExpirationPath = "Cache:SlidingExpiration";
+        private const string AbsoluteExpirationPath = "Cache:AbsoluteExpiration";
+        private const string SlidingExpirationPath = "Cache:SlidingExpiration";
         
         private IList<Housing> _housings;
         private List<HousingDto> _dtos;
@@ -37,15 +37,15 @@ namespace Standards.CQRS.Tests.Housings
             _cancellationToken = new CancellationToken();
 
             _configService = new Mock<IConfigService>();
-            _configService.Setup(config => config.GetValue<int>(_absoluteExpirationPath)).Returns(5);
-            _configService.Setup(config => config.GetValue<int>(_slidingExpirationPath)).Returns(2);
+            _configService.Setup(config => config.GetValue<int>(AbsoluteExpirationPath)).Returns(5);
+            _configService.Setup(config => config.GetValue<int>(SlidingExpirationPath)).Returns(2);
 
             _repository = new Mock<IRepository>();
             _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Housing>,IIncludableQueryable<Housing,object>>>(), _cancellationToken))
                 .Returns(Task.FromResult(_housings));
 
             _cacheService = new Mock<ICacheService>();
-            _cacheService.Setup(cache => cache.GetOrCreateAsync<Housing>(Cache.Housings, It.IsAny<Func<CancellationToken, Task<IList<Housing>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+            _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Housings, It.IsAny<Func<CancellationToken, Task<IList<Housing>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
                 .Returns(Task.FromResult(_housings));
 
             _handler = new GetAll.QueryHandler(_repository.Object, _cacheService.Object, _configService.Object); 

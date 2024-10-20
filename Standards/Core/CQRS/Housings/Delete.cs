@@ -14,7 +14,7 @@ namespace Standards.Core.CQRS.Housings
     {
         public class Query(int id) : IRequest<int>
         {
-            public int Id { get; set; } = id;
+            public int Id { get; } = id;
         }
 
         public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>

@@ -17,7 +17,7 @@ namespace Standards.Core.CQRS.Rooms
     {
         public class Query(RoomDto roomDto) : IRequest<int>
         {
-            public RoomDto RoomDto { get; set; } = roomDto;
+            public RoomDto RoomDto { get; } = roomDto;
         }
 
         public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>
@@ -32,7 +32,7 @@ namespace Standards.Core.CQRS.Rooms
                 var workplaces = repository.GetQueryable<WorkPlace>()
                     .Where(workplace => request.RoomDto.WorkplaceIds.Contains(workplace.Room.Id));
                 
-                var room = new Room()
+                var room = new Room
                 {
                     Id = request.RoomDto.Id,
                     Name = request.RoomDto.Name,

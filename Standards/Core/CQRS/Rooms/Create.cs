@@ -17,7 +17,7 @@ public class Create
 {
     public class Query(RoomDto room) : IRequest<int>
     {
-        public RoomDto Room { get; set; } = room;
+        public RoomDto Room { get; } = room;
     }
 
     public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>

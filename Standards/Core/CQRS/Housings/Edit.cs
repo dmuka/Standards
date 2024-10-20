@@ -16,7 +16,7 @@ namespace Standards.Core.CQRS.Housings
     {
         public class Query(HousingDto housingDto) : IRequest<int>
         {
-            public HousingDto HousingDto{ get; set; } = housingDto;
+            public HousingDto HousingDto{ get; } = housingDto;
         }
 
         public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>
@@ -31,7 +31,7 @@ namespace Standards.Core.CQRS.Housings
                 var rooms = repository.GetQueryable<Room>()
                     .Where(room => room.Housing.Id == request.HousingDto.Id);
                 
-                var housing = new Housing()
+                var housing = new Housing
                 {
                     Id = request.HousingDto.Id,
                     Name = request.HousingDto.Name,

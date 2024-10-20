@@ -1,3 +1,5 @@
+using FluentValidation;
+using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.Constants;
@@ -21,7 +23,9 @@ public class GetByIdTests : BaseTestFixture
     private CancellationToken _cancellationToken;
     
     private List<Room> _rooms;
+    
     private IRequestHandler<GetById.Query, Room> _handler;
+    private IValidator<GetById.Query> _validator;
 
     [SetUp]
     public void Setup()
@@ -39,6 +43,7 @@ public class GetByIdTests : BaseTestFixture
 
 
         _handler = new GetById.QueryHandler(_repository.Object, _cacheMock.Object); 
+        _validator = new GetById.QueryValidator(_repository.Object); 
     }
 
     [Test]
@@ -55,17 +60,18 @@ public class GetByIdTests : BaseTestFixture
         Assert.That(result, Is.EqualTo(expected));
     }
 
-    [Test]
-    public void Handler_IfIdIsInvalid_ReturnResult()
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    [TestCase(IdNotInDb)]
+    public void Validator_IfIdIsInvalid_ReturnResult(int id)
     {
         // Arrange
-        var query = new GetById.Query(IdNotInDb);
+        var query = new GetById.Query(id);
 
         // Act
-        var result = _handler.Handle(query, _cancellationToken).Result;
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(null));
+        result.ShouldHaveValidationErrorFor(_ => _.Id);
     }
 
     [Test]

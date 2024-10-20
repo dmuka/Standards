@@ -13,7 +13,7 @@ namespace Standards.Core.CQRS.Housings;
     {
         public class Query(QueryParameters parameters) : IRequest<PaginatedListModel<Housing>>
         {
-            public QueryParameters Parameters { get; set; } = parameters;
+            public QueryParameters Parameters { get; } = parameters;
         }
 
         public class QueryHandler(IQueryBuilder<Housing> queryBuilder, IQueryableWrapper<Housing> queryableWrapper)

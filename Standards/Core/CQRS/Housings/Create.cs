@@ -15,7 +15,7 @@ public class Create
 {
     public class Query(HousingDto housingDto) : IRequest<int>
     {
-        public HousingDto HousingDto { get; set; } = housingDto;
+        public HousingDto HousingDto { get; } = housingDto;
     }
 
     public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>
