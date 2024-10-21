@@ -18,6 +18,7 @@ using Standards.Infrastructure.Logging;
 using Standards.Infrastructure.Mediatr;
 using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
 using System.Text;
+using Standards.Core.Models.Departments;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Converters;
 using Standards.Infrastructure.Filter.Models;
@@ -145,12 +146,13 @@ namespace Standards
             builder.Services.AddMemoryCache();
             builder.Services.AddScoped<ICacheService, CacheService>();
             
-            builder.Services.AddScoped<IQueryBuilder<HousingDto>, QueryBuilder<HousingDto>>();
             builder.Services.AddScoped<IQueryBuilder<Housing>, QueryBuilder<Housing>>();
             builder.Services.AddScoped<IQueryBuilder<Room>, QueryBuilder<Room>>();
+            builder.Services.AddScoped<IQueryBuilder<Department>, QueryBuilder<Department>>();
             
             builder.Services.AddScoped<IQueryableWrapper<Housing>, QueryableWrapper<Housing>>();
             builder.Services.AddScoped<IQueryableWrapper<Room>, QueryableWrapper<Room>>();
+            builder.Services.AddScoped<IQueryableWrapper<Department>, QueryableWrapper<Department>>();
             
             builder.Services.AddControllers()
                 .AddJsonOptions(opt =>

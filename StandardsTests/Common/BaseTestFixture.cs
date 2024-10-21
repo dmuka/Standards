@@ -28,6 +28,8 @@ public abstract class BaseTestFixture
     protected static List<WorkPlace> Workplaces { get; private set; }
     
     protected static List<Department> Departments { get; private set; }
+    
+    protected static List<DepartmentDto> DepartmentDtos { get; private set; }
 
     protected static IList<Housing> Housings { get; private set; }
 
@@ -594,6 +596,7 @@ public abstract class BaseTestFixture
                 Name = "DepartmentName1",
                 ShortName = "DepartmentShortName1",
                 Comments = "DepartmentComments1",
+                Sectors = new List<Sector> { Sectors[0] }
             },
             new Department
             {
@@ -601,6 +604,7 @@ public abstract class BaseTestFixture
                 Name = "DepartmentName2",
                 ShortName = "DepartmentShortName2",
                 Comments = "DepartmentComments2",
+                Sectors = new List<Sector> { Sectors[1] }
             },
             new Department
             {
@@ -608,6 +612,38 @@ public abstract class BaseTestFixture
                 Name = "DepartmentName3",
                 ShortName = "DepartmentShortName3",
                 Comments = "DepartmentComments3",
+                Sectors = new List<Sector> { Sectors[2] }
+            }
+        ];
+        
+        DepartmentDtos =
+        [
+            new DepartmentDto
+            {
+                Id = 1,
+                Name = "DepartmentName1",
+                ShortName = "DepartmentShortName1",
+                Comments = "DepartmentComments1",
+                SectorIds = new List<int> { 1 },
+                HousingIds = new List<int> { 1, 3 }
+            },
+            new DepartmentDto
+            {
+                Id = 2,
+                Name = "DepartmentName2",
+                ShortName = "DepartmentShortName2",
+                Comments = "DepartmentComments2",
+                SectorIds = new List<int> { 2 },
+                HousingIds = new List<int> { 1, 2 }
+            },
+            new DepartmentDto
+            {
+                Id = 3,
+                Name = "DepartmentName3",
+                ShortName = "DepartmentShortName3",
+                Comments = "DepartmentComments3",
+                SectorIds = new List<int> { 3 },
+                HousingIds = new List<int> { 3 }
             }
         ];
         
@@ -620,8 +656,8 @@ public abstract class BaseTestFixture
                 Name = "Name 1",
                 ShortName = "Short name 1",
                 FloorsCount = 2,
-                Departments = new List<Department>() { Departments[0] },
-                Rooms = new List<Room>() { Rooms[0], Rooms[1] },
+                Departments = new List<Department> { Departments[0], Departments[1] },
+                Rooms = new List<Room> { Rooms[0], Rooms[1] },
                 Comments = "Comments 1"
                     
             },
@@ -656,6 +692,11 @@ public abstract class BaseTestFixture
         Rooms[2].Housing = Housings[0];
         Rooms[3].Housing = Housings[1];
         Rooms[4].Housing = Housings[1];
+
+        Departments[0].Housings = new List<Housing> { Housings[0], Housings[2] };
+        Departments[1].Housings = new List<Housing> { Housings[0], Housings[1] };
+        Departments[2].Housings = new List<Housing> { Housings[2] };
+        
         
         HousingDtos = 
         [

@@ -31,7 +31,9 @@ namespace Standards.Core.CQRS.Rooms
                         var result = await repository.GetListAsync<Room>(
                             query => query
                                 .Include(r => r.WorkPlaces)
-                                .Include(r => r.Persons),
+                                .Include(r => r.Persons)
+                                .Include(r => r.Sector)
+                                .Include(r => r.Housing),
                             token);
 
                         return result;

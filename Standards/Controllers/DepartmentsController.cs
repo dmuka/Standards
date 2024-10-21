@@ -1,86 +1,80 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Standards.Core.Models.Departments;
-using Standards.Infrastructure.Data;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Standards.Core.CQRS.Departments;
+using Standards.Core.Models.DTOs;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers
 {
     [Route("api/departments")]
     [ApiController]
-    public class DepartmentsController(ApplicationDbContext repository) : ControllerBase
+    public class DepartmentsController(IRepository repository, ISender sender) : ControllerBase
     {
         [HttpGet]
         [Route("list")]
-        public IActionResult GetDepartments()
+        public async Task<IActionResult> GetDepartments()
         {
-            var rooms = repository.Rooms.ToList();
-            var sectors = repository.Sectors.ToList();
-            sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.Sector.Id == s.Id)));
-            var departments = repository.Departments.ToList();
-            departments.ForEach(d => d.Sectors.ToList().AddRange(sectors.FindAll(s => s.Department.Id == d.Id)));
+            var query = new GetAll.Query();
 
-            return Ok(departments);
+            var result = await sender.Send(query);
+
+            return Ok(result);
         }
 
         [HttpGet]
-        [Route("")]
-        public IActionResult GetDepartment(int id = 0)
+        [Route("{id:int}")]
+        public async Task<IActionResult> GetDepartment(int id)
         {
-            if (id == 0) return BadRequest();
+            var query = new GetById.Query(id);
 
-            var rooms = repository.Rooms.ToList();
-            var sectors = repository.Sectors.ToList();
-            sectors.ForEach(s => s.Rooms.ToList().AddRange(rooms.FindAll(r => r.Sector.Id == s.Id)));
+            var result = await sender.Send(query);
 
-            var department = repository.Departments.FirstOrDefault(d => d.Id == id);
-
-            if (department is null)
-            {
-                return NotFound($"Not found department with id: {id}");
-            }
-
-            department.Sectors = sectors.FindAll(s => s.Department.Id == department.Id);
-
-            return Ok(department);
+            return Ok(result);
         }
 
         [HttpPost]
         [Route("add")]
-        public void CreateDepartment([FromBody] Department department)
+        public async Task<IActionResult> CreateDepartment([FromBody] DepartmentDto department)
         {
-            repository.Add(new Department
-            {
-                Name = department.Name,
-                ShortName = department.ShortName,
-                Sectors = department.Sectors,
-                Comments = department.Comments
-            });
+            var query = new Create.Query(department);
 
-            repository.SaveChanges();
+            var result = await sender.Send(query);
+
+            return Ok(result);
         }
 
         [HttpPut]
         [Route("edit")]
-        public void EditDepartment(int id, [FromBody] Department department)
+        public async Task<IActionResult> EditDepartment([FromBody] DepartmentDto department)
         {
-            if (department.Id != id) return;
+            var query = new Edit.Query(department);
             
-            repository.Entry(department).State = EntityState.Modified;
+            var result = await sender.Send(query);
 
-            repository.SaveChanges();
+            return Ok(result);
         }
 
         [HttpDelete]
         [Route("delete")]
-        public void DeleteDepartment(int id)
+        public async Task DeleteDepartment(int id)
         {
-            var department = repository.Departments.Find(id);
+            var department = await repository.GetByIdAsync<DepartmentDto>(id);
 
-            if (department is null) return;
-            
-            repository.Departments.Remove(department);
+            await repository.DeleteAsync(department);
 
-            repository.SaveChanges();
+            await repository.SaveChangesAsync();
+        }
+
+        [HttpPost]
+        [Route("filter")]
+        public async Task<IActionResult> GetDepartmentsByFilter([FromBody] QueryParameters parameters)
+        {
+            var query = new GetFiltered.Query(parameters);
+
+            var result = await sender.Send(query);
+
+            return Ok(result);
         }
     }
 }

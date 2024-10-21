@@ -2,18 +2,18 @@
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
-using Standards.Core.CQRS.Housings;
+using Standards.Core.CQRS.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
-namespace Standards.CQRS.Tests.Housings
+namespace Standards.CQRS.Tests.Departments
 {
     [TestFixture]
     public class CreateTests : BaseTestFixture
     {
-        private HousingDto _housing;
+        private DepartmentDto _department;
 
         private Mock<IRepository> _repositoryMock;
         private CancellationToken _cancellationToken;
@@ -25,12 +25,12 @@ namespace Standards.CQRS.Tests.Housings
         [SetUp]
         public void Setup()
         {
-            _housing = HousingDtos[0];
+            _department = DepartmentDtos[0];
 
             _cancellationToken = new CancellationToken();
 
             _repositoryMock = new Mock<IRepository>();
-            _repositoryMock.Setup(_ => _.AddAsync(_housing, _cancellationToken));
+            _repositoryMock.Setup(_ => _.AddAsync(_department, _cancellationToken));
             _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
             _cacheService = new Mock<ICacheService>();
@@ -43,7 +43,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new Create.Query(_housing);
+            var query = new Create.Query(_department);
             var expected = 1;
 
             // Act
@@ -57,7 +57,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new Create.Query(_housing);
+            var query = new Create.Query(_department);
             _cancellationToken = new CancellationToken(true);
             _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
 
@@ -72,75 +72,75 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfHousingDtoIsNull_ShouldHaveValidationError()
         {
             // Arrange
-            _housing = null;
+            _department = null;
 
-            var query = new Create.Query(_housing);
+            var query = new Create.Query(_department);
 
             // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+            var result = _validator.TestValidate(query);
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.HousingDto);
+            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto);
         }
 
         [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
         {
             // Arrange
-            _housing.Name = name;
+            _department.Name = name;
 
-            var query = new Create.Query(_housing);
+            var query = new Create.Query(_department);
 
             // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+            var result = _validator.TestValidate(query);
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
+            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
         }
 
         [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
         {
             // Arrange
-            _housing.ShortName = shortName;
+            _department.ShortName = shortName;
 
-            var query = new Create.Query(_housing);
-
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.HousingDto.ShortName);
-        }
-
-        [Test, TestCaseSource(nameof(NullOrEmptyString))]
-        public void Validator_IfAddressIsNull_ShouldHaveValidationError(string? address)
-        {
-            // Arrange
-            _housing.Address = address;
-
-            var query = new Create.Query(_housing);
+            var query = new Create.Query(_department);
 
             // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+            var result = _validator.TestValidate(query);
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Address);
+            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.ShortName);
         }
 
         [Test]
-        public void Validator_IfFloorsCountIsZero_ShouldHaveValidationError()
+        public void Validator_IfHousingIdsIsEmpty_ShouldHaveValidationError()
         {
             // Arrange
-            _housing.FloorsCount = default;
+            _department.HousingIds = new List<int>();
 
-            var query = new Create.Query(_housing);
+            var query = new Create.Query(_department);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.HousingDto.FloorsCount);
+            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
+        }
+
+        [Test]
+        public void Validator_IfSectorIdsIsEmpty_ShouldHaveValidationError()
+        {
+            // Arrange
+            _department.SectorIds = new List<int>();
+
+            var query = new Create.Query(_department);
+
+            // Act
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.SectorIds);
         }
     }
 }
