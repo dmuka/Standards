@@ -52,7 +52,7 @@ namespace Standards.Controllers
             {
                 Name = sector.Name,
                 ShortName = sector.ShortName,
-                WorkPlaces = sector.WorkPlaces,
+                Workplaces = sector.Workplaces,
                 Persons = sector.Persons,
                 Rooms = sector.Rooms,
                 Comments = sector.Comments

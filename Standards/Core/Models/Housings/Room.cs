@@ -10,7 +10,7 @@ namespace Standards.Core.Models.Housings
         public double Length { get; set; }
         public double Height { get; set; }
         public double Width { get; set; }
-        public IList<WorkPlace> WorkPlaces { get; set; } = new List<WorkPlace>();
+        public IList<Workplace> WorkPlaces { get; set; } = new List<Workplace>();
         public IList<Person> Persons { get; set; } = new List<Person>();
         public Sector Sector { get; set; }
     }

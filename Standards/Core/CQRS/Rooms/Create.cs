@@ -28,7 +28,7 @@ public class Create
                 .Where(person => person.Sector.Id == request.Room.SectorId)
                 .ToList();
 
-            var workplaces = repository.GetQueryable<WorkPlace>()
+            var workplaces = repository.GetQueryable<Workplace>()
                 .Where(workplace => workplace.Room.Id == request.Room.Id)
                 .ToList();
 
@@ -55,7 +55,7 @@ public class Create
         private Room GetRoom(
             RoomDto roomDto,
             IList<Person> persons,
-            IList<WorkPlace> workplaces)
+            IList<Workplace> workplaces)
         {
             var room = new Room
             {

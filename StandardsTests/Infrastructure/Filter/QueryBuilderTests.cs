@@ -52,7 +52,7 @@ public class QueryBuilderTests
                 Width = 4d,
                 Persons = new List<Person>(),
                 Sector = new Sector(),
-                WorkPlaces = new List<WorkPlace>()
+                WorkPlaces = new List<Workplace>()
             }
         };
 

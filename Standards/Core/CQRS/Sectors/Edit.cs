@@ -28,7 +28,7 @@ namespace Standards.Core.CQRS.Sectors
                     .Where(room => room.Sector.Id == request.SectorDto.Id)
                     .ToList();
 
-                var workplaces = repository.GetQueryable<WorkPlace>()
+                var workplaces = repository.GetQueryable<Workplace>()
                     .Where(workplace => rooms
                         .Select(room => room.Id)
                         .Contains(workplace.Room.Id))
@@ -47,7 +47,7 @@ namespace Standards.Core.CQRS.Sectors
                     ShortName = request.SectorDto.ShortName,
                     Department = department,
                     Rooms = rooms,
-                    WorkPlaces = workplaces,
+                    Workplaces = workplaces,
                     Persons = persons
                 };
                 
@@ -91,10 +91,10 @@ namespace Standards.Core.CQRS.Sectors
                             .ForEach(id => 
                                 id.SetValidator(new IdValidator<Room>(repository)));
 
-                        housing.RuleFor(sector => sector.WorkPlaceIds)
+                        housing.RuleFor(sector => sector.WorkplaceIds)
                             .NotEmpty()
                             .ForEach(id => 
-                                id.SetValidator(new IdValidator<WorkPlace>(repository)));
+                                id.SetValidator(new IdValidator<Workplace>(repository)));
 
                         housing.RuleFor(sector => sector.DepartmentId)
                             .GreaterThan(default(int))

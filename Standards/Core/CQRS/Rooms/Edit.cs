@@ -29,7 +29,7 @@ namespace Standards.Core.CQRS.Rooms
                 var persons = repository.GetQueryable<Person>()
                     .Where(person => request.RoomDto.PersonIds.Contains(person.Id));
 
-                var workplaces = repository.GetQueryable<WorkPlace>()
+                var workplaces = repository.GetQueryable<Workplace>()
                     .Where(workplace => request.RoomDto.WorkplaceIds.Contains(workplace.Room.Id));
                 
                 var room = new Room
@@ -105,7 +105,7 @@ namespace Standards.Core.CQRS.Rooms
                         room.RuleFor(roomDto => roomDto.WorkplaceIds)
                             .NotEmpty()
                             .ForEach(id => 
-                                id.SetValidator(new IdValidator<WorkPlace>(repository)));
+                                id.SetValidator(new IdValidator<Workplace>(repository)));
                     });
             }
         }

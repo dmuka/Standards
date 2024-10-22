@@ -28,7 +28,7 @@ public class Create
                 .Where(room => room.Sector.Id == request.SectorDto.Id)
                 .ToList();
 
-            var workplaces = repository.GetQueryable<WorkPlace>()
+            var workplaces = repository.GetQueryable<Workplace>()
                 .Where(workplace => rooms
                     .Select(room => room.Id)
                     .Contains(workplace.Room.Id))
@@ -38,8 +38,7 @@ public class Create
                 .Where(person => person.Sector.Id == request.SectorDto.Id)
                 .ToList();
 
-            var department = repository.GetQueryable<Department>()
-                .First(department => department.Id == request.SectorDto.DepartmentId);
+            var department = await repository.GetByIdAsync<Department>(request.SectorDto.DepartmentId, cancellationToken);
             
             var sector = new Sector
             {
@@ -47,7 +46,7 @@ public class Create
                 ShortName = request.SectorDto.ShortName,
                 Department = department,
                 Rooms = rooms,
-                WorkPlaces = workplaces,
+                Workplaces = workplaces,
                 Persons = persons
             };
 
@@ -84,13 +83,19 @@ public class Create
                         .SetValidator(new IdValidator<Department>(repository));
 
                     filter.RuleFor(sector => sector.PersonIds)
-                        .NotEmpty();
+                        .NotEmpty()
+                        .ForEach(id => 
+                            id.SetValidator(new IdValidator<Person>(repository)));
 
                     filter.RuleFor(sector => sector.RoomIds)
-                        .NotEmpty();
+                        .NotEmpty()
+                        .ForEach(id => 
+                            id.SetValidator(new IdValidator<Room>(repository)));
 
-                    filter.RuleFor(sector => sector.WorkPlaceIds)
-                        .NotEmpty();
+                    filter.RuleFor(sector => sector.WorkplaceIds)
+                        .NotEmpty()
+                        .ForEach(id => 
+                            id.SetValidator(new IdValidator<Workplace>(repository)));
                 });
         }
     }

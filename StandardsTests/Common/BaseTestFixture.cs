@@ -15,6 +15,8 @@ public abstract class BaseTestFixture
     
     protected static List<Sector> Sectors { get; private set; }
     
+    protected static List<SectorDto> SectorDtos { get; private set; }
+    
     protected static List<Category> Categories { get; private set; }
     
     protected static List<Position> Positions { get; private set; }
@@ -25,7 +27,7 @@ public abstract class BaseTestFixture
     
     protected static List<string> Roles { get; private set; }
     
-    protected static List<WorkPlace> Workplaces { get; private set; }
+    protected static List<Workplace> Workplaces { get; private set; }
     
     protected static List<Department> Departments { get; private set; }
     
@@ -338,7 +340,7 @@ public abstract class BaseTestFixture
         
         Workplaces =
         [
-            new WorkPlace
+            new Workplace
             {
                 Id = 1,
                 Name = "WorkPlaceName1",
@@ -347,7 +349,7 @@ public abstract class BaseTestFixture
                 Responcible = Persons[0],
                 ImagePath = null
             },
-            new WorkPlace
+            new Workplace
             {
                 Id = 2,
                 Name = "WorkPlaceName2",
@@ -356,7 +358,7 @@ public abstract class BaseTestFixture
                 Responcible = Persons[1],
                 ImagePath = null
             },
-            new WorkPlace
+            new Workplace
             {
                 Id = 3,
                 Name = "WorkPlaceName3",
@@ -365,7 +367,7 @@ public abstract class BaseTestFixture
                 Responcible = Persons[2],
                 ImagePath = null
             },
-            new WorkPlace
+            new Workplace
             {
                 Id = 4,
                 Name = "WorkPlaceName4",
@@ -374,7 +376,7 @@ public abstract class BaseTestFixture
                 Responcible = Persons[3],
                 ImagePath = null
             },
-            new WorkPlace
+            new Workplace
             {
                 Id = 5,
                 Name = "WorkPlaceName5",
@@ -383,7 +385,7 @@ public abstract class BaseTestFixture
                 Responcible = Persons[4],
                 ImagePath = null
             },
-            new WorkPlace
+            new Workplace
             {
                 Id = 6,
                 Name = "WorkPlaceName6",
@@ -406,7 +408,7 @@ public abstract class BaseTestFixture
                 Length = 5d,
                 Width = 4d,
                 Height = 2.5,
-                WorkPlaces = new List<WorkPlace> { Workplaces[0], Workplaces[1] },
+                WorkPlaces = new List<Workplace> { Workplaces[0], Workplaces[1] },
                 Persons = new List<Person> { Persons[0], Persons[1] }
             },
             new Room
@@ -419,7 +421,7 @@ public abstract class BaseTestFixture
                 Length = 6d,
                 Width = 5d,
                 Height = 2.5,
-                WorkPlaces = new List<WorkPlace> { Workplaces[2] },
+                WorkPlaces = new List<Workplace> { Workplaces[2] },
                 Persons = new List<Person> { Persons[2], Persons[3] }
             },
             new Room
@@ -432,7 +434,7 @@ public abstract class BaseTestFixture
                 Length = 7d,
                 Width = 6d,
                 Height = 2.5,
-                WorkPlaces = new List<WorkPlace> { Workplaces[3] },
+                WorkPlaces = new List<Workplace> { Workplaces[3] },
                 Persons = new List<Person> { Persons[4] }
             },
             new Room
@@ -445,7 +447,7 @@ public abstract class BaseTestFixture
                 Length = 6d,
                 Width = 5d,
                 Height = 2.5,
-                WorkPlaces = new List<WorkPlace> { Workplaces[4] },
+                WorkPlaces = new List<Workplace> { Workplaces[4] },
                 Persons = new List<Person> { Persons[5], Persons[6] }
             },
             new Room
@@ -458,15 +460,17 @@ public abstract class BaseTestFixture
                 Length = 7d,
                 Width = 6d,
                 Height = 2.5,
-                WorkPlaces = new List<WorkPlace> { Workplaces[5] },
+                WorkPlaces = new List<Workplace> { Workplaces[5] },
                 Persons = new List<Person> { Persons[7] }
             }
         ];
 
-        Workplaces[0].Room = Rooms[0];
-        Workplaces[1].Room = Rooms[1];
+        Workplaces[0].Room = Rooms[4];
+        Workplaces[1].Room = Rooms[4];
         Workplaces[2].Room = Rooms[2];
         Workplaces[3].Room = Rooms[3];
+        Workplaces[4].Room = Rooms[0];
+        Workplaces[5].Room = Rooms[1];
         
         RoomDtos =
         [
@@ -497,7 +501,7 @@ public abstract class BaseTestFixture
                 Width = 5d,
                 Height = 2.5,
                 HousingId = 2,
-                SectorId = 2,
+                SectorId = 1,
                 WorkplaceIds = new List<int> { 3 },
                 PersonIds = new List<int> { 2, 3 }
             },
@@ -512,7 +516,7 @@ public abstract class BaseTestFixture
                 Width = 6d,
                 Height = 2.5,
                 HousingId = 1,
-                SectorId = 3,
+                SectorId = 2,
                 WorkplaceIds = new List<int> { 4 },
                 PersonIds = new List<int> { 4 }
             },
@@ -527,7 +531,7 @@ public abstract class BaseTestFixture
                 Width = 5d,
                 Height = 2.5,
                 HousingId = 2,
-                SectorId = 3,
+                SectorId = 2,
                 WorkplaceIds = new List<int> { 5 },
                 PersonIds = new List<int> { 5, 6 }
             },
@@ -542,7 +546,7 @@ public abstract class BaseTestFixture
                 Width = 6d,
                 Height = 2.5,
                 HousingId = 2,
-                SectorId = 1,
+                SectorId = 3,
                 WorkplaceIds = new List<int> { 6 },
                 PersonIds = new List<int> { 7 }
             }
@@ -556,6 +560,9 @@ public abstract class BaseTestFixture
                 Name = "SectorName1",
                 ShortName = "SectorShortName1",
                 Comments = "SectorComments1",
+                Workplaces = new List<Workplace> { Workplaces[4], Workplaces[5] },
+                Persons = new List<Person> { Persons[0], Persons[1], Persons[2] },
+                Rooms = new List<Room> { Rooms[0], Rooms[1] }
             },
             new Sector
             {
@@ -563,6 +570,9 @@ public abstract class BaseTestFixture
                 Name = "SectorName2",
                 ShortName = "SectorShortName2",
                 Comments = "SectorComments2",
+                Workplaces =  new List<Workplace> { Workplaces[2], Workplaces[3] },
+                Persons = new List<Person> { Persons[3], Persons[4], Persons[5] },
+                Rooms = new List<Room> { Rooms[2], Rooms[3] }
             },
             new Sector
             {
@@ -570,23 +580,64 @@ public abstract class BaseTestFixture
                 Name = "SectorName3",
                 ShortName = "SectorShortName3",
                 Comments = "SectorComments3",
+                Workplaces = new List<Workplace> { Workplaces[0], Workplaces[1] },
+                Persons = new List<Person> { Persons[6], Persons[7], Persons[8] },
+                Rooms = new List<Room> { Rooms[4] }
+            }
+        ];
+        
+        SectorDtos =
+        [
+            new SectorDto
+            {
+                Id = 1,
+                Name = "SectorName1",
+                ShortName = "SectorShortName1",
+                Comments = "SectorComments1",
+                DepartmentId = 1,
+                PersonIds = new List<int> { 1, 2, 3 },
+                WorkplaceIds = new List<int> { 5, 6 },
+                RoomIds = new List<int> { 1, 2 }
+            },
+            new SectorDto
+            {
+                Id = 2,
+                Name = "SectorName2",
+                ShortName = "SectorShortName2",
+                Comments = "SectorComments2",
+                DepartmentId = 2,
+                PersonIds = new List<int> { 4, 5, 6 },
+                WorkplaceIds = new List<int> { 3, 4 },
+                RoomIds = new List<int> { 3, 4 }
+            },
+            new SectorDto
+            {
+                Id = 3,
+                Name = "SectorName3",
+                ShortName = "SectorShortName3",
+                Comments = "SectorComments3",
+                DepartmentId = 3,
+                PersonIds = new List<int> { 7, 8, 9 },
+                WorkplaceIds = new List<int> { 1, 2 },
+                RoomIds = new List<int> { 5 }
             }
         ];
 
         Persons[0].Sector = Sectors[0];
-        Persons[1].Sector = Sectors[1];
-        Persons[2].Sector = Sectors[2];
+        Persons[1].Sector = Sectors[0];
+        Persons[2].Sector = Sectors[0];
         Persons[3].Sector = Sectors[1];
-        Persons[4].Sector = Sectors[0];
-        Persons[5].Sector = Sectors[2];
-        Persons[6].Sector = Sectors[1];
+        Persons[4].Sector = Sectors[1];
+        Persons[5].Sector = Sectors[1];
+        Persons[6].Sector = Sectors[2];
         Persons[7].Sector = Sectors[2];
+        Persons[8].Sector = Sectors[2];
 
         Rooms[0].Sector = Sectors[0];
-        Rooms[1].Sector = Sectors[1];
-        Rooms[2].Sector = Sectors[2];
-        Rooms[3].Sector = Sectors[2];
-        Rooms[4].Sector = Sectors[0];
+        Rooms[1].Sector = Sectors[0];
+        Rooms[2].Sector = Sectors[1];
+        Rooms[3].Sector = Sectors[1];
+        Rooms[4].Sector = Sectors[2];
         
         Departments =
         [
@@ -615,6 +666,10 @@ public abstract class BaseTestFixture
                 Sectors = new List<Sector> { Sectors[2] }
             }
         ];
+
+        Sectors[0].Department = Departments[0];
+        Sectors[1].Department = Departments[1];
+        Sectors[2].Department = Departments[2];
         
         DepartmentDtos =
         [
@@ -696,7 +751,6 @@ public abstract class BaseTestFixture
         Departments[0].Housings = new List<Housing> { Housings[0], Housings[2] };
         Departments[1].Housings = new List<Housing> { Housings[0], Housings[1] };
         Departments[2].Housings = new List<Housing> { Housings[2] };
-        
         
         HousingDtos = 
         [

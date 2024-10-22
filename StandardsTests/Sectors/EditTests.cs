@@ -11,7 +11,7 @@ using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
-namespace Standards.CQRS.Tests.Rooms;
+namespace Standards.CQRS.Tests.Sectors;
 
 [TestFixture]
 public class EditTests : BaseTestFixture

@@ -15,7 +15,7 @@ namespace Standards.Infrastructure.Data;
         public DbSet<Quantity> Quantities { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Unit> Units { get; set; }
-        public DbSet<WorkPlace> WorkPlaces { get; set; }
+        public DbSet<Workplace> WorkPlaces { get; set; }
 
         public DbSet<Department> Departments { get; set; }
         public DbSet<Sector> Sectors { get; set; }
@@ -65,7 +65,7 @@ namespace Standards.Infrastructure.Data;
                 .WithOne()
                 .HasPrincipalKey<User>(u => u.Id);
 
-            modelBuilder.Entity<WorkPlace>()
+            modelBuilder.Entity<Workplace>()
                 .HasOne(wp => wp.Room)
                 .WithMany(room => room.WorkPlaces)
                 .OnDelete(DeleteBehavior.NoAction);
@@ -104,7 +104,7 @@ namespace Standards.Infrastructure.Data;
                 ]));
 
             modelBuilder.Entity<Sector>()
-                .HasMany(s => s.WorkPlaces)
+                .HasMany(s => s.Workplaces)
                 .WithOne();
 
             // Seeding data

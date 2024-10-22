@@ -39,14 +39,14 @@ namespace Standards.Controllers
 
         [HttpPost]
         [Route("add")]
-        public void CreateWorkPlace([FromBody] WorkPlace workPlace)
+        public void CreateWorkPlace([FromBody] Workplace workplace)
         {
-            repository.Add(new WorkPlace
+            repository.Add(new Workplace
             {
-                Name = workPlace.Name,
-                Responcible = workPlace.Responcible,
-                ImagePath = workPlace.ImagePath,
-                Comments = workPlace.Comments
+                Name = workplace.Name,
+                Responcible = workplace.Responcible,
+                ImagePath = workplace.ImagePath,
+                Comments = workplace.Comments
             });
 
             repository.SaveChanges();
@@ -54,10 +54,10 @@ namespace Standards.Controllers
 
         [HttpPut]
         [Route("edit")]
-        public void EditWorkPlace(int id, [FromBody] WorkPlace workPlace)
+        public void EditWorkPlace(int id, [FromBody] Workplace workplace)
         {
-            if (workPlace.Id != id) return;
-            repository.Entry(workPlace).State = EntityState.Modified;
+            if (workplace.Id != id) return;
+            repository.Entry(workplace).State = EntityState.Modified;
 
             repository.SaveChanges();
         }

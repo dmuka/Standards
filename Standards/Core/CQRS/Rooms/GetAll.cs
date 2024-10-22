@@ -45,7 +45,7 @@ namespace Standards.Core.CQRS.Rooms
                 if (rooms is null) return [];
                 
                 var dtos = rooms
-                    .Select(r => new RoomDto()
+                    .Select(r => new RoomDto
                     {
                         Id = r.Id,
                         Name = r.Name,

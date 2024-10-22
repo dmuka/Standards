@@ -7,7 +7,7 @@ namespace Standards.Core.Models.Departments
     {
         public Department Department { get; set; }
         public IList<Room> Rooms { get; set; } = new List<Room>();
-        public IList<WorkPlace> WorkPlaces { get; set; } = new List<WorkPlace>();
+        public IList<Workplace> Workplaces { get; set; } = new List<Workplace>();
         public IList<Person> Persons { get; set; } = new List<Person>();
     }
 }

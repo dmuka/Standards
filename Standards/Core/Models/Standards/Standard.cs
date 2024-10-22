@@ -7,7 +7,7 @@ namespace Standards.Core.Models.Standards
 {
     public class Standard : BaseEntity
     {
-        public WorkPlace WorkPlace { get; set; }
+        public Workplace Workplace { get; set; }
         public Person? Responsible { get; set; }
         public IList<Characteristic> Characteristics { get; set; } = new List<Characteristic>();
         public string ImagePath { get; set; } = null!;

@@ -10,28 +10,30 @@ namespace Standards.Core.CQRS.Sectors
 {
     public class GetAll
     {
-        public class Query : IRequest<IList<DepartmentDto>>
+        public class Query : IRequest<IList<SectorDto>>
         {
         }
 
         public class QueryHandler(
             IRepository repository, 
             ICacheService cache, 
-            IConfigService configService) : IRequestHandler<Query, IList<DepartmentDto>>
+            IConfigService configService) : IRequestHandler<Query, IList<SectorDto>>
         {
-            public async Task<IList<DepartmentDto>> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<IList<SectorDto>> Handle(Query request, CancellationToken cancellationToken)
             {
                 var absoluteExpiration = configService.GetValue<int>(Cache.AbsoluteExpirationConfigurationSectionKey);
                 var slidingExpiration = configService.GetValue<int>(Cache.SlidingExpirationConfigurationSectionKey);
                 
-                var departments = await cache.GetOrCreateAsync<Department>(
-                    Cache.Departments,
+                var sectors = await cache.GetOrCreateAsync<Sector>(
+                    Cache.Sectors,
                     async (token) =>
                     {
-                        var result = await repository.GetListAsync<Department>(
+                        var result = await repository.GetListAsync<Sector>(
                             query => query
-                                .Include(d => d.Housings)
-                                .Include(d => d.Sectors),
+                                .Include(s => s.Workplaces)
+                                .Include(s => s.Persons)
+                                .Include(s => s.Rooms)
+                                .Include(s => s.Department),
                             token);
 
                         return result;
@@ -40,17 +42,19 @@ namespace Standards.Core.CQRS.Sectors
                     TimeSpan.FromMinutes(absoluteExpiration),
                     TimeSpan.FromMinutes(slidingExpiration));
 
-                if (departments is null) return [];
+                if (sectors is null) return [];
                 
-                var dtos = departments
-                    .Select(d => new DepartmentDto
+                var dtos = sectors
+                    .Select(s => new SectorDto
                     {
-                        Id = d.Id,
-                        Name = d.Name,
-                        ShortName = d.ShortName,
-                        Comments = d.Comments,
-                        HousingIds = d.Housings.Select(h => h.Id).ToList(),
-                        SectorIds = d.Sectors.Select(s => s.Id).ToList()
+                        Id = s.Id,
+                        Name = s.Name,
+                        ShortName = s.ShortName,
+                        Comments = s.Comments,
+                        DepartmentId = s.Department.Id,
+                        RoomIds = s.Rooms.Select(r => r.Id).ToList(),
+                        WorkplaceIds = s.Workplaces.Select(wp => wp.Id).ToList(),
+                        PersonIds = s.Persons.Select(p => p.Id).ToList()
                     }).ToList();
 
                 return dtos;
