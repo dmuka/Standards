@@ -3,7 +3,9 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
+using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Rooms;
+using Standards.Core.CQRS.Sectors;
 using Standards.Core.Models;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Common;
@@ -29,8 +31,8 @@ public class GetFilteredTests : BaseTestFixture
     private Mock<IQueryableWrapper<Room>> _queryWrapperMock;
     private Mock<IQueryable<Room>> _queryMock;
 
-    private IRequestHandler<GetFiltered.Query, PaginatedListModel<Room>> _handler;
-    private IValidator<GetFiltered.Query> _validator;
+    private IRequestHandler<GetFiltered<Room>.Query, PaginatedListModel<Room>> _handler;
+    private IValidator<GetFiltered<Room>.Query> _validator;
 
     [SetUp]
     public void Setup()
@@ -55,15 +57,15 @@ public class GetFilteredTests : BaseTestFixture
 
         _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_rooms.AsQueryable());
 
-        _handler = new GetFiltered.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
-        _validator = new GetFiltered.QueryValidator();
+        _handler = new GetFiltered<Room>.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
+        _validator = new GetFiltered<Room>.QueryValidator();
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new GetFiltered.Query(_parameters);
+        var query = new GetFiltered<Room>.Query(_parameters);
         var expected = new PaginatedListModel<Room>(_rooms, 1, 10);
 
         // Act
@@ -77,7 +79,7 @@ public class GetFilteredTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new GetFiltered.Query(_parameters);
+        var query = new GetFiltered<Room>.Query(_parameters);
         _cancellationToken = new CancellationToken(true);
 
         // Act
@@ -94,7 +96,7 @@ public class GetFilteredTests : BaseTestFixture
         _parameters.ItemsOnPage = default;
         _parameters.PageNumber = default;
 
-        var query = new GetFiltered.Query(_parameters);
+        var query = new GetFiltered<Room>.Query(_parameters);
         var expected = new PaginatedListModel<Room>(_rooms,1, 10);
 
         // Act
@@ -110,7 +112,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters = null;
 
-        var query = new GetFiltered.Query(_parameters);
+        var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
         var result = _validator.TestValidate(query);
@@ -125,7 +127,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters.SearchString = null;
 
-        var query = new GetFiltered.Query(_parameters);
+        var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
         var result = _validator.TestValidate(query);
@@ -140,7 +142,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters.SearchBy = null;
 
-        var query = new GetFiltered.Query(_parameters);
+        var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
         var result = _validator.TestValidate(query);
@@ -155,7 +157,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters.SortBy = null;
 
-        var query = new GetFiltered.Query(_parameters);
+        var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
         var result = _validator.TestValidate(query);
@@ -170,7 +172,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters.ItemsOnPage = itemsPerPage;
 
-        var query = new GetFiltered.Query(_parameters);
+        var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
         var result = _validator.TestValidate(query);
@@ -185,7 +187,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters.PageNumber = pageNumber;
 
-        var query = new GetFiltered.Query(_parameters);
+        var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
         var result = _validator.TestValidate(query);

@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Rooms;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
@@ -27,7 +28,7 @@ namespace Standards.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetRoom(int id)
         {
-            var query = new GetById.Query(id);
+            var query = new GetById<Room>.Query(id);
 
             var result = await sender.Send(query);
 
@@ -56,17 +57,16 @@ namespace Standards.Controllers
             repository.SaveChanges();
         }
 
+
         [HttpDelete]
-        [Route("delete")]
-        public void DeleteRoom(int id)
+        [Route("delete/{id:int}")]
+        public async Task<IActionResult> DeleteRoom(int id)
         {
-            var room = repository.Rooms.Find(id);
+            var query = new Delete<Room>.Query(id);
 
-            if (room is null) return;
-            
-            repository.Rooms.Remove(room);
+            var result = await sender.Send(query);
 
-            repository.SaveChanges();
+            return Ok(result);
         }
     }
 }

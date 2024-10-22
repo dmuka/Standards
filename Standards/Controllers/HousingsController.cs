@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
+using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Models;
@@ -27,7 +29,7 @@ namespace Standards.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetHousing(int id)
         {
-            var query = new GetById.Query(id);
+            var query = new GetById<Housing>.Query(id);
 
             var result = await sender.Send(query);
 
@@ -38,7 +40,7 @@ namespace Standards.Controllers
         [Route("filter")]
         public async Task<IActionResult> GetHousingsByFilter([FromBody] QueryParameters parameters)
         {
-            var query = new GetFiltered.Query(parameters);
+            var query = new GetFiltered<Housing>.Query(parameters);
 
             var result = await sender.Send(query);
 
@@ -69,13 +71,13 @@ namespace Standards.Controllers
 
         [HttpDelete]
         [Route("delete/{id:int}")]
-        public async Task DeleteHousing(int id)
+        public async Task<IActionResult> DeleteHousing(int id)
         {
-            var housing = await repository.GetByIdAsync<HousingDto>(id);
+            var query = new Delete<Housing>.Query(id);
 
-            await repository.DeleteAsync(housing);
+            var result = await sender.Send(query);
 
-            await repository.SaveChangesAsync();
+            return Ok(result);
         }
     }
 }

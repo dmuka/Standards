@@ -3,7 +3,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
-using Standards.Core.CQRS.Departments;
+using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.Housings;
@@ -30,8 +30,8 @@ namespace Standards.CQRS.Tests.Departments
         private Mock<IQueryableWrapper<Department>> _queryWrapperMock;
         private Mock<IQueryable<Housing>> _queryMock;
 
-        private IRequestHandler<GetFiltered.Query, PaginatedListModel<Department>> _handler;
-        private IValidator<GetFiltered.Query> _validator;
+        private IRequestHandler<GetFiltered<Department>.Query, PaginatedListModel<Department>> _handler;
+        private IValidator<GetFiltered<Department>.Query> _validator;
 
         [SetUp]
         public void Setup()
@@ -57,15 +57,15 @@ namespace Standards.CQRS.Tests.Departments
 
             _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_departments.AsQueryable());
 
-            _handler = new GetFiltered.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
-            _validator = new GetFiltered.QueryValidator();
+            _handler = new GetFiltered<Department>.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
+            _validator = new GetFiltered<Department>.QueryValidator();
         }
 
         [Test]
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Department>.Query(_parameters);
             var expected = new PaginatedListModel<Department>(_departments, 1, 10);
 
             // Act
@@ -79,7 +79,7 @@ namespace Standards.CQRS.Tests.Departments
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Department>.Query(_parameters);
             _cancellationToken = new CancellationToken(true);
 
             // Act
@@ -96,7 +96,7 @@ namespace Standards.CQRS.Tests.Departments
             _parameters.ItemsOnPage = default;
             _parameters.PageNumber = default;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Department>.Query(_parameters);
             var expected = new PaginatedListModel<Department>(_departments, 1, 10);
 
             // Act
@@ -112,7 +112,7 @@ namespace Standards.CQRS.Tests.Departments
             // Arrange
             _parameters = null;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Department>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -127,7 +127,7 @@ namespace Standards.CQRS.Tests.Departments
             // Arrange
             _parameters.SearchString = null;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Department>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -142,7 +142,7 @@ namespace Standards.CQRS.Tests.Departments
             // Arrange
             _parameters.SearchBy = null;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Department>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -157,7 +157,7 @@ namespace Standards.CQRS.Tests.Departments
             // Arrange
             _parameters.SortBy = null;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Department>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -172,7 +172,7 @@ namespace Standards.CQRS.Tests.Departments
             // Arrange
             _parameters.ItemsOnPage = itemsPerPage;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Department>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -187,7 +187,7 @@ namespace Standards.CQRS.Tests.Departments
             // Arrange
             _parameters.PageNumber = pageNumber;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Department>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);

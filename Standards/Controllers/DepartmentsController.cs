@@ -1,6 +1,8 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Departments;
+using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Filter.Implementations;
@@ -26,7 +28,7 @@ namespace Standards.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetDepartment(int id)
         {
-            var query = new GetById.Query(id);
+            var query = new GetById<Department>.Query(id);
 
             var result = await sender.Send(query);
 
@@ -56,21 +58,21 @@ namespace Standards.Controllers
         }
 
         [HttpDelete]
-        [Route("delete")]
-        public async Task DeleteDepartment(int id)
+        [Route("delete/{id:int}")]
+        public async Task<IActionResult> DeleteDepartment(int id)
         {
-            var department = await repository.GetByIdAsync<DepartmentDto>(id);
+            var query = new Delete<Department>.Query(id);
 
-            await repository.DeleteAsync(department);
+            var result = await sender.Send(query);
 
-            await repository.SaveChangesAsync();
+            return Ok(result);
         }
 
         [HttpPost]
         [Route("filter")]
         public async Task<IActionResult> GetDepartmentsByFilter([FromBody] QueryParameters parameters)
         {
-            var query = new GetFiltered.Query(parameters);
+            var query = new GetFiltered<Department>.Query(parameters);
 
             var result = await sender.Send(query);
 

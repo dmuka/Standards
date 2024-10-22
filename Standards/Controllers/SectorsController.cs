@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Departments;
 using Standards.Infrastructure.Data;
 
@@ -7,7 +9,7 @@ namespace Standards.Controllers
 {
     [Route("api/sectors")]
     [ApiController]
-    public class SectorsController(ApplicationDbContext repository) : ControllerBase
+    public class SectorsController(ApplicationDbContext repository, ISender sender) : ControllerBase
     {
         [HttpGet]
         [Route("list")]
@@ -71,16 +73,14 @@ namespace Standards.Controllers
         }
 
         [HttpDelete]
-        [Route("delete")]
-        public void DeleteSector(int id)
+        [Route("delete/{id:int}")]
+        public async Task<IActionResult> DeleteHousing(int id)
         {
-            var sector = repository.Sectors.Find(id);
+            var query = new Delete<Sector>.Query(id);
 
-            if (sector is null) return;
-            
-            repository.Sectors.Remove(sector);
+            var result = await sender.Send(query);
 
-            repository.SaveChanges();
+            return Ok(result);
         }
     }
 }

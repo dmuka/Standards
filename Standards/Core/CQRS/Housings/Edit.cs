@@ -79,10 +79,14 @@ namespace Standards.Core.CQRS.Housings
                             .NotEmpty();
 
                         housing.RuleFor(housingDto => housingDto.DepartmentIds)
-                            .NotEmpty();
+                            .NotEmpty()
+                            .ForEach(id => 
+                                id.SetValidator(new IdValidator<Department>(repository)));
 
                         housing.RuleFor(housingDto => housingDto.RoomIds)
-                            .NotEmpty();
+                            .NotEmpty()
+                            .ForEach(id => 
+                                id.SetValidator(new IdValidator<Room>(repository)));
                     });
             }
         }

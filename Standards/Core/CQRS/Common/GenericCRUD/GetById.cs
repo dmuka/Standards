@@ -6,26 +6,26 @@ using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 using Standards.Infrastructure.Validators;
 
-namespace Standards.Core.CQRS.Housings
+namespace Standards.Core.CQRS.Common.GenericCRUD
 {
-    public class GetById
+    public class GetById<T> where T : BaseEntity
     {
-        public class Query(int id) : IRequest<Housing>
+        public class Query(int id) : IRequest<T>
         {
             public int Id { get; } = id;
         }
 
-        public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, Housing>
+        public class QueryHandler(IRepository repository, ICacheService cacheService, string cacheKey) : IRequestHandler<Query, T>
         {
-            public async Task<Housing> Handle(Query request, CancellationToken cancellationToken)
+            public async Task<T> Handle(Query request, CancellationToken cancellationToken)
             {
-                var housing = cacheService.GetById<Housing>(Cache.Housings, request.Id);
+                var entity = cacheService.GetById<T>(cacheKey, request.Id);
 
-                if (!cancellationToken.IsCancellationRequested && housing is not null) return housing;
+                if (!cancellationToken.IsCancellationRequested && entity is not null) return entity;
                 
-                housing = await repository.GetByIdAsync<Housing>(request.Id, cancellationToken);
+                entity = await repository.GetByIdAsync<T>(request.Id, cancellationToken);
 
-                return housing;
+                return entity;
             }
         }
 
@@ -37,7 +37,7 @@ namespace Standards.Core.CQRS.Housings
 
                 RuleFor(query => query.Id)
                     .GreaterThan(default(int))
-                    .SetValidator(new IdValidator<Housing>(repository));
+                    .SetValidator(new IdValidator<T>(repository));
             }
         }
     }

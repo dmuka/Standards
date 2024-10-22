@@ -3,7 +3,9 @@ using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.Constants;
+using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Rooms;
+using Standards.Core.CQRS.Sectors;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
@@ -24,8 +26,8 @@ public class GetByIdTests : BaseTestFixture
     
     private List<Room> _rooms;
     
-    private IRequestHandler<GetById.Query, Room> _handler;
-    private IValidator<GetById.Query> _validator;
+    private IRequestHandler<GetById<Room>.Query, Room> _handler;
+    private IValidator<GetById<Room>.Query> _validator;
 
     [SetUp]
     public void Setup()
@@ -42,15 +44,15 @@ public class GetByIdTests : BaseTestFixture
         _cacheMock.Setup(cache => cache.GetById<Room>(Cache.Rooms, IdInDb)).Returns(Rooms[0]);
 
 
-        _handler = new GetById.QueryHandler(_repository.Object, _cacheMock.Object); 
-        _validator = new GetById.QueryValidator(_repository.Object); 
+        _handler = new GetById<Room>.QueryHandler(_repository.Object, _cacheMock.Object, Cache.Rooms); 
+        _validator = new GetById<Room>.QueryValidator(_repository.Object); 
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new GetById.Query(IdInDb);
+        var query = new GetById<Room>.Query(IdInDb);
         var expected = _rooms.First(_ => _.Id == IdInDb);
 
         // Act
@@ -65,7 +67,7 @@ public class GetByIdTests : BaseTestFixture
     public void Validator_IfIdIsInvalid_ReturnResult(int id)
     {
         // Arrange
-        var query = new GetById.Query(id);
+        var query = new GetById<Room>.Query(id);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -79,7 +81,7 @@ public class GetByIdTests : BaseTestFixture
     {
         // Arrange
         _cacheMock.Object.Create(Cache.Rooms, Rooms);
-        var query = new GetById.Query(IdInDb);
+        var query = new GetById<Room>.Query(IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -93,7 +95,7 @@ public class GetByIdTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new GetById.Query(IdInDb);
+        var query = new GetById<Room>.Query(IdInDb);
         _cancellationToken = new CancellationToken(true);
 
         // Act

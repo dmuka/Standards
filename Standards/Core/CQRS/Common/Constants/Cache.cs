@@ -9,4 +9,5 @@ public class Cache
     public const string Housings = "Housings";
     public const string Rooms = "Rooms";
     public const string Departments = "Departments";
+    public const string Sectors = "Sectors";
 }

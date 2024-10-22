@@ -3,7 +3,9 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
+using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Housings;
+using Standards.Core.CQRS.Sectors;
 using Standards.Core.Models;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Common;
@@ -29,8 +31,8 @@ namespace Standards.CQRS.Tests.Housings
         private Mock<IQueryableWrapper<Housing>> _queryWrapperMock;
         private Mock<IQueryable<Housing>> _queryMock;
 
-        private IRequestHandler<GetFiltered.Query, PaginatedListModel<Housing>> _handler;
-        private IValidator<GetFiltered.Query> _validator;
+        private IRequestHandler<GetFiltered<Housing>.Query, PaginatedListModel<Housing>> _handler;
+        private IValidator<GetFiltered<Housing>.Query> _validator;
 
         [SetUp]
         public void Setup()
@@ -56,15 +58,15 @@ namespace Standards.CQRS.Tests.Housings
 
             _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_housings.AsQueryable());
 
-            _handler = new GetFiltered.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
-            _validator = new GetFiltered.QueryValidator();
+            _handler = new GetFiltered<Housing>.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
+            _validator = new GetFiltered<Housing>.QueryValidator();
         }
 
         [Test]
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Housing>.Query(_parameters);
             var expected = new PaginatedListModel<Housing>(_housings, 1, 10);
 
             // Act
@@ -78,7 +80,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Housing>.Query(_parameters);
             _cancellationToken = new CancellationToken(true);
 
             // Act
@@ -95,7 +97,7 @@ namespace Standards.CQRS.Tests.Housings
             _parameters.ItemsOnPage = default;
             _parameters.PageNumber = default;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Housing>.Query(_parameters);
             var expected = new PaginatedListModel<Housing>(_housings, 1, 10);
 
             // Act
@@ -111,7 +113,7 @@ namespace Standards.CQRS.Tests.Housings
             // Arrange
             _parameters = null;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Housing>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -126,7 +128,7 @@ namespace Standards.CQRS.Tests.Housings
             // Arrange
             _parameters.SearchString = null;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Housing>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -141,7 +143,7 @@ namespace Standards.CQRS.Tests.Housings
             // Arrange
             _parameters.SearchBy = null;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Housing>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -156,7 +158,7 @@ namespace Standards.CQRS.Tests.Housings
             // Arrange
             _parameters.SortBy = null;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Housing>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -171,7 +173,7 @@ namespace Standards.CQRS.Tests.Housings
             // Arrange
             _parameters.ItemsOnPage = itemsPerPage;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Housing>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -186,7 +188,7 @@ namespace Standards.CQRS.Tests.Housings
             // Arrange
             _parameters.PageNumber = pageNumber;
 
-            var query = new GetFiltered.Query(_parameters);
+            var query = new GetFiltered<Housing>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
