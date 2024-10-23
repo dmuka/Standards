@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Departments;
 using Standards.Core.Models.Departments;
@@ -28,7 +29,7 @@ namespace Standards.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetDepartment(int id)
         {
-            var query = new GetById<Department>.Query(id);
+            var query = new GetById.Query<Department>(id, Cache.Departments);
 
             var result = await sender.Send(query);
 

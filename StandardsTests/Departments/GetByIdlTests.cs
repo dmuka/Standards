@@ -23,8 +23,8 @@ namespace Standards.CQRS.Tests.Departments
         private CancellationToken _cancellationToken;
         private Mock<ICacheService> _cacheService;
         
-        private IRequestHandler<GetById<Department>.Query, Department> _handler;
-        private IValidator<GetById<Department>.Query> _validator;
+        private IRequestHandler<GetById.Query<Department>, Department> _handler;
+        private IValidator<GetById.Query<Department>> _validator;
 
         [SetUp]
         public void Setup()
@@ -40,15 +40,15 @@ namespace Standards.CQRS.Tests.Departments
             _cacheService = new Mock<ICacheService>();
             _cacheService.Setup(cache => cache.GetById<Department>(Cache.Departments, IdInDb)).Returns(Departments[0]);
 
-            _handler = new GetById<Department>.QueryHandler(_repository.Object, _cacheService.Object, Cache.Departments);
-            _validator = new GetById<Department>.QueryValidator(_repository.Object); 
+            _handler = new GetById.QueryHandler<Department>(_repository.Object, _cacheService.Object);
+            _validator = new GetById.QueryValidator<Department>(_repository.Object); 
         }
 
         [Test]
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new GetById<Department>.Query(IdInDb);
+            var query = new GetById.Query<Department>(IdInDb, Cache.Departments);
             var expected = _departments.First(_ => _.Id == IdInDb);
 
             // Act
@@ -63,7 +63,7 @@ namespace Standards.CQRS.Tests.Departments
         public void Validator_IfIdIsInvalid_ReturnResult(int id)
         {
             // Arrange
-            var query = new GetById<Department>.Query(id);
+            var query = new GetById.Query<Department>(id, Cache.Departments);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -76,7 +76,7 @@ namespace Standards.CQRS.Tests.Departments
         public void Handler_IfHousingInCache_ReturnCachedValue()
         {
             // Arrange
-            var query = new GetById<Department>.Query(IdInDb);
+            var query = new GetById.Query<Department>(IdInDb, Cache.Departments);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -90,7 +90,7 @@ namespace Standards.CQRS.Tests.Departments
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new GetById<Department>.Query(IdInDb);
+            var query = new GetById.Query<Department>(IdInDb, Cache.Departments);
             _cancellationToken = new CancellationToken(true);
 
             // Act

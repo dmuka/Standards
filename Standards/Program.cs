@@ -18,8 +18,10 @@ using Standards.Infrastructure.Logging;
 using Standards.Infrastructure.Mediatr;
 using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
 using System.Text;
+using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.Housings;
+using Standards.Core.Models.Persons;
 using Standards.Infrastructure.Converters;
 using Standards.Infrastructure.Filter.Models;
 using Standards.Infrastructure.QueryableWrapper.Implementation;
@@ -130,7 +132,14 @@ namespace Standards
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
-
+            builder.Services.AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Category>, IList<Category>>), typeof(GetAllBaseEntity.QueryHandler<Category>));
+            builder.Services.AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Position>, IList<Position>>), typeof(GetAllBaseEntity.QueryHandler<Position>));
+            
+            builder.Services.AddTransient(typeof(IRequestHandler<GetById.Query<Position>, Position>), typeof(GetById.QueryHandler<Position>));   
+            builder.Services.AddTransient(typeof(IRequestHandler<GetById.Query<Category>, Category>), typeof(GetById.QueryHandler<Category>));    
+            builder.Services.AddTransient(typeof(IRequestHandler<GetById.Query<Department>, Department>), typeof(GetById.QueryHandler<Department>));   
+            builder.Services.AddTransient(typeof(IRequestHandler<GetById.Query<Sector>, Sector>), typeof(GetById.QueryHandler<Sector>));  
+           
             builder.Services.AddValidatorsFromAssemblyContaining<Program>();
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
             builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
@@ -138,13 +147,13 @@ namespace Standards
 
             builder.Services.AddTransient<IRepository, Repository<ApplicationDbContext>>();
 
-            builder.Services.AddScoped<IConfigService, ConfigService>();
+            builder.Services.AddSingleton<IConfigService, ConfigService>();
             
             builder.Services.AddScoped<IUserService, UserService>();
             builder.Services.AddScoped<IAuthService, AuthService>();
             
             builder.Services.AddMemoryCache();
-            builder.Services.AddScoped<ICacheService, CacheService>();
+            builder.Services.AddSingleton<ICacheService, CacheService>();
             
             builder.Services.AddScoped<IQueryBuilder<Housing>, QueryBuilder<Housing>>();
             builder.Services.AddScoped<IQueryBuilder<Room>, QueryBuilder<Room>>();

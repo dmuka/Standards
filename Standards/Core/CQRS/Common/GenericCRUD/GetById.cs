@@ -6,21 +6,21 @@ using Standards.Infrastructure.Validators;
 
 namespace Standards.Core.CQRS.Common.GenericCRUD;
 
-public class GetById<T> where T : BaseEntity
+public class GetById
 {
-    public class Query(int id) : IRequest<T>
+    public class Query<T>(int id, string cacheKey) : IRequest<T> where T : BaseEntity
     {
         public int Id { get; } = id;
+        public string CacheKey { get; } = cacheKey;
     }
 
-    public class QueryHandler(
+    public class QueryHandler<T>(
         IRepository repository, 
-        ICacheService cacheService, 
-        string cacheKey) : IRequestHandler<Query, T>
+        ICacheService cacheService) : IRequestHandler<Query<T>, T> where T : BaseEntity
     {
-        public async Task<T> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<T> Handle(Query<T> request, CancellationToken cancellationToken)
         {
-            var entity = cacheService.GetById<T>(cacheKey, request.Id);
+            var entity = cacheService.GetById<T>(request.CacheKey, request.Id);
 
             if (!cancellationToken.IsCancellationRequested && entity is not null) return entity;
             
@@ -30,7 +30,7 @@ public class GetById<T> where T : BaseEntity
         }
     }
 
-    public class QueryValidator : AbstractValidator<Query>
+    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : BaseEntity
     {
         public QueryValidator(IRepository repository)
         {

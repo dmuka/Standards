@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Persons;
@@ -15,7 +16,7 @@ public class PositionsController(IRepository repository, ISender sender) : Contr
     [Route("list")]
     public async Task<IActionResult> GetPositions()
     {
-        var query = new GetAllBaseEntity<Position>.Query();
+        var query = new GetAllBaseEntity.Query<Position>(Cache.Positions);
 
         var result = await sender.Send(query);
 
@@ -26,7 +27,7 @@ public class PositionsController(IRepository repository, ISender sender) : Contr
     [Route("")]
     public async Task<IActionResult> GetPosition(int id = 0)
     {
-        var query = new GetById<Position>.Query(id);
+        var query = new GetById.Query<Position>(id, Cache.Positions);
 
         var result = await sender.Send(query);
 

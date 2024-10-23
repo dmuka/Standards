@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
-using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Persons;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 
@@ -15,7 +15,7 @@ public class CategoriesController(IRepository repository, ISender sender) : Cont
     [Route("list")]
     public async Task<IActionResult> GetCategories()
     {
-        var query = new GetAllBaseEntity<Category>.Query();
+        var query = new GetAllBaseEntity.Query<Category>(Cache.Categories);
 
         var result = await sender.Send(query);
 
@@ -26,7 +26,7 @@ public class CategoriesController(IRepository repository, ISender sender) : Cont
     [Route("{id:int}")]
     public async Task<IActionResult> GetCategory(int id)
     {
-        var query = new GetById<Category>.Query(id);
+        var query = new GetById.Query<Category>(id, Cache.Categories);
 
         var result = await sender.Send(query);
 

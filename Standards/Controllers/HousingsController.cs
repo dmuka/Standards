@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
@@ -29,7 +30,7 @@ namespace Standards.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetHousing(int id)
         {
-            var query = new GetById<Housing>.Query(id);
+            var query = new GetById.Query<Housing>(id, Cache.Housings);
 
             var result = await sender.Send(query);
 

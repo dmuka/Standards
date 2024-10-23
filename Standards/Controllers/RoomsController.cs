@@ -1,6 +1,7 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Rooms;
 using Standards.Core.Models.DTOs;
@@ -28,7 +29,7 @@ namespace Standards.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetRoom(int id)
         {
-            var query = new GetById<Room>.Query(id);
+            var query = new GetById.Query<Room>(id, Cache.Rooms);
 
             var result = await sender.Send(query);
 
