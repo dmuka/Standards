@@ -5,6 +5,7 @@ using Moq;
 using Standards.Core.CQRS.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.CQRS.Tests.Common;
+using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
@@ -84,7 +85,7 @@ namespace Standards.CQRS.Tests.Departments
         }
 
         [Test, TestCaseSource(nameof(NullOrEmptyString))]
-        public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
+        public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
         {
             // Arrange
             _department.Name = name;
@@ -98,8 +99,23 @@ namespace Standards.CQRS.Tests.Departments
             result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
         }
 
+        [Test]
+        public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
+        {
+            // Arrange
+            _department.Name = Cases.Length201;
+
+            var query = new Create.Query(_department);
+
+            // Act
+            var result = _validator.TestValidate(query);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
+        }
+
         [Test, TestCaseSource(nameof(NullOrEmptyString))]
-        public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
+        public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
         {
             // Arrange
             _department.ShortName = shortName;
@@ -111,6 +127,21 @@ namespace Standards.CQRS.Tests.Departments
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.ShortName);
+        }
+
+        [Test]
+        public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
+        {
+            // Arrange
+            _department.Name = Cases.Length101;
+
+            var query = new Create.Query(_department);
+
+            // Act
+            var result = _validator.TestValidate(query);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
         }
 
         [Test]

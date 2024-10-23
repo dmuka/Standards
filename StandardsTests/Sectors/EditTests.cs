@@ -8,6 +8,7 @@ using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Core.Models.Persons;
 using Standards.CQRS.Tests.Common;
+using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
@@ -174,7 +175,7 @@ public class EditTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(NullOrEmptyString))]
-    public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
+    public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
         _roomDto.Name = name;
@@ -188,8 +189,23 @@ public class EditTests : BaseTestFixture
         result.ShouldHaveValidationErrorFor(_ => _.RoomDto.Name);
     }
 
+    [Test]
+    public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
+    {
+        // Arrange
+        _roomDto.Name = Cases.Length201;
+
+        var query = new Edit.Query(_roomDto);
+
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.RoomDto.Name);
+    }
+
     [Test, TestCaseSource(nameof(NullOrEmptyString))]
-    public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
+    public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
         _roomDto.ShortName = shortName;
@@ -201,6 +217,21 @@ public class EditTests : BaseTestFixture
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.RoomDto.ShortName);
+    }
+
+    [Test]
+    public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
+    {
+        // Arrange
+        _roomDto.Name = Cases.Length101;
+
+        var query = new Edit.Query(_roomDto);
+
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.RoomDto.Name);
     }
 
     [Test]

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Standards.Core.Constants;
 using Standards.Core.CQRS.Common.Attributes;
 using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.Models.Departments;
@@ -53,10 +54,12 @@ public class Create
                 .ChildRules(filter =>
                 {
                     filter.RuleFor(housing => housing.Name)
-                        .NotEmpty();
+                        .NotEmpty()
+                        .Length(Lengths.EntityName);
 
                     filter.RuleFor(housing => housing.ShortName)
-                        .NotEmpty();
+                        .NotEmpty()
+                        .Length(Lengths.ShortName);
 
                     filter.RuleFor(housing => housing.FloorsCount)
                         .GreaterThan(default(int));

@@ -60,6 +60,32 @@ public class NullableEnumConverterTests
         Assert.That(result, Is.Null);
     }
 
+    [TestCase("\"One\"", TestEnum.One)]
+    [TestCase("\"Two\"", TestEnum.Two)]
+    [TestCase("\"Three\"", TestEnum.Three)]
+    public void ReadExtension_IfValidStringEnumValue_ShouldReturnValue(string? json, TestEnum expected)
+    {
+        // Arrange
+        // Act
+        var result = _converter.Read(json, _serializerOptions);
+        
+        // Assert
+        Assert.That(result, Is.EqualTo(expected));
+    }
+    
+    [Test]
+    public void ReadExtension_IfInvalidStringEnumValue_ShouldReturnValue()
+    {
+        // Arrange
+        const string json = "\"Wrong\"";
+        
+        // Act
+        var result = _converter.Read(json, _serializerOptions);
+        
+        // Assert
+        Assert.That(result, Is.Null);
+    }
+
     [Test]
     public void Write_IfValueIsNotNull_ShouldCallWriteStringValue()
     {

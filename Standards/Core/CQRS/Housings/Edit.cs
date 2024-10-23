@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Standards.Core.Constants;
 using Standards.Core.CQRS.Common.Attributes;
 using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.Models.Departments;
@@ -67,10 +68,12 @@ namespace Standards.Core.CQRS.Housings
                             .SetValidator(new IdValidator<Housing>(repository));
 
                         housing.RuleFor(housingDto => housingDto.Name)
-                            .NotEmpty();
+                            .NotEmpty()
+                            .Length(Lengths.EntityName);
 
                         housing.RuleFor(housingDto => housingDto.ShortName)
-                            .NotEmpty();
+                            .NotEmpty()
+                            .Length(Lengths.ShortName);
 
                         housing.RuleFor(housingDto => housingDto.FloorsCount)
                             .GreaterThan(default(int));

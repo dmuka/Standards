@@ -8,6 +8,7 @@ using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Core.Models.Persons;
 using Standards.CQRS.Tests.Common;
+using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
@@ -101,7 +102,7 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(NullOrEmptyString))]
-    public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
+    public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
         _sectorDto.Name = name;
@@ -115,8 +116,23 @@ public class CreateTests : BaseTestFixture
         result.ShouldHaveValidationErrorFor(_ => _.SectorDto.Name);
     }
 
+    [Test]
+    public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
+    {
+        // Arrange
+        _sectorDto.Name = Cases.Length201;
+
+        var query = new Create.Query(_sectorDto);
+
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.SectorDto.Name);
+    }
+
     [Test, TestCaseSource(nameof(NullOrEmptyString))]
-    public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
+    public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
         _sectorDto.ShortName = shortName;
@@ -128,6 +144,21 @@ public class CreateTests : BaseTestFixture
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.SectorDto.ShortName);
+    }
+
+    [Test]
+    public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
+    {
+        // Arrange
+        _sectorDto.Name = Cases.Length101;
+
+        var query = new Create.Query(_sectorDto);
+
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.SectorDto.Name);
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]

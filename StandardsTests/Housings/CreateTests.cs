@@ -5,6 +5,7 @@ using Moq;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
 using Standards.CQRS.Tests.Common;
+using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
@@ -84,7 +85,7 @@ namespace Standards.CQRS.Tests.Housings
         }
 
         [Test, TestCaseSource(nameof(NullOrEmptyString))]
-        public void Validator_IfNameIsNull_ShouldHaveValidationError(string? name)
+        public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
         {
             // Arrange
             _housing.Name = name;
@@ -92,14 +93,29 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Create.Query(_housing);
 
             // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+            var result = _validator.TestValidate(query);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
+        }
+
+        [Test]
+        public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
+        {
+            // Arrange
+            _housing.Name = Cases.Length201;
+
+            var query = new Create.Query(_housing);
+
+            // Act
+            var result = _validator.TestValidate(query);
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
         }
 
         [Test, TestCaseSource(nameof(NullOrEmptyString))]
-        public void Validator_IfShortNameIsNull_ShouldHaveValidationError(string? shortName)
+        public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
         {
             // Arrange
             _housing.ShortName = shortName;
@@ -107,12 +123,27 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Create.Query(_housing);
 
             // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+            var result = _validator.TestValidate(query);
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.ShortName);
         }
 
+        [Test]
+        public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
+        {
+            // Arrange
+            _housing.Name = Cases.Length101;
+
+            var query = new Create.Query(_housing);
+
+            // Act
+            var result = _validator.TestValidate(query);
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
+        }
+        
         [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfAddressIsNull_ShouldHaveValidationError(string? address)
         {
