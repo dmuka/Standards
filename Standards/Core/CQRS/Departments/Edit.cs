@@ -38,7 +38,8 @@ namespace Standards.Core.CQRS.Departments
                     Name = request.DepartmentDto.Name,
                     ShortName = request.DepartmentDto.ShortName,
                     Sectors = sectors,
-                    Housings = housings
+                    Housings = housings,
+                    Comments = request.DepartmentDto.Comments
                 };
                 
                 repository.Update(department);

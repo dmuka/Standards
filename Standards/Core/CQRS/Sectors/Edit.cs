@@ -49,7 +49,8 @@ namespace Standards.Core.CQRS.Sectors
                     Department = department,
                     Rooms = rooms,
                     Workplaces = workplaces,
-                    Persons = persons
+                    Persons = persons,
+                    Comments = request.SectorDto.Comments
                 };
                 
                 repository.Update(sector);

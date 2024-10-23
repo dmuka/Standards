@@ -40,7 +40,8 @@ namespace Standards.Core.CQRS.Housings
                     FloorsCount = request.HousingDto.FloorsCount,
                     Address = request.HousingDto.Address,
                     Departments = departments.ToList(),
-                    Rooms = rooms.ToList()
+                    Rooms = rooms.ToList(),
+                    Comments = request.HousingDto.Comments
                 };
                 
                 repository.Update(housing);
