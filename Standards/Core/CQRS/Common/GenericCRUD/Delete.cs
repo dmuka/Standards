@@ -15,7 +15,10 @@ public class Delete<T> where T : BaseEntity
         public int Id { get; } = id;
     }
 
-    public class QueryHandler(IRepository repository, ICacheService cacheService, string cacheKey) : IRequestHandler<Query, int>
+    public class QueryHandler(
+        IRepository repository, 
+        ICacheService cacheService, 
+        string cacheKey) : IRequestHandler<Query, int>
     {
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {

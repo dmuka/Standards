@@ -16,7 +16,10 @@ public class CreateBaseEntity<T> where T : BaseEntity, new()
         public T Entity { get; } = entity;
     }
 
-    public class QueryHandler(IRepository repository, ICacheService cacheService, string cacheKey) : IRequestHandler<Query, int>
+    public class QueryHandler(
+        IRepository repository, 
+        ICacheService cacheService, 
+        string cacheKey) : IRequestHandler<Query, int>
     {
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {

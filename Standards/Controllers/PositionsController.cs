@@ -1,78 +1,68 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Standards.Core.CQRS.Common.GenericCRUD;
+using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Persons;
-using Standards.Infrastructure.Data;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
 
-namespace Standards.Controllers
+namespace Standards.Controllers;
+
+[Route("api/[controller]")]
+[ApiController]
+public class PositionsController(IRepository repository, ISender sender) : ControllerBase
 {
-    [Route("api/[controller]")]
-    [ApiController]
-    public class PositionsController(ApplicationDbContext repository) : ControllerBase
+    [HttpGet]
+    [Route("list")]
+    public async Task<IActionResult> GetPositions()
     {
-        [HttpGet]
-        [Route("list")]
-        public IActionResult GetPositions()
-        {
-            var positions = repository.Positions.ToList();
+        var query = new GetAllBaseEntity<Position>.Query();
 
-            return Ok(positions);
-        }
+        var result = await sender.Send(query);
 
-        [HttpGet]
-        [Route("")]
-        public IActionResult GetPosition(int id = 0)
-        {
-            if (id == 0)
-            {
-                return BadRequest();
-            }
+        return Ok(result);
+    }
 
-            var position = repository.Positions.FirstOrDefault(p => p.Id == id);
+    [HttpGet]
+    [Route("")]
+    public async Task<IActionResult> GetPosition(int id = 0)
+    {
+        var query = new GetById<Position>.Query(id);
 
-            if (position is null)
-            {
-                return NotFound($"Not found position with id: {id}");
-            }
+        var result = await sender.Send(query);
 
-            return Ok(position);
-        }
+        return Ok(result);
+    }
 
-        [HttpPost]
-        [Route("add")]
-        public void CreatePosition([FromBody] Position position)
-        {
-            repository.Add(new Position
-            {
-                Name = position.Name,
-                Comments = position.Comments
-            });
+    [HttpPost]
+    [Route("add")]
+    public async Task<IActionResult> CreatePosition([FromBody] Position position)
+    {
+        var query = new CreateBaseEntity<Position>.Query(position);
 
-            repository.SaveChanges();
-        }
+        var result = await sender.Send(query);
 
-        [HttpPut]
-        [Route("edit")]
-        public void EditPosition(int id, [FromBody] Position position)
-        {
-            if (position.Id != id) return;
-            
-            repository.Entry(position).State = EntityState.Modified;
+        return Ok(result);
+    }
 
-            repository.SaveChanges();
-        }
+    [HttpPut]
+    [Route("edit")]
+    public async Task<IActionResult> EditPosition([FromBody] Position position)
+    {
+        var query = new EditBaseEntity<Position>.Query(position);
 
-        [HttpDelete]
-        [Route("delete")]
-        public void DeletePosition(int id)
-        {
-            var position = repository.Positions.Find(id);
+        var result = await sender.Send(query);
 
-            if (position is not null)
-            {
-                repository.Positions.Remove(position);
+        return Ok(result);
+    }
 
-                repository.SaveChanges();
-            }
-        }
+    [HttpDelete]
+    [Route("delete/{id:int}")]
+    public async Task<IActionResult> DeletePosition(int id)
+    {
+        var query = new Delete<Category>.Query(id);
+
+        var result = await sender.Send(query);
+
+        return Ok(result);
     }
 }

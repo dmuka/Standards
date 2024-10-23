@@ -1,74 +1,68 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Standards.Core.CQRS.Common.GenericCRUD;
+using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Persons;
-using Standards.Infrastructure.Data;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
 
-namespace Standards.Controllers
+namespace Standards.Controllers;
+
+[Route("api/persons/categories")]
+[ApiController]
+public class CategoriesController(IRepository repository, ISender sender) : ControllerBase
 {
-    [Route("api/persons/categories")]
-    [ApiController]
-    public class CategoriesController(ApplicationDbContext repository) : ControllerBase
+    [HttpGet]
+    [Route("list")]
+    public async Task<IActionResult> GetCategories()
     {
-        [HttpGet]
-        [Route("list")]
-        public IActionResult GetCategories()
-        {
-            var categories = repository.Categories.ToList();
+        var query = new GetAllBaseEntity<Category>.Query();
 
-            return Ok(categories);
-        }
+        var result = await sender.Send(query);
 
-        [HttpGet]
-        [Route("")]
-        public IActionResult GetCategory(int id = 0)
-        {
-            if (id == 0) return BadRequest();
+        return Ok(result);
+    }
 
-            var category = repository.Categories.FirstOrDefault(category => category.Id == id);
+    [HttpGet]
+    [Route("{id:int}")]
+    public async Task<IActionResult> GetCategory(int id)
+    {
+        var query = new GetById<Category>.Query(id);
 
-            if (category is null)
-            {
-                return NotFound($"Not found category with id: {id}");
-            }
+        var result = await sender.Send(query);
 
-            return Ok(category);
-        }
+        return Ok(result);
+    }
 
-        [HttpPost]
-        [Route("add")]
-        public void CreateCategory([FromBody] Category category)
-        {
-            repository.Add(new Category
-            {
-                Name = category.Name,
-                Comments = category.Comments
-            });
+    [HttpPost]
+    [Route("add")]
+    public async Task<IActionResult> CreateCategory([FromBody] Category category)
+    {
+        var query = new CreateBaseEntity<Category>.Query(category);
 
-            repository.SaveChanges();
-        }
+        var result = await sender.Send(query);
 
-        [HttpPut]
-        [Route("edit")]
-        public void EditCategory(int id, [FromBody] Category category)
-        {
-            if (category.Id != id) return;
-            
-            repository.Entry(category).State = EntityState.Modified;
+        return Ok(result);
+    }
 
-            repository.SaveChanges();
-        }
+    [HttpPut]
+    [Route("edit")]
+    public async Task<IActionResult> EditCategory(int id, [FromBody] Category category)
+    {
+        var query = new EditBaseEntity<Category>.Query(category);
 
-        [HttpDelete]
-        [Route("delete")]
-        public void DeleteCategory(int id)
-        {
-            var category = repository.Categories.Find(id);
+        var result = await sender.Send(query);
 
-            if (category is null) return;
-            
-            repository.Categories.Remove(category);
+        return Ok(result);
+    }
 
-            repository.SaveChanges();
-        }
+    [HttpDelete]
+    [Route("delete/{id:int}")]
+    public async Task<IActionResult> DeleteCategory(int id)
+    {
+        var query = new Delete<Category>.Query(id);
+
+        var result = await sender.Send(query);
+
+        return Ok(result);
     }
 }
