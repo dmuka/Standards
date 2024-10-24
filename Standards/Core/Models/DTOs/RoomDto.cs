@@ -1,5 +1,3 @@
-using Standards.Core.Models.Interfaces;
-
 namespace Standards.Core.Models.DTOs;
 
 public class RoomDto : BaseEntity

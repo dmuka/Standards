@@ -48,7 +48,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new GetById.Query<Housing>(IdInDb, Cache.Housings);
+            var query = new GetById.Query<Housing>(IdInDb);
             var expected = _housings.First(_ => _.Id == IdInDb);
 
             // Act
@@ -63,7 +63,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Validator_IfIdIsInvalid_ReturnResult(int id)
         {
             // Arrange
-            var query = new GetById.Query<Housing>(id, Cache.Housings);
+            var query = new GetById.Query<Housing>(id);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -76,7 +76,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Handler_IfHousingInCache_ReturnCachedValue()
         {
             // Arrange
-            var query = new GetById.Query<Housing>(IdInDb, Cache.Housings);
+            var query = new GetById.Query<Housing>(IdInDb);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -90,7 +90,7 @@ namespace Standards.CQRS.Tests.Housings
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new GetById.Query<Housing>(IdInDb, Cache.Housings);
+            var query = new GetById.Query<Housing>(IdInDb);
             _cancellationToken = new CancellationToken(true);
 
             // Act

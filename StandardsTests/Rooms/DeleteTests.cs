@@ -2,7 +2,6 @@
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
-using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Common;
@@ -21,8 +20,8 @@ namespace Standards.CQRS.Tests.Rooms
         private CancellationToken _cancellationToken;
         private Mock<ICacheService> _cacheService;
 
-        private IRequestHandler<Delete<Room>.Query, int> _handler;
-        private IValidator<Delete<Room>.Query> _validator;
+        private IRequestHandler<Delete.Query<Room>, int> _handler;
+        private IValidator<Delete.Query<Room>> _validator;
 
         [SetUp]
         public void Setup()
@@ -39,15 +38,15 @@ namespace Standards.CQRS.Tests.Rooms
 
             _cacheService = new Mock<ICacheService>();
 
-            _handler = new Delete<Room>.QueryHandler(_repository.Object, _cacheService.Object, Cache.Rooms);
-            _validator = new Delete<Room>.QueryValidator(_repository.Object);
+            _handler = new Delete.QueryHandler<Room>(_repository.Object, _cacheService.Object);
+            _validator = new Delete.QueryValidator<Room>(_repository.Object);
         }
 
         [Test]
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new Delete<Room>.Query(IdInDb);
+            var query = new Delete.Query<Room>(IdInDb);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -60,7 +59,7 @@ namespace Standards.CQRS.Tests.Rooms
         public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
         {
             // Arrange
-            var query = new Delete<Room>.Query(IdInDb);
+            var query = new Delete.Query<Room>(IdInDb);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -76,7 +75,7 @@ namespace Standards.CQRS.Tests.Rooms
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new Delete<Room>.Query(IdInDb);
+            var query = new Delete.Query<Room>(IdInDb);
             _cancellationToken = new CancellationToken(true);
 
             // Act
@@ -91,7 +90,7 @@ namespace Standards.CQRS.Tests.Rooms
         public void Validator_IfIdNotInDB_ShouldHaveValidationError(int id)
         {
             // Arrange
-            var query = new Delete<Room>.Query(id);
+            var query = new Delete.Query<Room>(id);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;

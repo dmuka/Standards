@@ -2,6 +2,7 @@ using FluentValidation;
 using MediatR;
 using Standards.Core.Constants;
 using Standards.Core.CQRS.Common.Attributes;
+using Standards.Core.Models.Interfaces;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 using Standards.Infrastructure.Validators;
@@ -9,19 +10,18 @@ using Standards.Infrastructure.Validators;
 namespace Standards.Core.CQRS.Common.GenericCRUD;
 
 [TransactionScope]
-public class EditBaseEntity<T> where T : BaseEntity, new()
+public class EditBaseEntity
 {
-    public class Query(T entity) : IRequest<int>
+    public class Query<T>(T entity) : IRequest<int> where T : BaseEntity, IEntity<int>
     {
         public T Entity { get; } = entity;
     }
 
-    public class QueryHandler(
+    public class QueryHandler<T>(
         IRepository repository, 
-        ICacheService cacheService, 
-        string cacheKey) : IRequestHandler<Query, int>
+        ICacheService cacheService) : IRequestHandler<Query<T>, int> where T : BaseEntity, IEntity<int>, new()
     {
-        public async Task<int> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<int> Handle(Query<T> request, CancellationToken cancellationToken)
         {
             var entity = new T
             {
@@ -34,13 +34,13 @@ public class EditBaseEntity<T> where T : BaseEntity, new()
             
             var result = await repository.SaveChangesAsync(cancellationToken);
             
-            cacheService.Remove(cacheKey);
+            cacheService.Remove(T.GetCacheKey());
 
             return result;
         }
     }
 
-    public class QueryValidator : AbstractValidator<Query>
+    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : BaseEntity, IEntity<int>
     {
         public QueryValidator(IRepository repository)
         {

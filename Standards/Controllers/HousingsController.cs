@@ -1,19 +1,16 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
-using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Filter.Implementations;
-using Standards.Infrastructure.Filter.Models;
 
 namespace Standards.Controllers
 {
     [ApiController]
     [Route("api/housings")]
-    public class HousingsController(IRepository repository, ISender sender) : ApiBaseController
+    public class HousingsController(ISender sender) : ApiBaseController
     {
         [HttpGet]
         [Route("list")]
@@ -30,7 +27,7 @@ namespace Standards.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetHousing(int id)
         {
-            var query = new GetById.Query<Housing>(id, Cache.Housings);
+            var query = new GetById.Query<Housing>(id);
 
             var result = await sender.Send(query);
 
@@ -74,7 +71,7 @@ namespace Standards.Controllers
         [Route("delete/{id:int}")]
         public async Task<IActionResult> DeleteHousing(int id)
         {
-            var query = new Delete<Housing>.Query(id);
+            var query = new Delete.Query<Housing>(id);
 
             var result = await sender.Send(query);
 

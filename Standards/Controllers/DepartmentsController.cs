@@ -1,18 +1,16 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Departments;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
-using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers
 {
     [Route("api/departments")]
     [ApiController]
-    public class DepartmentsController(IRepository repository, ISender sender) : ControllerBase
+    public class DepartmentsController(ISender sender) : ControllerBase
     {
         [HttpGet]
         [Route("list")]
@@ -29,7 +27,7 @@ namespace Standards.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetDepartment(int id)
         {
-            var query = new GetById.Query<Department>(id, Cache.Departments);
+            var query = new GetById.Query<Department>(id);
 
             var result = await sender.Send(query);
 
@@ -62,7 +60,7 @@ namespace Standards.Controllers
         [Route("delete/{id:int}")]
         public async Task<IActionResult> DeleteDepartment(int id)
         {
-            var query = new Delete<Department>.Query(id);
+            var query = new Delete.Query<Department>(id);
 
             var result = await sender.Send(query);
 

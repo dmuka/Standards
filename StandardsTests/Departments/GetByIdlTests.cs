@@ -48,7 +48,7 @@ namespace Standards.CQRS.Tests.Departments
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new GetById.Query<Department>(IdInDb, Cache.Departments);
+            var query = new GetById.Query<Department>(IdInDb);
             var expected = _departments.First(_ => _.Id == IdInDb);
 
             // Act
@@ -63,7 +63,7 @@ namespace Standards.CQRS.Tests.Departments
         public void Validator_IfIdIsInvalid_ReturnResult(int id)
         {
             // Arrange
-            var query = new GetById.Query<Department>(id, Cache.Departments);
+            var query = new GetById.Query<Department>(id);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -76,7 +76,7 @@ namespace Standards.CQRS.Tests.Departments
         public void Handler_IfHousingInCache_ReturnCachedValue()
         {
             // Arrange
-            var query = new GetById.Query<Department>(IdInDb, Cache.Departments);
+            var query = new GetById.Query<Department>(IdInDb);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -90,7 +90,7 @@ namespace Standards.CQRS.Tests.Departments
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new GetById.Query<Department>(IdInDb, Cache.Departments);
+            var query = new GetById.Query<Department>(IdInDb);
             _cancellationToken = new CancellationToken(true);
 
             // Act

@@ -2,7 +2,6 @@
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
-using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Departments;
 using Standards.CQRS.Tests.Common;
@@ -22,8 +21,8 @@ public class DeleteTests : BaseTestFixture
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
 
-    private IRequestHandler<Delete<Department>.Query, int> _handler;
-    private IValidator<Delete<Department>.Query> _validator;
+    private IRequestHandler<Delete.Query<Department>, int> _handler;
+    private IValidator<Delete.Query<Department>> _validator;
 
     [SetUp]
     public void Setup()
@@ -40,15 +39,15 @@ public class DeleteTests : BaseTestFixture
 
         _cacheService = new Mock<ICacheService>();
 
-        _handler = new Delete<Department>.QueryHandler(_repository.Object, _cacheService.Object, Cache.Departments);
-        _validator = new Delete<Department>.QueryValidator(_repository.Object);
+        _handler = new Delete.QueryHandler<Department>(_repository.Object, _cacheService.Object);
+        _validator = new Delete.QueryValidator<Department>(_repository.Object);
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new Delete<Department>.Query(IdInDb);
+        var query = new Delete.Query<Department>(IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -61,7 +60,7 @@ public class DeleteTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
     {
         // Arrange
-        var query = new Delete<Department>.Query(IdInDb);
+        var query = new Delete.Query<Department>(IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -77,7 +76,7 @@ public class DeleteTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new Delete<Department>.Query(IdInDb);
+        var query = new Delete.Query<Department>(IdInDb);
         _cancellationToken = new CancellationToken(true);
 
         // Act
@@ -92,7 +91,7 @@ public class DeleteTests : BaseTestFixture
     public void Validator_IfIdInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
-        var query = new Delete<Department>.Query(id);
+        var query = new Delete.Query<Department>(id);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;

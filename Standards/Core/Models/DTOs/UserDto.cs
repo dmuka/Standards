@@ -1,8 +1,6 @@
-﻿using Standards.Core.Models.Interfaces;
-
-namespace Standards.Core.Models.DTOs
+﻿namespace Standards.Core.Models.DTOs
 {
-    public class UserDto : IEntity
+    public class UserDto
     {
         public int Id { get; set; }
         public string UserName { get; set; } = null!;

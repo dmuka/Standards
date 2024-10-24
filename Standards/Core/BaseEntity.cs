@@ -1,10 +1,9 @@
 using System.ComponentModel.DataAnnotations;
 using Standards.Core.Constants;
-using Standards.Core.Models.Interfaces;
 
 namespace Standards.Core;
 
-public abstract class BaseEntity : IEntity<int>
+public abstract class BaseEntity
 {
     public int Id { get; set; }
     [MaxLength(Lengths.EntityName)]

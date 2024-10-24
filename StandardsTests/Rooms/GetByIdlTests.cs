@@ -4,8 +4,6 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
-using Standards.Core.CQRS.Rooms;
-using Standards.Core.CQRS.Sectors;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
@@ -52,7 +50,7 @@ public class GetByIdTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new GetById.Query<Room>(IdInDb, Cache.Housings);
+        var query = new GetById.Query<Room>(IdInDb);
         var expected = _rooms.First(_ => _.Id == IdInDb);
 
         // Act
@@ -67,7 +65,7 @@ public class GetByIdTests : BaseTestFixture
     public void Validator_IfIdIsInvalid_ReturnResult(int id)
     {
         // Arrange
-        var query = new GetById.Query<Room>(id, Cache.Housings);
+        var query = new GetById.Query<Room>(id);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -81,7 +79,7 @@ public class GetByIdTests : BaseTestFixture
     {
         // Arrange
         _cacheMock.Object.Create(Cache.Rooms, Rooms);
-        var query = new GetById.Query<Room>(IdInDb, Cache.Rooms);
+        var query = new GetById.Query<Room>(IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -95,7 +93,7 @@ public class GetByIdTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new GetById.Query<Room>(IdInDb, Cache.Housings);
+        var query = new GetById.Query<Room>(IdInDb);
         _cancellationToken = new CancellationToken(true);
 
         // Act

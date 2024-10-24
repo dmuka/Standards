@@ -1,7 +1,5 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.CQRS.Rooms;
 using Standards.Core.Models.DTOs;
@@ -29,7 +27,7 @@ namespace Standards.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetRoom(int id)
         {
-            var query = new GetById.Query<Room>(id, Cache.Rooms);
+            var query = new GetById.Query<Room>(id);
 
             var result = await sender.Send(query);
 
@@ -49,13 +47,13 @@ namespace Standards.Controllers
 
         [HttpPut]
         [Route("edit")]
-        public void EditRoom(int id, [FromBody] Room room)
+        public async Task<IActionResult> EditRoom([FromBody] RoomDto room)
         {
-            if (room.Id != id) return;
+            var query = new Edit.Query(room);
             
-            repository.Entry(room).State = EntityState.Modified;
+            var result = await sender.Send(query);
 
-            repository.SaveChanges();
+            return Ok(result);
         }
 
 
@@ -63,7 +61,7 @@ namespace Standards.Controllers
         [Route("delete/{id:int}")]
         public async Task<IActionResult> DeleteRoom(int id)
         {
-            var query = new Delete<Room>.Query(id);
+            var query = new Delete.Query<Room>(id);
 
             var result = await sender.Send(query);
 

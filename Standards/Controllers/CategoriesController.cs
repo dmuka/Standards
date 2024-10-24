@@ -1,21 +1,19 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Persons;
-using Standards.Infrastructure.Data.Repositories.Interfaces;
 
 namespace Standards.Controllers;
 
 [Route("api/persons/categories")]
 [ApiController]
-public class CategoriesController(IRepository repository, ISender sender) : ControllerBase
+public class CategoriesController(ISender sender) : ControllerBase
 {
     [HttpGet]
     [Route("list")]
     public async Task<IActionResult> GetCategories()
     {
-        var query = new GetAllBaseEntity.Query<Category>(Cache.Categories);
+        var query = new GetAllBaseEntity.Query<Category>();
 
         var result = await sender.Send(query);
 
@@ -26,7 +24,7 @@ public class CategoriesController(IRepository repository, ISender sender) : Cont
     [Route("{id:int}")]
     public async Task<IActionResult> GetCategory(int id)
     {
-        var query = new GetById.Query<Category>(id, Cache.Categories);
+        var query = new GetById.Query<Category>(id);
 
         var result = await sender.Send(query);
 
@@ -37,7 +35,7 @@ public class CategoriesController(IRepository repository, ISender sender) : Cont
     [Route("add")]
     public async Task<IActionResult> CreateCategory([FromBody] Category category)
     {
-        var query = new CreateBaseEntity<Category>.Query(category);
+        var query = new CreateBaseEntity.Query<Category>(category);
 
         var result = await sender.Send(query);
 
@@ -48,7 +46,7 @@ public class CategoriesController(IRepository repository, ISender sender) : Cont
     [Route("edit")]
     public async Task<IActionResult> EditCategory(int id, [FromBody] Category category)
     {
-        var query = new EditBaseEntity<Category>.Query(category);
+        var query = new EditBaseEntity.Query<Category>(category);
 
         var result = await sender.Send(query);
 
@@ -59,7 +57,7 @@ public class CategoriesController(IRepository repository, ISender sender) : Cont
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteCategory(int id)
     {
-        var query = new Delete<Category>.Query(id);
+        var query = new Delete.Query<Category>(id);
 
         var result = await sender.Send(query);
 

@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Standards.Core.Models.Interfaces;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 using Standards.Infrastructure.Validators;
@@ -8,19 +9,18 @@ namespace Standards.Core.CQRS.Common.GenericCRUD;
 
 public class GetById
 {
-    public class Query<T>(int id, string cacheKey) : IRequest<T> where T : BaseEntity
+    public class Query<T>(int id) : IRequest<T> where T : BaseEntity, IEntity<int>
     {
         public int Id { get; } = id;
-        public string CacheKey { get; } = cacheKey;
     }
 
     public class QueryHandler<T>(
         IRepository repository, 
-        ICacheService cacheService) : IRequestHandler<Query<T>, T> where T : BaseEntity
+        ICacheService cacheService) : IRequestHandler<Query<T>, T> where T : BaseEntity, IEntity<int>
     {
         public async Task<T> Handle(Query<T> request, CancellationToken cancellationToken)
         {
-            var entity = cacheService.GetById<T>(request.CacheKey, request.Id);
+            var entity = cacheService.GetById<T>(T.GetCacheKey(), request.Id);
 
             if (!cancellationToken.IsCancellationRequested && entity is not null) return entity;
             
@@ -30,7 +30,7 @@ public class GetById
         }
     }
 
-    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : BaseEntity
+    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : BaseEntity, IEntity<int>
     {
         public QueryValidator(IRepository repository)
         {

@@ -1,6 +1,6 @@
 using MediatR;
 using Standards.Core.CQRS.Common.Constants;
-using Standards.Core.Models.Persons;
+using Standards.Core.Models.Interfaces;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
@@ -8,15 +8,14 @@ namespace Standards.Core.CQRS.Common.GenericCRUD;
 
 public class GetAllBaseEntity
 {
-    public class Query<T>(string cacheKey) : IRequest<IList<T>> where T : BaseEntity
+    public class Query<T> : IRequest<IList<T>> where T : BaseEntity, IEntity<int>
     {
-        public string CacheKey { get; } = cacheKey;
     }
 
     public class QueryHandler<T>(
         IRepository repository, 
         ICacheService cache, 
-        IConfigService configService) : IRequestHandler<Query<T>, IList<T>> where T : BaseEntity, new()
+        IConfigService configService) : IRequestHandler<Query<T>, IList<T>> where T : BaseEntity, IEntity<int>, new()
     {
         public async Task<IList<T>> Handle(Query<T> request, CancellationToken cancellationToken)
         {
@@ -24,7 +23,7 @@ public class GetAllBaseEntity
             var slidingExpiration = configService.GetValue<int>(Cache.SlidingExpirationConfigurationSectionKey);
             
             var entities = await cache.GetOrCreateAsync<T>(
-                request.CacheKey,
+                T.GetCacheKey(),
                 async (token) =>
                 {
                     var result = await repository.GetListAsync<T>(token);
