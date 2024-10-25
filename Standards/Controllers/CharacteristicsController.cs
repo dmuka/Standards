@@ -2,16 +2,17 @@
 using Microsoft.AspNetCore.Mvc;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Persons;
+using Standards.Core.Models.Standards;
 
 namespace Standards.Controllers;
 
-[Route("api/persons/categories")]
+[Route("api/standards/characteristics")]
 [ApiController]
-public class CategoriesController(ISender sender) : ControllerBase
+public class CharacteristicsController(ISender sender) : ControllerBase
 {
     [HttpGet]
     [Route("list")]
-    public async Task<IActionResult> GetCategories()
+    public async Task<IActionResult> GetCharacteristics()
     {
         var query = new GetAllBaseEntity.Query<Category>();
 
@@ -22,9 +23,9 @@ public class CategoriesController(ISender sender) : ControllerBase
 
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<IActionResult> GetCategory(int id)
+    public async Task<IActionResult> GetCharacteristic(int id)
     {
-        var query = new GetById.Query<Category>(id);
+        var query = new GetById.Query<Characteristic>(id);
 
         var result = await sender.Send(query);
 
@@ -33,9 +34,9 @@ public class CategoriesController(ISender sender) : ControllerBase
 
     [HttpPost]
     [Route("add")]
-    public async Task<IActionResult> CreateCategory([FromBody] Category category)
+    public async Task<IActionResult> CreateCharacteristic([FromBody] Characteristic characteristic)
     {
-        var query = new CreateBaseEntity.Query<Category>(category);
+        var query = new CreateBaseEntity.Query<Characteristic>(characteristic);
 
         var result = await sender.Send(query);
 
@@ -44,9 +45,9 @@ public class CategoriesController(ISender sender) : ControllerBase
 
     [HttpPut]
     [Route("edit")]
-    public async Task<IActionResult> EditCategory([FromBody] Category category)
+    public async Task<IActionResult> EditCharacteristic([FromBody] Characteristic characteristic)
     {
-        var query = new EditBaseEntity.Query<Category>(category);
+        var query = new EditBaseEntity.Query<Characteristic>(characteristic);
 
         var result = await sender.Send(query);
 
@@ -55,9 +56,9 @@ public class CategoriesController(ISender sender) : ControllerBase
 
     [HttpDelete]
     [Route("delete/{id:int}")]
-    public async Task<IActionResult> DeleteCategory(int id)
+    public async Task<IActionResult> DeleteCharacteristic(int id)
     {
-        var query = new Delete.Query<Category>(id);
+        var query = new Delete.Query<Characteristic>(id);
 
         var result = await sender.Send(query);
 
