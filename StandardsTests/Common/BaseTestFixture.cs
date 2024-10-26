@@ -1,7 +1,10 @@
+using Standards.Core.Models;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Core.Models.Persons;
+using Standards.Core.Models.Services;
+using Standards.Core.Models.Standards;
 using Standards.Core.Models.Users;
 using Standards.CQRS.Tests.Constants;
 
@@ -32,6 +35,18 @@ public abstract class BaseTestFixture
     protected static List<Department> Departments { get; private set; }
     
     protected static List<DepartmentDto> DepartmentDtos { get; private set; }
+    
+    protected static List<Grade> Grades { get; private set; }
+    
+    protected static List<Quantity> Quantities { get; private set; }
+    
+    protected static List<Unit> Units { get; private set; }
+    
+    protected static List<Characteristic> Characteristics { get; private set; }
+    
+    protected static List<CharacteristicDto> CharacteristicsDtos { get; private set; }
+    
+    protected static List<Standard> Standards { get; private set; }
 
     protected static IList<Housing> Housings { get; private set; }
 
@@ -786,6 +801,220 @@ public abstract class BaseTestFixture
                 Comments = "Comments 3",
                 DepartmentIds = Housings[2].Departments.Select(d => d.Id).ToList(),
                 RoomIds = Housings[2].Rooms.Select(r => r.Id).ToList()
+            }
+        ];
+
+        Grades =
+        [
+            new Grade
+            {
+                Id = 1,
+                Name = "GradeName1",
+                ShortName = "GradeShortName1",
+                Comments = "Comments1"
+            },
+            new Grade
+            { 
+                Id = 2,
+                Name = "GradeName2",
+                ShortName = "GradeShortName2",
+                Comments = "Comments2"
+            },
+            new Grade
+            {
+                Id = 3,
+                Name = "GradeName3",
+                ShortName = "GradeShortName3",
+                Comments = "Comments3"
+            }
+        ];
+
+        Quantities =
+        [
+            new Quantity
+            {
+                Id = 1,
+                Name = "QuantityName1"
+            },
+            new Quantity
+            { 
+                Id = 2,
+                Name = "QuantityName2"
+            },
+            new Quantity
+            {
+                Id = 3,
+                Name = "QuantityName3"
+            }
+        ];
+
+        Units =
+        [
+            new Unit
+            {
+                Id = 1,
+                Name = "UnitName1",
+                Quantity = Quantities[0],
+                RuName = "UnitRuName1",
+                Symbol = "UnitSymbol1",
+                RuSymbol = "UnitRuSymbol1"
+            },
+            new Unit
+            {
+                Id = 2,
+                Name = "UnitName2",
+                Quantity = Quantities[1],
+                RuName = "UnitRuName2",
+                Symbol = "UnitSymbol2",
+                RuSymbol = "UnitRuSymbol2"
+            },
+            new Unit
+            {
+                Id = 3,
+                Name = "UnitName3",
+                Quantity = Quantities[2],
+                RuName = "UnitRuName3",
+                Symbol = "UnitSymbol3",
+                RuSymbol = "UnitRuSymbol3"
+            }
+        ];
+
+        Standards =
+        [
+            new Standard
+            {
+                Id = 1,
+                Name = "StandardName1",
+                ShortName = "StandardShortName1",
+                Services = new List<Service>(),
+                CalibrationInterval = 24,
+                VerificationInterval = 12,
+                ImagePath = null,
+                Responsible = Persons[0],
+                Workplaces = [ Workplaces[0], Workplaces[1] ],
+                Comments = "Comments1"
+            },
+            new Standard
+            {
+                Id = 2,
+                Name = "StandardName2",
+                ShortName = "StandardShortName2",
+                Services = new List<Service>(),
+                CalibrationInterval = 36,
+                VerificationInterval = 12,
+                ImagePath = null,
+                Responsible = Persons[1],
+                Workplaces = [ Workplaces[2], Workplaces[3] ],
+                Comments = "Comments2"
+            },
+            new Standard
+            {
+                Id = 3,
+                Name = "StandardName3",
+                ShortName = "StandardShortName3",
+                Services = new List<Service>(),
+                CalibrationInterval = 12,
+                VerificationInterval = 6,
+                ImagePath = null,
+                Responsible = Persons[2],
+                Workplaces = [ Workplaces[4], Workplaces[5] ],
+                Comments = "Comments3"
+            }
+        ];
+
+        Characteristics = 
+        [
+            new Characteristic
+            {
+                Id = 1,
+                Name = "CharacteristicName1",
+                ShortName = "CharacteristicShortName1",
+                Comments = "Comments1",
+                Grade = Grades[0],
+                GradeValue = 3d,
+                GradeValueStart = 0d,
+                GradeValueEnd = 7d,
+                RangeStart = -10d,
+                RangeEnd = 10d,
+                Unit = Units[0]
+            },
+            new Characteristic
+            {
+                Id = 2,
+                Name = "CharacteristicName2",
+                ShortName = "CharacteristicShortName2",
+                Comments = "Comments2",
+                Grade = Grades[1],
+                GradeValue = 1d,
+                GradeValueStart = 0d,
+                GradeValueEnd = 4d,
+                RangeStart = -5d,
+                RangeEnd = 10d,
+                Unit = Units[1]
+            },
+            new Characteristic
+            {
+                Id = 3,
+                Name = "CharacteristicName3",
+                ShortName = "CharacteristicShortName3",
+                Comments = "Comments3",
+                Grade = Grades[2],
+                GradeValue = 4d,
+                GradeValueStart = 0d,
+                GradeValueEnd = 10d,
+                RangeStart = 0d,
+                RangeEnd = 10d,
+                Unit = Units[2]
+            }
+        ];
+        
+        Standards[0].Characteristics.Add(Characteristics[0]);
+        Standards[1].Characteristics.Add(Characteristics[1]);
+        Standards[2].Characteristics.Add(Characteristics[2]);
+
+        CharacteristicsDtos = 
+        [
+            new CharacteristicDto
+            {
+                Id = 1,
+                Name = "CharacteristicName1",
+                ShortName = "CharacteristicShortName1",
+                Comments = "Comments1",
+                GradeId = Grades[0].Id,
+                GradeValue = 3d,
+                GradeValueStart = 0d,
+                GradeValueEnd = 7d,
+                RangeStart = -10d,
+                RangeEnd = 10d,
+                UnitId = Units[0].Id
+            },
+            new CharacteristicDto
+            {
+                Id = 2,
+                Name = "CharacteristicName2",
+                ShortName = "CharacteristicShortName2",
+                Comments = "Comments2",
+                GradeId = Grades[1].Id,
+                GradeValue = 1d,
+                GradeValueStart = 0d,
+                GradeValueEnd = 4d,
+                RangeStart = -5d,
+                RangeEnd = 10d,
+                UnitId = Units[1].Id
+            },
+            new CharacteristicDto
+            {
+                Id = 3,
+                Name = "CharacteristicName3",
+                ShortName = "CharacteristicShortName3",
+                Comments = "Comments3",
+                GradeId = Grades[2].Id,
+                GradeValue = 4d,
+                GradeValueStart = 0d,
+                GradeValueEnd = 10d,
+                RangeStart = 0d,
+                RangeEnd = 10d,
+                UnitId = Units[2].Id
             }
         ];
     }

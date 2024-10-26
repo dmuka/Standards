@@ -74,11 +74,11 @@ public class Create
                         .NotEmpty()
                         .Length(Lengths.ShortName);
 
-                    dto.RuleFor(characteristic => characteristic.RangeStart)
-                        .NotEmpty();
-
-                    dto.RuleFor(characteristic => characteristic.RangeEnd)
-                        .NotEmpty();
+                    // dto.RuleFor(characteristic => characteristic.RangeStart)
+                    //     .NotEmpty();
+                    //
+                    // dto.RuleFor(characteristic => characteristic.RangeEnd)
+                    //     .NotEmpty();
 
                     dto.RuleFor(characteristic => characteristic.UnitId)
                         .GreaterThan(default(int))
@@ -88,14 +88,14 @@ public class Create
                         .GreaterThan(default(int))
                         .SetValidator(new IdValidator<Grade>(repository));
 
-                    dto.RuleFor(characteristic => characteristic.GradeValue)
-                        .NotEmpty();
-
-                    dto.RuleFor(characteristic => characteristic.GradeValueStart)
-                        .NotEmpty();
-
-                    dto.RuleFor(characteristic => characteristic.GradeValueEnd)
-                        .NotEmpty();
+                    // dto.RuleFor(characteristic => characteristic.GradeValue)
+                    //     .NotEmpty();
+                    //
+                    // dto.RuleFor(characteristic => characteristic.GradeValueStart)
+                    //     .NotEmpty();
+                    //
+                    // dto.RuleFor(characteristic => characteristic.GradeValueEnd)
+                    //     .NotEmpty();
 
                     dto.RuleFor(characteristic => characteristic.StandardId)
                         .GreaterThan(default(int))
