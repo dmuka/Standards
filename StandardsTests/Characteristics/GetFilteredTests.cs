@@ -5,8 +5,8 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models;
-using Standards.Core.Models.Departments;
 using Standards.Core.Models.Housings;
+using Standards.Core.Models.Standards;
 using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Filter.Implementations;
@@ -21,52 +21,52 @@ namespace Standards.CQRS.Tests.Characteristics
         private const string SearchQuery = "Name"; 
         
         private QueryParameters _parameters;
-        private IList<Department> _departments;
-        private IQueryBuilder<Department> _queryBuilder;
+        private IList<Characteristic> _characteristics;
+        private IQueryBuilder<Characteristic> _queryBuilder;
 
         private Mock<IRepository> _repositoryMock;
         private CancellationToken _cancellationToken;
-        private Mock<IQueryBuilder<Department>> _queryBuilderMock;
-        private Mock<IQueryableWrapper<Department>> _queryWrapperMock;
+        private Mock<IQueryBuilder<Characteristic>> _queryBuilderMock;
+        private Mock<IQueryableWrapper<Characteristic>> _queryWrapperMock;
         private Mock<IQueryable<Housing>> _queryMock;
 
-        private IRequestHandler<GetFiltered<Department>.Query, PaginatedListModel<Department>> _handler;
-        private IValidator<GetFiltered<Department>.Query> _validator;
+        private IRequestHandler<GetFiltered<Characteristic>.Query, PaginatedListModel<Characteristic>> _handler;
+        private IValidator<GetFiltered<Characteristic>.Query> _validator;
 
         [SetUp]
         public void Setup()
         {
-            _departments = Departments;
+            _characteristics = Characteristics;
 
             _parameters = new QueryParameters(
                 searchString: string.Empty, itemsOnPage: 10, pageNumber: 1);
 
             _repositoryMock = new Mock<IRepository>();
 
-            _queryBuilder = new QueryBuilder<Department>(_repositoryMock.Object);
+            _queryBuilder = new QueryBuilder<Characteristic>(_repositoryMock.Object);
             
             _cancellationToken = new CancellationToken();
 
-            _queryBuilderMock = new Mock<IQueryBuilder<Department>>();
+            _queryBuilderMock = new Mock<IQueryBuilder<Characteristic>>();
 
-             _queryWrapperMock = new Mock<IQueryableWrapper<Department>>();
-             _queryWrapperMock.Setup(m => m.ToListAsync(It.IsAny<IQueryable<Department>>(), _cancellationToken))
-                   .Returns(Task.FromResult(_departments));
+             _queryWrapperMock = new Mock<IQueryableWrapper<Characteristic>>();
+             _queryWrapperMock.Setup(m => m.ToListAsync(It.IsAny<IQueryable<Characteristic>>(), _cancellationToken))
+                   .Returns(Task.FromResult(_characteristics));
 
             _queryMock = new Mock<IQueryable<Housing>>();
 
-            _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_departments.AsQueryable());
+            _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_characteristics.AsQueryable());
 
-            _handler = new GetFiltered<Department>.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
-            _validator = new GetFiltered<Department>.QueryValidator();
+            _handler = new GetFiltered<Characteristic>.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
+            _validator = new GetFiltered<Characteristic>.QueryValidator();
         }
 
         [Test]
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new GetFiltered<Department>.Query(_parameters);
-            var expected = new PaginatedListModel<Department>(_departments, 1, 10);
+            var query = new GetFiltered<Characteristic>.Query(_parameters);
+            var expected = new PaginatedListModel<Characteristic>(_characteristics, 1, 10);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -79,7 +79,7 @@ namespace Standards.CQRS.Tests.Characteristics
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new GetFiltered<Department>.Query(_parameters);
+            var query = new GetFiltered<Characteristic>.Query(_parameters);
             _cancellationToken = new CancellationToken(true);
 
             // Act
@@ -96,8 +96,8 @@ namespace Standards.CQRS.Tests.Characteristics
             _parameters.ItemsOnPage = default;
             _parameters.PageNumber = default;
 
-            var query = new GetFiltered<Department>.Query(_parameters);
-            var expected = new PaginatedListModel<Department>(_departments, 1, 10);
+            var query = new GetFiltered<Characteristic>.Query(_parameters);
+            var expected = new PaginatedListModel<Characteristic>(_characteristics, 1, 10);
 
             // Act
             var result = _handler.Handle(query, _cancellationToken).Result;
@@ -112,7 +112,7 @@ namespace Standards.CQRS.Tests.Characteristics
             // Arrange
             _parameters = null;
 
-            var query = new GetFiltered<Department>.Query(_parameters);
+            var query = new GetFiltered<Characteristic>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -127,7 +127,7 @@ namespace Standards.CQRS.Tests.Characteristics
             // Arrange
             _parameters.SearchString = null;
 
-            var query = new GetFiltered<Department>.Query(_parameters);
+            var query = new GetFiltered<Characteristic>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -142,7 +142,7 @@ namespace Standards.CQRS.Tests.Characteristics
             // Arrange
             _parameters.SearchBy = null;
 
-            var query = new GetFiltered<Department>.Query(_parameters);
+            var query = new GetFiltered<Characteristic>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -157,7 +157,7 @@ namespace Standards.CQRS.Tests.Characteristics
             // Arrange
             _parameters.SortBy = null;
 
-            var query = new GetFiltered<Department>.Query(_parameters);
+            var query = new GetFiltered<Characteristic>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -172,7 +172,7 @@ namespace Standards.CQRS.Tests.Characteristics
             // Arrange
             _parameters.ItemsOnPage = itemsPerPage;
 
-            var query = new GetFiltered<Department>.Query(_parameters);
+            var query = new GetFiltered<Characteristic>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);
@@ -187,7 +187,7 @@ namespace Standards.CQRS.Tests.Characteristics
             // Arrange
             _parameters.PageNumber = pageNumber;
 
-            var query = new GetFiltered<Department>.Query(_parameters);
+            var query = new GetFiltered<Characteristic>.Query(_parameters);
             
             // Act
             var result = _validator.TestValidate(query);

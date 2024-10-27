@@ -936,7 +936,8 @@ public abstract class BaseTestFixture
                 GradeValueEnd = 7d,
                 RangeStart = -10d,
                 RangeEnd = 10d,
-                Unit = Units[0]
+                Unit = Units[0],
+                Standard = Standards[0]
             },
             new Characteristic
             {
@@ -950,7 +951,8 @@ public abstract class BaseTestFixture
                 GradeValueEnd = 4d,
                 RangeStart = -5d,
                 RangeEnd = 10d,
-                Unit = Units[1]
+                Unit = Units[1],
+                Standard = Standards[1]
             },
             new Characteristic
             {
@@ -964,7 +966,8 @@ public abstract class BaseTestFixture
                 GradeValueEnd = 10d,
                 RangeStart = 0d,
                 RangeEnd = 10d,
-                Unit = Units[2]
+                Unit = Units[2],
+                Standard = Standards[2]
             }
         ];
         
@@ -986,7 +989,8 @@ public abstract class BaseTestFixture
                 GradeValueEnd = 7d,
                 RangeStart = -10d,
                 RangeEnd = 10d,
-                UnitId = Units[0].Id
+                UnitId = Units[0].Id,
+                StandardId = Standards[0].Id
             },
             new CharacteristicDto
             {
@@ -1000,7 +1004,8 @@ public abstract class BaseTestFixture
                 GradeValueEnd = 4d,
                 RangeStart = -5d,
                 RangeEnd = 10d,
-                UnitId = Units[1].Id
+                UnitId = Units[1].Id,
+                StandardId = Standards[1].Id
             },
             new CharacteristicDto
             {
@@ -1014,7 +1019,8 @@ public abstract class BaseTestFixture
                 GradeValueEnd = 10d,
                 RangeStart = 0d,
                 RangeEnd = 10d,
-                UnitId = Units[2].Id
+                UnitId = Units[2].Id,
+                StandardId = Standards[2].Id
             }
         ];
     }

@@ -3,9 +3,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Standards.Core.CQRS.Common.Constants;
-using Standards.Core.CQRS.Departments;
-using Standards.Core.Models.Departments;
+using Standards.Core.CQRS.Characteristics;
 using Standards.Core.Models.DTOs;
+using Standards.Core.Models.Standards;
 using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
@@ -18,21 +18,21 @@ namespace Standards.CQRS.Tests.Characteristics
         private const string AbsoluteExpirationPath = "Cache:AbsoluteExpiration";
         private const string SlidingExpirationPath = "Cache:SlidingExpiration";
         
-        private IList<Department> _departments;
-        private List<DepartmentDto> _dtos;
+        private IList<Characteristic> _characteristics;
+        private List<CharacteristicDto> _dtos;
         
         private Mock<IRepository> _repository;
         private CancellationToken _cancellationToken;
         private Mock<ICacheService> _cacheService;
         private Mock<IConfigService> _configService;
         
-        private IRequestHandler<GetAll.Query, IList<DepartmentDto>> _handler;
+        private IRequestHandler<GetAll.Query, IList<CharacteristicDto>> _handler;
 
         [SetUp]
         public void Setup()
         {
-            _dtos = DepartmentDtos;
-            _departments = Departments;
+            _dtos = CharacteristicsDtos;
+            _characteristics = Characteristics;
 
             _cancellationToken = new CancellationToken();
 
@@ -41,12 +41,12 @@ namespace Standards.CQRS.Tests.Characteristics
             _configService.Setup(config => config.GetValue<int>(SlidingExpirationPath)).Returns(2);
 
             _repository = new Mock<IRepository>();
-            _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Department>,IIncludableQueryable<Department,object>>>(), _cancellationToken))
-                .Returns(Task.FromResult(_departments));
+            _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Characteristic>,IIncludableQueryable<Characteristic,object>>>(), _cancellationToken))
+                .Returns(Task.FromResult(_characteristics));
 
             _cacheService = new Mock<ICacheService>();
-            _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Departments, It.IsAny<Func<CancellationToken, Task<IList<Department>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
-                .Returns(Task.FromResult(_departments));
+            _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Characteristics, It.IsAny<Func<CancellationToken, Task<IList<Characteristic>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+                .Returns(Task.FromResult(_characteristics));
 
             _handler = new GetAll.QueryHandler(_repository.Object, _cacheService.Object, _configService.Object); 
         }

@@ -2,10 +2,10 @@
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
-using Standards.Core.CQRS.Departments;
+using Standards.Core.CQRS.Characteristics;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
-using Standards.Core.Models.Housings;
+using Standards.Core.Models.Standards;
 using Standards.CQRS.Tests.Common;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
@@ -19,7 +19,7 @@ namespace Standards.CQRS.Tests.Characteristics
         private const int ValidId = 1;
         private const int IdNotInDb = 2;
 
-        private DepartmentDto _department;
+        private CharacteristicDto _characteristic;
 
         private Mock<IRepository> _repositoryMock;
         private CancellationToken _cancellationToken;
@@ -31,13 +31,13 @@ namespace Standards.CQRS.Tests.Characteristics
         [SetUp]
         public void Setup()
         {
-            _department = DepartmentDtos[0];
+            _characteristic = CharacteristicsDtos[0];
 
             _cancellationToken = new CancellationToken();
 
             _repositoryMock = new Mock<IRepository>();
-            _repositoryMock.Setup(_ => _.GetByIdAsync<DepartmentDto>(ValidId, _cancellationToken)).Returns(Task.FromResult(_department));
-            _repositoryMock.Setup(_ => _.Update(_department));
+            _repositoryMock.Setup(_ => _.GetByIdAsync<CharacteristicDto>(ValidId, _cancellationToken)).Returns(Task.FromResult(_characteristic));
+            _repositoryMock.Setup(_ => _.Update(_characteristic));
             _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
             _cacheService = new Mock<ICacheService>();
@@ -50,7 +50,7 @@ namespace Standards.CQRS.Tests.Characteristics
         public void Handler_IfAllDataIsValid_ReturnResult()
         {
             // Arrange
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
             var expected = 1;
 
             // Act
@@ -64,15 +64,16 @@ namespace Standards.CQRS.Tests.Characteristics
         public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
         {
             // Arrange
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
 
             // Act
             _handler.Handle(query, _cancellationToken);
 
             // Assert
-            _repositoryMock.Verify(repository => repository.GetQueryable<Housing>(), Times.Once);
-            _repositoryMock.Verify(repository => repository.GetQueryable<Sector>(), Times.Once);
-            _repositoryMock.Verify(repository => repository.Update(It.IsAny<Department>()), Times.Once);
+            _repositoryMock.Verify(repository => repository.GetByIdAsync<Standard>(ValidId, _cancellationToken), Times.Once);
+            _repositoryMock.Verify(repository => repository.GetByIdAsync<Standards.Core.Models.Unit>(ValidId, _cancellationToken), Times.Once);
+            _repositoryMock.Verify(repository => repository.GetByIdAsync<Grade>(ValidId, _cancellationToken), Times.Once);
+            _repositoryMock.Verify(repository => repository.Update(It.IsAny<Characteristic>()), Times.Once);
             _repositoryMock.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
             _cacheService.Verify(cache => cache.Remove(It.IsAny<string>()), Times.Once);
         }
@@ -81,7 +82,7 @@ namespace Standards.CQRS.Tests.Characteristics
         public void Handler_IfCancellationTokenIsActive_ReturnNull()
         {
             // Arrange
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
             _cancellationToken = new CancellationToken(true);
             _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
 
@@ -93,18 +94,18 @@ namespace Standards.CQRS.Tests.Characteristics
         }
 
         [Test]
-        public void Validator_IfHousingDtoIsNull_ShouldHaveValidationError()
+        public void Validator_IfCharacteristicDtoIsNull_ShouldHaveValidationError()
         {
             // Arrange
-            _department = null;
+            _characteristic = null;
 
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto);
+            result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto);
         }
 
         [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
@@ -112,105 +113,123 @@ namespace Standards.CQRS.Tests.Characteristics
         public void Validator_IfIdIsInvalid_ShouldHaveValidationError(int id)
         {
             // Arrange
-            _department.Id = default;
+            _characteristic.Id = id;
 
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Id);
+            result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.Id);
         }
 
         [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
         {
             // Arrange
-            _department.Name = name;
+            _characteristic.Name = name;
 
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
+            result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.Name);
         }
 
         [Test]
         public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
         {
             // Arrange
-            _department.Name = Cases.Length201;
+            _characteristic.Name = Cases.Length201;
 
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
+            result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.Name);
         }
 
         [Test, TestCaseSource(nameof(NullOrEmptyString))]
         public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
         {
             // Arrange
-            _department.ShortName = shortName;
+            _characteristic.ShortName = shortName;
 
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.ShortName);
+            result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.ShortName);
         }
 
         [Test]
         public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
         {
             // Arrange
-            _department.Name = Cases.Length101;
+            _characteristic.Name = Cases.Length101;
 
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
+            result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.Name);
         }
 
-        [Test, TestCaseSource(nameof(NullOrEmptyString))]
-        public void Validator_IfHousingIdsIsEmpty_ShouldHaveValidationError(string? address)
+        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+        [TestCase(IdNotInDb)]
+        public void Validator_IfGradeIdIsInvalid_ShouldHaveValidationError(int gradeId)
         {
             // Arrange
-            _department.HousingIds = new List<int>();
+            _characteristic.GradeId = gradeId;
 
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
+            result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.GradeId);
         }
 
-        [Test]
-        public void Validator_IfSectorIdsIsEmpty_ShouldHaveValidationError()
+        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+        [TestCase(IdNotInDb)]
+        public void Validator_IfStandardIdIsInvalid_ShouldHaveValidationError(int standardId)
         {
             // Arrange
-            _department.SectorIds = new List<int>();
+            _characteristic.StandardId = standardId;
 
-            var query = new Edit.Query(_department);
+            var query = new Edit.Query(_characteristic);
 
             // Act
             var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.SectorIds);
+            result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.StandardId);
+        }
+
+        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+        [TestCase(IdNotInDb)]
+        public void Validator_IfUnitdIsInvalid_ShouldHaveValidationError(int unitId)
+        {
+            // Arrange
+            _characteristic.UnitId = unitId;
+
+            var query = new Edit.Query(_characteristic);
+
+            // Act
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+            // Assert
+            result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.UnitId);
         }
     }
 }

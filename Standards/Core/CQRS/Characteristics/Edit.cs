@@ -64,6 +64,10 @@ namespace Standards.Core.CQRS.Characteristics
                     .NotEmpty()
                     .ChildRules(dto =>
                     {
+                        dto.RuleFor(characteristic => characteristic.Id)
+                            .GreaterThan(default(int))
+                            .SetValidator(new IdValidator<Unit>(repository));
+                        
                         dto.RuleFor(characteristic => characteristic.Name)
                             .NotEmpty()
                             .Length(Lengths.EntityName);
