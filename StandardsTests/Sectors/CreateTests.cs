@@ -95,7 +95,7 @@ public class CreateTests : BaseTestFixture
         var query = new Create.Query(_sectorDto);
 
         // Act
-        var result = _validator.TestValidate(query);
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.SectorDto);

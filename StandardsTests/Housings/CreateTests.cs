@@ -93,7 +93,7 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Create.Query(_housing);
 
             // Act
-            var result = _validator.TestValidate(query);
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
@@ -108,7 +108,7 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Create.Query(_housing);
 
             // Act
-            var result = _validator.TestValidate(query);
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
@@ -123,7 +123,7 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Create.Query(_housing);
 
             // Act
-            var result = _validator.TestValidate(query);
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.ShortName);
@@ -138,7 +138,7 @@ namespace Standards.CQRS.Tests.Housings
             var query = new Create.Query(_housing);
 
             // Act
-            var result = _validator.TestValidate(query);
+            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
             // Assert
             result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
