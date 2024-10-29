@@ -2,6 +2,7 @@ using Standards.Core.Models;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
+using Standards.Core.Models.MetrologyControl;
 using Standards.Core.Models.Persons;
 using Standards.Core.Models.Services;
 using Standards.Core.Models.Standards;
@@ -47,6 +48,8 @@ public abstract class BaseTestFixture
     protected static List<CharacteristicDto> CharacteristicsDtos { get; private set; }
     
     protected static List<Standard> Standards { get; private set; }
+    
+    protected static List<Place> Places { get; private set; }
 
     protected static IList<Housing> Housings { get; private set; }
 
@@ -919,6 +922,52 @@ public abstract class BaseTestFixture
                 Responsible = Persons[2],
                 Workplaces = [ Workplaces[4], Workplaces[5] ],
                 Comments = "Comments3"
+            }
+        ];
+
+        Places =
+        [
+            new Place
+            {
+                Id = 1,
+                Name = "PlaceName1",
+                ShortName = "PlaceShortName1",
+                Comments = "Comments1"
+            },
+            new Place
+            { 
+                Id = 2,
+                Name = "PlaceName2",
+                ShortName = "PlaceShortName2",
+                Comments = "Comments2"
+            },
+            new Place
+            {
+                Id = 3,
+                Name = "PlaceName3",
+                ShortName = "PlaceShortName3",
+                Comments = "Comments3"
+            },
+            new Place
+            {
+                Id = 4,
+                Name = "PlaceName4",
+                ShortName = "PlaceShortName4",
+                Comments = "Comments4"
+            },
+            new Place
+            { 
+                Id = 5,
+                Name = "PlaceName5",
+                ShortName = "PlaceShortName5",
+                Comments = "Comments5"
+            },
+            new Place
+            {
+                Id = 6,
+                Name = "PlaceName6",
+                ShortName = "PlaceShortName6",
+                Comments = "Comments6"
             }
         ];
 
