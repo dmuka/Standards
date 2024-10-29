@@ -5,14 +5,14 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models;
-using Standards.Core.Models.MetrologyControl;
+using Standards.Core.Models.Persons;
 using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.QueryableWrapper.Interface;
 
-namespace Standards.CQRS.Tests.BaseEntities.Places;
+namespace Standards.CQRS.Tests.BaseEntities.Positions;
 
 [TestFixture]
 public class GetFilteredTests : BaseTestFixture
@@ -20,52 +20,52 @@ public class GetFilteredTests : BaseTestFixture
     private const string SearchQuery = "Name"; 
         
     private QueryParameters _parameters;
-    private IList<Place> _places;
-    private IQueryBuilder<Place> _queryBuilder;
+    private IList<Position> _positions;
+    private IQueryBuilder<Position> _queryBuilder;
 
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
-    private Mock<IQueryBuilder<Place>> _queryBuilderMock;
-    private Mock<IQueryableWrapper<Place>> _queryWrapperMock;
-    private Mock<IQueryable<Place>> _queryMock;
+    private Mock<IQueryBuilder<Position>> _queryBuilderMock;
+    private Mock<IQueryableWrapper<Position>> _queryWrapperMock;
+    private Mock<IQueryable<Position>> _queryMock;
 
-    private IRequestHandler<GetFiltered<Place>.Query, PaginatedListModel<Place>> _handler;
-    private IValidator<GetFiltered<Place>.Query> _validator;
+    private IRequestHandler<GetFiltered<Position>.Query, PaginatedListModel<Position>> _handler;
+    private IValidator<GetFiltered<Position>.Query> _validator;
 
     [SetUp]
     public void Setup()
     {
-        _places = Places;
+        _positions = Positions;
 
         _parameters = new QueryParameters(
             searchString: string.Empty, itemsOnPage: 10, pageNumber: 1);
 
         _repositoryMock = new Mock<IRepository>();
 
-        _queryBuilder = new QueryBuilder<Place>(_repositoryMock.Object);
+        _queryBuilder = new QueryBuilder<Position>(_repositoryMock.Object);
             
         _cancellationToken = new CancellationToken();
 
-        _queryBuilderMock = new Mock<IQueryBuilder<Place>>();
+        _queryBuilderMock = new Mock<IQueryBuilder<Position>>();
 
-        _queryWrapperMock = new Mock<IQueryableWrapper<Place>>();
-        _queryWrapperMock.Setup(m => m.ToListAsync(It.IsAny<IQueryable<Place>>(), _cancellationToken))
-            .Returns(Task.FromResult(_places));
+        _queryWrapperMock = new Mock<IQueryableWrapper<Position>>();
+        _queryWrapperMock.Setup(m => m.ToListAsync(It.IsAny<IQueryable<Position>>(), _cancellationToken))
+            .Returns(Task.FromResult(_positions));
 
-        _queryMock = new Mock<IQueryable<Place>>();
+        _queryMock = new Mock<IQueryable<Position>>();
 
-        _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_places.AsQueryable());
+        _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_positions.AsQueryable());
 
-        _handler = new GetFiltered<Place>.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
-        _validator = new GetFiltered<Place>.QueryValidator();
+        _handler = new GetFiltered<Position>.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
+        _validator = new GetFiltered<Position>.QueryValidator();
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new GetFiltered<Place>.Query(_parameters);
-        var expected = new PaginatedListModel<Place>(_places, 1, 10);
+        var query = new GetFiltered<Position>.Query(_parameters);
+        var expected = new PaginatedListModel<Position>(_positions, 1, 10);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -78,7 +78,7 @@ public class GetFilteredTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new GetFiltered<Place>.Query(_parameters);
+        var query = new GetFiltered<Position>.Query(_parameters);
         _cancellationToken = new CancellationToken(true);
 
         // Act
@@ -95,8 +95,8 @@ public class GetFilteredTests : BaseTestFixture
         _parameters.ItemsOnPage = default;
         _parameters.PageNumber = default;
 
-        var query = new GetFiltered<Place>.Query(_parameters);
-        var expected = new PaginatedListModel<Place>(_places, 1, 10);
+        var query = new GetFiltered<Position>.Query(_parameters);
+        var expected = new PaginatedListModel<Position>(_positions, 1, 10);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -111,7 +111,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters = null;
 
-        var query = new GetFiltered<Place>.Query(_parameters);
+        var query = new GetFiltered<Position>.Query(_parameters);
             
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -126,7 +126,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters.SearchString = null;
 
-        var query = new GetFiltered<Place>.Query(_parameters);
+        var query = new GetFiltered<Position>.Query(_parameters);
             
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -141,7 +141,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters.SearchBy = null;
 
-        var query = new GetFiltered<Place>.Query(_parameters);
+        var query = new GetFiltered<Position>.Query(_parameters);
             
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -156,7 +156,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters.SortBy = null;
 
-        var query = new GetFiltered<Place>.Query(_parameters);
+        var query = new GetFiltered<Position>.Query(_parameters);
             
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -171,7 +171,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters.ItemsOnPage = itemsPerPage;
 
-        var query = new GetFiltered<Place>.Query(_parameters);
+        var query = new GetFiltered<Position>.Query(_parameters);
             
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -186,7 +186,7 @@ public class GetFilteredTests : BaseTestFixture
         // Arrange
         _parameters.PageNumber = pageNumber;
 
-        var query = new GetFiltered<Place>.Query(_parameters);
+        var query = new GetFiltered<Position>.Query(_parameters);
             
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;

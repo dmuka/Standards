@@ -5,7 +5,6 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models;
-using Standards.Core.Models.Housings;
 using Standards.Core.Models.Standards;
 using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
@@ -13,187 +12,186 @@ using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.QueryableWrapper.Interface;
 
-namespace Standards.CQRS.Tests.Characteristics
+namespace Standards.CQRS.Tests.Characteristics;
+
+[TestFixture]
+public class GetFilteredTests : BaseTestFixture
 {
-    [TestFixture]
-    public class GetFilteredTests : BaseTestFixture
-    {
-        private const string SearchQuery = "Name"; 
+    private const string SearchQuery = "Name"; 
         
-        private QueryParameters _parameters;
-        private IList<Characteristic> _characteristics;
-        private IQueryBuilder<Characteristic> _queryBuilder;
+    private QueryParameters _parameters;
+    private IList<Characteristic> _characteristics;
+    private IQueryBuilder<Characteristic> _queryBuilder;
 
-        private Mock<IRepository> _repositoryMock;
-        private CancellationToken _cancellationToken;
-        private Mock<IQueryBuilder<Characteristic>> _queryBuilderMock;
-        private Mock<IQueryableWrapper<Characteristic>> _queryWrapperMock;
-        private Mock<IQueryable<Housing>> _queryMock;
+    private Mock<IRepository> _repositoryMock;
+    private CancellationToken _cancellationToken;
+    private Mock<IQueryBuilder<Characteristic>> _queryBuilderMock;
+    private Mock<IQueryableWrapper<Characteristic>> _queryWrapperMock;
+    private Mock<IQueryable<Characteristic>> _queryMock;
 
-        private IRequestHandler<GetFiltered<Characteristic>.Query, PaginatedListModel<Characteristic>> _handler;
-        private IValidator<GetFiltered<Characteristic>.Query> _validator;
+    private IRequestHandler<GetFiltered<Characteristic>.Query, PaginatedListModel<Characteristic>> _handler;
+    private IValidator<GetFiltered<Characteristic>.Query> _validator;
 
-        [SetUp]
-        public void Setup()
-        {
-            _characteristics = Characteristics;
+    [SetUp]
+    public void Setup()
+    {
+        _characteristics = Characteristics;
 
-            _parameters = new QueryParameters(
-                searchString: string.Empty, itemsOnPage: 10, pageNumber: 1);
+        _parameters = new QueryParameters(
+            searchString: string.Empty, itemsOnPage: 10, pageNumber: 1);
 
-            _repositoryMock = new Mock<IRepository>();
+        _repositoryMock = new Mock<IRepository>();
 
-            _queryBuilder = new QueryBuilder<Characteristic>(_repositoryMock.Object);
+        _queryBuilder = new QueryBuilder<Characteristic>(_repositoryMock.Object);
             
-            _cancellationToken = new CancellationToken();
+        _cancellationToken = new CancellationToken();
 
-            _queryBuilderMock = new Mock<IQueryBuilder<Characteristic>>();
+        _queryBuilderMock = new Mock<IQueryBuilder<Characteristic>>();
 
-             _queryWrapperMock = new Mock<IQueryableWrapper<Characteristic>>();
-             _queryWrapperMock.Setup(m => m.ToListAsync(It.IsAny<IQueryable<Characteristic>>(), _cancellationToken))
-                   .Returns(Task.FromResult(_characteristics));
+        _queryWrapperMock = new Mock<IQueryableWrapper<Characteristic>>();
+        _queryWrapperMock.Setup(m => m.ToListAsync(It.IsAny<IQueryable<Characteristic>>(), _cancellationToken))
+            .Returns(Task.FromResult(_characteristics));
 
-            _queryMock = new Mock<IQueryable<Housing>>();
+        _queryMock = new Mock<IQueryable<Characteristic>>();
 
-            _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_characteristics.AsQueryable());
+        _queryBuilderMock.Setup(_ => _.Execute(It.IsAny<QueryParameters>())).Returns(_characteristics.AsQueryable());
 
-            _handler = new GetFiltered<Characteristic>.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
-            _validator = new GetFiltered<Characteristic>.QueryValidator();
-        }
+        _handler = new GetFiltered<Characteristic>.QueryHandler(_queryBuilderMock.Object, _queryWrapperMock.Object);
+        _validator = new GetFiltered<Characteristic>.QueryValidator();
+    }
 
-        [Test]
-        public void Handler_IfAllDataIsValid_ReturnResult()
-        {
-            // Arrange
-            var query = new GetFiltered<Characteristic>.Query(_parameters);
-            var expected = new PaginatedListModel<Characteristic>(_characteristics, 1, 10);
+    [Test]
+    public void Handler_IfAllDataIsValid_ReturnResult()
+    {
+        // Arrange
+        var query = new GetFiltered<Characteristic>.Query(_parameters);
+        var expected = new PaginatedListModel<Characteristic>(_characteristics, 1, 10);
 
-            // Act
-            var result = _handler.Handle(query, _cancellationToken).Result;
+        // Act
+        var result = _handler.Handle(query, _cancellationToken).Result;
 
-            // Assert
-            result.Should().BeEquivalentTo(expected);
-        }
+        // Assert
+        result.Should().BeEquivalentTo(expected);
+    }
 
-        [Test]
-        public void Handler_IfCancellationTokenIsActive_ReturnNull()
-        {
-            // Arrange
-            var query = new GetFiltered<Characteristic>.Query(_parameters);
-            _cancellationToken = new CancellationToken(true);
+    [Test]
+    public void Handler_IfCancellationTokenIsActive_ReturnNull()
+    {
+        // Arrange
+        var query = new GetFiltered<Characteristic>.Query(_parameters);
+        _cancellationToken = new CancellationToken(true);
 
-            // Act
-            var result = _handler.Handle(query, _cancellationToken).Result;
+        // Act
+        var result = _handler.Handle(query, _cancellationToken).Result;
 
-            // Assert
-            Assert.That(result, Is.EqualTo(null));
-        }
+        // Assert
+        Assert.That(result, Is.EqualTo(null));
+    }
 
-        [Test]
-        public void Handler_IfInvalidPagePaginateValues_ReturnResultWithDefaultValues()
-        {
-            // Arrange
-            _parameters.ItemsOnPage = default;
-            _parameters.PageNumber = default;
+    [Test]
+    public void Handler_IfInvalidPagePaginateValues_ReturnResultWithDefaultValues()
+    {
+        // Arrange
+        _parameters.ItemsOnPage = default;
+        _parameters.PageNumber = default;
 
-            var query = new GetFiltered<Characteristic>.Query(_parameters);
-            var expected = new PaginatedListModel<Characteristic>(_characteristics, 1, 10);
+        var query = new GetFiltered<Characteristic>.Query(_parameters);
+        var expected = new PaginatedListModel<Characteristic>(_characteristics, 1, 10);
 
-            // Act
-            var result = _handler.Handle(query, _cancellationToken).Result;
+        // Act
+        var result = _handler.Handle(query, _cancellationToken).Result;
 
-            // Assert
-            result.Should().BeEquivalentTo(expected);
-        }
+        // Assert
+        result.Should().BeEquivalentTo(expected);
+    }
 
-        [Test]
-        public void Validator_IfParametersIsNull_ShouldHaveValidationError()
-        {
-            // Arrange
-            _parameters = null;
+    [Test]
+    public void Validator_IfParametersIsNull_ShouldHaveValidationError()
+    {
+        // Arrange
+        _parameters = null;
 
-            var query = new GetFiltered<Characteristic>.Query(_parameters);
+        var query = new GetFiltered<Characteristic>.Query(_parameters);
             
-            // Act
-            var result = _validator.TestValidate(query);
+        // Act
+        var result = _validator.TestValidate(query);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Parameters);
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Parameters);
+    }
 
-        [Test]
-        public void Validator_IfSearchStringIsNull_ShouldHaveValidationError()
-        {
-            // Arrange
-            _parameters.SearchString = null;
+    [Test]
+    public void Validator_IfSearchStringIsNull_ShouldHaveValidationError()
+    {
+        // Arrange
+        _parameters.SearchString = null;
 
-            var query = new GetFiltered<Characteristic>.Query(_parameters);
+        var query = new GetFiltered<Characteristic>.Query(_parameters);
             
-            // Act
-            var result = _validator.TestValidate(query);
+        // Act
+        var result = _validator.TestValidate(query);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Parameters.SearchString);
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Parameters.SearchString);
+    }
 
-        [Test]
-        public void Validator_IfSearchByIsNull_ShouldHaveValidationError()
-        {
-            // Arrange
-            _parameters.SearchBy = null;
+    [Test]
+    public void Validator_IfSearchByIsNull_ShouldHaveValidationError()
+    {
+        // Arrange
+        _parameters.SearchBy = null;
 
-            var query = new GetFiltered<Characteristic>.Query(_parameters);
+        var query = new GetFiltered<Characteristic>.Query(_parameters);
             
-            // Act
-            var result = _validator.TestValidate(query);
+        // Act
+        var result = _validator.TestValidate(query);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Parameters.SearchBy);
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Parameters.SearchBy);
+    }
 
-        [Test]
-        public void Validator_IfSortByIsNull_ShouldHaveValidationError()
-        {
-            // Arrange
-            _parameters.SortBy = null;
+    [Test]
+    public void Validator_IfSortByIsNull_ShouldHaveValidationError()
+    {
+        // Arrange
+        _parameters.SortBy = null;
 
-            var query = new GetFiltered<Characteristic>.Query(_parameters);
+        var query = new GetFiltered<Characteristic>.Query(_parameters);
             
-            // Act
-            var result = _validator.TestValidate(query);
+        // Act
+        var result = _validator.TestValidate(query);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Parameters.SortBy);
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Parameters.SortBy);
+    }
 
-        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-        public void Validator_IfItemsPerPageIsZero_ShouldHaveValidationError(int itemsPerPage)
-        {
-            // Arrange
-            _parameters.ItemsOnPage = itemsPerPage;
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    public void Validator_IfItemsPerPageIsZero_ShouldHaveValidationError(int itemsPerPage)
+    {
+        // Arrange
+        _parameters.ItemsOnPage = itemsPerPage;
 
-            var query = new GetFiltered<Characteristic>.Query(_parameters);
+        var query = new GetFiltered<Characteristic>.Query(_parameters);
             
-            // Act
-            var result = _validator.TestValidate(query);
+        // Act
+        var result = _validator.TestValidate(query);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Parameters.ItemsOnPage);
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Parameters.ItemsOnPage);
+    }
 
-        [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-        public void Validator_IfPageNumberIsZero_ShouldHaveValidationError(int pageNumber)
-        {
-            // Arrange
-            _parameters.PageNumber = pageNumber;
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    public void Validator_IfPageNumberIsZero_ShouldHaveValidationError(int pageNumber)
+    {
+        // Arrange
+        _parameters.PageNumber = pageNumber;
 
-            var query = new GetFiltered<Characteristic>.Query(_parameters);
+        var query = new GetFiltered<Characteristic>.Query(_parameters);
             
-            // Act
-            var result = _validator.TestValidate(query);
+        // Act
+        var result = _validator.TestValidate(query);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.Parameters.PageNumber);
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.Parameters.PageNumber);
     }
 }

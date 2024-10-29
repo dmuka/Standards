@@ -4,8 +4,6 @@ using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.GenericCRUD;
-using Standards.Core.CQRS.Rooms;
-using Standards.Core.CQRS.Sectors;
 using Standards.Core.Models;
 using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Common;

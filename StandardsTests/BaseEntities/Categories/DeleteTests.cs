@@ -3,51 +3,51 @@ using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.GenericCRUD;
-using Standards.Core.Models.Standards;
+using Standards.Core.Models.Persons;
 using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
-namespace Standards.CQRS.Tests.BaseEntities.Grades;
+namespace Standards.CQRS.Tests.BaseEntities.Categories;
 
 public class DeleteTests : BaseTestFixture
 {
     private const int IdInDb = 1;
     private const int IdNotInDb = 2;
 
-    private Grade _grade;
+    private Category _category;
 
     private Mock<IRepository> _repository;
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
 
-    private IRequestHandler<Delete.Query<Grade>, int> _handler;
-    private IValidator<Delete.Query<Grade>> _validator;
+    private IRequestHandler<Delete.Query<Category>, int> _handler;
+    private IValidator<Delete.Query<Category>> _validator;
 
     [SetUp]
     public void Setup()
     {
-        _grade = Grades[0];
+        _category = Categories[0];
 
         _cancellationToken = new CancellationToken();
 
         _repository = new Mock<IRepository>();
-        _repository.Setup(_ => _.GetByIdAsync<Grade>(IdInDb, _cancellationToken))
-            .Returns(Task.FromResult(_grade));
-        _repository.Setup(_ => _.DeleteAsync(_grade, _cancellationToken));
+        _repository.Setup(_ => _.GetByIdAsync<Category>(IdInDb, _cancellationToken))
+            .Returns(Task.FromResult(_category));
+        _repository.Setup(_ => _.DeleteAsync(_category, _cancellationToken));
         _repository.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
         _cacheService = new Mock<ICacheService>();
 
-        _handler = new Delete.QueryHandler<Grade>(_repository.Object, _cacheService.Object);
-        _validator = new Delete.QueryValidator<Grade>(_repository.Object);
+        _handler = new Delete.QueryHandler<Category>(_repository.Object, _cacheService.Object);
+        _validator = new Delete.QueryValidator<Category>(_repository.Object);
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new Delete.Query<Grade>(IdInDb);
+        var query = new Delete.Query<Category>(IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -60,14 +60,14 @@ public class DeleteTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
     {
         // Arrange
-        var query = new Delete.Query<Grade>(IdInDb);
+        var query = new Delete.Query<Category>(IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        _repository.Verify(repository => repository.GetByIdAsync<Grade>(IdInDb, _cancellationToken), Times.Once);
-        _repository.Verify(repository => repository.DeleteAsync(It.IsAny<Grade>(), _cancellationToken), Times.Once);
+        _repository.Verify(repository => repository.GetByIdAsync<Category>(IdInDb, _cancellationToken), Times.Once);
+        _repository.Verify(repository => repository.DeleteAsync(It.IsAny<Category>(), _cancellationToken), Times.Once);
         _repository.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
         _cacheService.Verify(cache => cache.Remove(It.IsAny<string>()), Times.Once);
     }
@@ -76,7 +76,7 @@ public class DeleteTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new Delete.Query<Grade>(IdInDb);
+        var query = new Delete.Query<Category>(IdInDb);
         _cancellationToken = new CancellationToken(true);
 
         // Act
@@ -91,7 +91,7 @@ public class DeleteTests : BaseTestFixture
     public void Validator_IfIdInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
-        var query = new Delete.Query<Grade>(id);
+        var query = new Delete.Query<Category>(id);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;

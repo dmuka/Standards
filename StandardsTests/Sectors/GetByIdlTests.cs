@@ -4,7 +4,7 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
-using Standards.Core.Models.Housings;
+using Standards.Core.Models.Departments;
 using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
@@ -22,36 +22,36 @@ public class GetByIdTests : BaseTestFixture
     
     private CancellationToken _cancellationToken;
     
-    private List<Room> _rooms;
+    private List<Sector> _sectors;
     
-    private IRequestHandler<GetById.Query<Room>, Room> _handler;
-    private IValidator<GetById.Query<Room>> _validator;
+    private IRequestHandler<GetById.Query<Sector>, Sector> _handler;
+    private IValidator<GetById.Query<Sector>> _validator;
 
     [SetUp]
     public void Setup()
     {
-        _rooms = Rooms;
+        _sectors = Sectors;
 
         _cancellationToken = new CancellationToken();
 
         _repository = new Mock<IRepository>();
-        _repository.Setup(_ => _.GetByIdAsync<Room>(IdInDb, _cancellationToken))
-            .Returns(Task.FromResult(_rooms.First(_ => _.Id == IdInDb)));
+        _repository.Setup(_ => _.GetByIdAsync<Sector>(IdInDb, _cancellationToken))
+            .Returns(Task.FromResult(_sectors.First(_ => _.Id == IdInDb)));
 
         _cacheMock = new Mock<ICacheService>();
-        _cacheMock.Setup(cache => cache.GetById<Room>(Cache.Rooms, IdInDb)).Returns(Rooms[0]);
+        _cacheMock.Setup(cache => cache.GetById<Sector>(Cache.Sectors, IdInDb)).Returns(Sectors[0]);
 
 
-        _handler = new GetById.QueryHandler<Room>(_repository.Object, _cacheMock.Object); 
-        _validator = new GetById.QueryValidator<Room>(_repository.Object); 
+        _handler = new GetById.QueryHandler<Sector>(_repository.Object, _cacheMock.Object); 
+        _validator = new GetById.QueryValidator<Sector>(_repository.Object); 
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new GetById.Query<Room>(IdInDb);
-        var expected = _rooms.First(_ => _.Id == IdInDb);
+        var query = new GetById.Query<Sector>(IdInDb);
+        var expected = _sectors.First(_ => _.Id == IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -65,7 +65,7 @@ public class GetByIdTests : BaseTestFixture
     public void Validator_IfIdIsInvalid_ReturnResult(int id)
     {
         // Arrange
-        var query = new GetById.Query<Room>(id);
+        var query = new GetById.Query<Sector>(id);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -79,21 +79,21 @@ public class GetByIdTests : BaseTestFixture
     {
         // Arrange
         _cacheMock.Object.Create(Cache.Rooms, Rooms);
-        var query = new GetById.Query<Room>(IdInDb);
+        var query = new GetById.Query<Sector>(IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(Rooms[0]));
-        _repository.Verify(repository => repository.GetByIdAsync<Room>(IdInDb, _cancellationToken), Times.Never);
+        Assert.That(result, Is.EqualTo(Sectors[0]));
+        _repository.Verify(repository => repository.GetByIdAsync<Sector>(IdInDb, _cancellationToken), Times.Never);
     }
 
     [Test]
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new GetById.Query<Room>(IdInDb);
+        var query = new GetById.Query<Sector>(IdInDb);
         _cancellationToken = new CancellationToken(true);
 
         // Act

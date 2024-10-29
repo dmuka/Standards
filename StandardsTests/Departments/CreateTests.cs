@@ -9,169 +9,168 @@ using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
-namespace Standards.CQRS.Tests.Departments
+namespace Standards.CQRS.Tests.Departments;
+
+[TestFixture]
+public class CreateTests : BaseTestFixture
 {
-    [TestFixture]
-    public class CreateTests : BaseTestFixture
+    private DepartmentDto _department;
+
+    private Mock<IRepository> _repositoryMock;
+    private CancellationToken _cancellationToken;
+    private Mock<ICacheService> _cacheService;
+
+    private IRequestHandler<Create.Query, int> _handler;
+    private IValidator<Create.Query> _validator;
+
+    [SetUp]
+    public void Setup()
     {
-        private DepartmentDto _department;
+        _department = DepartmentDtos[0];
 
-        private Mock<IRepository> _repositoryMock;
-        private CancellationToken _cancellationToken;
-        private Mock<ICacheService> _cacheService;
+        _cancellationToken = new CancellationToken();
 
-        private IRequestHandler<Create.Query, int> _handler;
-        private IValidator<Create.Query> _validator;
+        _repositoryMock = new Mock<IRepository>();
+        _repositoryMock.Setup(_ => _.AddAsync(_department, _cancellationToken));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
-        [SetUp]
-        public void Setup()
-        {
-            _department = DepartmentDtos[0];
+        _cacheService = new Mock<ICacheService>();
 
-            _cancellationToken = new CancellationToken();
+        _handler = new Create.QueryHandler(_repositoryMock.Object, _cacheService.Object);
+        _validator = new Create.QueryValidator();
+    }
 
-            _repositoryMock = new Mock<IRepository>();
-            _repositoryMock.Setup(_ => _.AddAsync(_department, _cancellationToken));
-            _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+    [Test]
+    public void Handler_IfAllDataIsValid_ReturnResult()
+    {
+        // Arrange
+        var query = new Create.Query(_department);
+        var expected = 1;
 
-            _cacheService = new Mock<ICacheService>();
+        // Act
+        var result = _handler.Handle(query, _cancellationToken).Result;
 
-            _handler = new Create.QueryHandler(_repositoryMock.Object, _cacheService.Object);
-            _validator = new Create.QueryValidator();
-        }
+        // Assert
+        Assert.That(result, Is.EqualTo(expected));
+    }
 
-        [Test]
-        public void Handler_IfAllDataIsValid_ReturnResult()
-        {
-            // Arrange
-            var query = new Create.Query(_department);
-            var expected = 1;
+    [Test]
+    public void Handler_IfCancellationTokenIsActive_ReturnNull()
+    {
+        // Arrange
+        var query = new Create.Query(_department);
+        _cancellationToken = new CancellationToken(true);
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
 
-            // Act
-            var result = _handler.Handle(query, _cancellationToken).Result;
+        // Act
+        var result = _handler.Handle(query, _cancellationToken).Result;
 
-            // Assert
-            Assert.That(result, Is.EqualTo(expected));
-        }
+        // Assert
+        Assert.That(result, Is.EqualTo(default(int)));
+    }
 
-        [Test]
-        public void Handler_IfCancellationTokenIsActive_ReturnNull()
-        {
-            // Arrange
-            var query = new Create.Query(_department);
-            _cancellationToken = new CancellationToken(true);
-            _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
+    [Test]
+    public void Validator_IfDepartmentDtoIsNull_ShouldHaveValidationError()
+    {
+        // Arrange
+        _department = null;
 
-            // Act
-            var result = _handler.Handle(query, _cancellationToken).Result;
+        var query = new Create.Query(_department);
 
-            // Assert
-            Assert.That(result, Is.EqualTo(default(int)));
-        }
+        // Act
+        var result = _validator.TestValidate(query);
 
-        [Test]
-        public void Validator_IfDepartmentDtoIsNull_ShouldHaveValidationError()
-        {
-            // Arrange
-            _department = null;
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto);
+    }
 
-            var query = new Create.Query(_department);
+    [Test, TestCaseSource(nameof(NullOrEmptyString))]
+    public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
+    {
+        // Arrange
+        _department.Name = name;
 
-            // Act
-            var result = _validator.TestValidate(query);
+        var query = new Create.Query(_department);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto);
-        }
+        // Act
+        var result = _validator.TestValidate(query);
 
-        [Test, TestCaseSource(nameof(NullOrEmptyString))]
-        public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
-        {
-            // Arrange
-            _department.Name = name;
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
+    }
 
-            var query = new Create.Query(_department);
+    [Test]
+    public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
+    {
+        // Arrange
+        _department.Name = Cases.Length201;
 
-            // Act
-            var result = _validator.TestValidate(query);
+        var query = new Create.Query(_department);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
-        }
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-        [Test]
-        public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
-        {
-            // Arrange
-            _department.Name = Cases.Length201;
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
+    }
 
-            var query = new Create.Query(_department);
+    [Test, TestCaseSource(nameof(NullOrEmptyString))]
+    public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
+    {
+        // Arrange
+        _department.ShortName = shortName;
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+        var query = new Create.Query(_department);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
-        }
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-        [Test, TestCaseSource(nameof(NullOrEmptyString))]
-        public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
-        {
-            // Arrange
-            _department.ShortName = shortName;
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.ShortName);
+    }
 
-            var query = new Create.Query(_department);
+    [Test]
+    public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
+    {
+        // Arrange
+        _department.Name = Cases.Length101;
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+        var query = new Create.Query(_department);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.ShortName);
-        }
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-        [Test]
-        public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
-        {
-            // Arrange
-            _department.Name = Cases.Length101;
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
+    }
 
-            var query = new Create.Query(_department);
+    [Test]
+    public void Validator_IfHousingIdsIsEmpty_ShouldHaveValidationError()
+    {
+        // Arrange
+        _department.HousingIds = new List<int>();
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+        var query = new Create.Query(_department);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
-        }
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-        [Test]
-        public void Validator_IfHousingIdsIsEmpty_ShouldHaveValidationError()
-        {
-            // Arrange
-            _department.HousingIds = new List<int>();
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
+    }
 
-            var query = new Create.Query(_department);
+    [Test]
+    public void Validator_IfSectorIdsIsEmpty_ShouldHaveValidationError()
+    {
+        // Arrange
+        _department.SectorIds = new List<int>();
 
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+        var query = new Create.Query(_department);
 
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
-        }
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
-        [Test]
-        public void Validator_IfSectorIdsIsEmpty_ShouldHaveValidationError()
-        {
-            // Arrange
-            _department.SectorIds = new List<int>();
-
-            var query = new Create.Query(_department);
-
-            // Act
-            var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-            // Assert
-            result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.SectorIds);
-        }
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.SectorIds);
     }
 }

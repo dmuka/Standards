@@ -41,8 +41,8 @@ public class EditTests : BaseTestFixture
         _roomDto.Width = 1;
         _roomDto.Length = 1;
         _roomDto.Floor = 1;
-        _roomDto.PersonIds = new List<int>() { 1, 2, 3 };
-        _roomDto.WorkplaceIds = new List<int>() { 1, 2, 3, 4 };
+        _roomDto.PersonIds = [ 1, 2, 3 ];
+        _roomDto.WorkplaceIds = [ 1, 2, 3, 4 ];
         
         _room = Rooms[0];
 

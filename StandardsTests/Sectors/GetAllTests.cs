@@ -3,9 +3,9 @@ using MediatR;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Standards.Core.CQRS.Common.Constants;
-using Standards.Core.CQRS.Rooms;
+using Standards.Core.CQRS.Sectors;
+using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
-using Standards.Core.Models.Housings;
 using Standards.CQRS.Tests.Common;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
@@ -18,21 +18,21 @@ public class GetAllTests : BaseTestFixture
     private const string AbsoluteExpirationPath = "Cache:AbsoluteExpiration";
     private const string SlidingExpirationPath = "Cache:SlidingExpiration";
 
-    private IList<Room> _rooms;
-    private IList<RoomDto> _dtos;
+    private IList<Sector> _sectors;
+    private IList<SectorDto> _dtos;
     
     private Mock<IRepository> _repository;
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
     private Mock<IConfigService> _configService;
     
-    private IRequestHandler<GetAll.Query, IEnumerable<RoomDto>> _handler;
+    private IRequestHandler<GetAll.Query, IList<SectorDto>> _handler;
 
     [SetUp]
     public void Setup()
     {
-        _rooms = Rooms;
-        _dtos = RoomDtos;
+        _sectors = Sectors;
+        _dtos = SectorDtos;
 
         _cancellationToken = new CancellationToken();
 
@@ -41,12 +41,12 @@ public class GetAllTests : BaseTestFixture
         _configService.Setup(config => config.GetValue<int>(SlidingExpirationPath)).Returns(2);
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Rooms, It.IsAny<Func<CancellationToken, Task<IList<Room>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
-            .Returns(Task.FromResult(_rooms));
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Sectors, It.IsAny<Func<CancellationToken, Task<IList<Sector>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+            .Returns(Task.FromResult(_sectors));
 
         _repository = new Mock<IRepository>();
-        _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Room>,IIncludableQueryable<Room,object>>>(), _cancellationToken))
-            .Returns(Task.FromResult(_rooms));
+        _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Sector>,IIncludableQueryable<Sector,object>>>(), _cancellationToken))
+            .Returns(Task.FromResult(_sectors));
 
         _handler = new GetAll.QueryHandler(_repository.Object, _cacheService.Object, _configService.Object); 
     }

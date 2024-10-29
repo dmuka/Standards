@@ -4,7 +4,6 @@ using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.MetrologyControl;
-using Standards.Core.Models.Standards;
 using Standards.CQRS.Tests.Common;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;

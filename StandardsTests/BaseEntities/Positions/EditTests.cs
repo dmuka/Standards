@@ -3,13 +3,13 @@ using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.GenericCRUD;
-using Standards.Core.Models.Standards;
+using Standards.Core.Models.Persons;
 using Standards.CQRS.Tests.Common;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
-namespace Standards.CQRS.Tests.BaseEntities.Grades;
+namespace Standards.CQRS.Tests.BaseEntities.Positions;
 
 [TestFixture]
 public class EditTests : BaseTestFixture
@@ -17,38 +17,38 @@ public class EditTests : BaseTestFixture
     private const int ValidId = 1;
     private const int IdNotInDb = 2;
 
-    private Grade _grade;
+    private Position _position;
 
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
 
-    private IRequestHandler<EditBaseEntity.Query<Grade>, int> _handler;
-    private IValidator<EditBaseEntity.Query<Grade>> _validator;
+    private IRequestHandler<EditBaseEntity.Query<Position>, int> _handler;
+    private IValidator<EditBaseEntity.Query<Position>> _validator;
 
     [SetUp]
     public void Setup()
     {
-        _grade = Grades[0];
+        _position = Positions[0];
 
         _cancellationToken = new CancellationToken();
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Grade>(ValidId, _cancellationToken)).Returns(Task.FromResult(_grade));
-        _repositoryMock.Setup(_ => _.Update(_grade));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Position>(ValidId, _cancellationToken)).Returns(Task.FromResult(_position));
+        _repositoryMock.Setup(_ => _.Update(_position));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
         _cacheService = new Mock<ICacheService>();
             
-        _handler = new EditBaseEntity.QueryHandler<Grade>(_repositoryMock.Object, _cacheService.Object);
-        _validator = new EditBaseEntity.QueryValidator<Grade>(_repositoryMock.Object);
+        _handler = new EditBaseEntity.QueryHandler<Position>(_repositoryMock.Object, _cacheService.Object);
+        _validator = new EditBaseEntity.QueryValidator<Position>(_repositoryMock.Object);
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new EditBaseEntity.Query<Grade>(_grade);
+        var query = new EditBaseEntity.Query<Position>(_position);
         var expected = 1;
 
         // Act
@@ -62,13 +62,13 @@ public class EditTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
     {
         // Arrange
-        var query = new EditBaseEntity.Query<Grade>(_grade);
+        var query = new EditBaseEntity.Query<Position>(_position);
 
         // Act
         _handler.Handle(query, _cancellationToken);
 
         // Assert
-        _repositoryMock.Verify(repository => repository.Update(It.IsAny<Grade>()), Times.Once);
+        _repositoryMock.Verify(repository => repository.Update(It.IsAny<Position>()), Times.Once);
         _repositoryMock.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
         _cacheService.Verify(cache => cache.Remove(It.IsAny<string>()), Times.Once);
     }
@@ -77,7 +77,7 @@ public class EditTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new EditBaseEntity.Query<Grade>(_grade);
+        var query = new EditBaseEntity.Query<Position>(_position);
         _cancellationToken = new CancellationToken(true);
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
 
@@ -89,12 +89,12 @@ public class EditTests : BaseTestFixture
     }
 
     [Test]
-    public void Validator_IfHousingDtoIsNull_ShouldHaveValidationError()
+    public void Validator_IfPositionIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _grade = null;
+        _position = null;
 
-        var query = new EditBaseEntity.Query<Grade>(_grade);
+        var query = new EditBaseEntity.Query<Position>(_position);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -108,9 +108,9 @@ public class EditTests : BaseTestFixture
     public void Validator_IfIdIsInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
-        _grade.Id = default;
+        _position.Id = default;
 
-        var query = new EditBaseEntity.Query<Grade>(_grade);
+        var query = new EditBaseEntity.Query<Position>(_position);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -123,9 +123,9 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _grade.Name = name;
+        _position.Name = name;
 
-        var query = new EditBaseEntity.Query<Grade>(_grade);
+        var query = new EditBaseEntity.Query<Position>(_position);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -138,9 +138,9 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _grade.Name = Cases.Length201;
+        _position.Name = Cases.Length201;
 
-        var query = new EditBaseEntity.Query<Grade>(_grade);
+        var query = new EditBaseEntity.Query<Position>(_position);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -153,9 +153,9 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _grade.ShortName = shortName;
+        _position.ShortName = shortName;
 
-        var query = new EditBaseEntity.Query<Grade>(_grade);
+        var query = new EditBaseEntity.Query<Position>(_position);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -168,9 +168,9 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _grade.Name = Cases.Length101;
+        _position.Name = Cases.Length101;
 
-        var query = new EditBaseEntity.Query<Grade>(_grade);
+        var query = new EditBaseEntity.Query<Position>(_position);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;

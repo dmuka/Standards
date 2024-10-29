@@ -578,9 +578,9 @@ public abstract class BaseTestFixture
                 Name = "SectorName1",
                 ShortName = "SectorShortName1",
                 Comments = "SectorComments1",
-                Workplaces = new List<Workplace> { Workplaces[4], Workplaces[5] },
-                Persons = new List<Person> { Persons[0], Persons[1], Persons[2] },
-                Rooms = new List<Room> { Rooms[0], Rooms[1] }
+                Workplaces = [ Workplaces[4], Workplaces[5] ],
+                Persons = [ Persons[0], Persons[1], Persons[2] ],
+                Rooms = [ Rooms[0], Rooms[1] ]
             },
             new Sector
             {
@@ -588,9 +588,9 @@ public abstract class BaseTestFixture
                 Name = "SectorName2",
                 ShortName = "SectorShortName2",
                 Comments = "SectorComments2",
-                Workplaces =  new List<Workplace> { Workplaces[2], Workplaces[3] },
-                Persons = new List<Person> { Persons[3], Persons[4], Persons[5] },
-                Rooms = new List<Room> { Rooms[2], Rooms[3] }
+                Workplaces =  [ Workplaces[2], Workplaces[3] ],
+                Persons = [ Persons[3], Persons[4], Persons[5] ],
+                Rooms = [ Rooms[2], Rooms[3] ]
             },
             new Sector
             {
@@ -598,9 +598,9 @@ public abstract class BaseTestFixture
                 Name = "SectorName3",
                 ShortName = "SectorShortName3",
                 Comments = "SectorComments3",
-                Workplaces = new List<Workplace> { Workplaces[0], Workplaces[1] },
-                Persons = new List<Person> { Persons[6], Persons[7], Persons[8] },
-                Rooms = new List<Room> { Rooms[4] }
+                Workplaces = [ Workplaces[0], Workplaces[1] ],
+                Persons = [ Persons[6], Persons[7], Persons[8] ],
+                Rooms = [ Rooms[4] ]
             }
         ];
         
@@ -613,9 +613,9 @@ public abstract class BaseTestFixture
                 ShortName = "SectorShortName1",
                 Comments = "SectorComments1",
                 DepartmentId = 1,
-                PersonIds = new List<int> { 1, 2, 3 },
-                WorkplaceIds = new List<int> { 5, 6 },
-                RoomIds = new List<int> { 1, 2 }
+                PersonIds = Sectors[0].Persons.Select(s => s.Id).ToList(),
+                WorkplaceIds = Sectors[0].Workplaces.Select(s => s.Id).ToList(),
+                RoomIds = Sectors[0].Rooms.Select(s => s.Id).ToList()
             },
             new SectorDto
             {
@@ -624,9 +624,9 @@ public abstract class BaseTestFixture
                 ShortName = "SectorShortName2",
                 Comments = "SectorComments2",
                 DepartmentId = 2,
-                PersonIds = new List<int> { 4, 5, 6 },
-                WorkplaceIds = new List<int> { 3, 4 },
-                RoomIds = new List<int> { 3, 4 }
+                PersonIds = Sectors[1].Persons.Select(s => s.Id).ToList(),
+                WorkplaceIds = Sectors[1].Workplaces.Select(s => s.Id).ToList(),
+                RoomIds = Sectors[1].Rooms.Select(s => s.Id).ToList()
             },
             new SectorDto
             {
@@ -635,9 +635,9 @@ public abstract class BaseTestFixture
                 ShortName = "SectorShortName3",
                 Comments = "SectorComments3",
                 DepartmentId = 3,
-                PersonIds = new List<int> { 7, 8, 9 },
-                WorkplaceIds = new List<int> { 1, 2 },
-                RoomIds = new List<int> { 5 }
+                PersonIds = Sectors[2].Persons.Select(s => s.Id).ToList(),
+                WorkplaceIds = Sectors[2].Workplaces.Select(s => s.Id).ToList(),
+                RoomIds = Sectors[2].Rooms.Select(s => s.Id).ToList()
             }
         ];
 
