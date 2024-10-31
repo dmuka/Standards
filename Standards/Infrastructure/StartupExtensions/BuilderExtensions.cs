@@ -7,7 +7,8 @@ public static class BuilderExtensions
         builder.Services
             .AddDbConnection(builder.Configuration)
             .AddJwtAuth(builder.Configuration)
-            .AddMediatrAutoRegister();
+            .AddMediatrAutoRegister()
+            .AddMediatrManualRegister();
 
         return builder;
     }

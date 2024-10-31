@@ -1,7 +1,11 @@
 using System.Text;
+using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Standards.Core.CQRS.Common.GenericCRUD;
+using Standards.Core.Models.Departments;
+using Standards.Core.Models.Persons;
 using Standards.Infrastructure.Data;
 
 namespace Standards.Infrastructure.StartupExtensions;
@@ -69,6 +73,25 @@ public static class ServiceCollectionExtensions
     internal static IServiceCollection AddMediatrAutoRegister(this IServiceCollection services)
     {
         services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
+
+        return services;
+    }    
+    
+    /// <summary>
+    /// Registers handlers and mediator types specified manually 
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
+    internal static IServiceCollection AddMediatrManualRegister(this IServiceCollection services)
+    {
+        services
+            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Category>, IList<Category>>), typeof(GetAllBaseEntity.QueryHandler<Category>))
+            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Position>, IList<Position>>), typeof(GetAllBaseEntity.QueryHandler<Position>))
+            
+            .AddTransient(typeof(IRequestHandler<GetById.Query<Position>, Position>), typeof(GetById.QueryHandler<Position>))   
+            .AddTransient(typeof(IRequestHandler<GetById.Query<Category>, Category>), typeof(GetById.QueryHandler<Category>))    
+            .AddTransient(typeof(IRequestHandler<GetById.Query<Department>, Department>), typeof(GetById.QueryHandler<Department>))   
+            .AddTransient(typeof(IRequestHandler<GetById.Query<Sector>, Sector>), typeof(GetById.QueryHandler<Sector>));
 
         return services;
     }
