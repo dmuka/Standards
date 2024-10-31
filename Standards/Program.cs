@@ -1,11 +1,7 @@
 ﻿using FluentValidation;
 using MediatR;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using NLog;
 using NLog.Web;
-using Standards.Core.Models.DTOs;
 using Standards.Core.Services.Implementations;
 using Standards.Core.Services.Interfaces;
 using Standards.Infrastructure.Data;
@@ -17,7 +13,6 @@ using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.Logging;
 using Standards.Infrastructure.Mediatr;
 using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
-using System.Text;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.Housings;
@@ -104,37 +99,6 @@ namespace Standards
 
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
-            // var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-            //     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            // var connectionStringPasswordSecret = builder.Configuration["Secrets:DefaultConnectionPassword"];
-            // connectionString = connectionString.Replace("passwordvalue", connectionStringPasswordSecret);
-
-            // configure jwt authentication
-            var jwtBearerSecret = builder.Configuration["Secrets:JwtBearerKey"];
-            var key = Encoding.ASCII.GetBytes(jwtBearerSecret);
-            builder.Services.AddAuthentication(authOptions =>
-            {
-                authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-                authOptions.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-            })
-            .AddJwtBearer(jwtBearerOptions =>
-            {
-                jwtBearerOptions.RequireHttpsMetadata = false;
-                jwtBearerOptions.SaveToken = true;
-                jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
-                {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ClockSkew = TimeSpan.Zero
-                };
-            });
-
-            // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
-            // builder.Services.AddDatabaseDeveloperPageExceptionFilter();
-
-            builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
             builder.Services.AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Category>, IList<Category>>), typeof(GetAllBaseEntity.QueryHandler<Category>));
             builder.Services.AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Position>, IList<Position>>), typeof(GetAllBaseEntity.QueryHandler<Position>));
             
