@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using MediatR;
-using NLog;
+﻿using NLog;
 using NLog.Web;
 using Standards.Core.Services.Implementations;
 using Standards.Core.Services.Interfaces;
@@ -11,8 +9,6 @@ using Standards.Infrastructure.Exceptions;
 using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.Logging;
-using Standards.Infrastructure.Mediatr;
-using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Converters;
@@ -96,12 +92,7 @@ namespace Standards
         }
 
         private static void ConfigureServices(WebApplicationBuilder builder)
-        {           
-            builder.Services.AddValidatorsFromAssemblyContaining<Program>();
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-            builder.Services.AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
-
+        {
             builder.Services.AddTransient<IRepository, Repository<ApplicationDbContext>>();
 
             builder.Services.AddSingleton<IConfigService, ConfigService>();

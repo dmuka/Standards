@@ -1,4 +1,5 @@
 using System.Text;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,8 @@ using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.Persons;
 using Standards.Infrastructure.Data;
+using Standards.Infrastructure.Mediatr;
+using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
 
 namespace Standards.Infrastructure.StartupExtensions;
 
@@ -92,6 +95,34 @@ public static class ServiceCollectionExtensions
             .AddTransient(typeof(IRequestHandler<GetById.Query<Category>, Category>), typeof(GetById.QueryHandler<Category>))    
             .AddTransient(typeof(IRequestHandler<GetById.Query<Department>, Department>), typeof(GetById.QueryHandler<Department>))   
             .AddTransient(typeof(IRequestHandler<GetById.Query<Sector>, Sector>), typeof(GetById.QueryHandler<Sector>));
+
+        return services;
+    }       
+    
+    /// <summary>
+    /// Adds mediatr pipeline behaviors
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
+    internal static IServiceCollection AddMediatrPipelineBehaviors(this IServiceCollection services)
+    {
+        services
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>))
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>))
+            .AddTransient(typeof(IPipelineBehavior<,>), typeof(TransactionBehavior<,>));
+
+        return services;
+    }    
+    
+    /// <summary>
+    /// Adds validators from assembly of the type specified by generic parameter
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <typeparam name="T">Type of the assembly</typeparam>
+    /// <returns>Collection of service descriptors</returns>
+    internal static IServiceCollection AddValidators<T>(this IServiceCollection services)
+    {           
+        services.AddValidatorsFromAssemblyContaining<T>();;
 
         return services;
     }
