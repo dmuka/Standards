@@ -28,6 +28,7 @@ using Standards.Infrastructure.QueryableWrapper.Implementation;
 using Standards.Infrastructure.QueryableWrapper.Interface;
 using Standards.Infrastructure.Services.Implementations;
 using Standards.Infrastructure.Services.Interfaces;
+using Standards.Infrastructure.StartupExtensions;
 
 namespace Standards
 {
@@ -43,6 +44,8 @@ namespace Standards
             {
                 var builder = WebApplication.CreateBuilder(args);
 
+                builder.AddInfrastructure();
+                
                 ConfigureServices(builder);
 
                 // NLog: Setup NLog for Dependency injection
@@ -99,12 +102,12 @@ namespace Standards
             }
         }
 
-        private static void ConfigureServices(WebApplicationBuilder? builder)
+        private static void ConfigureServices(WebApplicationBuilder builder)
         {
-            var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
-            var connectionStringPasswordSecret = builder.Configuration["Secrets:DefaultConnectionPassword"];
-            connectionString = connectionString.Replace("passwordvalue", connectionStringPasswordSecret);
+            // var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
+            //     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+            // var connectionStringPasswordSecret = builder.Configuration["Secrets:DefaultConnectionPassword"];
+            // connectionString = connectionString.Replace("passwordvalue", connectionStringPasswordSecret);
 
             // configure jwt authentication
             var jwtBearerSecret = builder.Configuration["Secrets:JwtBearerKey"];
@@ -128,8 +131,8 @@ namespace Standards
                 };
             });
 
-            builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
-            builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+            // builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
+            // builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblyContaining<Program>());
             builder.Services.AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Category>, IList<Category>>), typeof(GetAllBaseEntity.QueryHandler<Category>));
