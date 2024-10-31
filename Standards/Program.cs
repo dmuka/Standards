@@ -1,22 +1,9 @@
 ﻿using NLog;
 using NLog.Web;
-using Standards.Core.Services.Implementations;
-using Standards.Core.Services.Interfaces;
-using Standards.Infrastructure.Data;
-using Standards.Infrastructure.Data.Repositories.Implementations;
-using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Exceptions;
-using Standards.Infrastructure.Filter.Implementations;
-using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.Logging;
-using Standards.Core.Models.Departments;
-using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Converters;
 using Standards.Infrastructure.Filter.Models;
-using Standards.Infrastructure.QueryableWrapper.Implementation;
-using Standards.Infrastructure.QueryableWrapper.Interface;
-using Standards.Infrastructure.Services.Implementations;
-using Standards.Infrastructure.Services.Interfaces;
 using Standards.Infrastructure.StartupExtensions;
 
 namespace Standards
@@ -93,24 +80,6 @@ namespace Standards
 
         private static void ConfigureServices(WebApplicationBuilder builder)
         {
-            builder.Services.AddTransient<IRepository, Repository<ApplicationDbContext>>();
-
-            builder.Services.AddSingleton<IConfigService, ConfigService>();
-            
-            builder.Services.AddScoped<IUserService, UserService>();
-            builder.Services.AddScoped<IAuthService, AuthService>();
-            
-            builder.Services.AddMemoryCache();
-            builder.Services.AddSingleton<ICacheService, CacheService>();
-            
-            builder.Services.AddScoped<IQueryBuilder<Housing>, QueryBuilder<Housing>>();
-            builder.Services.AddScoped<IQueryBuilder<Room>, QueryBuilder<Room>>();
-            builder.Services.AddScoped<IQueryBuilder<Department>, QueryBuilder<Department>>();
-            
-            builder.Services.AddScoped<IQueryableWrapper<Housing>, QueryableWrapper<Housing>>();
-            builder.Services.AddScoped<IQueryableWrapper<Room>, QueryableWrapper<Room>>();
-            builder.Services.AddScoped<IQueryableWrapper<Department>, QueryableWrapper<Department>>();
-            
             builder.Services.AddControllers()
                 .AddJsonOptions(opt =>
                 {

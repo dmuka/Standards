@@ -6,10 +6,21 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Departments;
+using Standards.Core.Models.Housings;
 using Standards.Core.Models.Persons;
+using Standards.Core.Services.Implementations;
+using Standards.Core.Services.Interfaces;
 using Standards.Infrastructure.Data;
+using Standards.Infrastructure.Data.Repositories.Implementations;
+using Standards.Infrastructure.Data.Repositories.Interfaces;
+using Standards.Infrastructure.Filter.Implementations;
+using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.Mediatr;
 using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
+using Standards.Infrastructure.QueryableWrapper.Interface;
+using Standards.Infrastructure.QueryableWrapper.Implementation;
+using Standards.Infrastructure.Services.Implementations;
+using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.Infrastructure.StartupExtensions;
 
@@ -122,7 +133,56 @@ public static class ServiceCollectionExtensions
     /// <returns>Collection of service descriptors</returns>
     internal static IServiceCollection AddValidators<T>(this IServiceCollection services)
     {           
-        services.AddValidatorsFromAssemblyContaining<T>();;
+        services.AddValidatorsFromAssemblyContaining<T>();
+
+        return services;
+    }    
+    
+    /// <summary>
+    /// Adds application services
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
+    internal static IServiceCollection AddAppServices(this IServiceCollection services)
+    {
+        services
+            .AddTransient<IRepository, Repository<ApplicationDbContext>>()
+            .AddSingleton<IConfigService, ConfigService>()
+            .AddScoped<IUserService, UserService>()
+            .AddScoped<IAuthService, AuthService>();
+
+        return services;
+    }    
+    
+    /// <summary>
+    /// Adds cache
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
+    internal static IServiceCollection AddCache(this IServiceCollection services)
+    {
+        services
+            .AddMemoryCache()
+            .AddSingleton<ICacheService, CacheService>();
+
+        return services;
+    }    
+    
+    /// <summary>
+    /// Registers query builder and wrapper types
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
+    internal static IServiceCollection RegisterQueryBuilder(this IServiceCollection services)
+    {
+        services
+            .AddScoped<IQueryBuilder<Housing>, QueryBuilder<Housing>>()
+            .AddScoped<IQueryBuilder<Room>, QueryBuilder<Room>>()
+            .AddScoped<IQueryBuilder<Department>, QueryBuilder<Department>>()
+            
+            .AddScoped<IQueryableWrapper<Housing>, QueryableWrapper<Housing>>()
+            .AddScoped<IQueryableWrapper<Room>, QueryableWrapper<Room>>()
+            .AddScoped<IQueryableWrapper<Department>, QueryableWrapper<Department>>();
 
         return services;
     }

@@ -10,7 +10,10 @@ public static class BuilderExtensions
             .AddMediatrAutoRegister()
             .AddMediatrManualRegister()
             .AddMediatrPipelineBehaviors()
-            .AddValidators<Program>();
+            .AddValidators<Program>()
+            .AddAppServices()
+            .AddCache()
+            .RegisterQueryBuilder();
 
         return builder;
     }
