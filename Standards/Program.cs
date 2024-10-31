@@ -2,94 +2,75 @@
 using NLog.Web;
 using Standards.Infrastructure.Exceptions;
 using Standards.Infrastructure.Logging;
-using Standards.Infrastructure.Converters;
-using Standards.Infrastructure.Filter.Models;
 using Standards.Infrastructure.StartupExtensions;
 
-namespace Standards
+namespace Standards;
+
+public class Program
 {
-    public class Program
+    public static void Main(string[] args)
     {
-        public static void Main(string[] args)
+        // Early init of NLog to allow startup and exception logging, before host is built
+        var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+        logger.Debug("init main");
+
+        try
         {
-            // Early init of NLog to allow startup and exception logging, before host is built
-            var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
-            logger.Debug("init main");
+            var builder = WebApplication.CreateBuilder(args);
 
-            try
+            builder.AddInfrastructure();
+
+            // NLog: Setup NLog for Dependency injection
+            builder.Logging.ClearProviders();
+            builder.Host.UseNLog();
+
+            var app = builder.Build();
+
+            if (app.Environment.IsDevelopment())
             {
-                var builder = WebApplication.CreateBuilder(args);
-
-                builder.AddInfrastructure();
-                
-                ConfigureServices(builder);
-
-                // NLog: Setup NLog for Dependency injection
-                builder.Logging.ClearProviders();
-                builder.Host.UseNLog();
-
-                var app = builder.Build();
-
-                if (app.Environment.IsDevelopment())
-                {
-                    app.UseDeveloperExceptionPage();
-                    app.UseMigrationsEndPoint();
-                    app.UseSwagger();
-                    app.UseSwaggerUI();
-                }
-                else
-                {
-                    app.UseExceptionHandler("/Home/Error");
-                    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-                    app.UseHsts();
-                }
-
-                app.UseHttpsRedirection();
-                app.UseStaticFiles();
-
-                app.UseRouting();
-
-                app.UseAuthentication();
-                app.UseAuthorization();
-
-                app.MapControllerRoute(
-                    name: "default",
-                    pattern: "/api/{controller}/{action=Index}/{id?}");
-
-                app.UseMiddleware<RequestLoggingMiddleware>();
-                app.UseMiddleware<ExceptionHandlingMiddleware>();
-
-                //app.MapRazorPages();
-
-                app.MapFallbackToFile("index.html");
-
-                app.Run();
+                app.UseDeveloperExceptionPage();
+                app.UseMigrationsEndPoint();
+                app.UseSwagger();
+                app.UseSwaggerUI();
             }
-            catch (Exception exception)
+            else
             {
-                // NLog: catch setup errors
-                logger.Error(exception, "Stopped program because of exception");
-                throw;
+                app.UseExceptionHandler("/Home/Error");
+                // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+                app.UseHsts();
             }
-            finally
-            {
-                // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
-                LogManager.Shutdown();
-            }
+
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
+            app.UseAuthentication();
+            app.UseAuthorization();
+
+            app.MapControllerRoute(
+                name: "default",
+                pattern: "/api/{controller}/{action=Index}/{id?}");
+
+            app.UseMiddleware<RequestLoggingMiddleware>();
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
+
+            //app.MapRazorPages();
+
+            app.MapFallbackToFile("index.html");
+
+            app.Run();
         }
-
-        private static void ConfigureServices(WebApplicationBuilder builder)
+        catch (Exception exception)
         {
-            builder.Services.AddControllers()
-                .AddJsonOptions(opt =>
-                {
-                    opt.JsonSerializerOptions.Converters.Add(new NullableEnumConverter<FilterBy>());
-                    opt.JsonSerializerOptions.Converters.Add(new NullableEnumConverter<SortBy>());
-                });
-            builder.Services.AddRazorPages();
-
-            builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            // NLog: catch setup errors
+            logger.Error(exception, "Stopped program because of exception");
+            throw;
+        }
+        finally
+        {
+            // Ensure to flush and stop internal timers/threads before application-exit (Avoid segmentation fault on Linux)
+            LogManager.Shutdown();
         }
     }
 }

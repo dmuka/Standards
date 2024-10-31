@@ -10,11 +10,13 @@ using Standards.Core.Models.Housings;
 using Standards.Core.Models.Persons;
 using Standards.Core.Services.Implementations;
 using Standards.Core.Services.Interfaces;
+using Standards.Infrastructure.Converters;
 using Standards.Infrastructure.Data;
 using Standards.Infrastructure.Data.Repositories.Implementations;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Interfaces;
+using Standards.Infrastructure.Filter.Models;
 using Standards.Infrastructure.Mediatr;
 using Standards.Infrastructure.Mediatr.Standards.Core.CQRS.Common.Behaviors;
 using Standards.Infrastructure.QueryableWrapper.Interface;
@@ -183,6 +185,21 @@ public static class ServiceCollectionExtensions
             .AddScoped<IQueryableWrapper<Housing>, QueryableWrapper<Housing>>()
             .AddScoped<IQueryableWrapper<Room>, QueryableWrapper<Room>>()
             .AddScoped<IQueryableWrapper<Department>, QueryableWrapper<Department>>();
+
+        return services;
+    }    
+    
+    internal static IServiceCollection AddControllersServices(this IServiceCollection services)
+    {
+        services
+            .AddControllers()
+            .AddJsonOptions(opt =>
+            {
+                opt.JsonSerializerOptions.Converters.Add(new NullableEnumConverter<FilterBy>());
+                opt.JsonSerializerOptions.Converters.Add(new NullableEnumConverter<SortBy>());
+            });
+            
+        services.AddEndpointsApiExplorer();
 
         return services;
     }

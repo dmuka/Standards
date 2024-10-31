@@ -13,7 +13,13 @@ public static class BuilderExtensions
             .AddValidators<Program>()
             .AddAppServices()
             .AddCache()
-            .RegisterQueryBuilder();
+            .RegisterQueryBuilder()
+            .AddControllersServices();
+
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddSwaggerGen();
+        }
 
         return builder;
     }
