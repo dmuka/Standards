@@ -75,11 +75,11 @@ public class Create
                 {
                     filter.RuleFor(sector => sector.Name)
                         .NotEmpty()
-                        .Length(Lengths.EntityName);
+                        .MaximumLength(Lengths.EntityName);
 
                     filter.RuleFor(sector => sector.ShortName)
                         .NotEmpty()
-                        .Length(Lengths.ShortName);
+                        .MaximumLength(Lengths.ShortName);
                     
                     filter.RuleFor(sector => sector.DepartmentId)
                         .GreaterThan(default(int))

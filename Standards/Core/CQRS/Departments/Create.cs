@@ -64,11 +64,11 @@ public class Create
                 {
                     filter.RuleFor(department => department.Name)
                         .NotEmpty()
-                        .Length(Lengths.EntityName);
+                        .MaximumLength(Lengths.EntityName);
 
                     filter.RuleFor(department => department.ShortName)
                         .NotEmpty()
-                        .Length(Lengths.ShortName);
+                        .MaximumLength(Lengths.ShortName);
 
                     filter.RuleFor(department => department.HousingIds)
                         .NotEmpty();

@@ -55,11 +55,11 @@ public class Create
                 {
                     filter.RuleFor(housing => housing.Name)
                         .NotEmpty()
-                        .Length(Lengths.EntityName);
+                        .MaximumLength(Lengths.EntityName);
 
                     filter.RuleFor(housing => housing.ShortName)
                         .NotEmpty()
-                        .Length(Lengths.ShortName);
+                        .MaximumLength(Lengths.ShortName);
 
                     filter.RuleFor(housing => housing.FloorsCount)
                         .GreaterThan(default(int));

@@ -85,11 +85,11 @@ public class Create
                 {
                     filter.RuleFor(room => room.Name)
                         .NotEmpty()
-                        .Length(Lengths.EntityName);
+                        .MaximumLength(Lengths.EntityName);
                     
                     filter.RuleFor(room => room.ShortName)
                         .NotEmpty()
-                        .Length(Lengths.ShortName);
+                        .MaximumLength(Lengths.ShortName);
 
                     filter.RuleFor(room => room.HousingId)
                         .GreaterThan(default(int))

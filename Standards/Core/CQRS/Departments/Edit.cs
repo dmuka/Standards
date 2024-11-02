@@ -68,11 +68,11 @@ namespace Standards.Core.CQRS.Departments
 
                         housing.RuleFor(department => department.Name)
                             .NotEmpty()
-                            .Length(Lengths.EntityName);
+                            .MaximumLength(Lengths.EntityName);
 
                         housing.RuleFor(department => department.ShortName)
                             .NotEmpty()
-                            .Length(Lengths.ShortName);
+                            .MaximumLength(Lengths.ShortName);
 
                         housing.RuleFor(department => department.HousingIds)
                             .NotEmpty()

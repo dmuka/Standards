@@ -57,11 +57,11 @@ public class CreateBaseEntity
 
                     entity.RuleFor(e => e.Name)
                         .NotEmpty()
-                        .Length(Lengths.EntityName);
+                        .MaximumLength(Lengths.EntityName);
 
                     entity.RuleFor(e => e.ShortName)
                         .NotEmpty()
-                        .Length(Lengths.ShortName);
+                        .MaximumLength(Lengths.ShortName);
                 });
         }
     }

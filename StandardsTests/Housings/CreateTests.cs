@@ -133,7 +133,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _housing.Name = Cases.Length101;
+        _housing.ShortName = Cases.Length101;
 
         var query = new Create.Query(_housing);
 
@@ -141,7 +141,7 @@ public class CreateTests : BaseTestFixture
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.HousingDto.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.HousingDto.ShortName);
     }
         
     [Test, TestCaseSource(nameof(NullOrEmptyString))]

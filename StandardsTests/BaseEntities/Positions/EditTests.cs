@@ -168,7 +168,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _position.Name = Cases.Length101;
+        _position.ShortName = Cases.Length101;
 
         var query = new EditBaseEntity.Query<Position>(_position);
 
@@ -176,6 +176,6 @@ public class EditTests : BaseTestFixture
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.Entity.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.Entity.ShortName);
     }
 }

@@ -70,11 +70,11 @@ public class Edit
 
                     housing.RuleFor(housingDto => housingDto.Name)
                         .NotEmpty()
-                        .Length(Lengths.EntityName);
+                        .MaximumLength(Lengths.EntityName);
 
                     housing.RuleFor(housingDto => housingDto.ShortName)
                         .NotEmpty()
-                        .Length(Lengths.ShortName);
+                        .MaximumLength(Lengths.ShortName);
 
                     housing.RuleFor(housingDto => housingDto.FloorsCount)
                         .GreaterThan(default(int));

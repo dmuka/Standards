@@ -134,7 +134,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _category.Name = Cases.Length101;
+        _category.ShortName = Cases.Length101;
 
         var query = new CreateBaseEntity.Query<Category>(_category);
 
@@ -142,6 +142,6 @@ public class CreateTests : BaseTestFixture
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.Entity.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.Entity.ShortName);
     }
 }

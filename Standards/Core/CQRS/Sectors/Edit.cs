@@ -79,11 +79,11 @@ namespace Standards.Core.CQRS.Sectors
 
                         housing.RuleFor(sector => sector.Name)
                             .NotEmpty()
-                            .Length(Lengths.EntityName);
+                            .MaximumLength(Lengths.EntityName);
 
                         housing.RuleFor(sector => sector.ShortName)
                             .NotEmpty()
-                            .Length(Lengths.ShortName);
+                            .MaximumLength(Lengths.ShortName);
 
                         housing.RuleFor(sector => sector.PersonIds)
                             .NotEmpty()

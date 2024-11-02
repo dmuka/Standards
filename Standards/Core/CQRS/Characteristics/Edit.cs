@@ -70,11 +70,11 @@ namespace Standards.Core.CQRS.Characteristics
                         
                         dto.RuleFor(characteristic => characteristic.Name)
                             .NotEmpty()
-                            .Length(Lengths.EntityName);
+                            .MaximumLength(Lengths.EntityName);
 
                         dto.RuleFor(characteristic => characteristic.ShortName)
                             .NotEmpty()
-                            .Length(Lengths.ShortName);
+                            .MaximumLength(Lengths.ShortName);
 
                         dto.RuleFor(characteristic => characteristic.RangeStart)
                             .NotEmpty();

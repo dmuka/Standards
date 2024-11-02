@@ -223,7 +223,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _roomDto.Name = Cases.Length101;
+        _roomDto.ShortName = Cases.Length101;
 
         var query = new Edit.Query(_roomDto);
 
@@ -231,7 +231,7 @@ public class EditTests : BaseTestFixture
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.RoomDto.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.RoomDto.ShortName);
     }
 
     [Test]

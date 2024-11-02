@@ -172,7 +172,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _characteristic.Name = Cases.Length101;
+        _characteristic.ShortName = Cases.Length101;
 
         var query = new Edit.Query(_characteristic);
 
@@ -180,7 +180,7 @@ public class EditTests : BaseTestFixture
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.ShortName);
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]

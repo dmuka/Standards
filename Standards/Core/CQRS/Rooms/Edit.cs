@@ -74,11 +74,11 @@ namespace Standards.Core.CQRS.Rooms
 
                         room.RuleFor(roomDto => roomDto.Name)
                             .NotEmpty()
-                            .Length(Lengths.EntityName);
+                            .MaximumLength(Lengths.EntityName);
 
                         room.RuleFor(roomDto => roomDto.ShortName)
                             .NotEmpty()
-                            .Length(Lengths.ShortName);
+                            .MaximumLength(Lengths.ShortName);
 
                         room.RuleFor(roomDto => roomDto.Floor)
                             .GreaterThan(default(int));
