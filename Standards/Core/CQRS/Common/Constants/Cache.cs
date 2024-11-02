@@ -12,6 +12,7 @@ public class Cache
     public const string Sectors = "Sectors";
     public const string Categories = "Categories";
     public const string Positions = "Positions";
+    public const string Persons = "Persons";
     public const string Workplaces = "Workplaces";
     public const string Places = "Places";
     public const string Materials = "Materials";

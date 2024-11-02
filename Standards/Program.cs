@@ -55,8 +55,6 @@ public class Program
             app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
 
-            //app.MapRazorPages();
-
             app.MapFallbackToFile("index.html");
 
             app.Run();
