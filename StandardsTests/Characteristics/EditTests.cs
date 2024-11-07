@@ -3,6 +3,7 @@ using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Characteristics;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Standards;
 using Standards.CQRS.Tests.Common;
@@ -74,7 +75,7 @@ public class EditTests : BaseTestFixture
         _repositoryMock.Verify(repository => repository.GetByIdAsync<Grade>(ValidId, _cancellationToken), Times.Once);
         _repositoryMock.Verify(repository => repository.Update(It.IsAny<Characteristic>()), Times.Once);
         _repositoryMock.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
-        _cacheService.Verify(cache => cache.Remove(It.IsAny<string>()), Times.Once);
+        _cacheService.Verify(cache => cache.Remove(Cache.Characteristics), Times.Once);
     }
 
     [Test]

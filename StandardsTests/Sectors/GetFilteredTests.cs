@@ -113,7 +113,7 @@ public class GetFilteredTests : BaseTestFixture
         var query = new GetFiltered<Sector>.Query(_parameters);
         
         // Act
-        var result = _validator.TestValidate(query);
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.Parameters);

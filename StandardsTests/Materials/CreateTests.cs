@@ -2,22 +2,22 @@
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
-using Standards.Core.CQRS.Characteristics;
+using Standards.Core.CQRS.Materials;
 using Standards.Core.Models.DTOs;
 using Standards.CQRS.Tests.Common;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
 
-namespace Standards.CQRS.Tests.Characteristics;
+namespace Standards.CQRS.Tests.Materials;
 
 [TestFixture]
 public class CreateTests : BaseTestFixture
 {
     private const int ValidId = 1;
     private const int IdNotInDb = 2;
-        
-    private CharacteristicDto _characteristic;
+    
+    private MaterialDto _material;
 
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
@@ -29,12 +29,12 @@ public class CreateTests : BaseTestFixture
     [SetUp]
     public void Setup()
     {
-        _characteristic = CharacteristicsDtos[0];
+        _material = MaterialDtos[0];
 
         _cancellationToken = new CancellationToken();
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.AddAsync(_characteristic, _cancellationToken));
+        _repositoryMock.Setup(_ => _.AddAsync(_material, _cancellationToken));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
         _cacheService = new Mock<ICacheService>();
@@ -47,7 +47,7 @@ public class CreateTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new Create.Query(_characteristic);
+        var query = new Create.Query(_material);
         var expected = 1;
 
         // Act
@@ -61,7 +61,7 @@ public class CreateTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new Create.Query(_characteristic);
+        var query = new Create.Query(_material);
         _cancellationToken = new CancellationToken(true);
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
 
@@ -73,124 +73,93 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test]
-    public void Validator_IfCharacteristicDtoIsNull_ShouldHaveValidationError()
+    public void Validator_IfMaterialDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _characteristic = null;
+        _material = null;
 
-        var query = new Create.Query(_characteristic);
+        var query = new Create.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto);
     }
 
     [Test, TestCaseSource(nameof(NullOrEmptyString))]
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _characteristic.Name = name;
+        _material.Name = name;
 
-        var query = new Create.Query(_characteristic);
+        var query = new Create.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.Name);
     }
 
     [Test]
     public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _characteristic.Name = Cases.Length201;
+        _material.Name = Cases.Length201;
 
-        var query = new Create.Query(_characteristic);
+        var query = new Create.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.Name);
     }
 
     [Test, TestCaseSource(nameof(NullOrEmptyString))]
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _characteristic.ShortName = shortName;
+        _material.ShortName = shortName;
 
-        var query = new Create.Query(_characteristic);
+        var query = new Create.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.ShortName);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.ShortName);
     }
 
     [Test]
     public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _characteristic.ShortName = Cases.Length101;
+        _material.ShortName = Cases.Length101;
 
-        var query = new Create.Query(_characteristic);
+        var query = new Create.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.ShortName);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.ShortName);
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
     [TestCase(IdNotInDb)]
-    public void Validator_IfGradeIdIsInvalid_ShouldHaveValidationError(int gradeId)
+    public void Validator_IfUnitIsInvalid_ShouldHaveValidationError(int unitId)
     {
         // Arrange
-        _characteristic.GradeId = gradeId;
+        _material.UnitId = unitId;
 
-        var query = new Create.Query(_characteristic);
+        var query = new Create.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.GradeId);
-    }
-
-    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
-    public void Validator_IfStandardIdIsInvalid_ShouldHaveValidationError(int standardId)
-    {
-        // Arrange
-        _characteristic.StandardId = standardId;
-
-        var query = new Create.Query(_characteristic);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.StandardId);
-    }
-
-    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
-    public void Validator_IfUnitdIsInvalid_ShouldHaveValidationError(int unitId)
-    {
-        // Arrange
-        _characteristic.UnitId = unitId;
-
-        var query = new Create.Query(_characteristic);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.UnitId);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.UnitId);
     }
 }

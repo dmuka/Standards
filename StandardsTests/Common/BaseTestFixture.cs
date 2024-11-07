@@ -43,6 +43,10 @@ public abstract class BaseTestFixture
     
     protected static List<Unit> Units { get; private set; }
     
+    protected static List<Material> Materials { get; private set; }
+    
+    protected static List<MaterialDto> MaterialDtos { get; private set; }
+    
     protected static List<Characteristic> Characteristics { get; private set; }
     
     protected static List<CharacteristicDto> CharacteristicsDtos { get; private set; }
@@ -58,6 +62,7 @@ public abstract class BaseTestFixture
     [OneTimeSetUp]
     public void OneTimeSetup()
     {
+        #region Users
         Users =
         [
             new User
@@ -181,7 +186,9 @@ public abstract class BaseTestFixture
                 IsLockOutEnabled = false
             }
         ];
+        #endregion
         
+        #region Roles
         Roles =
         [
             "Admin",
@@ -190,7 +197,9 @@ public abstract class BaseTestFixture
             "Engineer",
             "Technician"
         ];
+        #endregion
         
+        #region Categories
         Categories =
         [
             new Category
@@ -212,7 +221,9 @@ public abstract class BaseTestFixture
                 ShortName = "CategoryShortName3"
             }
         ];
+        #endregion
         
+        #region Positions
         Positions =
         [
             new Position
@@ -234,7 +245,9 @@ public abstract class BaseTestFixture
                 ShortName = "PositionShortName3"
             }
         ];
+        #endregion
         
+        #region Positions
         Persons =
         [
             new Person
@@ -355,7 +368,9 @@ public abstract class BaseTestFixture
                 User = Users[7]
             }
         ];
+        #endregion
         
+        #region Workplaces
         Workplaces =
         [
             new Workplace
@@ -413,7 +428,9 @@ public abstract class BaseTestFixture
                 ImagePath = null
             }
         ];
+        #endregion
         
+        #region Rooms
         Rooms =
         [
             new Room
@@ -482,6 +499,7 @@ public abstract class BaseTestFixture
                 Persons = new List<Person> { Persons[7] }
             }
         ];
+        #endregion
 
         Workplaces[0].Room = Rooms[4];
         Workplaces[1].Room = Rooms[4];
@@ -489,7 +507,8 @@ public abstract class BaseTestFixture
         Workplaces[3].Room = Rooms[3];
         Workplaces[4].Room = Rooms[0];
         Workplaces[5].Room = Rooms[1];
-        
+
+        #region RoomDtos
         RoomDtos =
         [
             new RoomDto
@@ -569,7 +588,9 @@ public abstract class BaseTestFixture
                 PersonIds = new List<int> { 7 }
             }
         ];
+        #endregion
         
+        #region Sectors + SectorDtos
         Sectors =
         [
             new Sector
@@ -640,6 +661,7 @@ public abstract class BaseTestFixture
                 RoomIds = Sectors[2].Rooms.Select(s => s.Id).ToList()
             }
         ];
+        #endregion
 
         Persons[0].Sector = Sectors[0];
         Persons[1].Sector = Sectors[0];
@@ -657,6 +679,7 @@ public abstract class BaseTestFixture
         Rooms[3].Sector = Sectors[1];
         Rooms[4].Sector = Sectors[2];
         
+        #region Departments + DepartmentDtos
         Departments =
         [
             new Department
@@ -719,7 +742,9 @@ public abstract class BaseTestFixture
                 HousingIds = new List<int> { 3 }
             }
         ];
+        #endregion
         
+        #region Housings + HousingDtos
         Housings = 
         [
             new Housing
@@ -806,7 +831,9 @@ public abstract class BaseTestFixture
                 RoomIds = Housings[2].Rooms.Select(r => r.Id).ToList()
             }
         ];
+        #endregion
 
+        #region Grades
         Grades =
         [
             new Grade
@@ -831,7 +858,9 @@ public abstract class BaseTestFixture
                 Comments = "Comments3"
             }
         ];
+        #endregion
 
+        #region Quantities
         Quantities =
         [
             new Quantity
@@ -850,7 +879,9 @@ public abstract class BaseTestFixture
                 Name = "QuantityName3"
             }
         ];
+        #endregion
 
+        #region Units
         Units =
         [
             new Unit
@@ -881,7 +912,67 @@ public abstract class BaseTestFixture
                 RuSymbol = "UnitRuSymbol3"
             }
         ];
+        #endregion
 
+        #region Materials + MaterialDtos
+        Materials =
+        [
+            new Material
+            {
+                Id = 1,
+                Name = "MaterialName1",
+                ShortName = "MaterialShortName1",
+                Unit = Units[0],
+                Comments = "Comments1"
+            },
+            new Material
+            {
+                Id = 2,
+                Name = "MaterialName2",
+                ShortName = "MaterialShortName2",
+                Unit = Units[1],
+                Comments = "Comments2"
+            },
+            new Material
+            {
+                Id = 3,
+                Name = "MaterialName3",
+                ShortName = "MaterialShortName3",
+                Unit = Units[2],
+                Comments = "Comments3"
+            }
+        ];
+        
+        MaterialDtos =
+        [
+            new MaterialDto
+            {
+                Id = 1,
+                Name = "MaterialName1",
+                ShortName = "MaterialShortName1",
+                UnitId = Materials[0].Unit.Id,
+                Comments = "Comments1"
+            },
+            new MaterialDto
+            {
+                Id = 2,
+                Name = "MaterialName2",
+                ShortName = "MaterialShortName2",
+                UnitId = Materials[1].Unit.Id,
+                Comments = "Comments2"
+            },
+            new MaterialDto
+            {
+                Id = 3,
+                Name = "MaterialName3",
+                ShortName = "MaterialShortName3",
+                UnitId = Materials[2].Unit.Id,
+                Comments = "Comments3"
+            }
+        ];
+        #endregion
+
+        #region Standards
         Standards =
         [
             new Standard
@@ -924,7 +1015,9 @@ public abstract class BaseTestFixture
                 Comments = "Comments3"
             }
         ];
+        #endregion
 
+        #region Places
         Places =
         [
             new Place
@@ -970,7 +1063,9 @@ public abstract class BaseTestFixture
                 Comments = "Comments6"
             }
         ];
+        #endregion
 
+        #region Characteristics + CharacteristicDtos
         Characteristics = 
         [
             new Characteristic
@@ -1072,6 +1167,7 @@ public abstract class BaseTestFixture
                 StandardId = Standards[2].Id
             }
         ];
+        #endregion
     }
     
     protected static IEnumerable<TestCaseData> NullOrEmptyString()

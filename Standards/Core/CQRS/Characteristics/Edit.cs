@@ -48,7 +48,7 @@ namespace Standards.Core.CQRS.Characteristics
 
                 var result = await repository.SaveChangesAsync(cancellationToken);
                 
-                cacheService.Remove(Cache.Departments);
+                cacheService.Remove(Cache.Characteristics);
 
                 return result;
             }

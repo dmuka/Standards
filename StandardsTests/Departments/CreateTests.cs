@@ -78,7 +78,7 @@ public class CreateTests : BaseTestFixture
         var query = new Create.Query(_department);
 
         // Act
-        var result = _validator.TestValidate(query);
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto);
@@ -93,7 +93,7 @@ public class CreateTests : BaseTestFixture
         var query = new Create.Query(_department);
 
         // Act
-        var result = _validator.TestValidate(query);
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);

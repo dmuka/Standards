@@ -39,8 +39,7 @@ namespace Standards.Core.CQRS.Sectors
                     .Where(person => person.Sector.Id == request.SectorDto.Id)
                     .ToList();
 
-                var department = repository.GetQueryable<Department>()
-                    .First(department => department.Id == request.SectorDto.DepartmentId);
+                var department = await repository.GetByIdAsync<Department>(request.SectorDto.DepartmentId, cancellationToken);
             
                 var sector = new Sector
                 {

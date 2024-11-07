@@ -2,6 +2,7 @@
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.MetrologyControl;
 using Standards.CQRS.Tests.Common;
@@ -69,7 +70,7 @@ public class DeleteTests : BaseTestFixture
         _repository.Verify(repository => repository.GetByIdAsync<Place>(IdInDb, _cancellationToken), Times.Once);
         _repository.Verify(repository => repository.DeleteAsync(It.IsAny<Place>(), _cancellationToken), Times.Once);
         _repository.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
-        _cacheService.Verify(cache => cache.Remove(It.IsAny<string>()), Times.Once);
+        _cacheService.Verify(cache => cache.Remove(Cache.Places), Times.Once);
     }
 
     [Test]

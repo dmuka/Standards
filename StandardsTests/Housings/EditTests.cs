@@ -2,6 +2,7 @@
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Housings;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
@@ -74,7 +75,7 @@ public class EditTests : BaseTestFixture
         _repositoryMock.Verify(repository => repository.GetQueryable<Room>(), Times.Once);
         _repositoryMock.Verify(repository => repository.Update(It.IsAny<Housing>()), Times.Once);
         _repositoryMock.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
-        _cacheService.Verify(cache => cache.Remove(It.IsAny<string>()), Times.Once);
+        _cacheService.Verify(cache => cache.Remove(Cache.Housings), Times.Once);
     }
 
     [Test]

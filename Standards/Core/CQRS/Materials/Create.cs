@@ -62,7 +62,7 @@ public class Create
                     
                     dto.RuleFor(material => material.ShortName)
                         .NotEmpty()
-                        .MaximumLength(Lengths.EntityName);
+                        .MaximumLength(Lengths.ShortName);
 
                     dto.RuleFor(material => material.UnitId)
                         .GreaterThan(default(int))

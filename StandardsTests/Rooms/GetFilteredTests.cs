@@ -113,7 +113,7 @@ public class GetFilteredTests : BaseTestFixture
         var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
-        var result = _validator.TestValidate(query);
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.Parameters);
@@ -128,7 +128,7 @@ public class GetFilteredTests : BaseTestFixture
         var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
-        var result = _validator.TestValidate(query);
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.Parameters.SearchString);
@@ -143,7 +143,7 @@ public class GetFilteredTests : BaseTestFixture
         var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
-        var result = _validator.TestValidate(query);
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.Parameters.SearchBy);
@@ -158,7 +158,7 @@ public class GetFilteredTests : BaseTestFixture
         var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
-        var result = _validator.TestValidate(query);
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.Parameters.SortBy);
@@ -173,7 +173,7 @@ public class GetFilteredTests : BaseTestFixture
         var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
-        var result = _validator.TestValidate(query);
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.Parameters.ItemsOnPage);
@@ -188,7 +188,7 @@ public class GetFilteredTests : BaseTestFixture
         var query = new GetFiltered<Room>.Query(_parameters);
         
         // Act
-        var result = _validator.TestValidate(query);
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.Parameters.PageNumber);

@@ -3,16 +3,16 @@ using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
 using Standards.Core.CQRS.Common.Constants;
-using Standards.Core.CQRS.Departments;
-using Standards.Core.Models.Departments;
+using Standards.Core.CQRS.Materials;
 using Standards.Core.Models.DTOs;
-using Standards.Core.Models.Housings;
+using Standards.Core.Models.Services;
 using Standards.CQRS.Tests.Common;
 using Standards.CQRS.Tests.Constants;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
+using Unit = Standards.Core.Models.Unit;
 
-namespace Standards.CQRS.Tests.Departments;
+namespace Standards.CQRS.Tests.Materials;
 
 [TestFixture]
 public class EditTests : BaseTestFixture
@@ -20,7 +20,7 @@ public class EditTests : BaseTestFixture
     private const int ValidId = 1;
     private const int IdNotInDb = 2;
 
-    private DepartmentDto _department;
+    private MaterialDto _material;
 
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
@@ -32,13 +32,13 @@ public class EditTests : BaseTestFixture
     [SetUp]
     public void Setup()
     {
-        _department = DepartmentDtos[0];
+        _material = MaterialDtos[0];
 
         _cancellationToken = new CancellationToken();
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<DepartmentDto>(ValidId, _cancellationToken)).Returns(Task.FromResult(_department));
-        _repositoryMock.Setup(_ => _.Update(_department));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<MaterialDto>(ValidId, _cancellationToken)).Returns(Task.FromResult(_material));
+        _repositoryMock.Setup(_ => _.Update(_material));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
         _cacheService = new Mock<ICacheService>();
@@ -51,7 +51,7 @@ public class EditTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new Edit.Query(_department);
+        var query = new Edit.Query(_material);
         var expected = 1;
 
         // Act
@@ -65,24 +65,23 @@ public class EditTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
     {
         // Arrange
-        var query = new Edit.Query(_department);
+        var query = new Edit.Query(_material);
 
         // Act
         _handler.Handle(query, _cancellationToken);
 
         // Assert
-        _repositoryMock.Verify(repository => repository.GetQueryable<Housing>(), Times.Once);
-        _repositoryMock.Verify(repository => repository.GetQueryable<Sector>(), Times.Once);
-        _repositoryMock.Verify(repository => repository.Update(It.IsAny<Department>()), Times.Once);
+        _repositoryMock.Verify(repository => repository.GetByIdAsync<Unit>(ValidId, _cancellationToken), Times.Once);
+        _repositoryMock.Verify(repository => repository.Update(It.IsAny<Material>()), Times.Once);
         _repositoryMock.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
-        _cacheService.Verify(cache => cache.Remove(Cache.Departments), Times.Once);
+        _cacheService.Verify(cache => cache.Remove(Cache.Materials), Times.Once);
     }
 
     [Test]
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new Edit.Query(_department);
+        var query = new Edit.Query(_material);
         _cancellationToken = new CancellationToken(true);
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
 
@@ -94,18 +93,18 @@ public class EditTests : BaseTestFixture
     }
 
     [Test]
-    public void Validator_IfDepartmentDtoIsNull_ShouldHaveValidationError()
+    public void Validator_IfMaterialDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _department = null;
+        _material = null;
 
-        var query = new Edit.Query(_department);
+        var query = new Edit.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto);
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
@@ -113,104 +112,90 @@ public class EditTests : BaseTestFixture
     public void Validator_IfIdIsInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
-        _department.Id = default;
+        _material.Id = default;
 
-        var query = new Edit.Query(_department);
+        var query = new Edit.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Id);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.Id);
     }
 
     [Test, TestCaseSource(nameof(NullOrEmptyString))]
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _department.Name = name;
+        _material.Name = name;
 
-        var query = new Edit.Query(_department);
+        var query = new Edit.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.Name);
     }
 
     [Test]
     public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _department.Name = Cases.Length201;
+        _material.Name = Cases.Length201;
 
-        var query = new Edit.Query(_department);
+        var query = new Edit.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.Name);
     }
 
     [Test, TestCaseSource(nameof(NullOrEmptyString))]
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _department.ShortName = shortName;
+        _material.ShortName = shortName;
 
-        var query = new Edit.Query(_department);
+        var query = new Edit.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.ShortName);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.ShortName);
     }
 
     [Test]
     public void Validator_IfShortNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _department.ShortName = Cases.Length101;
+        _material.ShortName = Cases.Length101;
 
-        var query = new Edit.Query(_department);
+        var query = new Edit.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.ShortName);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.ShortName);
     }
 
-    [Test, TestCaseSource(nameof(NullOrEmptyString))]
-    public void Validator_IfHousingIdsIsEmpty_ShouldHaveValidationError(string? address)
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    [TestCase(IdNotInDb)]
+    public void Validator_IfUnitIsInvalid_ShouldHaveValidationError(int unitId)
     {
         // Arrange
-        _department.HousingIds = new List<int>();
+        _material.UnitId = unitId;
 
-        var query = new Edit.Query(_department);
+        var query = new Edit.Query(_material);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
-    }
-
-    [Test]
-    public void Validator_IfSectorIdsIsEmpty_ShouldHaveValidationError()
-    {
-        // Arrange
-        _department.SectorIds = new List<int>();
-
-        var query = new Edit.Query(_department);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.SectorIds);
+        result.ShouldHaveValidationErrorFor(_ => _.MaterialDto.UnitId);
     }
 }

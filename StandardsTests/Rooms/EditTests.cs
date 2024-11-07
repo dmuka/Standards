@@ -2,6 +2,7 @@
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Rooms;
 using Standards.Core.Models.Departments;
 using Standards.Core.Models.DTOs;
@@ -27,7 +28,7 @@ public class EditTests : BaseTestFixture
 
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
-    private Mock<ICacheService> _cacheMock;
+    private Mock<ICacheService> _cacheService;
 
     private IRequestHandler<Edit.Query, int> _handler;
     private IValidator<Edit.Query> _validator;
@@ -59,9 +60,9 @@ public class EditTests : BaseTestFixture
         _repositoryMock.Setup(_ => _.Update(_room));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
-        _cacheMock = new Mock<ICacheService>();
+        _cacheService = new Mock<ICacheService>();
 
-        _handler = new Edit.QueryHandler(_repositoryMock.Object, _cacheMock.Object);
+        _handler = new Edit.QueryHandler(_repositoryMock.Object, _cacheService.Object);
         _validator = new Edit.QueryValidator(_repositoryMock.Object);
     }
 
@@ -94,6 +95,7 @@ public class EditTests : BaseTestFixture
         _repositoryMock.Verify(repository => repository.GetQueryable<Workplace>(), Times.Once);
         _repositoryMock.Verify(repository => repository.Update(It.IsAny<Room>()), Times.Once);
         _repositoryMock.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
+        _cacheService.Verify(cache => cache.Remove(Cache.Rooms), Times.Once);
     }
 
     [Test]

@@ -145,7 +145,7 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test]
-    public void Validator_IfHousingDtoIsNull_ShouldHaveValidationError()
+    public void Validator_IfRoomDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
         _roomDto = null;

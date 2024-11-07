@@ -2,6 +2,7 @@
 using FluentValidation.TestHelper;
 using MediatR;
 using Moq;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Persons;
 using Standards.CQRS.Tests.Common;
@@ -70,7 +71,7 @@ public class EditTests : BaseTestFixture
         // Assert
         _repositoryMock.Verify(repository => repository.Update(It.IsAny<Category>()), Times.Once);
         _repositoryMock.Verify(repository => repository.SaveChangesAsync(_cancellationToken), Times.Once);
-        _cacheService.Verify(cache => cache.Remove(It.IsAny<string>()), Times.Once);
+        _cacheService.Verify(cache => cache.Remove(Cache.Categories), Times.Once);
     }
 
     [Test]
