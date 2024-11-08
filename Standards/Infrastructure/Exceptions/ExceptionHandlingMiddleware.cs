@@ -2,53 +2,52 @@
 using System.Net;
 using System.Text.Json;
 
-namespace Standards.Infrastructure.Exceptions
+namespace Standards.Infrastructure.Exceptions;
+
+public class ExceptionHandlingMiddleware
 {
-    public class ExceptionHandlingMiddleware
+    private readonly RequestDelegate _next;
+    private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+
+    public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
     {
-        private readonly RequestDelegate _next;
-        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
+        _next = next;
+        _logger = logger;
+    }
 
-        public ExceptionHandlingMiddleware(RequestDelegate next, ILogger<ExceptionHandlingMiddleware> logger)
+    public async Task Invoke(HttpContext context)
+    {
+        try
         {
-            _next = next;
-            _logger = logger;
+            await _next(context);
         }
-
-        public async Task Invoke(HttpContext context)
+        catch (ValidationException validationException)
         {
-            try
-            {
-                await _next(context);
-            }
-            catch (ValidationException validationException)
-            {
-                await HandleException(context, validationException.Message, (int)HttpStatusCode.BadRequest);
-            }
-            catch (StandardsException standardsException)
-            {
-                await HandleException(context, standardsException.Message, (int)standardsException.Error);
-            }
-            catch (Exception exception)
-            {
-                await HandleException(context, exception.Message, (int)HttpStatusCode.InternalServerError);
-            }
+            await HandleException(context, validationException.Message, (int)HttpStatusCode.BadRequest);
         }
-
-        private async Task HandleException(
-            HttpContext context, 
-            string exceptionMessage, 
-            int statusCode)
+        catch (StandardsException standardsException)
         {
-            var response = context.Response;
-            response.ContentType = "application/json";
-            response.StatusCode = statusCode;
+            await HandleException(context, standardsException.Message, (int)standardsException.Error);
+        }
+        catch (Exception exception)
+        {
+            await HandleException(context, exception.Message, (int)HttpStatusCode.InternalServerError);
+        }
+    }
 
-            _logger.LogError("Status code: {statusCode} - exception message: {exceptionMessage}", statusCode, exceptionMessage);
+    private async Task HandleException(
+        HttpContext context, 
+        string exceptionMessage, 
+        int statusCode)
+    {
+        var response = context.Response;
+        response.ContentType = "application/json";
+        response.StatusCode = statusCode;
+
+        _logger.LogError("Status code: {statusCode} - exception message: {exceptionMessage}", statusCode, exceptionMessage);
             
-            var result = JsonSerializer.Serialize(new { message = exceptionMessage });
+        var result = JsonSerializer.Serialize(new { message = exceptionMessage });
 
-            await response.WriteAsync(result);
-        }
+        await response.WriteAsync(result);
     }
 }
