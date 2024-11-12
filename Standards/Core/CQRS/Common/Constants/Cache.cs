@@ -21,4 +21,6 @@ public class Cache
     public const string Characteristics = "Characteristics";
     public const string Grades = "Grades";
     public const string Standards = "Standards";
+    public const string Units = "Units";
+    public const string Quantities = "Quantities";
 }
