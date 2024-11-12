@@ -11,56 +11,56 @@ public class CategoriesController(ISender sender) : ControllerBase
 {
     [HttpGet]
     [Route("list")]
-    public async Task<IActionResult> GetCategories()
+    public async Task<IResult> GetCategories()
     {
         var query = new GetAllBaseEntity.Query<Category>();
 
         var result = await sender.Send(query);
 
-        return Ok(result);
+        return TypedResults.Ok(result);
     }
 
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<IActionResult> GetCategory(int id)
+    public async Task<IResult> GetCategory(int id)
     {
         var query = new GetById.Query<Category>(id);
 
         var result = await sender.Send(query);
 
-        return Ok(result);
+        return TypedResults.Ok(result);
     }
 
     [HttpPost]
     [Route("add")]
-    public async Task<IActionResult> CreateCategory([FromBody] Category category)
+    public async Task<IResult> CreateCategory([FromBody] Category category)
     {
         var query = new CreateBaseEntity.Query<Category>(category);
 
         var result = await sender.Send(query);
 
-        return Ok(result);
+        return Results.Created($"/api/categories/{category.Id}", result);
     }
 
     [HttpPut]
     [Route("edit")]
-    public async Task<IActionResult> EditCategory([FromBody] Category category)
+    public async Task<IResult> EditCategory([FromBody] Category category)
     {
         var query = new EditBaseEntity.Query<Category>(category);
 
-        var result = await sender.Send(query);
+        await sender.Send(query);
 
-        return Ok(result);
+        return Results.NoContent();
     }
 
     [HttpDelete]
     [Route("delete/{id:int}")]
-    public async Task<IActionResult> DeleteCategory(int id)
+    public async Task<IResult> DeleteCategory(int id)
     {
         var query = new Delete.Query<Category>(id);
 
-        var result = await sender.Send(query);
+        await sender.Send(query);
 
-        return Ok(result);
+        return Results.NoContent();
     }
 }
