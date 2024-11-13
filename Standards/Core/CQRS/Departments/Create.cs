@@ -8,6 +8,8 @@ using Standards.Core.Models.DTOs;
 using Standards.Core.Models.Housings;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
+using Standards.Infrastructure.Validators;
+using Unit = Standards.Core.Models.Unit;
 
 namespace Standards.Core.CQRS.Departments;
 
@@ -54,7 +56,7 @@ public class Create
 
     public class QueryValidator : AbstractValidator<Query>
     {
-        public QueryValidator()
+        public QueryValidator(IRepository repository)
         {
             RuleLevelCascadeMode = CascadeMode.Stop;
 
@@ -71,10 +73,14 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
 
                     filter.RuleFor(department => department.HousingIds)
-                        .NotEmpty();
+                        .NotEmpty()
+                        .ForEach(id => 
+                            id.SetValidator(new IdValidator<Housing>(repository)));
 
                     filter.RuleFor(department => department.SectorIds)
-                        .NotEmpty();
+                        .NotEmpty()
+                        .ForEach(id => 
+                            id.SetValidator(new IdValidator<Sector>(repository)));
                 });
         }
     }

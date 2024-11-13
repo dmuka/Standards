@@ -1,9 +1,14 @@
-﻿namespace Standards.Core.Models
+﻿using Standards.Core.CQRS.Common.Constants;
+using Standards.Core.Models.Interfaces;
+
+namespace Standards.Core.Models;
+
+public class Quantity : BaseEntity, IEntity<int>
 {
-    public class Quantity
+    public IList<Unit> Units { get; set; } = null!;
+        
+    public static string GetCacheKey()
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = null!;
-        public IList<Unit> Units { get; set; } = null!;
+        return Cache.Quantities;
     }
 }

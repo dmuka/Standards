@@ -41,6 +41,8 @@ public abstract class BaseTestFixture
     
     protected static List<Quantity> Quantities { get; private set; }
     
+    protected static List<QuantityDto> QuantityDtos { get; private set; }
+    
     protected static List<Unit> Units { get; private set; }
     
     protected static List<Material> Materials { get; private set; }
@@ -860,27 +862,6 @@ public abstract class BaseTestFixture
         ];
         #endregion
 
-        #region Quantities
-        Quantities =
-        [
-            new Quantity
-            {
-                Id = 1,
-                Name = "QuantityName1"
-            },
-            new Quantity
-            { 
-                Id = 2,
-                Name = "QuantityName2"
-            },
-            new Quantity
-            {
-                Id = 3,
-                Name = "QuantityName3"
-            }
-        ];
-        #endregion
-
         #region Units
         Units =
         [
@@ -888,7 +869,6 @@ public abstract class BaseTestFixture
             {
                 Id = 1,
                 Name = "UnitName1",
-                Quantity = Quantities[0],
                 RuName = "UnitRuName1",
                 Symbol = "UnitSymbol1",
                 RuSymbol = "UnitRuSymbol1"
@@ -897,7 +877,6 @@ public abstract class BaseTestFixture
             {
                 Id = 2,
                 Name = "UnitName2",
-                Quantity = Quantities[1],
                 RuName = "UnitRuName2",
                 Symbol = "UnitSymbol2",
                 RuSymbol = "UnitRuSymbol2"
@@ -906,13 +885,62 @@ public abstract class BaseTestFixture
             {
                 Id = 3,
                 Name = "UnitName3",
-                Quantity = Quantities[2],
                 RuName = "UnitRuName3",
                 Symbol = "UnitSymbol3",
                 RuSymbol = "UnitRuSymbol3"
             }
         ];
         #endregion
+
+        #region Quantities
+        Quantities =
+        [
+            new Quantity
+            {
+                Id = 1,
+                Name = "QuantityName1",
+                Units = new List<Unit> { Units[0] }
+            },
+            new Quantity
+            { 
+                Id = 2,
+                Name = "QuantityName2",
+                Units = new List<Unit> { Units[1] }
+            },
+            new Quantity
+            {
+                Id = 3,
+                Name = "QuantityName3",
+                Units = new List<Unit> { Units[2] }
+            }
+        ];
+        
+        QuantityDtos =
+        [
+            new QuantityDto
+            {
+                Id = 1,
+                Name = "QuantityName1",
+                UnitIds = new List<int> { Units[0].Id }
+            },
+            new QuantityDto
+            { 
+                Id = 2,
+                Name = "QuantityName2",
+                UnitIds = new List<int> { Units[1].Id }
+            },
+            new QuantityDto
+            {
+                Id = 3,
+                Name = "QuantityName3",
+                UnitIds = new List<int> { Units[2].Id }
+            }
+        ];
+        #endregion
+
+        Units[0].Quantity = Quantities[0];
+        Units[1].Quantity = Quantities[1];
+        Units[2].Quantity = Quantities[2];
 
         #region Materials + MaterialDtos
         Materials =

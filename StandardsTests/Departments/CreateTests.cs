@@ -14,6 +14,9 @@ namespace Standards.CQRS.Tests.Departments;
 [TestFixture]
 public class CreateTests : BaseTestFixture
 {
+    private const int ValidId = 1;
+    private const int IdNotInDb = 12;
+    
     private DepartmentDto _department;
 
     private Mock<IRepository> _repositoryMock;
@@ -37,7 +40,7 @@ public class CreateTests : BaseTestFixture
         _cacheService = new Mock<ICacheService>();
 
         _handler = new Create.QueryHandler(_repositoryMock.Object, _cacheService.Object);
-        _validator = new Create.QueryValidator();
+        _validator = new Create.QueryValidator(_repositoryMock.Object);
     }
 
     [Test]
@@ -160,10 +163,40 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test]
+    public void Validator_IfHousingIdIsNotInDb_ShouldHaveValidationError()
+    {
+        // Arrange
+        _department.HousingIds = new List<int> { IdNotInDb };
+
+        var query = new Create.Query(_department);
+
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
+    }
+
+    [Test]
     public void Validator_IfSectorIdsIsEmpty_ShouldHaveValidationError()
     {
         // Arrange
         _department.SectorIds = new List<int>();
+
+        var query = new Create.Query(_department);
+
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.SectorIds);
+    }
+
+    [Test]
+    public void Validator_IfSectorIdIsNotInDb_ShouldHaveValidationError()
+    {
+        // Arrange
+        _department.SectorIds = new List<int> { IdNotInDb };
 
         var query = new Create.Query(_department);
 

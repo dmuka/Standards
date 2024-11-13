@@ -200,10 +200,40 @@ public class EditTests : BaseTestFixture
     }
 
     [Test]
+    public void Validator_IfHousingIdIsNotInDb_ShouldHaveValidationError()
+    {
+        // Arrange
+        _department.HousingIds = new List<int> { IdNotInDb };
+
+        var query = new Edit.Query(_department);
+
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
+    }
+
+    [Test]
     public void Validator_IfSectorIdsIsEmpty_ShouldHaveValidationError()
     {
         // Arrange
         _department.SectorIds = new List<int>();
+
+        var query = new Edit.Query(_department);
+
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.SectorIds);
+    }
+
+    [Test]
+    public void Validator_IfSectorIdIsNotInDb_ShouldHaveValidationError()
+    {
+        // Arrange
+        _department.SectorIds = new List<int> { IdNotInDb };
 
         var query = new Edit.Query(_department);
 
