@@ -1,4 +1,5 @@
 using MediatR;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Standards.Controllers;
@@ -34,10 +35,10 @@ public class CategoriesControllerTests : BaseTestFixture
         var result = await _controller.GetCategories();
 
         // Assert
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
-        var okResult = result as OkObjectResult;
+        Assert.That(result, Is.InstanceOf<Ok<IList<Category>>>());
+        var okResult = result as Ok<IList<Category>>;
         Assert.That(okResult, Is.Not.Null);
-        Assert.That((List<Category>)okResult.Value, Is.EquivalentTo(categories));
+        Assert.That((IList<Category>)okResult.Value, Is.EquivalentTo(categories));
     }
 
     [Test]
@@ -53,8 +54,8 @@ public class CategoriesControllerTests : BaseTestFixture
         var result = await _controller.GetCategory(1);
 
         // Assert
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
-        var okResult = result as OkObjectResult;
+        Assert.That(result, Is.InstanceOf<Ok<Category>>());
+        var okResult = result as Ok<Category>;
         Assert.That(okResult, Is.Not.Null);
         Assert.That((Category)okResult.Value, Is.EqualTo(category));
     }
@@ -72,10 +73,10 @@ public class CategoriesControllerTests : BaseTestFixture
         var result = await _controller.CreateCategory(category);
 
         // Assert
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
-        var okResult = result as OkObjectResult;
+        Assert.That(result, Is.InstanceOf<Created<int>>());
+        var okResult = result as Created<int>;
         Assert.That(okResult, Is.Not.Null);
-        Assert.That((int)okResult.Value, Is.EqualTo(category.Id));
+        Assert.That(okResult.Value, Is.EqualTo(category.Id));
     }
 
     [Test]
@@ -91,10 +92,7 @@ public class CategoriesControllerTests : BaseTestFixture
         var result = await _controller.EditCategory(category);
 
         // Assert
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
-        var okResult = result as OkObjectResult;
-        Assert.That(okResult, Is.Not.Null);
-        Assert.That((int)okResult.Value, Is.EqualTo(1));
+        Assert.That(result, Is.InstanceOf<NoContent>());
     }
 
     [Test]
@@ -110,9 +108,6 @@ public class CategoriesControllerTests : BaseTestFixture
         var result = await _controller.DeleteCategory(1);
 
         // Assert
-        Assert.That(result, Is.InstanceOf<OkObjectResult>());
-        var okResult = result as OkObjectResult;
-        Assert.That(okResult, Is.Not.Null);
-        Assert.That((int)okResult.Value, Is.EqualTo(1));
+        Assert.That(result, Is.InstanceOf<NoContent>());
     }
 }
