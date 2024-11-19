@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Persons;
+using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
@@ -22,7 +23,7 @@ public class PositionsController(ISender sender) : ControllerBase
 
     [HttpGet]
     [Route("")]
-    public async Task<IActionResult> GetPosition(int id = 0)
+    public async Task<IActionResult> GetPosition(int id)
     {
         var query = new GetById.Query<Position>(id);
 
@@ -57,7 +58,18 @@ public class PositionsController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeletePosition(int id)
     {
-        var query = new Delete.Query<Category>(id);
+        var query = new Delete.Query<Position>(id);
+
+        var result = await sender.Send(query);
+
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("filter")]
+    public async Task<IActionResult> GetMaterialsByFilter([FromBody] QueryParameters parameters)
+    {
+        var query = new GetFiltered<Position>.Query(parameters);
 
         var result = await sender.Send(query);
 

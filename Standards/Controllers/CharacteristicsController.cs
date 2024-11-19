@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Persons;
 using Standards.Core.Models.Standards;
+using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
@@ -59,6 +60,17 @@ public class CharacteristicsController(ISender sender) : ControllerBase
     public async Task<IActionResult> DeleteCharacteristic(int id)
     {
         var query = new Delete.Query<Characteristic>(id);
+
+        var result = await sender.Send(query);
+
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("filter")]
+    public async Task<IActionResult> GetCharacteristicsByFilter([FromBody] QueryParameters parameters)
+    {
+        var query = new GetFiltered<Characteristic>.Query(parameters);
 
         var result = await sender.Send(query);
 

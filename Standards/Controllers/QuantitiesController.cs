@@ -1,20 +1,20 @@
-﻿using MediatR;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Standards.Core.CQRS.Common.GenericCRUD;
-using Standards.Core.Models.MetrologyControl;
+using Standards.Core.Models;
 using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
-[Route("api/standards/control/places")]
+[Route("api/[controller]")]
 [ApiController]
-public class PlacesController(ISender sender) : ControllerBase
+public class QuantitiesController(ISender sender) : ControllerBase
 {
     [HttpGet]
     [Route("list")]
-    public async Task<IActionResult> GetPlaces()
+    public async Task<IActionResult> GetQuantities()
     {
-        var query = new GetAllBaseEntity.Query<Place>();
+        var query = new GetAllBaseEntity.Query<Quantity>();
 
         var result = await sender.Send(query);
 
@@ -22,10 +22,10 @@ public class PlacesController(ISender sender) : ControllerBase
     }
 
     [HttpGet]
-    [Route("{id:int}")]
-    public async Task<IActionResult> GetPlace(int id)
+    [Route("")]
+    public async Task<IActionResult> GetQuantity(int id)
     {
-        var query = new GetById.Query<Place>(id);
+        var query = new GetById.Query<Quantity>(id);
 
         var result = await sender.Send(query);
 
@@ -34,9 +34,9 @@ public class PlacesController(ISender sender) : ControllerBase
 
     [HttpPost]
     [Route("add")]
-    public async Task<IActionResult> CreatePlace([FromBody] Place place)
+    public async Task<IActionResult> CreateQuantity([FromBody] Quantity quantity)
     {
-        var query = new CreateBaseEntity.Query<Place>(place);
+        var query = new CreateBaseEntity.Query<Quantity>(quantity);
 
         var result = await sender.Send(query);
 
@@ -45,9 +45,9 @@ public class PlacesController(ISender sender) : ControllerBase
 
     [HttpPut]
     [Route("edit")]
-    public async Task<IActionResult> EditPlace([FromBody] Place place)
+    public async Task<IActionResult> EditQuantity([FromBody] Quantity quantity)
     {
-        var query = new EditBaseEntity.Query<Place>(place);
+        var query = new EditBaseEntity.Query<Quantity>(quantity);
 
         var result = await sender.Send(query);
 
@@ -56,9 +56,9 @@ public class PlacesController(ISender sender) : ControllerBase
 
     [HttpDelete]
     [Route("delete/{id:int}")]
-    public async Task<IActionResult> DeletePlace(int id)
+    public async Task<IActionResult> DeleteQuantity(int id)
     {
-        var query = new Delete.Query<Place>(id);
+        var query = new Delete.Query<Quantity>(id);
 
         var result = await sender.Send(query);
 
@@ -69,7 +69,7 @@ public class PlacesController(ISender sender) : ControllerBase
     [Route("filter")]
     public async Task<IActionResult> GetMaterialsByFilter([FromBody] QueryParameters parameters)
     {
-        var query = new GetFiltered<Place>.Query(parameters);
+        var query = new GetFiltered<Quantity>.Query(parameters);
 
         var result = await sender.Send(query);
 

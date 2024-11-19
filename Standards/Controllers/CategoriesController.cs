@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Standards.Core.CQRS.Common.GenericCRUD;
 using Standards.Core.Models.Persons;
+using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
@@ -62,5 +63,17 @@ public class CategoriesController(ISender sender) : ControllerBase
         await sender.Send(query);
 
         return Results.NoContent();
+    }
+
+    [HttpPost]
+    [Route("filter")]
+    
+    public async Task<IActionResult> GetCategoriesByFilter([FromBody] QueryParameters parameters)
+    {
+        var query = new GetFiltered<Category>.Query(parameters);
+
+        var result = await sender.Send(query);
+
+        return Ok(result);
     }
 }

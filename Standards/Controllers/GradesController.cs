@@ -1,7 +1,9 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Standards.Core.CQRS.Common.GenericCRUD;
+using Standards.Core.Models.Departments;
 using Standards.Core.Models.Standards;
+using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
@@ -58,6 +60,17 @@ public class GradesController(ISender sender) : ControllerBase
     public async Task<IActionResult> DeleteGrade(int id)
     {
         var query = new Delete.Query<Grade>(id);
+
+        var result = await sender.Send(query);
+
+        return Ok(result);
+    }
+
+    [HttpPost]
+    [Route("filter")]
+    public async Task<IActionResult> GetGradesByFilter([FromBody] QueryParameters parameters)
+    {
+        var query = new GetFiltered<Grade>.Query(parameters);
 
         var result = await sender.Send(query);
 
