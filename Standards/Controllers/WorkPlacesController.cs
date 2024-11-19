@@ -1,76 +1,69 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
+﻿using MediatR;
+using Microsoft.AspNetCore.Mvc;
+using Standards.Core.CQRS.Common.GenericCRUD;
+using Standards.Core.CQRS.Workplaces;
 using Standards.Core.Models.Departments;
-using Standards.Infrastructure.Data;
+using Standards.Core.Models.DTOs;
+using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
-[Route("api/workplaces")]
+[Route("api/[controller]")]
 [ApiController]
-public class WorkPlacesController(ApplicationDbContext repository) : ControllerBase
+public class WorkPlacesController(ISender sender) : ControllerBase
 {
     [HttpGet]
     [Route("list")]
-    public IActionResult GetWorkPlaces()
+    public async Task<IActionResult> GetWorkPlaces()
     {
-        var workPlaces = repository.WorkPlaces.ToList();
+        var query = new GetAll.Query();
 
-        return Ok(workPlaces);
+        var result = await sender.Send(query);
+
+        return Ok(result);
     }
 
     [HttpGet]
-    [Route("")]
-    public IActionResult GetWorkPlace(int id = 0)
+    [Route("{id:int}")]
+    public async Task<IActionResult> GetWorkPlace(int id)
     {
-        if (id == 0)
-        {
-            return BadRequest();
-        }
+        var query = new GetById.Query<Sector>(id);
 
-        var workPlace = repository.WorkPlaces.FirstOrDefault(w => w.Id == id);
+        var result = await sender.Send(query);
 
-        if (workPlace is null)
-        {
-            return NotFound($"Not found workplace with id: {id}");
-        }
-
-        return Ok(workPlace);
+        return Ok(result);
     }
 
     [HttpPost]
     [Route("add")]
-    public void CreateWorkPlace([FromBody] Workplace workplace)
+    public async Task<IActionResult> CreateWorkPlace([FromBody] WorkplaceDto workplace)
     {
-        repository.Add(new Workplace
-        {
-            Name = workplace.Name,
-            Responcible = workplace.Responcible,
-            ImagePath = workplace.ImagePath,
-            Comments = workplace.Comments
-        });
+        var query = new Create.Query(workplace);
 
-        repository.SaveChanges();
+        var result = await sender.Send(query);
+
+        return Ok(result);
     }
 
     [HttpPut]
     [Route("edit")]
-    public void EditWorkPlace(int id, [FromBody] Workplace workplace)
+    public async Task<IActionResult> EditWorkPlace(int id, [FromBody] WorkplaceDto workplace)
     {
-        if (workplace.Id != id) return;
-        repository.Entry(workplace).State = EntityState.Modified;
+        var query = new Edit.Query(workplace);
+            
+        var result = await sender.Send(query);
 
-        repository.SaveChanges();
+        return Ok(result);
     }
 
-    [HttpDelete]
-    [Route("delete")]
-    public void DeleteWorkPlace(int id)
+    [HttpPost]
+    [Route("filter")]
+    public async Task<IActionResult> GetWorkplacesByFilter([FromBody] QueryParameters parameters)
     {
-        var workPlace = repository.WorkPlaces.Find(id);
+        var query = new GetFiltered<Workplace>.Query(parameters);
 
-        if (workPlace is null) return;
-        repository.WorkPlaces.Remove(workPlace);
+        var result = await sender.Send(query);
 
-        repository.SaveChanges();
+        return Ok(result);
     }
 }

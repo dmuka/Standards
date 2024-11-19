@@ -6,7 +6,7 @@ using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
-[Route("api/standards/control/places")]
+[Route("api/standards/control/[controller]")]
 [ApiController]
 public class PlacesController(ISender sender) : ControllerBase
 {

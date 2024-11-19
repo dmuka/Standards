@@ -9,7 +9,7 @@ using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
-[Route("api/rooms")]
+[Route("api/[controller]")]
 [ApiController]
 public class RoomsController(ApplicationDbContext repository, ISender sender) : ControllerBase
 {

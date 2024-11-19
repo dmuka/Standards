@@ -9,7 +9,7 @@ using Standards.Infrastructure.Filter.Implementations;
 namespace Standards.Controllers;
 
 [ApiController]
-[Route("api/housings")]
+[Route("api/[controller]")]
 public class HousingsController(ISender sender) : ApiBaseController
 {
     [HttpGet]

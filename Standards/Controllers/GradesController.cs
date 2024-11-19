@@ -7,7 +7,7 @@ using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
-[Route("api/persons/grades")]
+[Route("api/persons/[controller]")]
 [ApiController]
 public class GradesController(ISender sender) : ControllerBase
 {

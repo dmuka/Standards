@@ -6,7 +6,7 @@ using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
-[Route("api/persons/categories")]
+[Route("api/persons/[controller]")]
 [ApiController]
 public class CategoriesController(ISender sender) : ControllerBase
 {

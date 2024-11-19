@@ -7,7 +7,7 @@ using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
-[Route("api/standards/characteristics")]
+[Route("api/standards/[controller]")]
 [ApiController]
 public class CharacteristicsController(ISender sender) : ControllerBase
 {

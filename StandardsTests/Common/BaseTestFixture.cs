@@ -381,7 +381,7 @@ public abstract class BaseTestFixture
                 Name = "WorkPlaceName1",
                 ShortName = "WorkPlaceShortName1",
                 Comments = "WorkplaceComments1",
-                Responcible = Persons[0],
+                Responsible = Persons[0],
                 ImagePath = null
             },
             new Workplace
@@ -390,7 +390,7 @@ public abstract class BaseTestFixture
                 Name = "WorkPlaceName2",
                 ShortName = "WorkPlaceShortName2",
                 Comments = "WorkplaceComments2",
-                Responcible = Persons[1],
+                Responsible = Persons[1],
                 ImagePath = null
             },
             new Workplace
@@ -399,7 +399,7 @@ public abstract class BaseTestFixture
                 Name = "WorkPlaceName3",
                 ShortName = "WorkPlaceShortName3",
                 Comments = "WorkplaceComments3",
-                Responcible = Persons[2],
+                Responsible = Persons[2],
                 ImagePath = null
             },
             new Workplace
@@ -408,7 +408,7 @@ public abstract class BaseTestFixture
                 Name = "WorkPlaceName4",
                 ShortName = "WorkPlaceShortName4",
                 Comments = "WorkplaceComments4",
-                Responcible = Persons[3],
+                Responsible = Persons[3],
                 ImagePath = null
             },
             new Workplace
@@ -417,7 +417,7 @@ public abstract class BaseTestFixture
                 Name = "WorkPlaceName5",
                 ShortName = "WorkPlaceShortName5",
                 Comments = "WorkplaceComments5",
-                Responcible = Persons[4],
+                Responsible = Persons[4],
                 ImagePath = null
             },
             new Workplace
@@ -426,7 +426,7 @@ public abstract class BaseTestFixture
                 Name = "WorkPlaceName6",
                 ShortName = "WorkPlaceShortName6",
                 Comments = "WorkplaceComments6",
-                Responcible = Persons[5],
+                Responsible = Persons[5],
                 ImagePath = null
             }
         ];

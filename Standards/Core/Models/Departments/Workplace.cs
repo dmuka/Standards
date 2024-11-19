@@ -8,7 +8,7 @@ namespace Standards.Core.Models.Departments
     public class Workplace : BaseEntity, IEntity<int>
     {
         public Room Room { get; set; }
-        public Person Responcible { get; set; }
+        public Person Responsible { get; set; }
         public string? ImagePath { get; set; }
 
         public static string GetCacheKey()

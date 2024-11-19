@@ -8,7 +8,7 @@ using Standards.Infrastructure.Filter.Implementations;
 
 namespace Standards.Controllers;
 
-[Route("api/sectors")]
+[Route("api/[controller]")]
 [ApiController]
 public class SectorsController(ISender sender) : ControllerBase
 {
