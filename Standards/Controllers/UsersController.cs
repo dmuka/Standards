@@ -24,26 +24,21 @@ public class UsersController(IUserService userService) : ControllerBase
     //[Authorize(Roles = Role.Admin)]
     [HttpGet]
     [Route("list")]
-    public IActionResult GetAll()
+    public async Task<IActionResult> GetAll()
     {
-        var users = userService.GetAll();
+        var users = await userService.GetAll();
+        
         return Ok(users);
     }
 
     [HttpGet("{id}")]
-    public IActionResult GetById(int id)
+    public async Task<IActionResult> GetById(int id)
     {
-        var user = userService.GetById(id);
+        var user = await userService.GetById(id);
 
-        if (user == null)
-        {
-            return NotFound();
-        }
+        if (user is null) return NotFound();
 
-        if (User.IsInRole(Role.Admin))
-        {
-            return Forbid();
-        }
+        if (User.IsInRole(Role.Admin)) return Forbid();
 
         return Ok(user);
     }
