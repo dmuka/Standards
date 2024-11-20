@@ -15,6 +15,10 @@ export class Home extends Component {
           <li>Notifications about next verification, calibration and service maintenance</li>
           <li>Different information about standards: department, sector, housing and room, where standard is using and so on</li>
         </ul>
+        <h2>Service apps</h2>
+        <ul>
+          <li><a href='https://localhost:3000/swagger'>Swagger</a></li>
+        </ul>
       </div>
     );
   }
