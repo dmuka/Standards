@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace Standards.Migrations
 {
-    public partial class Initial : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -127,11 +127,11 @@ namespace Standards.Migrations
                     IsEmailConfirmed = table.Column<bool>(type: "bit", nullable: false),
                     RefreshToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     AccessToken = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
-                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: false),
+                    PasswordHash = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
+                    PasswordSalt = table.Column<byte[]>(type: "varbinary(max)", nullable: true),
                     IsTwoFactorEnabled = table.Column<bool>(type: "bit", nullable: false),
                     AccessFailedCount = table.Column<int>(type: "int", nullable: false),
-                    LockOutEnd = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    LockOutEnd = table.Column<DateTime>(type: "datetime2", nullable: true),
                     IsLockOutEnabled = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
@@ -266,47 +266,11 @@ namespace Standards.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "WorkPlaces",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("SqlServer:Identity", "1, 1"),
-                    RoomId = table.Column<int>(type: "int", nullable: false),
-                    ResponcibleId = table.Column<int>(type: "int", nullable: false),
-                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    SectorId = table.Column<int>(type: "int", nullable: true),
-                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
-                    ShortName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Comments = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_WorkPlaces", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_WorkPlaces_Persons_ResponcibleId",
-                        column: x => x.ResponcibleId,
-                        principalTable: "Persons",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_WorkPlaces_Rooms_RoomId",
-                        column: x => x.RoomId,
-                        principalTable: "Rooms",
-                        principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_WorkPlaces_Sectors_SectorId",
-                        column: x => x.SectorId,
-                        principalTable: "Sectors",
-                        principalColumn: "Id");
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Standards",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    WorkPlaceId = table.Column<int>(type: "int", nullable: false),
                     ResponsibleId = table.Column<int>(type: "int", nullable: true),
                     ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     VerificationInterval = table.Column<int>(type: "int", nullable: false),
@@ -323,12 +287,6 @@ namespace Standards.Migrations
                         column: x => x.ResponsibleId,
                         principalTable: "Persons",
                         principalColumn: "Id");
-                    table.ForeignKey(
-                        name: "FK_Standards_WorkPlaces_WorkPlaceId",
-                        column: x => x.WorkPlaceId,
-                        principalTable: "WorkPlaces",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -422,13 +380,56 @@ namespace Standards.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "WorkPlaces",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    RoomId = table.Column<int>(type: "int", nullable: false),
+                    ResponsibleId = table.Column<int>(type: "int", nullable: false),
+                    ImagePath = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    SectorId = table.Column<int>(type: "int", nullable: true),
+                    StandardId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ShortName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Comments = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_WorkPlaces", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_WorkPlaces_Persons_ResponsibleId",
+                        column: x => x.ResponsibleId,
+                        principalTable: "Persons",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_WorkPlaces_Rooms_RoomId",
+                        column: x => x.RoomId,
+                        principalTable: "Rooms",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_WorkPlaces_Sectors_SectorId",
+                        column: x => x.SectorId,
+                        principalTable: "Sectors",
+                        principalColumn: "Id");
+                    table.ForeignKey(
+                        name: "FK_WorkPlaces_Standards_StandardId",
+                        column: x => x.StandardId,
+                        principalTable: "Standards",
+                        principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Quantities",
                 columns: table => new
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    ServiceId = table.Column<int>(type: "int", nullable: true)
+                    ServiceId = table.Column<int>(type: "int", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(200)", maxLength: 200, nullable: false),
+                    ShortName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Comments = table.Column<string>(type: "nvarchar(500)", maxLength: 500, nullable: false)
                 },
                 constraints: table =>
                 {
@@ -615,6 +616,18 @@ namespace Standards.Migrations
                 });
 
             migrationBuilder.InsertData(
+                table: "Users",
+                columns: new[] { "Id", "AccessFailedCount", "AccessToken", "Email", "IsEmailConfirmed", "IsLockOutEnabled", "IsTwoFactorEnabled", "LockOutEnd", "PasswordHash", "PasswordSalt", "RefreshToken", "UserName" },
+                values: new object[,]
+                {
+                    { 1, 0, null, "user1@email.com", false, false, false, null, null, null, null, "user1" },
+                    { 2, 0, null, "user2@email.com", false, false, false, null, null, null, null, "user2" },
+                    { 3, 0, null, "user3@email.com", false, false, false, null, null, null, null, "user3" },
+                    { 4, 0, null, "user4@email.com", false, false, false, null, null, null, null, "user4" },
+                    { 5, 0, null, "user5@email.com", false, false, false, null, null, null, null, "user5" }
+                });
+
+            migrationBuilder.InsertData(
                 table: "DepartmentHousing",
                 columns: new[] { "DepartmentsId", "HousingsId" },
                 values: new object[,]
@@ -657,6 +670,18 @@ namespace Standards.Migrations
                     { 10, "Comments10", 1, 3.0, 2, 3.0, "Room10", 5, "r10", 4.0 },
                     { 11, "Comments11", 2, 3.0, 3, 6.0, "Room11", 6, "r11", 7.0 },
                     { 12, "Comments12", 2, 3.0, 3, 6.0, "Room12", 7, "r12", 5.0 }
+                });
+
+            migrationBuilder.InsertData(
+                table: "Persons",
+                columns: new[] { "Id", "BirthdayDate", "CategoryId", "Comments", "FirstName", "LastName", "MiddleName", "PositionId", "Role", "RoomId", "SectorId" },
+                values: new object[,]
+                {
+                    { 1, new DateTime(2000, 10, 11, 0, 0, 0, 0, DateTimeKind.Unspecified), 2, "Comments1", "Антон", "Чехов", "Сергеевич", 2, "Engineer", 1, 1 },
+                    { 2, new DateTime(2001, 4, 1, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, "Comments1", "Дмитрий", "Тургенев", "Анатольевич", 2, "Engineer", 2, 1 },
+                    { 3, new DateTime(1999, 11, 5, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Comments1", "Сергей", "Толстой", "Романович", 3, "SectorHead", 3, 3 },
+                    { 4, new DateTime(1998, 6, 6, 0, 0, 0, 0, DateTimeKind.Unspecified), 3, "Comments1", "Петр", "Достоевский", "Артемович", 4, "DepartmentHead", 4, 2 },
+                    { 5, new DateTime(2002, 1, 2, 0, 0, 0, 0, DateTimeKind.Unspecified), 4, "Comments1", "Иван", "Пушкин", "Никодимович", 2, "Engineer", 5, 3 }
                 });
 
             migrationBuilder.CreateIndex(
@@ -770,11 +795,6 @@ namespace Standards.Migrations
                 column: "ResponsibleId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Standards_WorkPlaceId",
-                table: "Standards",
-                column: "WorkPlaceId");
-
-            migrationBuilder.CreateIndex(
                 name: "IX_Units_QuantityId",
                 table: "Units",
                 column: "QuantityId");
@@ -795,9 +815,9 @@ namespace Standards.Migrations
                 column: "StandardId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_WorkPlaces_ResponcibleId",
+                name: "IX_WorkPlaces_ResponsibleId",
                 table: "WorkPlaces",
-                column: "ResponcibleId");
+                column: "ResponsibleId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_WorkPlaces_RoomId",
@@ -808,6 +828,11 @@ namespace Standards.Migrations
                 name: "IX_WorkPlaces_SectorId",
                 table: "WorkPlaces",
                 column: "SectorId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_WorkPlaces_StandardId",
+                table: "WorkPlaces",
+                column: "StandardId");
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -831,6 +856,9 @@ namespace Standards.Migrations
                 name: "VerificationsJournal");
 
             migrationBuilder.DropTable(
+                name: "WorkPlaces");
+
+            migrationBuilder.DropTable(
                 name: "Grades");
 
             migrationBuilder.DropTable(
@@ -850,9 +878,6 @@ namespace Standards.Migrations
 
             migrationBuilder.DropTable(
                 name: "Standards");
-
-            migrationBuilder.DropTable(
-                name: "WorkPlaces");
 
             migrationBuilder.DropTable(
                 name: "Persons");

@@ -15,7 +15,7 @@ public class CharacteristicsController(ISender sender) : ControllerBase
     [Route("list")]
     public async Task<IActionResult> GetCharacteristics()
     {
-        var query = new GetAllBaseEntity.Query<Category>();
+        var query = new GetAllBaseEntity.Query<Characteristic>();
 
         var result = await sender.Send(query);
 

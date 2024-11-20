@@ -206,7 +206,7 @@ namespace Standards.Migrations
                         });
                 });
 
-            modelBuilder.Entity("Standards.Core.Models.Departments.WorkPlace", b =>
+            modelBuilder.Entity("Standards.Core.Models.Departments.Workplace", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -227,7 +227,7 @@ namespace Standards.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("nvarchar(200)");
 
-                    b.Property<int>("ResponcibleId")
+                    b.Property<int>("ResponsibleId")
                         .HasColumnType("int");
 
                     b.Property<int>("RoomId")
@@ -241,13 +241,18 @@ namespace Standards.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<int?>("StandardId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
-                    b.HasIndex("ResponcibleId");
+                    b.HasIndex("ResponsibleId");
 
                     b.HasIndex("RoomId");
 
                     b.HasIndex("SectorId");
+
+                    b.HasIndex("StandardId");
 
                     b.ToTable("WorkPlaces");
                 });
@@ -889,12 +894,23 @@ namespace Standards.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("Comments")
+                        .IsRequired()
+                        .HasMaxLength(500)
+                        .HasColumnType("nvarchar(500)");
+
                     b.Property<string>("Name")
                         .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                        .HasMaxLength(200)
+                        .HasColumnType("nvarchar(200)");
 
                     b.Property<int?>("ServiceId")
                         .HasColumnType("int");
+
+                    b.Property<string>("ShortName")
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.HasKey("Id");
 
@@ -1164,14 +1180,9 @@ namespace Standards.Migrations
                     b.Property<int>("VerificationInterval")
                         .HasColumnType("int");
 
-                    b.Property<int>("WorkPlaceId")
-                        .HasColumnType("int");
-
                     b.HasKey("Id");
 
                     b.HasIndex("ResponsibleId");
-
-                    b.HasIndex("WorkPlaceId");
 
                     b.ToTable("Standards");
                 });
@@ -1341,11 +1352,11 @@ namespace Standards.Migrations
                     b.Navigation("Department");
                 });
 
-            modelBuilder.Entity("Standards.Core.Models.Departments.WorkPlace", b =>
+            modelBuilder.Entity("Standards.Core.Models.Departments.Workplace", b =>
                 {
-                    b.HasOne("Standards.Core.Models.Persons.Person", "Responcible")
+                    b.HasOne("Standards.Core.Models.Persons.Person", "Responsible")
                         .WithMany()
-                        .HasForeignKey("ResponcibleId")
+                        .HasForeignKey("ResponsibleId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -1356,10 +1367,14 @@ namespace Standards.Migrations
                         .IsRequired();
 
                     b.HasOne("Standards.Core.Models.Departments.Sector", null)
-                        .WithMany("WorkPlaces")
+                        .WithMany("Workplaces")
                         .HasForeignKey("SectorId");
 
-                    b.Navigation("Responcible");
+                    b.HasOne("Standards.Core.Models.Standards.Standard", null)
+                        .WithMany("Workplaces")
+                        .HasForeignKey("StandardId");
+
+                    b.Navigation("Responsible");
 
                     b.Navigation("Room");
                 });
@@ -1559,15 +1574,7 @@ namespace Standards.Migrations
                         .HasForeignKey("ResponsibleId")
                         .OnDelete(DeleteBehavior.NoAction);
 
-                    b.HasOne("Standards.Core.Models.Departments.WorkPlace", "WorkPlace")
-                        .WithMany()
-                        .HasForeignKey("WorkPlaceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.Navigation("Responsible");
-
-                    b.Navigation("WorkPlace");
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Unit", b =>
@@ -1596,7 +1603,7 @@ namespace Standards.Migrations
 
                     b.Navigation("Rooms");
 
-                    b.Navigation("WorkPlaces");
+                    b.Navigation("Workplaces");
                 });
 
             modelBuilder.Entity("Standards.Core.Models.Housings.Housing", b =>
@@ -1630,6 +1637,8 @@ namespace Standards.Migrations
                     b.Navigation("Characteristics");
 
                     b.Navigation("Services");
+
+                    b.Navigation("Workplaces");
                 });
 #pragma warning restore 612, 618
         }
