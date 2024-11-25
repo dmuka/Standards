@@ -11,14 +11,14 @@ namespace Standards.Core.CQRS.Common.GenericCRUD;
 [TransactionScope]
 public class Delete 
 {
-    public class Query<T>(int id) : IRequest<int> where T : BaseEntity, IEntity<int>
+    public class Query<T>(int id) : IRequest<int> where T : class, IEntity<int>
     {
         public int Id { get; } = id;
     }
 
     public class QueryHandler<T>(
         IRepository repository, 
-        ICacheService cacheService) : IRequestHandler<Query<T>, int> where T : BaseEntity, IEntity<int>
+        ICacheService cacheService) : IRequestHandler<Query<T>, int> where T : class, IEntity<int>
     {
         public async Task<int> Handle(Query<T> request, CancellationToken cancellationToken)
         {

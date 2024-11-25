@@ -63,6 +63,7 @@ namespace Standards.Infrastructure.Data;
             modelBuilder.Entity<Person>()
                 .HasOne(p => p.User)
                 .WithOne()
+                .HasForeignKey<Person>(p => p.UserId)
                 .HasPrincipalKey<User>(u => u.Id);
 
             modelBuilder.Entity<Workplace>()

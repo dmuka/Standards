@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Standards.Core.Models.Interfaces;
 using Standards.Infrastructure.Filter.Constants;
 
 namespace Standards.Core.Models
@@ -33,7 +34,7 @@ namespace Standards.Core.Models
         public static PaginatedListModel<TEntity> ApplyPagination<TEntity>(
             IEnumerable<TEntity> entities,
             int pageNumber,
-            int itemsOnPage) where TEntity : BaseEntity
+            int itemsOnPage) where TEntity : IEntity<int>
         {
             PaginatedListModel<TEntity> result = null;
                 

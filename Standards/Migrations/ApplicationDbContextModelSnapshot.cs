@@ -701,7 +701,10 @@ namespace Standards.Migrations
             modelBuilder.Entity("Standards.Core.Models.Persons.Person", b =>
                 {
                     b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<DateTime>("BirthdayDate")
                         .HasColumnType("datetime2");
@@ -743,6 +746,9 @@ namespace Standards.Migrations
                     b.Property<int>("SectorId")
                         .HasColumnType("int");
 
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -752,6 +758,9 @@ namespace Standards.Migrations
                     b.HasIndex("RoomId");
 
                     b.HasIndex("SectorId");
+
+                    b.HasIndex("UserId")
+                        .IsUnique();
 
                     b.ToTable("Persons");
 
@@ -768,7 +777,8 @@ namespace Standards.Migrations
                             PositionId = 2,
                             Role = "Engineer",
                             RoomId = 1,
-                            SectorId = 1
+                            SectorId = 1,
+                            UserId = 1
                         },
                         new
                         {
@@ -782,7 +792,8 @@ namespace Standards.Migrations
                             PositionId = 2,
                             Role = "Engineer",
                             RoomId = 2,
-                            SectorId = 1
+                            SectorId = 1,
+                            UserId = 2
                         },
                         new
                         {
@@ -796,7 +807,8 @@ namespace Standards.Migrations
                             PositionId = 3,
                             Role = "SectorHead",
                             RoomId = 3,
-                            SectorId = 3
+                            SectorId = 3,
+                            UserId = 3
                         },
                         new
                         {
@@ -810,7 +822,8 @@ namespace Standards.Migrations
                             PositionId = 4,
                             Role = "DepartmentHead",
                             RoomId = 4,
-                            SectorId = 2
+                            SectorId = 2,
+                            UserId = 4
                         },
                         new
                         {
@@ -824,7 +837,8 @@ namespace Standards.Migrations
                             PositionId = 2,
                             Role = "Engineer",
                             RoomId = 5,
-                            SectorId = 3
+                            SectorId = 3,
+                            UserId = 5
                         });
                 });
 
@@ -1444,12 +1458,6 @@ namespace Standards.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Standards.Core.Models.Users.User", "User")
-                        .WithOne()
-                        .HasForeignKey("Standards.Core.Models.Persons.Person", "Id")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("Standards.Core.Models.Persons.Position", "Position")
                         .WithMany()
                         .HasForeignKey("PositionId")
@@ -1465,6 +1473,12 @@ namespace Standards.Migrations
                         .WithMany("Persons")
                         .HasForeignKey("SectorId")
                         .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("Standards.Core.Models.Users.User", "User")
+                        .WithOne()
+                        .HasForeignKey("Standards.Core.Models.Persons.Person", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Category");

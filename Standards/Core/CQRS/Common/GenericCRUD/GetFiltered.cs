@@ -2,6 +2,7 @@
 using MediatR;
 using Standards.Core.Models;
 using Standards.Core.Models.Housings;
+using Standards.Core.Models.Interfaces;
 using Standards.Infrastructure.Filter.Implementations;
 using Standards.Infrastructure.Filter.Interfaces;
 using Standards.Infrastructure.QueryableWrapper.Interface;
@@ -9,7 +10,7 @@ using Standards.Infrastructure.Validators.Constants;
 
 namespace Standards.Core.CQRS.Common.GenericCRUD;
 
-public class GetFiltered<T> where T : BaseEntity
+public class GetFiltered<T> where T : class, IEntity<int>
 {
     public class Query(QueryParameters parameters) : IRequest<PaginatedListModel<T>>
     {

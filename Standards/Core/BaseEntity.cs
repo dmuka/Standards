@@ -1,11 +1,11 @@
 using System.ComponentModel.DataAnnotations;
 using Standards.Core.Constants;
+using Standards.Core.Models;
 
 namespace Standards.Core;
 
-public abstract class BaseEntity
+public abstract class BaseEntity : Entity
 {
-    public int Id { get; set; }
     [MaxLength(Lengths.EntityName)]
     public string Name { get; set; } = null!;
     [MaxLength(Lengths.ShortName)]

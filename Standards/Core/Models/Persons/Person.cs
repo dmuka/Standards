@@ -1,11 +1,13 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Standards.Core.Constants;
+using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.Models.Departments;
+using Standards.Core.Models.Interfaces;
 using Standards.Core.Models.Users;
 
 namespace Standards.Core.Models.Persons
 {
-    public class Person
+    public class Person : IEntity<int> 
     {
         public int Id { get; set; }
         [MaxLength(Lengths.PersonName)]
@@ -20,8 +22,13 @@ namespace Standards.Core.Models.Persons
         public Sector Sector { get; set; } = null!;
         [MaxLength(Lengths.Role)]
         public string Role { get; set; } = null!;
+        public int UserId { get; set; }
         public User User { get; set; } = null!;
         [MaxLength(Lengths.Comment)]
         public string Comments { get; set; } = null!;
+        public static string GetCacheKey()
+        {
+            return Cache.Persons;
+        }
     }
 }

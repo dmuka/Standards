@@ -9,14 +9,14 @@ namespace Standards.Core.CQRS.Common.GenericCRUD;
 
 public class GetById
 {
-    public class Query<T>(int id) : IRequest<T> where T : BaseEntity, IEntity<int>
+    public class Query<T>(int id) : IRequest<T> where T : IEntity<int>
     {
         public int Id { get; } = id;
     }
 
     public class QueryHandler<T>(
         IRepository repository, 
-        ICacheService cacheService) : IRequestHandler<Query<T>, T> where T : BaseEntity, IEntity<int>
+        ICacheService cacheService) : IRequestHandler<Query<T>, T> where T : class, IEntity<int>
     {
         public async Task<T> Handle(Query<T> request, CancellationToken cancellationToken)
         {
