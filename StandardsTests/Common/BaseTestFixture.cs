@@ -29,6 +29,8 @@ public abstract class BaseTestFixture
     
     protected static List<Person> Persons { get; private set; }
     
+    protected static List<PersonDto> PersonDtos { get; private set; }
+    
     protected static List<string> Roles { get; private set; }
     
     protected static List<Workplace> Workplaces { get; private set; }
@@ -249,7 +251,7 @@ public abstract class BaseTestFixture
         ];
         #endregion
         
-        #region Positions
+        #region Persons
         Persons =
         [
             new Person
@@ -368,6 +370,126 @@ public abstract class BaseTestFixture
                 Position = Positions[2],
                 Role = Roles[4],
                 User = Users[7]
+            }
+        ];
+        PersonDtos =
+        [
+            new PersonDto
+            {
+                Id = 1,
+                FirstName = "FirstName1",
+                MiddleName = "MiddleName1",
+                LastName = "LastName1",
+                BirthdayDate = new DateTime(2000, 10, 15),
+                CategoryId = Categories[0].Id,
+                Comments = "PersonsComments1",
+                PositionId = Positions[0].Id,
+                Role = Roles[0],
+                UserId = Users[0].Id
+            },
+            new PersonDto
+            {
+                Id = 2,
+                FirstName = "FirstName2",
+                MiddleName = "MiddleName2",
+                LastName = "LastName2",
+                BirthdayDate = new DateTime(2000, 10, 16),
+                CategoryId = Categories[1].Id,
+                Comments = "PersonsComments2",
+                PositionId = Positions[1].Id,
+                Role = Roles[1],
+                UserId = Users[1].Id
+            },
+            new PersonDto
+            {
+                Id = 2,
+                FirstName = "FirstName2",
+                MiddleName = "MiddleName2",
+                LastName = "LastName2",
+                BirthdayDate = new DateTime(2000, 10, 16),
+                CategoryId = Categories[1].Id,
+                Comments = "PersonsComments2",
+                PositionId = Positions[1].Id,
+                Role = Roles[1],
+                UserId = Users[1].Id
+            },
+            new PersonDto
+            {
+                Id = 3,
+                FirstName = "FirstName3",
+                MiddleName = "MiddleName3",
+                LastName = "LastName3",
+                BirthdayDate = new DateTime(2000, 10, 17),
+                CategoryId = Categories[2].Id,
+                Comments = "PersonsComments3",
+                PositionId = Positions[2].Id,
+                Role = Roles[2],
+                UserId = Users[2].Id
+            },
+            new PersonDto
+            {
+                Id = 4,
+                FirstName = "FirstName4",
+                MiddleName = "MiddleName4",
+                LastName = "LastName4",
+                BirthdayDate = new DateTime(2000, 10, 18),
+                CategoryId = Categories[2].Id,
+                Comments = "PersonsComments4",
+                PositionId = Positions[2].Id,
+                Role = Roles[3],
+                UserId = Users[3].Id
+            },
+            new PersonDto
+            {
+                Id = 5,
+                FirstName = "FirstName5",
+                MiddleName = "MiddleName5",
+                LastName = "LastName5",
+                BirthdayDate = new DateTime(2000, 10, 19),
+                CategoryId = Categories[1].Id,
+                Comments = "PersonsComments5",
+                PositionId = Positions[1].Id,
+                Role = Roles[3],
+                UserId = Users[4].Id
+            },
+            new PersonDto
+            {
+                Id = 6,
+                FirstName = "FirstName6",
+                MiddleName = "MiddleName6",
+                LastName = "LastName6",
+                BirthdayDate = new DateTime(2000, 10, 20),
+                CategoryId = Categories[2].Id,
+                Comments = "PersonsComments6",
+                PositionId = Positions[2].Id,
+                Role = Roles[4],
+                UserId = Users[5].Id
+            },
+            new PersonDto
+            {
+                Id = 7,
+                FirstName = "FirstName7",
+                MiddleName = "MiddleName7",
+                LastName = "LastName7",
+                BirthdayDate = new DateTime(2000, 10, 21),
+                CategoryId = Categories[1].Id,
+                Comments = "PersonsComments4",
+                PositionId = Positions[2].Id,
+                Role = Roles[3],
+                UserId = Users[6].Id
+            },
+            new PersonDto
+            {
+                Id = 8,
+                FirstName = "FirstName8",
+                MiddleName = "MiddleName8",
+                LastName = "LastName8",
+                BirthdayDate = new DateTime(2000, 10, 22),
+                CategoryId = Categories[2].Id,
+                Comments = "PersonsComments8",
+                PositionId = Positions[2].Id,
+                Role = Roles[4],
+                UserId = Users[7].Id
             }
         ];
         #endregion
@@ -674,6 +796,16 @@ public abstract class BaseTestFixture
         Persons[6].Sector = Sectors[2];
         Persons[7].Sector = Sectors[2];
         Persons[8].Sector = Sectors[2];
+
+        PersonDtos[0].SectorId = Sectors[0].Id;
+        PersonDtos[1].SectorId = Sectors[0].Id;
+        PersonDtos[2].SectorId = Sectors[0].Id;
+        PersonDtos[3].SectorId = Sectors[1].Id;
+        PersonDtos[4].SectorId = Sectors[1].Id;
+        PersonDtos[5].SectorId = Sectors[1].Id;
+        PersonDtos[6].SectorId = Sectors[2].Id;
+        PersonDtos[7].SectorId = Sectors[2].Id;
+        PersonDtos[8].SectorId = Sectors[2].Id;
 
         Rooms[0].Sector = Sectors[0];
         Rooms[1].Sector = Sectors[0];
@@ -1202,6 +1334,11 @@ public abstract class BaseTestFixture
     {
         yield return new TestCaseData(Cases.Null);
         yield return new TestCaseData(Cases.EmptyString);
+    }
+    
+    protected static IEnumerable<TestCaseData> NullDate()
+    {
+        yield return new TestCaseData(Cases.Null);
     }
     
     protected static IEnumerable<TestCaseData> ZeroOrNegativeId()

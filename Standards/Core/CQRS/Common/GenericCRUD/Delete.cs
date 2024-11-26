@@ -34,7 +34,7 @@ public class Delete
         }
     }
 
-    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : BaseEntity, IEntity<int>
+    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : class, IEntity<int>
     {
         public QueryValidator(IRepository repository)
         {
