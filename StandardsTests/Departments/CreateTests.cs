@@ -147,35 +147,35 @@ public class CreateTests : BaseTestFixture
         result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.ShortName);
     }
 
-    [Test]
-    public void Validator_IfHousingIdsIsEmpty_ShouldHaveValidationError()
-    {
-        // Arrange
-        _department.HousingIds = new List<int>();
-
-        var query = new Create.Query(_department);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
-    }
-
-    [Test]
-    public void Validator_IfHousingIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _department.HousingIds = new List<int> { IdNotInDb };
-
-        var query = new Create.Query(_department);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
-    }
+    // [Test]
+    // public void Validator_IfHousingIdsIsEmpty_ShouldHaveValidationError()
+    // {
+    //     // Arrange
+    //     _department.HousingIds = new List<int>();
+    //
+    //     var query = new Create.Query(_department);
+    //
+    //     // Act
+    //     var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+    //
+    //     // Assert
+    //     result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
+    // }
+    //
+    // [Test]
+    // public void Validator_IfHousingIdIsNotInDb_ShouldHaveValidationError()
+    // {
+    //     // Arrange
+    //     _department.HousingIds = new List<int> { IdNotInDb };
+    //
+    //     var query = new Create.Query(_department);
+    //
+    //     // Act
+    //     var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+    //
+    //     // Assert
+    //     result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.HousingIds);
+    // }
 
     [Test]
     public void Validator_IfSectorIdsIsEmpty_ShouldHaveValidationError()

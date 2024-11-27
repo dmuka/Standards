@@ -1,13 +1,13 @@
 namespace Standards.Core.Models.DTOs;
 
-public class RoomDto : BaseEntity
+public class RoomDto : Entity
 {
-    public int HousingId { get; set; }
-    public int Floor { get; set; }
-    public double Length { get; set; }
-    public double Height { get; set; }
-    public double Width { get; set; }
-    public IList<int> PersonIds { get; set; }
-    public IList<int> WorkplaceIds { get; set; }
-    public int SectorId { get; set; }
+    public required int HousingId { get; set; }
+    public required int Floor { get; set; }
+    public required double Length { get; set; }
+    public required double Height { get; set; }
+    public required double Width { get; set; }
+    public IList<int> PersonIds { get; set; } = [];
+    public IList<int> WorkplaceIds { get; set; } = [];
+    public required int SectorId { get; set; }
 }

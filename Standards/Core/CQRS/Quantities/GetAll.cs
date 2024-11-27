@@ -46,6 +46,7 @@ public class GetAll
                 {
                     Id = q.Id,
                     Name = q.Name,
+                    ShortName = q.ShortName,
                     UnitIds = q.Units.Select(u => u.Id).ToList()
                 }).ToList();
 

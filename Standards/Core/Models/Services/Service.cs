@@ -3,12 +3,12 @@ using Standards.Core.Models.Interfaces;
 
 namespace Standards.Core.Models.Services
 {
-    public class Service : BaseEntity, IEntity<int>
+    public class Service : Entity, ICacheable
     {
-        public ServiceType ServiceType { get; set; }
-        public IList<Material> Materials { get; set; } = new List<Material>();
-        public IList<Quantity> MaterialsQuantities { get; set; } = new List<Quantity>();
-        public IList<Unit> MaterialsUnits { get; set; } = new List<Unit>();
+        public required ServiceType ServiceType { get; set; }
+        public IList<Material> Materials { get; set; } = [];
+        public IList<Quantity> MaterialsQuantities { get; set; } = [];
+        public IList<Unit> MaterialsUnits { get; set; } = [];
 
         public static string GetCacheKey()
         {

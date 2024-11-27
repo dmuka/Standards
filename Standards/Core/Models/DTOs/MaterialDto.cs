@@ -1,6 +1,6 @@
 namespace Standards.Core.Models.DTOs;
 
-public class MaterialDto : BaseEntity
+public class MaterialDto : Entity
 {
-    public int UnitId { get; set; }
+    public required int UnitId { get; set; }
 }

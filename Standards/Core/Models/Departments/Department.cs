@@ -1,13 +1,11 @@
 ﻿using Standards.Core.CQRS.Common.Constants;
-using Standards.Core.Models.Housings;
 using Standards.Core.Models.Interfaces;
 
 namespace Standards.Core.Models.Departments
 {
-    public class Department : BaseEntity, IEntity<int>
+    public class Department : Entity, ICacheable
     {
-        public IList<Sector> Sectors { get; set; } = new List<Sector>();
-        public IList<Housing> Housings { get; set; } = new List<Housing>();
+        public IList<Sector> Sectors { get; set; } = [];
 
         public static string GetCacheKey()
         {

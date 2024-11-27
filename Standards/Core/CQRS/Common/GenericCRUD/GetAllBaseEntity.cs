@@ -1,5 +1,6 @@
 using MediatR;
 using Standards.Core.CQRS.Common.Constants;
+using Standards.Core.Models;
 using Standards.Core.Models.Interfaces;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
@@ -8,14 +9,14 @@ namespace Standards.Core.CQRS.Common.GenericCRUD;
 
 public class GetAllBaseEntity
 {
-    public class Query<T> : IRequest<IList<T>> where T : BaseEntity, IEntity<int>
+    public class Query<T> : IRequest<IList<T>> where T : Entity, ICacheable
     {
     }
 
     public class QueryHandler<T>(
         IRepository repository, 
         ICacheService cache, 
-        IConfigService configService) : IRequestHandler<Query<T>, IList<T>> where T : BaseEntity, IEntity<int>, new()
+        IConfigService configService) : IRequestHandler<Query<T>, IList<T>> where T : Entity, ICacheable, new()
     {
         public async Task<IList<T>> Handle(Query<T> request, CancellationToken cancellationToken)
         {

@@ -10,7 +10,7 @@ using Standards.Infrastructure.Validators.Constants;
 
 namespace Standards.Core.CQRS.Common.GenericCRUD;
 
-public class GetFiltered<T> where T : class, IEntity<int>
+public class GetFiltered<T> where T : BaseEntity, ICacheable
 {
     public class Query(QueryParameters parameters) : IRequest<PaginatedListModel<T>>
     {

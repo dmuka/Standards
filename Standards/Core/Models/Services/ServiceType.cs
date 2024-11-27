@@ -1,13 +1,12 @@
 ﻿using Standards.Core.CQRS.Common.Constants;
 using Standards.Core.Models.Interfaces;
 
-namespace Standards.Core.Models.Services
+namespace Standards.Core.Models.Services;
+
+public class ServiceType : Entity, ICacheable
 {
-    public class ServiceType : BaseEntity, IEntity<int>
+    public static string GetCacheKey()
     {
-        public static string GetCacheKey()
-        {
-            return Cache.ServiceTypes;
-        }
+        return Cache.ServiceTypes;
     }
 }

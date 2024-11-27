@@ -24,10 +24,10 @@ public class Edit
     {
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
-            var departments = repository.GetQueryable<Department>()
-                .Where(department => department.Housings
-                    .SelectMany(h => h.Departments.Select(d => d.Id))
-                    .Intersect(request.HousingDto.DepartmentIds).Any());
+            // var departments = repository.GetQueryable<Department>()
+            //     .Where(department => department.Housings
+            //         .SelectMany(h => h.Departments.Select(d => d.Id))
+            //         .Intersect(request.HousingDto.DepartmentIds).Any());
 
             var rooms = repository.GetQueryable<Room>()
                 .Where(room => room.Housing.Id == request.HousingDto.Id);
@@ -39,7 +39,6 @@ public class Edit
                 ShortName = request.HousingDto.ShortName,
                 FloorsCount = request.HousingDto.FloorsCount,
                 Address = request.HousingDto.Address,
-                Departments = departments.ToList(),
                 Rooms = rooms.ToList(),
                 Comments = request.HousingDto.Comments
             };
@@ -82,10 +81,10 @@ public class Edit
                     housing.RuleFor(housingDto => housingDto.Address)
                         .NotEmpty();
 
-                    housing.RuleFor(housingDto => housingDto.DepartmentIds)
-                        .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Department>(repository)));
+                    // housing.RuleFor(housingDto => housingDto.DepartmentIds)
+                    //     .NotEmpty()
+                    //     .ForEach(id => 
+                    //         id.SetValidator(new IdValidator<Department>(repository)));
 
                     housing.RuleFor(housingDto => housingDto.RoomIds)
                         .NotEmpty()

@@ -5,16 +5,16 @@ using Standards.Core.Models.Persons;
 
 namespace Standards.Core.Models.Housings
 {
-    public class Room : BaseEntity, IEntity<int>
+    public class Room : Entity, ICacheable
     {
-        public Housing Housing { get; set; }
-        public int Floor { get; set; }
-        public double Length { get; set; }
-        public double Height { get; set; }
-        public double Width { get; set; }
-        public IList<Workplace> WorkPlaces { get; set; } = new List<Workplace>();
-        public IList<Person> Persons { get; set; } = new List<Person>();
-        public Sector Sector { get; set; }
+        public required Housing Housing { get; set; }
+        public required int Floor { get; set; }
+        public required double Length { get; set; }
+        public required double Height { get; set; }
+        public required double Width { get; set; }
+        public IList<Workplace> WorkPlaces { get; set; } = [];
+        public IList<Person> Persons { get; set; } = [];
+        public required Sector Sector { get; set; }
 
         public static string GetCacheKey()
         {

@@ -1,6 +1,7 @@
 using FluentValidation;
 using MediatR;
 using Standards.Core.CQRS.Common.Attributes;
+using Standards.Core.Models;
 using Standards.Core.Models.Interfaces;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
@@ -11,14 +12,14 @@ namespace Standards.Core.CQRS.Common.GenericCRUD;
 [TransactionScope]
 public class Delete 
 {
-    public class Query<T>(int id) : IRequest<int> where T : class, IEntity<int>
+    public class Query<T>(int id) : IRequest<int> where T : BaseEntity
     {
         public int Id { get; } = id;
     }
 
     public class QueryHandler<T>(
         IRepository repository, 
-        ICacheService cacheService) : IRequestHandler<Query<T>, int> where T : class, IEntity<int>
+        ICacheService cacheService) : IRequestHandler<Query<T>, int> where T : BaseEntity, ICacheable
     {
         public async Task<int> Handle(Query<T> request, CancellationToken cancellationToken)
         {
@@ -34,7 +35,7 @@ public class Delete
         }
     }
 
-    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : class, IEntity<int>
+    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : BaseEntity, ICacheable
     {
         public QueryValidator(IRepository repository)
         {

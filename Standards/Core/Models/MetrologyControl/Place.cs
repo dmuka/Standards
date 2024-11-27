@@ -3,7 +3,7 @@ using Standards.Core.Models.Interfaces;
 
 namespace Standards.Core.Models.MetrologyControl
 {
-    public class Place : BaseEntity, IEntity<int>
+    public class Place : Entity, ICacheable
     {
         public static string GetCacheKey()
         {

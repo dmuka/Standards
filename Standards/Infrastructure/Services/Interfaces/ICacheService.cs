@@ -1,4 +1,4 @@
-using Standards.Core.Models.Interfaces;
+using Standards.Core;
 
 namespace Standards.Infrastructure.Services.Interfaces;
 
@@ -17,7 +17,7 @@ public interface ICacheService
         TimeSpan? absoluteExpiration = null,
         TimeSpan? slidingExpiration = null);
 
-    public T? GetById<T>(string cacheKey, int id) where T : IEntity<int>;
+    public T? GetById<T>(string cacheKey, int id) where T : BaseEntity;
 
     public void Remove(string cacheKey);
 }

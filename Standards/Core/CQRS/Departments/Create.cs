@@ -29,17 +29,16 @@ public class Create
                 .Where(sector => sector.Department.Id == request.DepartmentDto.Id)
                 .ToList();
 
-            var housings = repository.GetQueryable<Housing>()
-                .Where(housing => housing.Departments
-                    .Any(d => d.Housings.Any(h => request.DepartmentDto.HousingIds.Contains(h.Id))))
-                .ToList();
+            // var housings = repository.GetQueryable<Housing>()
+            //     .Where(housing => housing.Departments
+            //         .Any(d => d.Housings.Any(h => request.DepartmentDto.HousingIds.Contains(h.Id))))
+            //     .ToList();
             
             var department = new Department
             {
                 Name = request.DepartmentDto.Name,
                 ShortName = request.DepartmentDto.ShortName,
-                Sectors = sectors,
-                Housings = housings
+                Sectors = sectors
             };
 
             if (request.DepartmentDto.Comments is not null) department.Comments = request.DepartmentDto.Comments;
@@ -72,10 +71,10 @@ public class Create
                         .NotEmpty()
                         .MaximumLength(Lengths.ShortName);
 
-                    filter.RuleFor(department => department.HousingIds)
-                        .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Housing>(repository)));
+                    // filter.RuleFor(department => department.HousingIds)
+                    //     .NotEmpty()
+                    //     .ForEach(id => 
+                    //         id.SetValidator(new IdValidator<Housing>(repository)));
 
                     filter.RuleFor(department => department.SectorIds)
                         .NotEmpty()

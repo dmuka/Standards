@@ -3,7 +3,7 @@ using Standards.Core.Models.Interfaces;
 
 namespace Standards.Core.Models.Persons
 {
-    public class Position : BaseEntity, IEntity<int>
+    public class Position : Entity, ICacheable
     {
         public static string GetCacheKey()
         {

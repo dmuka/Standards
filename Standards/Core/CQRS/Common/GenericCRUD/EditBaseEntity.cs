@@ -2,6 +2,7 @@ using FluentValidation;
 using MediatR;
 using Standards.Core.Constants;
 using Standards.Core.CQRS.Common.Attributes;
+using Standards.Core.Models;
 using Standards.Core.Models.Interfaces;
 using Standards.Infrastructure.Data.Repositories.Interfaces;
 using Standards.Infrastructure.Services.Interfaces;
@@ -12,14 +13,14 @@ namespace Standards.Core.CQRS.Common.GenericCRUD;
 [TransactionScope]
 public class EditBaseEntity
 {
-    public class Query<T>(T entity) : IRequest<int> where T : BaseEntity, IEntity<int>
+    public class Query<T>(T entity) : IRequest<int> where T : Entity, ICacheable
     {
         public T Entity { get; } = entity;
     }
 
     public class QueryHandler<T>(
         IRepository repository, 
-        ICacheService cacheService) : IRequestHandler<Query<T>, int> where T : BaseEntity, IEntity<int>, new()
+        ICacheService cacheService) : IRequestHandler<Query<T>, int> where T : Entity, ICacheable, new()
     {
         public async Task<int> Handle(Query<T> request, CancellationToken cancellationToken)
         {
@@ -40,7 +41,7 @@ public class EditBaseEntity
         }
     }
 
-    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : BaseEntity, IEntity<int>
+    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : Entity, ICacheable
     {
         public QueryValidator(IRepository repository)
         {

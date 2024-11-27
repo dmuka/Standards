@@ -1,7 +1,6 @@
 namespace Standards.Core.Models.DTOs;
 
-public class DepartmentDto : BaseEntity
+public class DepartmentDto : Entity
 {
-    public IList<int> SectorIds { get; set; } = new List<int>();
-    public IList<int> HousingIds { get; set; } = new List<int>();
+    public IList<int> SectorIds { get; set; } = [];
 }

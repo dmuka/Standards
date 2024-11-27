@@ -37,12 +37,21 @@ public class Create
             
             var housing = await repository.GetByIdAsync<Housing>(request.Room.HousingId, cancellationToken);
 
-            var room = GetRoom(request.Room, persons, workplaces);
+            var room = new Room
+            {
+                Name = request.Room.Name,
+                ShortName = request.Room.ShortName,
+                Floor = request.Room.Floor,
+                Height = request.Room.Height,
+                Housing = housing,
+                Sector = sector,
+                Persons = persons,
+                WorkPlaces = workplaces,
+                Width = request.Room.Width,
+                Length = request.Room.Length
+            };
 
-            room.Persons = persons;
-            room.WorkPlaces = workplaces;
-            room.Sector = sector;
-            room.Housing = housing;
+            if (request.Room.Comments is not null) room.Comments = request.Room.Comments;
             
             await repository.AddAsync(room, cancellationToken);
 
@@ -51,25 +60,6 @@ public class Create
             cacheService.Remove(Cache.Rooms);
 
             return result;
-        }
-
-        private Room GetRoom(
-            RoomDto roomDto,
-            IList<Person> persons,
-            IList<Workplace> workplaces)
-        {
-            var room = new Room
-            {
-                Name = roomDto.Name,
-                Floor = roomDto.Floor,
-                Height = roomDto.Height,
-                Width = roomDto.Width,
-                Length = roomDto.Length
-            };
-
-            if (roomDto.Comments is not null) room.Comments = roomDto.Comments;
-
-            return room;
         }
     }
 

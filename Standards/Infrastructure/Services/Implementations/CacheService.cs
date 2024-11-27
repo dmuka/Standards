@@ -1,5 +1,5 @@
 using Microsoft.Extensions.Caching.Memory;
-using Standards.Core.Models.Interfaces;
+using Standards.Core;
 using Standards.Infrastructure.Services.Interfaces;
 
 namespace Standards.Infrastructure.Services.Implementations;
@@ -25,7 +25,7 @@ public class CacheService(IMemoryCache cache) : ICacheService
         return cachedData;
     }
     
-    public T? GetById<T>(string cacheKey, int id) where T : IEntity<int>
+    public T? GetById<T>(string cacheKey, int id) where T : BaseEntity
     {
         var entities = cache.Get<IList<T>>(cacheKey);
         

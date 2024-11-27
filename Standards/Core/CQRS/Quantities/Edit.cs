@@ -31,7 +31,9 @@ public class Edit
                 
             var quantity = new Quantity
             {
+                Id = request.QuantityDto.Id,
                 Name = request.QuantityDto.Name,
+                ShortName = request.QuantityDto.ShortName,
                 Units = units
             };
                 

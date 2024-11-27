@@ -26,6 +26,8 @@ namespace Standards.Core.CQRS.Rooms
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
                 var housing = await repository.GetByIdAsync<Housing>(request.RoomDto.HousingId, cancellationToken);
+                
+                var sector = await repository.GetByIdAsync<Sector>(request.RoomDto.SectorId, cancellationToken);
 
                 var persons = repository.GetQueryable<Person>()
                     .Where(person => request.RoomDto.PersonIds.Contains(person.Id));
@@ -39,6 +41,7 @@ namespace Standards.Core.CQRS.Rooms
                     Name = request.RoomDto.Name,
                     ShortName = request.RoomDto.ShortName,
                     Housing = housing,
+                    Sector = sector,
                     Comments = request.RoomDto.Comments,
                     Floor = request.RoomDto.Floor,
                     Height = request.RoomDto.Height,

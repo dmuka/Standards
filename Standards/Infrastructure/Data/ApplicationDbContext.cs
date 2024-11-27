@@ -91,18 +91,18 @@ namespace Standards.Infrastructure.Data;
                 .WithOne()
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Housing>()
-                .ToTable("Housings")
-                .HasMany(h => h.Departments)
-                .WithMany(d => d.Housings)
-                .UsingEntity(d => d.HasData(
-                [
-                    new { DepartmentsId = 1, HousingsId = 1 },
-                    new { DepartmentsId = 2, HousingsId = 1 },
-                    new { DepartmentsId = 2, HousingsId = 2 },
-                    new { DepartmentsId = 1, HousingsId = 3 },
-                    new { DepartmentsId = 3, HousingsId = 3 }
-                ]));
+            // modelBuilder.Entity<Housing>()
+            //     .ToTable("Housings")
+            //     .HasMany(h => h.Departments)
+            //     .WithMany(d => d.Housings)
+            //     .UsingEntity(d => d.HasData(
+            //     [
+            //         new { DepartmentsId = 1, HousingsId = 1 },
+            //         new { DepartmentsId = 2, HousingsId = 1 },
+            //         new { DepartmentsId = 2, HousingsId = 2 },
+            //         new { DepartmentsId = 1, HousingsId = 3 },
+            //         new { DepartmentsId = 3, HousingsId = 3 }
+            //     ]));
 
             modelBuilder.Entity<Sector>()
                 .HasMany(s => s.Workplaces)

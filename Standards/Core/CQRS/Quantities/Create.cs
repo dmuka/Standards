@@ -32,6 +32,7 @@ public class Create
             var quantity = new Quantity
             {
                 Name = request.QuantityDto.Name,
+                ShortName = request.QuantityDto.ShortName,
                 Units = units
             };
             

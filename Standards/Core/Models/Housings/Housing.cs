@@ -6,13 +6,12 @@ using Standards.Core.Models.Interfaces;
 
 namespace Standards.Core.Models.Housings
 {
-    public class Housing : BaseEntity, IEntity<int>
+    public class Housing : Entity, ICacheable
     {
         [MaxLength(Lengths.Address)]
-        public string Address { get; set; } = null!;
-        public int FloorsCount { get; set; }
-        public IList<Department> Departments { get; set; } = new List<Department>();
-        public IList<Room> Rooms { get; set; } = new List<Room>();
+        public required string Address { get; set; } = null!;
+        public required int FloorsCount { get; set; }
+        public IList<Room> Rooms { get; set; } = [];
 
         public static string GetCacheKey()
         {

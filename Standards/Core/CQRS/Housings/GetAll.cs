@@ -30,7 +30,7 @@ public class GetAll
                 {
                     var result = await repository.GetListAsync<Housing>(
                         query => query
-                            .Include(h => h.Departments)
+                            //.Include(h => h.Departments)
                             .Include(h => h.Rooms),
                         token);
 
@@ -51,7 +51,6 @@ public class GetAll
                     Address = h.Address,
                     FloorsCount = h.FloorsCount,
                     Comments = h.Comments,
-                    DepartmentIds = h.Departments.Select(d => d.Id).ToList(),
                     RoomIds = h.Rooms.Select(r => r.Id).ToList()
                 }).ToList();
 

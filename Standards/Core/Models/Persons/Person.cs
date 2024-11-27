@@ -5,30 +5,28 @@ using Standards.Core.Models.Departments;
 using Standards.Core.Models.Interfaces;
 using Standards.Core.Models.Users;
 
-namespace Standards.Core.Models.Persons
+namespace Standards.Core.Models.Persons;
+
+public class Person : BaseEntity, ICacheable
 {
-    public class Person : IEntity<int> 
+    [MaxLength(Lengths.PersonName)]
+    public string FirstName { get; set; } = null!;
+    [MaxLength(Lengths.PersonName)]
+    public string MiddleName { get; set; } = null!;
+    [MaxLength(Lengths.PersonName)]
+    public string LastName { get; set; } = null!;
+    public Category Category { get; set; } = null!;
+    public Position Position { get; set; } = null!;
+    public DateTime BirthdayDate { get; set; }
+    public Sector Sector { get; set; } = null!;
+    [MaxLength(Lengths.Role)]
+    public string Role { get; set; } = null!;
+    public int UserId { get; set; }
+    public User User { get; set; } = null!;
+    [MaxLength(Lengths.Comment)]
+    public string Comments { get; set; } = null!;
+    public static string GetCacheKey()
     {
-        public int Id { get; set; }
-        [MaxLength(Lengths.PersonName)]
-        public string FirstName { get; set; } = null!;
-        [MaxLength(Lengths.PersonName)]
-        public string MiddleName { get; set; } = null!;
-        [MaxLength(Lengths.PersonName)]
-        public string LastName { get; set; } = null!;
-        public Category Category { get; set; } = null!;
-        public Position Position { get; set; } = null!;
-        public DateTime BirthdayDate { get; set; }
-        public Sector Sector { get; set; } = null!;
-        [MaxLength(Lengths.Role)]
-        public string Role { get; set; } = null!;
-        public int UserId { get; set; }
-        public User User { get; set; } = null!;
-        [MaxLength(Lengths.Comment)]
-        public string Comments { get; set; } = null!;
-        public static string GetCacheKey()
-        {
-            return Cache.Persons;
-        }
+        return Cache.Persons;
     }
 }

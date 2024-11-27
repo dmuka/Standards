@@ -3,9 +3,9 @@ using Standards.Core.Models.Interfaces;
 
 namespace Standards.Core.Models;
 
-public class Quantity : BaseEntity, IEntity<int>
+public class Quantity : Entity, ICacheable
 {
-    public IList<Unit> Units { get; set; } = null!;
+    public IList<Unit> Units { get; set; } = [];
         
     public static string GetCacheKey()
     {

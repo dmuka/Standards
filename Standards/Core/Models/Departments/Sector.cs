@@ -5,12 +5,12 @@ using Standards.Core.Models.Persons;
 
 namespace Standards.Core.Models.Departments
 {
-    public class Sector : BaseEntity, IEntity<int>
+    public class Sector : Entity, ICacheable
     {
-        public Department Department { get; set; }
-        public IList<Room> Rooms { get; set; } = new List<Room>();
-        public IList<Workplace> Workplaces { get; set; } = new List<Workplace>();
-        public IList<Person> Persons { get; set; } = new List<Person>();
+        public required Department Department { get; set; }
+        public IList<Room> Rooms { get; set; } = [];
+        public IList<Workplace> Workplaces { get; set; } = [];
+        public IList<Person> Persons { get; set; } = [];
 
         public static string GetCacheKey()
         {

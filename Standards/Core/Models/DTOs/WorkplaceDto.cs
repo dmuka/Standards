@@ -1,8 +1,8 @@
 namespace Standards.Core.Models.DTOs;
 
-public class WorkplaceDto : BaseEntity
+public class WorkplaceDto : Entity
 {
-    public int RoomId { get; set; }
-    public int ResponsibleId { get; set; }
+    public required int RoomId { get; set; }
+    public required int ResponsibleId { get; set; }
     public string? ImagePath { get; set; }
 }

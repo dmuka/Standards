@@ -60,7 +60,7 @@ public class CacheServiceTests : BaseTestFixture
             {
                 var result = await _repositoryMock.Object.GetListAsync<Housing>(
                     query => query
-                        .Include(h => h.Departments)
+                        //.Include(h => h.Departments)
                         .Include(h => h.Rooms),
                     token);
 
@@ -83,7 +83,7 @@ public class CacheServiceTests : BaseTestFixture
             {
                 var result = await _repositoryMock.Object.GetListAsync<Housing>(
                     query => query
-                        .Include(h => h.Departments)
+                        //.Include(h => h.Departments)
                         .Include(h => h.Rooms),
                     token);
 
@@ -106,7 +106,7 @@ public class CacheServiceTests : BaseTestFixture
             {
                 var result = await _repositoryMock.Object.GetListAsync<Housing>(
                     query => query
-                        .Include(h => h.Departments)
+                        //.Include(h => h.Departments)
                         .Include(h => h.Rooms),
                     token);
 
