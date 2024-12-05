@@ -27,14 +27,7 @@ public class GetAll
                 
             var materials = await cache.GetOrCreateAsync<Material>(
                 Cache.Materials,
-                async (token) =>
-                {
-                    var result = await repository.GetListAsync<Material>(
-                        query => query.Include(m => m.Unit),
-                        token);
-
-                    return result;
-                },
+                [m => m.Unit],
                 cancellationToken,
                 TimeSpan.FromMinutes(absoluteExpiration),
                 TimeSpan.FromMinutes(slidingExpiration));

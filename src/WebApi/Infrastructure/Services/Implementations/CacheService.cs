@@ -1,21 +1,34 @@
+using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Domain;
+using Infrastructure.Data.Repositories.Interfaces;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Caching.Memory;
 
 namespace WebApi.Infrastructure.Services.Implementations;
 
-public class CacheService(IMemoryCache cache) : ICacheService
+public class CacheService(IMemoryCache cache, IRepository repository) : ICacheService
 {
     public async Task<IList<T>> GetOrCreateAsync<T>(
-        string cacheKey, 
-        Func<CancellationToken, Task<IList<T>>> retrieveData,
+        string cacheKey,
+        Expression<Func<T, object>>[] includes,
         CancellationToken cancellationToken,
         TimeSpan? absoluteExpiration = null,
-        TimeSpan? slidingExpiration = null)
+        TimeSpan? slidingExpiration = null) where T : class
     {
         if (!cache.TryGetValue(cacheKey, out IList<T> cachedData))
         {
-            cachedData = await retrieveData(cancellationToken);
+            var query = repository.GetQueryable<T>();
+            
+            if (includes is not null && includes.Length != 0)
+            {
+                foreach (var include in includes)
+                {
+                    query = query.Include(include);
+                }
+            }
+
+            cachedData = await repository.QueryableToListAsync(query, cancellationToken);
             
             var cacheEntryOptions = GetOptions(absoluteExpiration, slidingExpiration);
             

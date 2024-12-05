@@ -26,12 +26,7 @@ public class GetAllBaseEntity
             
             var entities = await cache.GetOrCreateAsync<T>(
                 T.GetCacheKey(),
-                async (token) =>
-                {
-                    var result = await repository.GetListAsync<T>(token);
-
-                    return result;
-                },
+                [],
                 cancellationToken,
                 TimeSpan.FromMinutes(absoluteExpiration),
                 TimeSpan.FromMinutes(slidingExpiration));

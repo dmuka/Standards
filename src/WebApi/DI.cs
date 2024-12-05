@@ -37,7 +37,7 @@ public static class DI
     {
         services
             .AddMemoryCache()
-            .AddSingleton<ICacheService, CacheService>();
+            .AddScoped<ICacheService, CacheService>();
 
         return services;
     }

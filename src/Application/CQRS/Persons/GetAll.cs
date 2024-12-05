@@ -27,18 +27,12 @@ public class GetAll
                 
             var persons = await cache.GetOrCreateAsync<Person>(
                 Cache.Persons,
-                async (token) =>
-                {
-                    var result = await repository.GetListAsync<Person>(
-                        query => query
-                            .Include(p => p.Category)
-                            .Include(p => p.Position)
-                            .Include(p => p.Sector)
-                            .Include(p => p.User),
-                        token);
-
-                    return result;
-                },
+                [
+                    p => p.Category,
+                    p => p.Position,
+                    p => p.Sector,
+                    p => p.User
+                ],
                 cancellationToken,
                 TimeSpan.FromMinutes(absoluteExpiration),
                 TimeSpan.FromMinutes(slidingExpiration));

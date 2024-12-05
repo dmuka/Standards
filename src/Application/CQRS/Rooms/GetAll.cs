@@ -27,18 +27,12 @@ namespace Application.CQRS.Rooms
 
                 var rooms = await cache.GetOrCreateAsync<Room>(
                     Cache.Rooms,
-                    async (token) =>
-                    {
-                        var result = await repository.GetListAsync<Room>(
-                            query => query
-                                .Include(r => r.WorkPlaces)
-                                .Include(r => r.Persons)
-                                .Include(r => r.Sector)
-                                .Include(r => r.Housing),
-                            token);
-
-                        return result;
-                    },
+                    [
+                        r => r.WorkPlaces,
+                        r => r.Persons,
+                        r => r.Sector,
+                        r => r.Housing
+                    ],
                     cancellationToken,
                     TimeSpan.FromMinutes(absoluteExpiration),
                     TimeSpan.FromMinutes(slidingExpiration));

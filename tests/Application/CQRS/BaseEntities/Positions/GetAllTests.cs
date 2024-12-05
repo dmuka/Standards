@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
 using Application.CQRS.Common.GenericCRUD;
@@ -42,7 +43,7 @@ public class GetAllTests : BaseTestFixture
             .Returns(Task.FromResult(_positions));
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Positions, It.IsAny<Func<CancellationToken, Task<IList<Position>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Positions, It.IsAny<Expression<Func<Position, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
             .Returns(Task.FromResult(_positions));
 
         _handler = new GetAllBaseEntity.QueryHandler<Position>(_repository.Object, _cacheService.Object, _configService.Object); 

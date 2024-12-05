@@ -32,6 +32,17 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// <returns>Returns <see cref="IQueryable{T}"/>.</returns>
         IQueryable<TEntity> GetQueryable<TEntity>() where TEntity : class;
 
+        /// <summary>
+        /// Materialize asynchronously <see cref="IQueryable{T}"/> to <see cref="IList{T}"/>.
+        /// </summary>
+        /// <param name="query"><see cref="IQueryable{T}"/></param>
+        /// <param name="cancellationToken">Cancellation token</param>
+        /// <typeparam name="T">Entity type</typeparam>
+        /// <returns>
+        /// <see><cref>Task{IList{T}}</cref></see>
+        /// </returns>
+        Task<IList<T>> QueryableToListAsync<T>(IQueryable<T> query, CancellationToken cancellationToken) where T : class;
+
         #region Get list
         /// <summary>
         /// This method returns <see cref="IList{T}"/> without any filter. Call only when you want to pull all the data from the source.

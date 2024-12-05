@@ -27,16 +27,7 @@ public class GetAll
                 
             var departments = await cache.GetOrCreateAsync<Department>(
                 Cache.Departments,
-                async (token) =>
-                {
-                    var result = await repository.GetListAsync<Department>(
-                        query => query
-                            //.Include(d => d.Housings)
-                            .Include(d => d.Sectors),
-                        token);
-
-                    return result;
-                },
+                [d => d.Sectors],
                 cancellationToken,
                 TimeSpan.FromMinutes(absoluteExpiration),
                 TimeSpan.FromMinutes(slidingExpiration));

@@ -2,8 +2,6 @@ using Application.Abstractions.Cache;
 using Domain.Models.Housings;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Tests.Common;
@@ -27,6 +25,7 @@ public class CacheServiceTests : BaseTestFixture
     private IList<Housing> _housings;
     
     private Mock<IRepository> _repositoryMock;
+    private Mock<IQueryable<Housing>> _queryableMock;
     private CancellationToken _cancellationToken;
     
     [SetUp]
@@ -38,10 +37,13 @@ public class CacheServiceTests : BaseTestFixture
         _memoryCache.Set(CacheKey, Housings);
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Housing>,IIncludableQueryable<Housing,object>>>(), _cancellationToken))
-            .Returns(Task.FromResult(Housings));
+        _repositoryMock.Setup(repository => repository.GetQueryable<Housing>()).Returns(Housings.AsQueryable);
+        _repositoryMock.Setup(repository => repository.QueryableToListAsync(It.IsAny<IQueryable<Housing>>(), _cancellationToken))
+             .ReturnsAsync(Housings);
         
-        _cacheService = new CacheService(_memoryCache);
+        _queryableMock = new Mock<IQueryable<Housing>>();
+        
+        _cacheService = new CacheService(_memoryCache, _repositoryMock.Object);
     }
 
     [TearDown]
@@ -55,17 +57,9 @@ public class CacheServiceTests : BaseTestFixture
     {
         // Arrange
         // Act
-        var result = _cacheService.GetOrCreateAsync(CacheKey,
-            async (token) =>
-            {
-                var result = await _repositoryMock.Object.GetListAsync<Housing>(
-                    query => query
-                        //.Include(h => h.Departments)
-                        .Include(h => h.Rooms),
-                    token);
-
-                return result;
-            }, _cancellationToken,
+        var result = _cacheService.GetOrCreateAsync<Housing>(CacheKey,
+            [h => h.Rooms],
+            _cancellationToken,
             AbsoluteExpiration,
             SlidingExpiration).Result;
 
@@ -78,17 +72,10 @@ public class CacheServiceTests : BaseTestFixture
     {
         // Arrange
         // Act
-        var result = _cacheService.GetOrCreateAsync(CacheKey,
-            async (token) =>
-            {
-                var result = await _repositoryMock.Object.GetListAsync<Housing>(
-                    query => query
-                        //.Include(h => h.Departments)
-                        .Include(h => h.Rooms),
-                    token);
-
-                return result;
-            }, _cancellationToken).Result;
+        var result = _cacheService.GetOrCreateAsync<Housing>(
+            CacheKey,
+            [h => h.Rooms],
+            _cancellationToken).Result;
 
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
@@ -101,17 +88,10 @@ public class CacheServiceTests : BaseTestFixture
         const string notCached = "NotCached";
         
         // Act
-        var result = _cacheService.GetOrCreateAsync(notCached,
-            async (token) =>
-            {
-                var result = await _repositoryMock.Object.GetListAsync<Housing>(
-                    query => query
-                        //.Include(h => h.Departments)
-                        .Include(h => h.Rooms),
-                    token);
-
-                return result;
-            }, _cancellationToken).Result;
+        var result = _cacheService.GetOrCreateAsync<Housing>(
+            notCached,
+            [h => h.Rooms],
+            _cancellationToken).Result;
 
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));

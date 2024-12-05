@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
 using Application.CQRS.Persons;
@@ -46,7 +47,7 @@ public class GetAllTests : BaseTestFixture
             .Returns(Task.FromResult(_persons));
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Persons, It.IsAny<Func<CancellationToken, Task<IList<Person>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Persons, It.IsAny<Expression<Func<Person, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
             .Returns(Task.FromResult(_persons));
 
         _handler = new GetAll.QueryHandler(_repository.Object, _cacheService.Object, _configService.Object); 

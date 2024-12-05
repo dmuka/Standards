@@ -1,3 +1,4 @@
+using System.Linq.Expressions;
 using Domain;
 
 namespace Application.Abstractions.Cache;
@@ -5,11 +6,11 @@ namespace Application.Abstractions.Cache;
 public interface ICacheService
 {
     Task<IList<T>> GetOrCreateAsync<T>(
-        string cacheKey, 
-        Func<CancellationToken, Task<IList<T>>> retrieveData,
+        string cacheKey,
+        Expression<Func<T, object>>[] includes,
         CancellationToken cancellationToken,
         TimeSpan? absoluteExpiration = null,
-        TimeSpan? slidingExpiration = null);
+        TimeSpan? slidingExpiration = null) where T : class;
 
     public void Create<T>(
         string cacheKey,

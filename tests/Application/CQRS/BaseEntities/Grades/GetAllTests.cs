@@ -1,7 +1,9 @@
+using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
 using Application.CQRS.Common.GenericCRUD;
 using Domain.Constants;
+using Domain.Models.Persons;
 using Domain.Models.Standards;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;
@@ -42,7 +44,7 @@ public class GetAllTests : BaseTestFixture
             .Returns(Task.FromResult(_grades));
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Grades, It.IsAny<Func<CancellationToken, Task<IList<Grade>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Grades, It.IsAny<Expression<Func<Grade, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
             .Returns(Task.FromResult(_grades));
 
         _handler = new GetAllBaseEntity.QueryHandler<Grade>(_repository.Object, _cacheService.Object, _configService.Object); 

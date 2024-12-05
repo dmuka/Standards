@@ -28,6 +28,11 @@ namespace Infrastructure.Data.Repositories.Implementations
             return dbContext.Set<T>();
         }
 
+        public async Task<IList<T>> QueryableToListAsync<T>(IQueryable<T> query, CancellationToken cancellationToken) where T : class
+        {
+            return await query.ToListAsync(cancellationToken);
+        }
+
         #region GetListAsync
         public Task<IList<T>> GetListAsync<T>(CancellationToken cancellationToken = default) where T : class
         {

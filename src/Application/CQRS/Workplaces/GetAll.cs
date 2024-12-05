@@ -27,16 +27,10 @@ public class GetAll
                 
             var workplaces = await cache.GetOrCreateAsync<Workplace>(
                 Cache.Workplaces,
-                async (token) =>
-                {
-                    var result = await repository.GetListAsync<Workplace>(
-                        query => query
-                            .Include(w => w.Room)
-                            .Include(s => s.Responsible),
-                        token);
-
-                    return result;
-                },
+                [
+                    w => w.Room,
+                    w => w.Responsible
+                ],
                 cancellationToken,
                 TimeSpan.FromMinutes(absoluteExpiration),
                 TimeSpan.FromMinutes(slidingExpiration));

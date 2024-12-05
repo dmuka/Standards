@@ -27,15 +27,7 @@ public class GetAll
                 
             var quantities = await cache.GetOrCreateAsync<Quantity>(
                 Cache.Quantities,
-                async (token) =>
-                {
-                    var result = await repository.GetListAsync<Quantity>(
-                        query => query
-                            .Include(q => q.Units),
-                        token);
-
-                    return result;
-                },
+                [quantity => quantity.Units],
                 cancellationToken,
                 TimeSpan.FromMinutes(absoluteExpiration),
                 TimeSpan.FromMinutes(slidingExpiration));

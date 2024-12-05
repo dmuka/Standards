@@ -1,9 +1,11 @@
+using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
 using Application.CQRS.Departments;
 using Domain.Constants;
 using Domain.Models.Departments;
 using Domain.Models.DTOs;
+using Domain.Models.Persons;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
@@ -46,7 +48,7 @@ public class GetAllTests : BaseTestFixture
             .Returns(Task.FromResult(_departments));
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Departments, It.IsAny<Func<CancellationToken, Task<IList<Department>>>>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Departments, It.IsAny<Expression<Func<Department, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
             .Returns(Task.FromResult(_departments));
 
         _handler = new GetAll.QueryHandler(_repository.Object, _cacheService.Object, _configService.Object); 

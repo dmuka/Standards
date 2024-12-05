@@ -1,4 +1,5 @@
-﻿using Application.Abstractions.Cache;
+﻿using System.Linq.Expressions;
+using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
 using Domain.Constants;
 using Domain.Models.DTOs;
@@ -27,16 +28,7 @@ public class GetAll
                 
             var housings = await cache.GetOrCreateAsync<Housing>(
                 Cache.Housings,
-                async (token) =>
-                {
-                    var result = await repository.GetListAsync<Housing>(
-                        query => query
-                            //.Include(h => h.Departments)
-                            .Include(h => h.Rooms),
-                        token);
-
-                    return result;
-                },
+                [housing => housing.Rooms],
                 cancellationToken,
                 TimeSpan.FromMinutes(absoluteExpiration),
                 TimeSpan.FromMinutes(slidingExpiration));

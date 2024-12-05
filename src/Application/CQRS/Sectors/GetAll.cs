@@ -27,18 +27,12 @@ namespace Application.CQRS.Sectors
                 
                 var sectors = await cache.GetOrCreateAsync<Sector>(
                     Cache.Sectors,
-                    async (token) =>
-                    {
-                        var result = await repository.GetListAsync<Sector>(
-                            query => query
-                                .Include(s => s.Workplaces)
-                                .Include(s => s.Persons)
-                                .Include(s => s.Rooms)
-                                .Include(s => s.Department),
-                            token);
-
-                        return result;
-                    },
+                    [
+                        s => s.Workplaces,
+                        s => s.Persons,
+                        s => s.Rooms,
+                        s => s.Department
+                    ],
                     cancellationToken,
                     TimeSpan.FromMinutes(absoluteExpiration),
                     TimeSpan.FromMinutes(slidingExpiration));

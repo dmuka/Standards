@@ -27,17 +27,11 @@ public class GetAll
                 
             var characteristics = await cache.GetOrCreateAsync<Characteristic>(
                 Cache.Characteristics,
-                async (token) =>
-                {
-                    var result = await repository.GetListAsync<Characteristic>(
-                        query => query
-                            .Include(c => c.Unit)
-                            .Include(c => c.Grade)
-                            .Include(c => c.Standard),
-                        token);
-
-                    return result;
-                },
+                [
+                    c => c.Unit,
+                    c => c.Grade,
+                    c => c.Standard
+                ],
                 cancellationToken,
                 TimeSpan.FromMinutes(absoluteExpiration),
                 TimeSpan.FromMinutes(slidingExpiration));
