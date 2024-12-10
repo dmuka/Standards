@@ -3,10 +3,10 @@ using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
 using Application.CQRS.Common.GenericCRUD;
 using Domain.Constants;
-using Domain.Models.Persons;
 using Domain.Models.Standards;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;
+using Infrastructure.Errors;
 using MediatR;
 using Moq;
 using Tests.Common;
@@ -26,7 +26,7 @@ public class GetAllTests : BaseTestFixture
     private Mock<ICacheService> _cacheService;
     private Mock<IConfigService> _configService;
         
-    private IRequestHandler<GetAllBaseEntity.Query<Grade>, IList<Grade>> _handler;
+    private IRequestHandler<GetAllBaseEntity.Query<Grade>, Result<List<Grade>>> _handler;
 
     [SetUp]
     public void Setup()
@@ -47,7 +47,7 @@ public class GetAllTests : BaseTestFixture
         _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Grades, It.IsAny<Expression<Func<Grade, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
             .Returns(Task.FromResult(_grades));
 
-        _handler = new GetAllBaseEntity.QueryHandler<Grade>(_repository.Object, _cacheService.Object, _configService.Object); 
+        _handler = new GetAllBaseEntity.QueryHandler<Grade>(_cacheService.Object, _configService.Object); 
     }
 
     [Test]
@@ -60,7 +60,7 @@ public class GetAllTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        result.Should().BeEquivalentTo(_grades);
+        result.Value.Should().BeEquivalentTo(_grades);
     }
 
     [Test]
@@ -74,6 +74,6 @@ public class GetAllTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Has.Count.EqualTo(default(int)));
+        Assert.That(result.Value, Has.Count.EqualTo(default(int)));
     }
 }

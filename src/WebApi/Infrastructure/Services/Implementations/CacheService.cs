@@ -16,24 +16,23 @@ public class CacheService(IMemoryCache cache, IRepository repository) : ICacheSe
         TimeSpan? absoluteExpiration = null,
         TimeSpan? slidingExpiration = null) where T : class
     {
-        if (!cache.TryGetValue(cacheKey, out IList<T> cachedData))
+        if (cache.TryGetValue(cacheKey, out IList<T> cachedData)) return cachedData;
+        
+        var query = repository.GetQueryable<T>();
+            
+        if (includes.Length != 0)
         {
-            var query = repository.GetQueryable<T>();
-            
-            if (includes is not null && includes.Length != 0)
+            foreach (var include in includes)
             {
-                foreach (var include in includes)
-                {
-                    query = query.Include(include);
-                }
+                query = query.Include(include);
             }
-
-            cachedData = await repository.QueryableToListAsync(query, cancellationToken);
-            
-            var cacheEntryOptions = GetOptions(absoluteExpiration, slidingExpiration);
-            
-            cache.Set(cacheKey, cachedData, cacheEntryOptions);
         }
+
+        cachedData = await repository.QueryableToListAsync(query, cancellationToken);
+            
+        var cacheEntryOptions = GetOptions(absoluteExpiration, slidingExpiration);
+            
+        cache.Set(cacheKey, cachedData, cacheEntryOptions);
 
         return cachedData;
     }

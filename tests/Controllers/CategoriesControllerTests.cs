@@ -3,8 +3,8 @@ using Domain.Models.Persons;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Moq;
-using Standards.Controllers;
 using Tests.Common;
+using WebApi.Controllers;
 
 namespace Tests.Controllers;
 
@@ -34,10 +34,10 @@ public class CategoriesControllerTests : BaseTestFixture
         var result = await _controller.GetCategories();
 
         // Assert
-        Assert.That(result, Is.InstanceOf<Ok<IList<Category>>>());
-        var okResult = result as Ok<IList<Category>>;
+        Assert.That(result, Is.InstanceOf<Ok<List<Category>>>());
+        var okResult = result as Ok<List<Category>>;
         Assert.That(okResult, Is.Not.Null);
-        Assert.That((IList<Category>)okResult.Value, Is.EquivalentTo(categories));
+        Assert.That((List<Category>)okResult.Value, Is.EquivalentTo(categories));
     }
 
     [Test]

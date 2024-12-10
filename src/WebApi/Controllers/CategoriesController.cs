@@ -3,8 +3,9 @@ using Domain.Models.Persons;
 using Infrastructure.Filter.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Infrastructure.Results;
 
-namespace Standards.Controllers;
+namespace WebApi.Controllers;
 
 [Route("api/persons/[controller]")]
 [ApiController]
@@ -18,7 +19,7 @@ public class CategoriesController(ISender sender) : ControllerBase
 
         var result = await sender.Send(query);
 
-        return TypedResults.Ok(result);
+        return result.Match(Results.Ok, CustomResults.Problem);
     }
 
     [HttpGet]

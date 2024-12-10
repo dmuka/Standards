@@ -7,6 +7,7 @@ using Domain.Models.Persons;
 using Domain.Models.Services;
 using Domain.Models.Standards;
 using FluentValidation;
+using Infrastructure.Errors;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -26,19 +27,19 @@ public static class DI
         });
         
         services
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Category>, IList<Category>>), typeof(GetAllBaseEntity.QueryHandler<Category>))
+            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Category>, Result<List<Category>>>), typeof(GetAllBaseEntity.QueryHandler<Category>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Category>, int>), typeof(CreateBaseEntity.QueryHandler<Category>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Position>, IList<Position>>), typeof(GetAllBaseEntity.QueryHandler<Position>))
+            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Position>, Result<List<Position>>>), typeof(GetAllBaseEntity.QueryHandler<Position>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Position>, int>), typeof(CreateBaseEntity.QueryHandler<Position>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Characteristic>, IList<Characteristic>>), typeof(GetAllBaseEntity.QueryHandler<Characteristic>))
+            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Characteristic>, Result<List<Characteristic>>>), typeof(GetAllBaseEntity.QueryHandler<Characteristic>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Characteristic>, int>), typeof(CreateBaseEntity.QueryHandler<Characteristic>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Grade>, IList<Grade>>), typeof(GetAllBaseEntity.QueryHandler<Grade>))
+            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Grade>, Result<List<Grade>>>), typeof(GetAllBaseEntity.QueryHandler<Grade>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Grade>, int>), typeof(CreateBaseEntity.QueryHandler<Grade>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Material>, IList<Material>>), typeof(GetAllBaseEntity.QueryHandler<Material>))
+            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Material>, Result<List<Material>>>), typeof(GetAllBaseEntity.QueryHandler<Material>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Material>, int>), typeof(CreateBaseEntity.QueryHandler<Material>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Place>, IList<Place>>), typeof(GetAllBaseEntity.QueryHandler<Place>))
+            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Place>, Result<List<Place>>>), typeof(GetAllBaseEntity.QueryHandler<Place>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Place>, int>), typeof(CreateBaseEntity.QueryHandler<Place>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Quantity>, IList<Quantity>>), typeof(GetAllBaseEntity.QueryHandler<Quantity>))
+            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Quantity>, Result<List<Quantity>>>), typeof(GetAllBaseEntity.QueryHandler<Quantity>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Quantity>, int>), typeof(CreateBaseEntity.QueryHandler<Quantity>))
             
             .AddTransient(typeof(IRequestHandler<GetById.Query<Position>, Position>), typeof(GetById.QueryHandler<Position>)) 

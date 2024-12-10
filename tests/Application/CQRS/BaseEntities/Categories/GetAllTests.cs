@@ -6,6 +6,7 @@ using Domain.Constants;
 using Domain.Models.Persons;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;
+using Infrastructure.Errors;
 using MediatR;
 using Moq;
 using Tests.Common;
@@ -25,7 +26,7 @@ public class GetAllTests : BaseTestFixture
     private Mock<ICacheService> _cacheService;
     private Mock<IConfigService> _configService;
         
-    private IRequestHandler<GetAllBaseEntity.Query<Category>, IList<Category>> _handler;
+    private IRequestHandler<GetAllBaseEntity.Query<Category>, Result<List<Category>>> _handler;
 
     [SetUp]
     public void Setup()
@@ -46,7 +47,7 @@ public class GetAllTests : BaseTestFixture
         _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Categories, It.IsAny<Expression<Func<Category, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
             .Returns(Task.FromResult(_categories));
 
-        _handler = new GetAllBaseEntity.QueryHandler<Category>(_repository.Object, _cacheService.Object, _configService.Object); 
+        _handler = new GetAllBaseEntity.QueryHandler<Category>(_cacheService.Object, _configService.Object); 
     }
 
     [Test]
@@ -59,7 +60,7 @@ public class GetAllTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        result.Should().BeEquivalentTo(_categories);
+        result.Value.Should().BeEquivalentTo(_categories);
     }
 
     [Test]
@@ -73,6 +74,6 @@ public class GetAllTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Has.Count.EqualTo(default(int)));
+        Assert.That(result.Value, Has.Count.EqualTo(default(int)));
     }
 }
