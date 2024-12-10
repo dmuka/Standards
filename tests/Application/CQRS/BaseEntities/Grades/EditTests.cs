@@ -5,6 +5,7 @@ using Domain.Models.Standards;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using Infrastructure.Data.Repositories.Interfaces;
+using Infrastructure.Errors;
 using MediatR;
 using Moq;
 using Tests.Common;
@@ -24,7 +25,7 @@ public class EditTests : BaseTestFixture
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
 
-    private IRequestHandler<EditBaseEntity.Query<Grade>, int> _handler;
+    private IRequestHandler<EditBaseEntity.Query<Grade>, Result<int>> _handler;
     private IValidator<EditBaseEntity.Query<Grade>> _validator;
 
     [SetUp]
@@ -56,7 +57,7 @@ public class EditTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(expected));
+        Assert.That(result.Value, Is.EqualTo(expected));
     }
 
     [Test]
@@ -75,7 +76,7 @@ public class EditTests : BaseTestFixture
     }
 
     [Test]
-    public void Handler_IfCancellationTokenIsActive_ReturnNull()
+    public void Handler_IfCancellationTokenIsActive_ReturnZero()
     {
         // Arrange
         var query = new EditBaseEntity.Query<Grade>(_grade);
@@ -86,7 +87,7 @@ public class EditTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(default(int)));
+        Assert.That(result.Value, Is.EqualTo(default(int)));
     }
 
     [Test]

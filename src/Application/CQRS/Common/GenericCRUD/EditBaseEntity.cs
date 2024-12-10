@@ -6,6 +6,7 @@ using FluentValidation;
 using MediatR;
 using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
+using Infrastructure.Errors;
 using Infrastructure.Validators;
 
 namespace Application.CQRS.Common.GenericCRUD;
@@ -13,16 +14,16 @@ namespace Application.CQRS.Common.GenericCRUD;
 [TransactionScope]
 public class EditBaseEntity
 {
-    public class Query<T>(T entity) : IRequest<int> where T : Entity, ICacheable
+    public class Query<T>(T entity) : IRequest<Result<int>> where T : Entity, ICacheable
     {
         public T Entity { get; } = entity;
     }
 
     public class QueryHandler<T>(
         IRepository repository, 
-        ICacheService cacheService) : IRequestHandler<Query<T>, int> where T : Entity, ICacheable, new()
+        ICacheService cacheService) : IRequestHandler<Query<T>, Result<int>> where T : Entity, ICacheable, new()
     {
-        public async Task<int> Handle(Query<T> request, CancellationToken cancellationToken)
+        public async Task<Result<int>> Handle(Query<T> request, CancellationToken cancellationToken)
         {
             var entity = new T
             {
@@ -37,7 +38,7 @@ public class EditBaseEntity
             
             cacheService.Remove(T.GetCacheKey());
 
-            return result;
+            return Result.Success(result);
         }
     }
 

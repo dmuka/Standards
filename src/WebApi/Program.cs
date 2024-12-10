@@ -4,6 +4,7 @@ using Infrastructure.Logging;
 using NLog;
 using NLog.Web;
 using WebApi.Infrastructure.Exceptions;
+using WebApi.Infrastructure.Logging;
 using WebApi.Infrastructure.StartupExtensions;
 
 namespace WebApi;
