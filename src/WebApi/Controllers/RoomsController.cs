@@ -2,11 +2,11 @@
 using Application.CQRS.Rooms;
 using Domain.Models.DTOs;
 using Domain.Models.Housings;
+using Infrastructure.Filter.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Infrastructure.Filter.Implementations;
 
-namespace Standards.Controllers;
+namespace WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]

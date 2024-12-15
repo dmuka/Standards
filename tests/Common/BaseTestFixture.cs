@@ -57,6 +57,8 @@ public abstract class BaseTestFixture
     
     protected static List<CharacteristicDto> CharacteristicsDtos { get; private set; } = [];
     
+    protected static List<ServiceType> ServiceTypes { get; private set; } = [];
+    
     protected static List<Standard> Standards { get; private set; } = [];
     
     protected static List<Place> Places { get; private set; } = [];
@@ -998,7 +1000,31 @@ public abstract class BaseTestFixture
         RoomDtos[2].PersonIds = [ Persons[3].Id ];
         RoomDtos[3].PersonIds = [ Persons[4].Id, Persons[5].Id ];
         RoomDtos[4].PersonIds = [ Persons[7].Id ];
-
+        
+        #region ServiceTypes
+        ServiceTypes =
+        [
+            new ServiceType
+            {
+                Id = 1,
+                Name = "ServiceTypeName1",
+                ShortName = "ServiceTypeShortName1"
+            },
+            new ServiceType
+            {
+                Id = 2,
+                Name = "ServiceTypeName2",
+                ShortName = "ServiceTypeShortName2"
+            },
+            new ServiceType
+            {
+                Id = 3,
+                Name = "ServiceTypeName3",
+                ShortName = "ServiceTypeShortName3"
+            }
+        ];
+        #endregion
+        
         #region Grades
         Grades =
         [

@@ -1,10 +1,9 @@
 ﻿using Application.Abstractions.Authentication;
 using Domain.Models.DTOs;
 using Domain.Models.Users;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
-namespace Standards.Controllers;
+namespace WebApi.Controllers;
 
 //[Authorize]
 [ApiController]

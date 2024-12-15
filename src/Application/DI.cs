@@ -29,6 +29,8 @@ public static class DI
         services
             .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Category>, Result<List<Category>>>), typeof(GetAllBaseEntity.QueryHandler<Category>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Category>, int>), typeof(CreateBaseEntity.QueryHandler<Category>))
+            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<ServiceType>, Result<List<ServiceType>>>), typeof(GetAllBaseEntity.QueryHandler<ServiceType>))
+            .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<ServiceType>, int>), typeof(CreateBaseEntity.QueryHandler<ServiceType>))
             .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Position>, Result<List<Position>>>), typeof(GetAllBaseEntity.QueryHandler<Position>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Position>, int>), typeof(CreateBaseEntity.QueryHandler<Position>))
             .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Characteristic>, Result<List<Characteristic>>>), typeof(GetAllBaseEntity.QueryHandler<Characteristic>))

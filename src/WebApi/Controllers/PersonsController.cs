@@ -2,11 +2,11 @@
 using Application.CQRS.Persons;
 using Domain.Models.DTOs;
 using Domain.Models.Persons;
+using Infrastructure.Filter.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Infrastructure.Filter.Implementations;
 
-namespace Standards.Controllers;
+namespace WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
