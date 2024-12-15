@@ -35,6 +35,8 @@ public abstract class BaseTestFixture
     
     protected static List<Workplace> Workplaces { get; private set; } = [];
     
+    protected static List<WorkplaceDto> WorkplaceDtos { get; private set; } = [];
+    
     protected static List<Department> Departments { get; private set; } = [];
     
     protected static List<DepartmentDto> DepartmentDtos { get; private set; } = [];
@@ -897,6 +899,70 @@ public abstract class BaseTestFixture
                 Responsible = Persons[5],
                 Room = Rooms[1],
                 ImagePath = null
+            }
+        ];
+        
+        WorkplaceDtos =
+        [
+            new WorkplaceDto
+            {
+                Id = Workplaces[0].Id,
+                Name = Workplaces[0].Name,
+                ShortName = Workplaces[0].ShortName,
+                Comments = Workplaces[0].Comments,
+                ResponsibleId = Persons[0].Id,
+                RoomId = Rooms[4].Id,
+                ImagePath = Workplaces[0].ImagePath
+            },
+            new WorkplaceDto
+            {
+                Id = Workplaces[1].Id,
+                Name = Workplaces[1].Name,
+                ShortName = Workplaces[1].ShortName,
+                Comments = Workplaces[1].Comments,
+                ResponsibleId = Persons[1].Id,
+                RoomId = Rooms[4].Id,
+                ImagePath = Workplaces[1].ImagePath
+            },
+            new WorkplaceDto
+            {
+                Id = Workplaces[2].Id,
+                Name = Workplaces[2].Name,
+                ShortName = Workplaces[2].ShortName,
+                Comments = Workplaces[2].Comments,
+                ResponsibleId = Persons[2].Id,
+                RoomId = Rooms[2].Id,
+                ImagePath = Workplaces[2].ImagePath
+            },
+            new WorkplaceDto
+            {
+                Id = Workplaces[3].Id,
+                Name = Workplaces[3].Name,
+                ShortName = Workplaces[3].ShortName,
+                Comments = Workplaces[3].Comments,
+                ResponsibleId = Persons[3].Id,
+                RoomId = Rooms[3].Id,
+                ImagePath = Workplaces[3].ImagePath
+            },
+            new WorkplaceDto
+            {
+                Id = Workplaces[4].Id,
+                Name = Workplaces[4].Name,
+                ShortName = Workplaces[4].ShortName,
+                Comments = Workplaces[4].Comments,
+                ResponsibleId = Persons[4].Id,
+                RoomId = Rooms[0].Id,
+                ImagePath = Workplaces[4].ImagePath
+            },
+            new WorkplaceDto
+            {
+                Id = Workplaces[5].Id,
+                Name = Workplaces[5].Name,
+                ShortName = Workplaces[5].ShortName,
+                Comments = Workplaces[5].Comments,
+                ResponsibleId = Persons[5].Id,
+                RoomId = Rooms[1].Id,
+                ImagePath = Workplaces[5].ImagePath
             }
         ];
         #endregion
