@@ -1052,36 +1052,6 @@ public abstract class BaseTestFixture
         ];
         #endregion
 
-        #region Units
-        Units =
-        [
-            new Unit
-            {
-                Id = 1,
-                Name = "UnitName1",
-                RuName = "UnitRuName1",
-                Symbol = "UnitSymbol1",
-                RuSymbol = "UnitRuSymbol1"
-            },
-            new Unit
-            {
-                Id = 2,
-                Name = "UnitName2",
-                RuName = "UnitRuName2",
-                Symbol = "UnitSymbol2",
-                RuSymbol = "UnitRuSymbol2"
-            },
-            new Unit
-            {
-                Id = 3,
-                Name = "UnitName3",
-                RuName = "UnitRuName3",
-                Symbol = "UnitSymbol3",
-                RuSymbol = "UnitRuSymbol3"
-            }
-        ];
-        #endregion
-
         #region Quantities
         Quantities =
         [
@@ -1128,9 +1098,38 @@ public abstract class BaseTestFixture
         ];
         #endregion
 
-        Units[0].Quantity = Quantities[0];
-        Units[1].Quantity = Quantities[1];
-        Units[2].Quantity = Quantities[2];
+        #region Units
+        Units =
+        [
+            new Unit
+            {
+                Id = 1,
+                Quantity = Quantities[0],
+                Name = "UnitName1",
+                RuName = "UnitRuName1",
+                Symbol = "UnitSymbol1",
+                RuSymbol = "UnitRuSymbol1"
+            },
+            new Unit
+            {
+                Id = 2,
+                Quantity = Quantities[1],
+                Name = "UnitName2",
+                RuName = "UnitRuName2",
+                Symbol = "UnitSymbol2",
+                RuSymbol = "UnitRuSymbol2"
+            },
+            new Unit
+            {
+                Id = 3,
+                Quantity = Quantities[2],
+                Name = "UnitName3",
+                RuName = "UnitRuName3",
+                Symbol = "UnitSymbol3",
+                RuSymbol = "UnitRuSymbol3"
+            }
+        ];
+        #endregion
 
         #region Materials + MaterialDtos
         Materials =

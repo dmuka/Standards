@@ -16,9 +16,9 @@ namespace Application.CQRS.Rooms;
 [TransactionScope]
 public class Create
 {
-    public class Query(RoomDto room) : IRequest<int>
+    public class Query(RoomDto dto) : IRequest<int>
     {
-        public RoomDto Room { get; } = room;
+        public RoomDto Room { get; } = dto;
     }
 
     public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>
@@ -71,33 +71,33 @@ public class Create
 
             RuleFor(query => query.Room)
                 .NotEmpty()
-                .ChildRules(filter =>
+                .ChildRules(room =>
                 {
-                    filter.RuleFor(room => room.Name)
+                    room.RuleFor(dto => dto.Name)
                         .NotEmpty()
                         .MaximumLength(Lengths.EntityName);
                     
-                    filter.RuleFor(room => room.ShortName)
+                    room.RuleFor(dto => dto.ShortName)
                         .NotEmpty()
                         .MaximumLength(Lengths.ShortName);
 
-                    filter.RuleFor(room => room.HousingId)
+                    room.RuleFor(dto => dto.HousingId)
                         .GreaterThan(default(int))
                         .SetValidator(new IdValidator<Housing>(repository));
 
-                    filter.RuleFor(room => room.Width)
+                    room.RuleFor(dto => dto.Width)
                         .GreaterThan(default(int));
 
-                    filter.RuleFor(room => room.Length)
+                    room.RuleFor(dto => dto.Length)
                         .GreaterThan(default(int));
 
-                    filter.RuleFor(room => room.Height)
+                    room.RuleFor(dto => dto.Height)
                         .GreaterThan(default(int));
 
-                    filter.RuleFor(room => room.Floor)
+                    room.RuleFor(dto => dto.Floor)
                         .GreaterThan(default(int));
 
-                    filter.RuleFor(room => room.SectorId)
+                    room.RuleFor(dto => dto.SectorId)
                         .GreaterThan(default(int))
                         .SetValidator(new IdValidator<Sector>(repository));
                 });

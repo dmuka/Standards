@@ -16,9 +16,9 @@ namespace Application.CQRS.Rooms
     [TransactionScope]
     public class Edit
     {
-        public class Query(RoomDto roomDto) : IRequest<int>
+        public class Query(RoomDto dto) : IRequest<int>
         {
-            public RoomDto RoomDto { get; } = roomDto;
+            public RoomDto RoomDto { get; } = dto;
         }
 
         public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>
@@ -71,44 +71,44 @@ namespace Application.CQRS.Rooms
                     .NotEmpty()
                     .ChildRules(room =>
                     {
-                        room.RuleFor(roomDto => roomDto.Id)
+                        room.RuleFor(dto => dto.Id)
                             .GreaterThan(default(int))
                             .SetValidator(new IdValidator<Room>(repository));;
 
-                        room.RuleFor(roomDto => roomDto.Name)
+                        room.RuleFor(dto => dto.Name)
                             .NotEmpty()
                             .MaximumLength(Lengths.EntityName);
 
-                        room.RuleFor(roomDto => roomDto.ShortName)
+                        room.RuleFor(dto => dto.ShortName)
                             .NotEmpty()
                             .MaximumLength(Lengths.ShortName);
 
-                        room.RuleFor(roomDto => roomDto.Floor)
+                        room.RuleFor(dto => dto.Floor)
                             .GreaterThan(default(int));
 
-                        room.RuleFor(roomDto => roomDto.Height)
+                        room.RuleFor(dto => dto.Height)
                             .GreaterThan(default(double));
 
-                        room.RuleFor(roomDto => roomDto.Length)
+                        room.RuleFor(dto => dto.Length)
                             .GreaterThan(default(double));
 
-                        room.RuleFor(roomDto => roomDto.Width)
+                        room.RuleFor(dto => dto.Width)
                             .GreaterThan(default(double));
                         
-                        room.RuleFor(roomDto => roomDto.HousingId)
+                        room.RuleFor(dto => dto.HousingId)
                             .GreaterThan(default(int))
                             .SetValidator(new IdValidator<Housing>(repository));
                         
-                        room.RuleFor(roomDto => roomDto.SectorId)
+                        room.RuleFor(dto => dto.SectorId)
                             .GreaterThan(default(int))
                             .SetValidator(new IdValidator<Sector>(repository));
                         
-                        room.RuleFor(roomDto => roomDto.PersonIds)
+                        room.RuleFor(dto => dto.PersonIds)
                             .NotEmpty()
                             .ForEach(id => 
                                 id.SetValidator(new IdValidator<Person>(repository)));
                         
-                        room.RuleFor(roomDto => roomDto.WorkplaceIds)
+                        room.RuleFor(dto => dto.WorkplaceIds)
                             .NotEmpty()
                             .ForEach(id => 
                                 id.SetValidator(new IdValidator<Workplace>(repository)));

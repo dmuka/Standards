@@ -1,11 +1,18 @@
-﻿namespace Domain.Models;
+﻿using Domain.Constants;
+using Domain.Models.Interfaces;
 
-public class Unit
+namespace Domain.Models;
+
+public class Unit : BaseEntity, ICacheable
 {
-    public int Id { get; set; }
-    public Quantity Quantity { get; set; }
-    public string Name { get; set; } = null!;
-    public string Symbol { get; set; } = null!;
-    public string RuName { get; set; } = null!;
-    public string RuSymbol { get; set; } = null!;
+    public required Quantity Quantity { get; set; }
+    public required string Name { get; set; }
+    public required string Symbol { get; set; }
+    public required string RuName { get; set; }
+    public required string RuSymbol { get; set; }
+        
+    public static string GetCacheKey()
+    {
+        return Cache.Units;
+    }
 }
