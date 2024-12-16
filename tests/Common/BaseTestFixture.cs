@@ -1058,20 +1058,17 @@ public abstract class BaseTestFixture
             new Quantity
             {
                 Id = 1,
-                Name = "QuantityName1",
-                Units = new List<Unit> { Units[0] }
+                Name = "QuantityName1"
             },
             new Quantity
             { 
                 Id = 2,
-                Name = "QuantityName2",
-                Units = new List<Unit> { Units[1] }
+                Name = "QuantityName2"
             },
             new Quantity
             {
                 Id = 3,
-                Name = "QuantityName3",
-                Units = new List<Unit> { Units[2] }
+                Name = "QuantityName3"
             }
         ];
         
@@ -1080,20 +1077,17 @@ public abstract class BaseTestFixture
             new QuantityDto
             {
                 Id = 1,
-                Name = "QuantityName1",
-                UnitIds = new List<int> { Units[0].Id }
+                Name = "QuantityName1"
             },
             new QuantityDto
             { 
                 Id = 2,
-                Name = "QuantityName2",
-                UnitIds = new List<int> { Units[1].Id }
+                Name = "QuantityName2"
             },
             new QuantityDto
             {
                 Id = 3,
-                Name = "QuantityName3",
-                UnitIds = new List<int> { Units[2].Id }
+                Name = "QuantityName3"
             }
         ];
         #endregion
@@ -1130,6 +1124,14 @@ public abstract class BaseTestFixture
             }
         ];
         #endregion
+
+        Quantities[0].Units = new List<Unit> { Units[0] };
+        Quantities[1].Units = new List<Unit> { Units[1] };
+        Quantities[2].Units = new List<Unit> { Units[2] };
+
+        QuantityDtos[0].UnitIds = new List<int> { Units[0].Id };
+        QuantityDtos[1].UnitIds = new List<int> { Units[1].Id };
+        QuantityDtos[2].UnitIds = new List<int> { Units[2].Id };
 
         #region Materials + MaterialDtos
         Materials =
