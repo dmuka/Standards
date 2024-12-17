@@ -31,7 +31,7 @@ public class CacheServiceTests : BaseTestFixture
     [SetUp]
     public void Setup()
     {
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
         
         _memoryCache = new MemoryCache(new MemoryCacheOptions());
         _memoryCache.Set(CacheKey, Housings);

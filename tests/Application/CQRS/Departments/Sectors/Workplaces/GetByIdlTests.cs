@@ -32,7 +32,7 @@ public class GetByIdTests : BaseTestFixture
     {
         _sectors = Workplaces;
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _repository = new Mock<IRepository>();
         _repository.Setup(_ => _.GetByIdAsync<Workplace>(IdInDb, _cancellationToken))

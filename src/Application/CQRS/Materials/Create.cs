@@ -5,7 +5,6 @@ using Domain.Models.DTOs;
 using Domain.Models.Services;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 using Unit = Domain.Models.Unit;
@@ -65,7 +64,7 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
 
                     dto.RuleFor(material => material.UnitId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Unit>(repository));
                 });
         }

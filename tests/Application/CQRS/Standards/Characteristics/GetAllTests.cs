@@ -4,7 +4,6 @@ using Application.Abstractions.Configuration;
 using Application.CQRS.Characteristics;
 using Domain.Constants;
 using Domain.Models.DTOs;
-using Domain.Models.Persons;
 using Domain.Models.Standards;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;
@@ -37,7 +36,7 @@ public class GetAllTests : BaseTestFixture
         _dtos = CharacteristicsDtos;
         _characteristics = Characteristics;
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _configService = new Mock<IConfigService>();
         _configService.Setup(config => config.GetValue<int>(AbsoluteExpirationPath)).Returns(5);
@@ -78,6 +77,6 @@ public class GetAllTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Has.Count.EqualTo(default(int)));
+        Assert.That(result, Has.Count.EqualTo(0));
     }
 }

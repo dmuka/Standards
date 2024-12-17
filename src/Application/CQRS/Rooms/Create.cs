@@ -7,7 +7,6 @@ using Domain.Models.Housings;
 using Domain.Models.Persons;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 
@@ -82,23 +81,23 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
 
                     room.RuleFor(dto => dto.HousingId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Housing>(repository));
 
                     room.RuleFor(dto => dto.Width)
-                        .GreaterThan(default(int));
+                        .GreaterThan(0);
 
                     room.RuleFor(dto => dto.Length)
-                        .GreaterThan(default(int));
+                        .GreaterThan(0);
 
                     room.RuleFor(dto => dto.Height)
-                        .GreaterThan(default(int));
+                        .GreaterThan(0);
 
                     room.RuleFor(dto => dto.Floor)
-                        .GreaterThan(default(int));
+                        .GreaterThan(0);
 
                     room.RuleFor(dto => dto.SectorId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Sector>(repository));
                 });
         }

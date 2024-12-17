@@ -5,7 +5,6 @@ using Domain.Models.DTOs;
 using Domain.Models.Housings;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 
 namespace Application.CQRS.Housings;
@@ -61,7 +60,7 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
 
                     filter.RuleFor(housing => housing.FloorsCount)
-                        .GreaterThan(default(int));
+                        .GreaterThan(0);
 
                     filter.RuleFor(housing => housing.Address)
                         .NotEmpty();

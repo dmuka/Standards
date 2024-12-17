@@ -5,7 +5,6 @@ using Domain.Models.DTOs;
 using Domain.Models.Standards;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 using Unit = Domain.Models.Unit;
@@ -65,7 +64,7 @@ namespace Application.CQRS.Characteristics
                     .ChildRules(dto =>
                     {
                         dto.RuleFor(characteristic => characteristic.Id)
-                            .GreaterThan(default(int))
+                            .GreaterThan(0)
                             .SetValidator(new IdValidator<Unit>(repository));
                         
                         dto.RuleFor(characteristic => characteristic.Name)
@@ -83,11 +82,11 @@ namespace Application.CQRS.Characteristics
                             .NotEmpty();
 
                         dto.RuleFor(characteristic => characteristic.UnitId)
-                            .GreaterThan(default(int))
+                            .GreaterThan(0)
                             .SetValidator(new IdValidator<Unit>(repository));
 
                         dto.RuleFor(characteristic => characteristic.GradeId)
-                            .GreaterThan(default(int))
+                            .GreaterThan(0)
                             .SetValidator(new IdValidator<Grade>(repository));
 
                         dto.RuleFor(characteristic => characteristic.GradeValue)
@@ -100,7 +99,7 @@ namespace Application.CQRS.Characteristics
                             .NotEmpty();
 
                         dto.RuleFor(characteristic => characteristic.StandardId)
-                            .GreaterThan(default(int))
+                            .GreaterThan(0)
                             .SetValidator(new IdValidator<Standard>(repository));
                     });
             }

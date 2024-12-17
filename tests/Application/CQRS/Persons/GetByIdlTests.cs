@@ -31,7 +31,7 @@ public class GetByIdTests : BaseTestFixture
     {
         _person = Persons;
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _repository = new Mock<IRepository>();
         _repository.Setup(_ => _.GetByIdAsync<Person>(IdInDb, _cancellationToken))

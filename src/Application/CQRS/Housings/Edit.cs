@@ -5,7 +5,6 @@ using Domain.Models.DTOs;
 using Domain.Models.Housings;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 
@@ -63,7 +62,7 @@ public class Edit
                 .ChildRules(housing =>
                 {
                     housing.RuleFor(housingDto => housingDto.Id)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Housing>(repository));
 
                     housing.RuleFor(housingDto => housingDto.Name)
@@ -75,7 +74,7 @@ public class Edit
                         .MaximumLength(Lengths.ShortName);
 
                     housing.RuleFor(housingDto => housingDto.FloorsCount)
-                        .GreaterThan(default(int));
+                        .GreaterThan(0);
 
                     housing.RuleFor(housingDto => housingDto.Address)
                         .NotEmpty();

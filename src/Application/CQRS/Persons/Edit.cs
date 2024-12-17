@@ -7,7 +7,6 @@ using Domain.Models.Persons;
 using Domain.Models.Users;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 
@@ -69,7 +68,7 @@ public class Edit
                 .ChildRules(person =>
                 {
                     person.RuleFor(dto => dto.Id)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Person>(repository));
 
                     person.RuleFor(dto => dto.FirstName)
@@ -85,19 +84,19 @@ public class Edit
                         .MaximumLength(Lengths.PersonName);
 
                     person.RuleFor(dto => dto.CategoryId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Category>(repository));
 
                     person.RuleFor(dto => dto.PositionId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Position>(repository));
 
                     person.RuleFor(dto => dto.SectorId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Sector>(repository));
 
                     person.RuleFor(dto => dto.UserId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<User>(repository));
 
                     person.RuleFor(dto => dto.BirthdayDate)

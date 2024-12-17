@@ -3,7 +3,6 @@ using Domain;
 using Domain.Models.Interfaces;
 using FluentValidation;
 using MediatR;
-using Standards.Core;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 
@@ -39,7 +38,7 @@ public class GetById
             RuleLevelCascadeMode = CascadeMode.Stop;
 
             RuleFor(query => query.Id)
-                .GreaterThan(default(int))
+                .GreaterThan(0)
                 .SetValidator(new IdValidator<T>(repository));
         }
     }

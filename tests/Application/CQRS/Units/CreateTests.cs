@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Cache;
-using Application.CQRS.Quantities;
+using Application.CQRS.Units;
 using Domain.Models.DTOs;
 using FluentValidation;
 using FluentValidation.TestHelper;
@@ -9,7 +9,7 @@ using Moq;
 using Tests.Common;
 using Tests.Common.Constants;
 
-namespace Tests.Application.CQRS.Quantities;
+namespace Tests.Application.CQRS.Units;
 
 [TestFixture]
 public class CreateTests : BaseTestFixture
@@ -17,7 +17,7 @@ public class CreateTests : BaseTestFixture
     private const int ValidId = 1;
     private const int IdNotInDb = 2;
     
-    private QuantityDto _quantity;
+    private UnitDto _unit;
 
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
@@ -29,12 +29,12 @@ public class CreateTests : BaseTestFixture
     [SetUp]
     public void Setup()
     {
-        _quantity = QuantityDtos[0];
+        _unit = UnitDtos[0];
 
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.AddAsync(_quantity, _cancellationToken));
+        _repositoryMock.Setup(_ => _.AddAsync(_unit, _cancellationToken));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
         _cacheService = new Mock<ICacheService>();
@@ -47,7 +47,7 @@ public class CreateTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new Create.Query(_quantity);
+        var query = new Create.Query(_unit);
         var expected = 1;
 
         // Act
@@ -61,7 +61,7 @@ public class CreateTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new Create.Query(_quantity);
+        var query = new Create.Query(_unit);
         _cancellationToken = new CancellationToken(true);
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(0));
 
@@ -73,77 +73,108 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test]
-    public void Validator_IfQuantityDtoIsNull_ShouldHaveValidationError()
+    public void Validator_IfUnitDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _quantity = null;
+        _unit = null;
 
-        var query = new Create.Query(_quantity);
+        var query = new Create.Query(_unit);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.QuantityDto);
+        result.ShouldHaveValidationErrorFor(_ => _.UnitDto);
     }
 
     [Test, TestCaseSource(nameof(NullOrEmptyString))]
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _quantity.Name = name;
+        _unit.Name = name;
 
-        var query = new Create.Query(_quantity);
+        var query = new Create.Query(_unit);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.QuantityDto.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.UnitDto.Name);
     }
 
     [Test]
     public void Validator_IfNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _quantity.Name = Cases.Length51;
+        _unit.Name = Cases.Length16;
 
-        var query = new Create.Query(_quantity);
+        var query = new Create.Query(_unit);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.QuantityDto.Name);
+        result.ShouldHaveValidationErrorFor(_ => _.UnitDto.Name);
     }
 
     [Test]
-    public void Validator_IfUnitIdsIsEmpty_ShouldHaveValidationError()
+    public void Validator_IfRuNameIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _quantity.UnitIds = new List<int>();
+        _unit.RuName = Cases.Length16;
 
-        var query = new Create.Query(_quantity);
+        var query = new Create.Query(_unit);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.QuantityDto.UnitIds);
+        result.ShouldHaveValidationErrorFor(_ => _.UnitDto.RuName);
     }
 
     [Test]
-    public void Validator_IfUnitIdIsNotInDb_ShouldHaveValidationError()
+    public void Validator_IfSymbolIsLongerThanRequired_ShouldHaveValidationError()
     {
         // Arrange
-        _quantity.UnitIds = new List<int> { IdNotInDb };
+        _unit.Name = Cases.Length4;
 
-        var query = new Create.Query(_quantity);
+        var query = new Create.Query(_unit);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.QuantityDto.UnitIds);
+        result.ShouldHaveValidationErrorFor(_ => _.UnitDto.Symbol);
+    }
+
+    [Test]
+    public void Validator_IfRuSymbolIsLongerThanRequired_ShouldHaveValidationError()
+    {
+        // Arrange
+        _unit.RuName = Cases.Length4;
+
+        var query = new Create.Query(_unit);
+
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.UnitDto.RuSymbol);
+    }
+
+    [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
+    [TestCase(IdNotInDb)]
+    public void Validator_IfQuantityIdIsInvalid_ShouldHaveValidationError(int quantityId)
+    {
+        // Arrange
+        _unit.QuantityId = quantityId;
+
+        var query = new Create.Query(_unit);
+
+        // Act
+        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+
+        // Assert
+        result.ShouldHaveValidationErrorFor(_ => _.UnitDto.QuantityId);
     }
 }

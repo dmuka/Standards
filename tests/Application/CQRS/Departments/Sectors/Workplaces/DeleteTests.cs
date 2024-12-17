@@ -29,7 +29,7 @@ public class DeleteTests : BaseTestFixture
     {
         _sector = Workplaces[0];
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _repository = new Mock<IRepository>();
         _repository.Setup(_ => _.GetByIdAsync<Workplace>(IdInDb, _cancellationToken))

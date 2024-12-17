@@ -33,7 +33,7 @@ public class GetAllTests : BaseTestFixture
     {
         _serviceTypes = ServiceTypes;
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _configService = new Mock<IConfigService>();
         _configService.Setup(config => config.GetValue<int>(AbsoluteExpirationPath)).Returns(5);
@@ -74,6 +74,6 @@ public class GetAllTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result.Value, Has.Count.EqualTo(default(int)));
+        Assert.That(result.Value, Has.Count.EqualTo(0));
     }
 }

@@ -40,7 +40,7 @@ public class EditTests : BaseTestFixture
 
         _department = Departments[0];
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
         _repositoryMock.Setup(_ => _.GetByIdAsync<Sector>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_sector));
@@ -93,13 +93,13 @@ public class EditTests : BaseTestFixture
         // Arrange
         var query = new Edit.Query(_sectorDto);
         _cancellationToken = new CancellationToken(true);
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(0));
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(default(int)));
+        Assert.That(result, Is.EqualTo(0));
     }
 
     [Test]

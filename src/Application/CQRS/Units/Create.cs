@@ -8,7 +8,6 @@ using FluentValidation;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 using MediatR;
-using Standards.Core.Constants;
 using Unit = Domain.Models.Unit;
 
 namespace Application.CQRS.Units;

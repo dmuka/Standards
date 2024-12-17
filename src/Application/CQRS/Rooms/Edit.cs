@@ -7,7 +7,6 @@ using Domain.Models.Housings;
 using Domain.Models.Persons;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 
@@ -72,7 +71,7 @@ namespace Application.CQRS.Rooms
                     .ChildRules(room =>
                     {
                         room.RuleFor(dto => dto.Id)
-                            .GreaterThan(default(int))
+                            .GreaterThan(0)
                             .SetValidator(new IdValidator<Room>(repository));;
 
                         room.RuleFor(dto => dto.Name)
@@ -84,7 +83,7 @@ namespace Application.CQRS.Rooms
                             .MaximumLength(Lengths.ShortName);
 
                         room.RuleFor(dto => dto.Floor)
-                            .GreaterThan(default(int));
+                            .GreaterThan(0);
 
                         room.RuleFor(dto => dto.Height)
                             .GreaterThan(default(double));
@@ -96,11 +95,11 @@ namespace Application.CQRS.Rooms
                             .GreaterThan(default(double));
                         
                         room.RuleFor(dto => dto.HousingId)
-                            .GreaterThan(default(int))
+                            .GreaterThan(0)
                             .SetValidator(new IdValidator<Housing>(repository));
                         
                         room.RuleFor(dto => dto.SectorId)
-                            .GreaterThan(default(int))
+                            .GreaterThan(0)
                             .SetValidator(new IdValidator<Sector>(repository));
                         
                         room.RuleFor(dto => dto.PersonIds)

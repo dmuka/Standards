@@ -30,7 +30,7 @@ public class DeleteTests : BaseTestFixture
     {
         _quantity = Quantities[0];
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _repository = new Mock<IRepository>();
         _repository.Setup(_ => _.GetByIdAsync<Quantity>(IdInDb, _cancellationToken))

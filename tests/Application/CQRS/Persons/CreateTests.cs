@@ -31,7 +31,7 @@ public class CreateTests : BaseTestFixture
     {
         _person = PersonDtos[0];
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
         _repositoryMock.Setup(_ => _.AddAsync(_person, _cancellationToken));
@@ -63,13 +63,13 @@ public class CreateTests : BaseTestFixture
         // Arrange
         var query = new Create.Query(_person);
         _cancellationToken = new CancellationToken(true);
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(0));
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(default(int)));
+        Assert.That(result, Is.EqualTo(0));
     }
 
     [Test]

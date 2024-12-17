@@ -5,7 +5,6 @@ using Domain.Models.Departments;
 using Domain.Models.DTOs;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 
@@ -61,7 +60,7 @@ namespace Application.CQRS.Departments
                     .ChildRules(housing =>
                     {
                         housing.RuleFor(department => department.Id)
-                            .GreaterThan(default(int))
+                            .GreaterThan(0)
                             .SetValidator(new IdValidator<Department>(repository));
 
                         housing.RuleFor(department => department.Name)

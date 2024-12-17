@@ -4,7 +4,6 @@ using Domain.Models.Housings;
 using Domain.Models.Interfaces;
 using FluentValidation;
 using MediatR;
-using Standards.Core;
 using Infrastructure.Filter.Implementations;
 using Infrastructure.Filter.Interfaces;
 using Infrastructure.QueryableWrapper.Interface;
@@ -55,10 +54,10 @@ public class GetFiltered<T> where T : BaseEntity, ICacheable
                         .NotNull().WithMessage(ValidationErrors.WrongEnumValue);
 
                     q.RuleFor(qp => qp.PageNumber)
-                        .GreaterThan(default(int));
+                        .GreaterThan(0);
 
                     q.RuleFor(qp => qp.ItemsOnPage)
-                        .GreaterThan(default(int));
+                        .GreaterThan(0);
                 });
         }
     }

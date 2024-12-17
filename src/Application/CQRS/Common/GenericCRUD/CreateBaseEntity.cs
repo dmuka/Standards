@@ -1,10 +1,10 @@
 using Application.Abstractions.Cache;
 using Application.CQRS.Common.Attributes;
+using Domain.Constants;
 using Domain.Models;
 using Domain.Models.Interfaces;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 
@@ -53,7 +53,7 @@ public class CreateBaseEntity
                 .ChildRules(entity =>
                 {
                     entity.RuleFor(e => e.Id)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<T>(repository));
 
                     entity.RuleFor(e => e.Name)

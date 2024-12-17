@@ -44,7 +44,7 @@ public class GetFilteredTests : BaseTestFixture
 
         _queryBuilder = new QueryBuilder<Material>(_repositoryMock.Object);
             
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _queryBuilderMock = new Mock<IQueryBuilder<Material>>();
 

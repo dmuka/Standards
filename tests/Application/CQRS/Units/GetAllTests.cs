@@ -1,19 +1,18 @@
 using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
-using Application.CQRS.Materials;
+using Application.CQRS.Units;
 using Domain.Constants;
 using Domain.Models.DTOs;
-using Domain.Models.Persons;
-using Domain.Models.Services;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;
 using Tests.Common;
+using Unit = Domain.Models.Unit;
 
-namespace Tests.Application.CQRS.Services.Materials;
+namespace Tests.Application.CQRS.Units;
 
 [TestFixture]
 public class GetAllTests : BaseTestFixture
@@ -21,21 +20,21 @@ public class GetAllTests : BaseTestFixture
     private const string AbsoluteExpirationPath = "Cache:AbsoluteExpiration";
     private const string SlidingExpirationPath = "Cache:SlidingExpiration";
         
-    private IList<Material> _materials;
-    private List<MaterialDto> _dtos;
+    private IList<Unit> _units;
+    private List<UnitDto> _dtos;
         
     private Mock<IRepository> _repository;
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
     private Mock<IConfigService> _configService;
         
-    private IRequestHandler<GetAll.Query, IList<MaterialDto>> _handler;
+    private IRequestHandler<GetAll.Query, IList<UnitDto>> _handler;
 
     [SetUp]
     public void Setup()
     {
-        _dtos = MaterialDtos;
-        _materials = Materials;
+        _dtos = UnitDtos;
+        _units = Units;
 
         _cancellationToken = CancellationToken.None;
 
@@ -44,14 +43,14 @@ public class GetAllTests : BaseTestFixture
         _configService.Setup(config => config.GetValue<int>(SlidingExpirationPath)).Returns(2);
 
         _repository = new Mock<IRepository>();
-        _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Material>,IIncludableQueryable<Material,object>>>(), _cancellationToken))
-            .Returns(Task.FromResult(_materials));
+        _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Unit>,IIncludableQueryable<Unit,object>>>(), _cancellationToken))
+            .Returns(Task.FromResult(_units));
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Materials, It.IsAny<Expression<Func<Material, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
-            .Returns(Task.FromResult(_materials));
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Units, It.IsAny<Expression<Func<Unit, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+            .Returns(Task.FromResult(_units));
 
-        _handler = new GetAll.QueryHandler(_repository.Object, _cacheService.Object, _configService.Object); 
+        _handler = new GetAll.QueryHandler(_cacheService.Object, _configService.Object); 
     }
 
     [Test]

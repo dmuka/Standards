@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Standards.Core.Constants;
+using Domain.Constants;
 
 namespace Domain.Models.DTOs;
 

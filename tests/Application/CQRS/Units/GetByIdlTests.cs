@@ -1,57 +1,55 @@
 using Application.Abstractions.Cache;
 using Application.CQRS.Common.GenericCRUD;
 using Domain.Constants;
-using Domain.Models.Housings;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
 using Moq;
 using Tests.Common;
+using Unit = Domain.Models.Unit;
 
-namespace Tests.Application.CQRS.Housings.Rooms;
+namespace Tests.Application.CQRS.Units;
 
 [TestFixture]
 public class GetByIdTests : BaseTestFixture
 {
     private const int IdInDb = 1;
     private const int IdNotInDb = 10;
+        
+    private IList<Unit> _departments;
 
     private Mock<IRepository> _repository;
-    private Mock<ICacheService> _cacheMock;
-    
     private CancellationToken _cancellationToken;
-    
-    private List<Room> _rooms;
-    
-    private IRequestHandler<GetById.Query<Room>, Room> _handler;
-    private IValidator<GetById.Query<Room>> _validator;
+    private Mock<ICacheService> _cacheService;
+        
+    private IRequestHandler<GetById.Query<Unit>, Unit> _handler;
+    private IValidator<GetById.Query<Unit>> _validator;
 
     [SetUp]
     public void Setup()
     {
-        _rooms = Rooms;
+        _departments = Units;
 
         _cancellationToken = CancellationToken.None;
 
         _repository = new Mock<IRepository>();
-        _repository.Setup(_ => _.GetByIdAsync<Room>(IdInDb, _cancellationToken))
-            .Returns(Task.FromResult(_rooms.First(_ => _.Id == IdInDb)));
+        _repository.Setup(_ => _.GetByIdAsync<Unit>(IdInDb, _cancellationToken))
+            .Returns(Task.FromResult(_departments.First(_ => _.Id == IdInDb)));
 
-        _cacheMock = new Mock<ICacheService>();
-        _cacheMock.Setup(cache => cache.GetById<Room>(Cache.Rooms, IdInDb)).Returns(Rooms[0]);
+        _cacheService = new Mock<ICacheService>();
+        _cacheService.Setup(cache => cache.GetById<Unit>(Cache.Units, IdInDb)).Returns(Units[0]);
 
-
-        _handler = new GetById.QueryHandler<Room>(_repository.Object, _cacheMock.Object); 
-        _validator = new GetById.QueryValidator<Room>(_repository.Object); 
+        _handler = new GetById.QueryHandler<Unit>(_repository.Object, _cacheService.Object);
+        _validator = new GetById.QueryValidator<Unit>(_repository.Object); 
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new GetById.Query<Room>(IdInDb);
-        var expected = _rooms.First(_ => _.Id == IdInDb);
+        var query = new GetById.Query<Unit>(IdInDb);
+        var expected = _departments.First(_ => _.Id == IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -65,7 +63,7 @@ public class GetByIdTests : BaseTestFixture
     public void Validator_IfIdIsInvalid_ReturnResult(int id)
     {
         // Arrange
-        var query = new GetById.Query<Room>(id);
+        var query = new GetById.Query<Unit>(id);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -75,25 +73,24 @@ public class GetByIdTests : BaseTestFixture
     }
 
     [Test]
-    public void Handler_IfRoomInCache_ReturnCachedValue()
+    public void Handler_IfUnitInCache_ReturnCachedValue()
     {
         // Arrange
-        _cacheMock.Object.Create(Cache.Rooms, Rooms);
-        var query = new GetById.Query<Room>(IdInDb);
+        var query = new GetById.Query<Unit>(IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(Rooms[0]));
-        _repository.Verify(repository => repository.GetByIdAsync<Room>(IdInDb, _cancellationToken), Times.Never);
+        Assert.That(result, Is.EqualTo(Units[0]));
+        _repository.Verify(repository => repository.GetByIdAsync<Unit>(IdInDb, _cancellationToken), Times.Never);
     }
 
     [Test]
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new GetById.Query<Room>(IdInDb);
+        var query = new GetById.Query<Unit>(IdInDb);
         _cancellationToken = new CancellationToken(true);
 
         // Act

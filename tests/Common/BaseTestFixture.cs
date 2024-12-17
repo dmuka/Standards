@@ -14,11 +14,9 @@ namespace Tests.Common;
 public abstract class BaseTestFixture
 {
     protected static List<Room> Rooms { get; private set; } = [];
-    
     protected static List<RoomDto> RoomDtos { get; private set; } = [];
     
     protected static List<Sector> Sectors { get; private set; } = [];
-    
     protected static List<SectorDto> SectorDtos { get; private set; } = [];
     
     protected static List<Category> Categories { get; private set; } = [];
@@ -28,33 +26,28 @@ public abstract class BaseTestFixture
     protected static List<User> Users { get; private set; } = [];
     
     protected static List<Person> Persons { get; private set; } = [];
-    
     protected static List<PersonDto> PersonDtos { get; private set; } = [];
     
     protected static List<string> Roles { get; private set; } = [];
     
     protected static List<Workplace> Workplaces { get; private set; } = [];
-    
     protected static List<WorkplaceDto> WorkplaceDtos { get; private set; } = [];
     
     protected static List<Department> Departments { get; private set; } = [];
-    
     protected static List<DepartmentDto> DepartmentDtos { get; private set; } = [];
     
     protected static List<Grade> Grades { get; private set; } = [];
     
     protected static List<Quantity> Quantities { get; private set; } = [];
-    
     protected static List<QuantityDto> QuantityDtos { get; private set; } = [];
     
     protected static List<Unit> Units { get; private set; } = [];
+    protected static List<UnitDto> UnitDtos { get; private set; } = [];
     
     protected static List<Material> Materials { get; private set; } = [];
-    
     protected static List<MaterialDto> MaterialDtos { get; private set; } = [];
     
     protected static List<Characteristic> Characteristics { get; private set; } = [];
-    
     protected static List<CharacteristicDto> CharacteristicsDtos { get; private set; } = [];
     
     protected static List<ServiceType> ServiceTypes { get; private set; } = [];
@@ -64,7 +57,6 @@ public abstract class BaseTestFixture
     protected static List<Place> Places { get; private set; } = [];
 
     protected static IList<Housing> Housings { get; private set; } = [];
-
     protected static List<HousingDto> HousingDtos { get; private set; } = [];
 
     [OneTimeSetUp]
@@ -1117,6 +1109,37 @@ public abstract class BaseTestFixture
             {
                 Id = 3,
                 Quantity = Quantities[2],
+                Name = "UnitName3",
+                RuName = "UnitRuName3",
+                Symbol = "UnitSymbol3",
+                RuSymbol = "UnitRuSymbol3"
+            }
+        ];
+        
+        UnitDtos =
+        [
+            new UnitDto
+            {
+                Id = 1,
+                QuantityId = Units[0].Quantity.Id,
+                Name = "UnitName1",
+                RuName = "UnitRuName1",
+                Symbol = "UnitSymbol1",
+                RuSymbol = "UnitRuSymbol1"
+            },
+            new UnitDto
+            {
+                Id = 2,
+                QuantityId = Units[1].Quantity.Id,
+                Name = "UnitName2",
+                RuName = "UnitRuName2",
+                Symbol = "UnitSymbol2",
+                RuSymbol = "UnitRuSymbol2"
+            },
+            new UnitDto
+            {
+                Id = 3,
+                QuantityId = Units[2].Quantity.Id,
                 Name = "UnitName3",
                 RuName = "UnitRuName3",
                 Symbol = "UnitSymbol3",

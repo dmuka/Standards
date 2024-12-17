@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Domain.Constants;
 using Domain.Models.Interfaces;
-using Standards.Core.Constants;
 
 namespace Domain.Models.Housings;
 

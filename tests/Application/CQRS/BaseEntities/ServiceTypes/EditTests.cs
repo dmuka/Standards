@@ -33,7 +33,7 @@ public class EditTests : BaseTestFixture
     {
         _serviceType = ServiceTypes[0];
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
         _repositoryMock.Setup(_ => _.GetByIdAsync<ServiceType>(ValidId, _cancellationToken)).Returns(Task.FromResult(_serviceType));
@@ -81,13 +81,13 @@ public class EditTests : BaseTestFixture
         // Arrange
         var query = new EditBaseEntity.Query<ServiceType>(_serviceType);
         _cancellationToken = new CancellationToken(true);
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(0));
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result.Value, Is.EqualTo(default(int)));
+        Assert.That(result.Value, Is.EqualTo(0));
     }
 
     [Test]

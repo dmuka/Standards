@@ -42,7 +42,7 @@ public class CreateTests : BaseTestFixture
         _room = Rooms[0];
         _responsible = Persons[0];
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
         _repositoryMock.Setup(repository => repository.AddAsync(_workplace, _cancellationToken));
@@ -76,13 +76,13 @@ public class CreateTests : BaseTestFixture
         // Arrange
         var query = new Create.Query(_workplaceDto);
         _cancellationToken = new CancellationToken(true);
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(default(int)));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(0));
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(default(int)));
+        Assert.That(result, Is.EqualTo(0));
     }
 
     [Test]

@@ -7,7 +7,6 @@ using Domain.Models.Housings;
 using Domain.Models.Persons;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 
@@ -59,7 +58,7 @@ public class Edit
                 .ChildRules(workplace =>
                 {
                     workplace.RuleFor(dto => dto.Id)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Workplace>(repository));
 
                     workplace.RuleFor(dto => dto.Name)
@@ -71,11 +70,11 @@ public class Edit
                         .MaximumLength(Lengths.ShortName);
                     
                     workplace.RuleFor(dto => dto.RoomId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Room>(repository));
                     
                     workplace.RuleFor(dto => dto.ResponsibleId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Person>(repository));
                 });
         }

@@ -31,7 +31,7 @@ public class GetByIdTests : BaseTestFixture
     {
         _materials = Materials;
 
-        _cancellationToken = new CancellationToken();
+        _cancellationToken = CancellationToken.None;
 
         _repository = new Mock<IRepository>();
         _repository.Setup(_ => _.GetByIdAsync<Material>(IdInDb, _cancellationToken))

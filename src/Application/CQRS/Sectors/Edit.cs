@@ -7,7 +7,6 @@ using Domain.Models.Housings;
 using Domain.Models.Persons;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 
@@ -73,7 +72,7 @@ public class Edit
                 .ChildRules(sector =>
                 {
                     sector.RuleFor(dto => dto.Id)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Sector>(repository));
 
                     sector.RuleFor(dto => dto.Name)
@@ -100,7 +99,7 @@ public class Edit
                             id.SetValidator(new IdValidator<Workplace>(repository)));
 
                     sector.RuleFor(dto => dto.DepartmentId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Department>(repository));
                 });
         }

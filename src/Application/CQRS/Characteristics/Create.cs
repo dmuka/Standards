@@ -5,7 +5,6 @@ using Domain.Models.DTOs;
 using Domain.Models.Standards;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 using Unit = Domain.Models.Unit;
@@ -81,11 +80,11 @@ public class Create
                     //     .NotEmpty();
 
                     dto.RuleFor(characteristic => characteristic.UnitId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Unit>(repository));
 
                     dto.RuleFor(characteristic => characteristic.GradeId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Grade>(repository));
 
                     // dto.RuleFor(characteristic => characteristic.GradeValue)
@@ -98,7 +97,7 @@ public class Create
                     //     .NotEmpty();
 
                     dto.RuleFor(characteristic => characteristic.StandardId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Standard>(repository));
                 });
         }

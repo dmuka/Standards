@@ -5,7 +5,6 @@ using Domain.Models;
 using Domain.Models.DTOs;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 using Unit = Domain.Models.Unit;
@@ -58,7 +57,7 @@ public class Edit
                 .ChildRules(quantity =>
                 {
                     quantity.RuleFor(dto => dto.Id)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Quantity>(repository));
 
                     quantity.RuleFor(dto => dto.Name)

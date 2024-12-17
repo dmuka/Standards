@@ -1,4 +1,4 @@
-namespace Standards.Core.Constants;
+namespace Domain.Constants;
 
 public static class Lengths
 {

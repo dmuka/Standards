@@ -7,7 +7,6 @@ using Domain.Models.Housings;
 using Domain.Models.Persons;
 using FluentValidation;
 using MediatR;
-using Standards.Core.Constants;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 
@@ -82,7 +81,7 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
                     
                     filter.RuleFor(sector => sector.DepartmentId)
-                        .GreaterThan(default(int))
+                        .GreaterThan(0)
                         .SetValidator(new IdValidator<Department>(repository));
 
                     filter.RuleFor(sector => sector.PersonIds)

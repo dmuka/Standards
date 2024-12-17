@@ -16,20 +16,20 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     {
         var requestType = typeof(TRequest);
 
-        _logger.LogInformation($"Handling {requestType.Name}");
+        _logger.LogInformation("Handling {requestTypeName}", requestType.Name);
 
         foreach (var requestProperty in requestType.GetProperties())
         {
             var propertyValue = requestProperty.GetValue(request, null);
 
-            _logger.LogInformation($"{requestProperty.Name} : { propertyValue }");
+            _logger.LogInformation("{requestPropertyName} : { propertyValue }", requestProperty.Name, propertyValue);
         }
 
         var response = await next();
 
         var responseType = typeof(TRequest);
 
-        _logger.LogInformation($"Handled { responseType.Name }");
+        _logger.LogInformation("Handled { responseTypeName }", responseType.Name);
 
         return response;
     }
