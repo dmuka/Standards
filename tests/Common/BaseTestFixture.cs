@@ -57,6 +57,9 @@ public abstract class BaseTestFixture
     
     protected static List<Standard> Standards { get; private set; } = [];
     
+    protected static List<ServiceJournalItem> ServiceJournalItems { get; private set; } = [];
+    protected static List<ServiceJournalItemDto> ServiceJournalItemDtos { get; private set; } = [];
+    
     protected static List<Place> Places { get; private set; } = [];
 
     protected static IList<Housing> Housings { get; private set; } = [];
@@ -1381,7 +1384,7 @@ public abstract class BaseTestFixture
         ];
         #endregion
 
-        #region WebApi
+        #region Standards
         Standards =
         [
             new Standard
@@ -1436,6 +1439,82 @@ public abstract class BaseTestFixture
         CharacteristicsDtos[0].StandardId = Characteristics[0].Standard.Id;
         CharacteristicsDtos[1].StandardId = Characteristics[1].Standard.Id;
         CharacteristicsDtos[2].StandardId = Characteristics[2].Standard.Id;
+
+        #region ServiceJournalItems + ServiceJournalItemDtos
+        ServiceJournalItems =
+        [
+            new ServiceJournalItem
+            {
+                Id = 1,
+                Name = "ServiceJournalItemName1",
+                ShortName = "ServiceJournalItemShortName1",
+                Comments = "ServiceJournalItemComments1",
+                Service = Services[0],
+                Standard = Standards[0],
+                Person = Persons[0],
+                Date = new DateTime(2024, 12, 10, 0, 0, 0, DateTimeKind.Utc)
+            },
+            new ServiceJournalItem
+            {
+                Id = 2,
+                Name = "ServiceJournalItemName2",
+                ShortName = "ServiceJournalItemShortName2",
+                Comments = "ServiceJournalItemComments2",
+                Service = Services[1],
+                Standard = Standards[1],
+                Person = Persons[1],
+                Date = new DateTime(2024, 12, 11, 0, 0, 0, DateTimeKind.Utc)
+            },
+            new ServiceJournalItem
+            {
+                Id = 3,
+                Name = "ServiceJournalItemName3",
+                ShortName = "ServiceJournalItemShortName3",
+                Comments = "ServiceJournalItemComments3",
+                Service = Services[2],
+                Standard = Standards[2],
+                Person = Persons[2],
+                Date = new DateTime(2024, 12, 12, 0, 0, 0, DateTimeKind.Utc)
+            }
+        ];
+        
+        ServiceJournalItemDtos =
+        [
+            new ServiceJournalItemDto
+            {
+                Id = 1,
+                Name = ServiceJournalItems[0].Name,
+                ShortName = ServiceJournalItems[0].ShortName,
+                Comments = ServiceJournalItems[0].Comments,
+                ServiceId = ServiceJournalItems[0].Service.Id,
+                StandardId = ServiceJournalItems[0].Standard.Id,
+                PersonId = ServiceJournalItems[0].Person.Id,
+                Date = ServiceJournalItems[0].Date
+            },
+            new ServiceJournalItemDto
+            {
+                Id = 2,
+                Name = ServiceJournalItems[1].Name,
+                ShortName = ServiceJournalItems[1].ShortName,
+                Comments = ServiceJournalItems[1].Comments,
+                ServiceId = ServiceJournalItems[1].Service.Id,
+                StandardId = ServiceJournalItems[1].Standard.Id,
+                PersonId = ServiceJournalItems[1].Person.Id,
+                Date = ServiceJournalItems[1].Date
+            },
+            new ServiceJournalItemDto
+            {
+                Id = 3,
+                Name = ServiceJournalItems[2].Name,
+                ShortName = ServiceJournalItems[2].ShortName,
+                Comments = ServiceJournalItems[2].Comments,
+                ServiceId = ServiceJournalItems[2].Service.Id,
+                StandardId = ServiceJournalItems[2].Standard.Id,
+                PersonId = ServiceJournalItems[2].Person.Id,
+                Date = ServiceJournalItems[2].Date
+            }
+        ];
+        #endregion
 
         #region Places
         Places =
@@ -1501,5 +1580,11 @@ public abstract class BaseTestFixture
     {
         yield return new TestCaseData(Cases.Zero);
         yield return new TestCaseData(Cases.Negative);
+    }
+    
+    protected static IEnumerable<TestCaseData> MinOrInPast()
+    {
+        yield return new TestCaseData(Cases.MinDateTime);
+        yield return new TestCaseData(Cases.DateTimeInPast);
     }
 }

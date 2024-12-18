@@ -14,6 +14,6 @@ public class ServiceJournalItem : Entity, ICacheable
 
     public static string GetCacheKey()
     {
-        return Cache.Services;
+        return Cache.ServiceJournal;
     }
 }

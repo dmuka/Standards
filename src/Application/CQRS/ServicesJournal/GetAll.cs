@@ -23,7 +23,7 @@ public class GetAll
             var slidingExpiration = configService.GetValue<int>(Cache.SlidingExpirationConfigurationSectionKey);
                 
             var serviceJournalItems = await cache.GetOrCreateAsync<ServiceJournalItem>(
-                Cache.Services,
+                Cache.ServiceJournal,
                 [
                     si => si.Standard,
                     si => si.Service,

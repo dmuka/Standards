@@ -4,6 +4,10 @@ public class Cases
 {
     public const int Negative = -1;
     public const int Zero = -1;
+
+    public static readonly DateTime MinDateTime = DateTime.MinValue;
+    public static readonly DateTime DateTimeInPast = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+
     public const object Null = null;
     public const string EmptyString = "";
 
