@@ -283,24 +283,24 @@ public abstract class BaseTestFixture
         [
             new DepartmentDto
             {
-                Id = 1,
-                Name = "DepartmentName1",
-                ShortName = "DepartmentShortName1",
-                Comments = "DepartmentComments1"
+                Id = Departments[0].Id,
+                Name = Departments[0].Name,
+                ShortName = Departments[0].ShortName,
+                Comments = Departments[0].Comments
             },
             new DepartmentDto
             {
-                Id = 2,
-                Name = "DepartmentName2",
-                ShortName = "DepartmentShortName2",
-                Comments = "DepartmentComments2"
+                Id = Departments[1].Id,
+                Name = Departments[1].Name,
+                ShortName = Departments[1].ShortName,
+                Comments = Departments[1].Comments
             },
             new DepartmentDto
             {
-                Id = 3,
-                Name = "DepartmentName3",
-                ShortName = "DepartmentShortName3",
-                Comments = "DepartmentComments3"
+                Id = Departments[2].Id,
+                Name = Departments[2].Name,
+                ShortName = Departments[2].ShortName,
+                Comments = Departments[2].Comments
             }
         ];
         #endregion
@@ -341,30 +341,30 @@ public abstract class BaseTestFixture
         [
             new HousingDto
             {
-                Id = 1,
-                Name = "Name 1",
-                ShortName = "Short name 1",
-                FloorsCount = 2,
-                Address = "Address 1",
-                Comments = "Comments 1"
+                Id = Housings[0].Id,
+                Name = Housings[0].Name,
+                ShortName = Housings[0].ShortName,
+                FloorsCount = Housings[0].FloorsCount,
+                Address = Housings[0].Address,
+                Comments = Housings[0].Comments
             },
             new HousingDto
             {
-                Id = 2,
-                Name = "Name 2",
-                ShortName = "Short name 2",
-                FloorsCount = 1,
-                Address = "Address 2",
-                Comments = "Comments 2"
+                Id = Housings[1].Id,
+                Name = Housings[1].Name,
+                ShortName = Housings[1].ShortName,
+                FloorsCount = Housings[1].FloorsCount,
+                Address = Housings[1].Address,
+                Comments = Housings[1].Comments
             },
             new HousingDto
             {
-                Id = 3,
-                Name = "Name 3",
-                ShortName = "Short name 3",
-                FloorsCount = 2,
-                Address = "Address 3",
-                Comments = "Comments 3"
+                Id = Housings[2].Id,
+                Name = Housings[2].Name,
+                ShortName = Housings[2].ShortName,
+                FloorsCount = Housings[2].FloorsCount,
+                Address = Housings[2].Address,
+                Comments = Housings[2].Comments
             }
         ];
         #endregion
@@ -402,34 +402,30 @@ public abstract class BaseTestFixture
         [
             new SectorDto
             {
-                Id = 1,
-                Name = "SectorName1",
-                ShortName = "SectorShortName1",
-                Comments = "SectorComments1",
-                DepartmentId = 1
+                Id = Sectors[0].Id,
+                Name = Sectors[0].Name,
+                ShortName = Sectors[0].ShortName,
+                Comments = Sectors[0].Comments,
+                DepartmentId = Sectors[0].Department.Id
             },
             new SectorDto
             {
-                Id = 2,
-                Name = "SectorName2",
-                ShortName = "SectorShortName2",
-                Comments = "SectorComments2",
-                DepartmentId = 2
+                Id = Sectors[1].Id,
+                Name = Sectors[1].Name,
+                ShortName = Sectors[1].ShortName,
+                Comments = Sectors[1].Comments,
+                DepartmentId = Sectors[1].Department.Id
             },
             new SectorDto
             {
-                Id = 3,
-                Name = "SectorName3",
-                ShortName = "SectorShortName3",
-                Comments = "SectorComments3",
-                DepartmentId = 3
+                Id = Sectors[2].Id,
+                Name = Sectors[2].Name,
+                ShortName = Sectors[2].ShortName,
+                Comments = Sectors[2].Comments,
+                DepartmentId = Sectors[2].Department.Id
             }
         ];
         #endregion
-
-        Sectors[0].Department = Departments[0];
-        Sectors[1].Department = Departments[1];
-        Sectors[2].Department = Departments[2];
 
         Departments[0].Sectors = [ Sectors[0] ];
         Departments[1].Sectors = [ Sectors[1] ];
@@ -513,68 +509,68 @@ public abstract class BaseTestFixture
         [
             new RoomDto
             {
-                Id = 1,
-                Name = "RoomName1",
-                ShortName = "RoomShortName1",
-                Comments = "RoomComments1",
+                Id = Rooms[0].Id,
+                Name = Rooms[0].Name,
+                ShortName = Rooms[0].ShortName,
+                Comments = Rooms[0].Comments,
                 SectorId = Rooms[0].Sector.Id,
-                Floor = 1,
-                Length = 5d,
-                Width = 4d,
-                Height = 2.5,
-                HousingId = 3
+                Floor = Rooms[0].Floor,
+                Length = Rooms[0].Length,
+                Width = Rooms[0].Width,
+                Height = Rooms[0].Height,
+                HousingId = Rooms[0].Housing.Id
             },
             new RoomDto
             {
-                Id = 2,
-                Name = "RoomName2",
-                ShortName = "RoomShortName2",
-                Comments = "RoomComments2",
+                Id = Rooms[1].Id,
+                Name = Rooms[1].Name,
+                ShortName = Rooms[1].ShortName,
+                Comments = Rooms[1].Comments,
                 SectorId = Rooms[1].Sector.Id,
-                Floor = 1,
-                Length = 6d,
-                Width = 5d,
-                Height = 2.5,
-                HousingId = 2
+                Floor = Rooms[1].Floor,
+                Length = Rooms[1].Length,
+                Width = Rooms[1].Width,
+                Height = Rooms[1].Height,
+                HousingId = Rooms[1].Housing.Id
             },
             new RoomDto
             {
-                Id = 3,
-                Name = "RoomName3",
-                ShortName = "RoomShortName3",
-                Comments = "RoomComments3",
+                Id = Rooms[2].Id,
+                Name = Rooms[2].Name,
+                ShortName = Rooms[2].ShortName,
+                Comments = Rooms[2].Comments,
                 SectorId = Rooms[2].Sector.Id,
-                Floor = 1,
-                Length = 7d,
-                Width = 6d,
-                Height = 2.5,
-                HousingId = 1
+                Floor = Rooms[2].Floor,
+                Length = Rooms[2].Length,
+                Width = Rooms[2].Width,
+                Height = Rooms[2].Height,
+                HousingId = Rooms[2].Housing.Id
             },
             new RoomDto
             {
-                Id = 4,
-                Name = "RoomName4",
-                ShortName = "RoomShortName4",
-                Comments = "RoomComments4",
+                Id = Rooms[3].Id,
+                Name = Rooms[3].Name,
+                ShortName = Rooms[3].ShortName,
+                Comments = Rooms[3].Comments,
                 SectorId = Rooms[3].Sector.Id,
-                Floor = 1,
-                Length = 6d,
-                Width = 5d,
-                Height = 2.5,
-                HousingId = 2
+                Floor = Rooms[3].Floor,
+                Length = Rooms[3].Length,
+                Width = Rooms[3].Width,
+                Height = Rooms[3].Height,
+                HousingId = Rooms[3].Housing.Id
             },
             new RoomDto
             {
-                Id = 5,
-                Name = "RoomName5",
-                ShortName = "RoomShortName5",
-                Comments = "RoomComments5",
+                Id = Rooms[4].Id,
+                Name = Rooms[4].Name,
+                ShortName = Rooms[4].ShortName,
+                Comments = Rooms[4].Comments,
                 SectorId = Rooms[4].Sector.Id,
-                Floor = 1,
-                Length = 7d,
-                Width = 6d,
-                Height = 2.5,
-                HousingId = 2
+                Floor = Rooms[4].Floor,
+                Length = Rooms[4].Length,
+                Width = Rooms[4].Width,
+                Height = Rooms[4].Height,
+                HousingId = Rooms[4].Housing.Id
             }
         ];
         #endregion
@@ -716,115 +712,115 @@ public abstract class BaseTestFixture
         [
             new PersonDto
             {
-                Id = 1,
-                FirstName = "FirstName1",
-                MiddleName = "MiddleName1",
-                LastName = "LastName1",
-                BirthdayDate = new DateTime(2000, 10, 15),
-                CategoryId = Categories[0].Id,
-                Comments = "PersonsComments1",
-                PositionId = Positions[0].Id,
-                SectorId = Sectors[0].Id,
-                Role = Roles[0],
-                UserId = Users[0].Id
+                Id = Persons[0].Id,
+                FirstName = Persons[0].FirstName,
+                MiddleName = Persons[0].MiddleName,
+                LastName = Persons[0].LastName,
+                BirthdayDate = Persons[0].BirthdayDate,
+                CategoryId = Persons[0].Category.Id,
+                Comments = Persons[0].Comments,
+                PositionId = Persons[0].Position.Id,
+                SectorId = Persons[0].Sector.Id,
+                Role = Persons[0].Role,
+                UserId = Persons[0].User.Id
             },
             new PersonDto
             {
-                Id = 2,
-                FirstName = "FirstName2",
-                MiddleName = "MiddleName2",
-                LastName = "LastName2",
-                BirthdayDate = new DateTime(2000, 10, 16),
-                CategoryId = Categories[1].Id,
-                Comments = "PersonsComments2",
-                PositionId = Positions[1].Id,
-                SectorId = Sectors[0].Id,
-                Role = Roles[1],
-                UserId = Users[1].Id
+                Id = Persons[1].Id,
+                FirstName = Persons[1].FirstName,
+                MiddleName = Persons[1].MiddleName,
+                LastName = Persons[1].LastName,
+                BirthdayDate = Persons[1].BirthdayDate,
+                CategoryId = Persons[1].Category.Id,
+                Comments = Persons[1].Comments,
+                PositionId = Persons[1].Position.Id,
+                SectorId = Persons[1].Sector.Id,
+                Role = Persons[1].Role,
+                UserId = Persons[1].User.Id
             },
             new PersonDto
             {
-                Id = 3,
-                FirstName = "FirstName3",
-                MiddleName = "MiddleName3",
-                LastName = "LastName3",
-                BirthdayDate = new DateTime(2000, 10, 17),
-                CategoryId = Categories[2].Id,
-                Comments = "PersonsComments3",
-                PositionId = Positions[2].Id,
-                SectorId = Sectors[0].Id,
-                Role = Roles[2],
-                UserId = Users[2].Id
+                Id = Persons[2].Id,
+                FirstName = Persons[2].FirstName,
+                MiddleName = Persons[2].MiddleName,
+                LastName = Persons[2].LastName,
+                BirthdayDate = Persons[2].BirthdayDate,
+                CategoryId = Persons[2].Category.Id,
+                Comments = Persons[2].Comments,
+                PositionId = Persons[2].Position.Id,
+                SectorId = Persons[2].Sector.Id,
+                Role = Persons[2].Role,
+                UserId = Persons[2].User.Id
             },
             new PersonDto
             {
-                Id = 4,
-                FirstName = "FirstName4",
-                MiddleName = "MiddleName4",
-                LastName = "LastName4",
-                BirthdayDate = new DateTime(2000, 10, 18),
-                CategoryId = Categories[2].Id,
-                Comments = "PersonsComments4",
-                PositionId = Positions[2].Id,
-                SectorId = Sectors[1].Id,
-                Role = Roles[3],
-                UserId = Users[3].Id
+                Id = Persons[3].Id,
+                FirstName = Persons[3].FirstName,
+                MiddleName = Persons[3].MiddleName,
+                LastName = Persons[3].LastName,
+                BirthdayDate = Persons[3].BirthdayDate,
+                CategoryId = Persons[3].Category.Id,
+                Comments = Persons[3].Comments,
+                PositionId = Persons[3].Position.Id,
+                SectorId = Persons[3].Sector.Id,
+                Role = Persons[3].Role,
+                UserId = Persons[3].User.Id
             },
             new PersonDto
             {
-                Id = 5,
-                FirstName = "FirstName5",
-                MiddleName = "MiddleName5",
-                LastName = "LastName5",
-                BirthdayDate = new DateTime(2000, 10, 19),
-                CategoryId = Categories[1].Id,
-                Comments = "PersonsComments5",
-                PositionId = Positions[1].Id,
-                SectorId = Sectors[1].Id,
-                Role = Roles[3],
-                UserId = Users[4].Id
+                Id = Persons[4].Id,
+                FirstName = Persons[4].FirstName,
+                MiddleName = Persons[4].MiddleName,
+                LastName = Persons[4].LastName,
+                BirthdayDate = Persons[4].BirthdayDate,
+                CategoryId = Persons[4].Category.Id,
+                Comments = Persons[4].Comments,
+                PositionId = Persons[4].Position.Id,
+                SectorId = Persons[4].Sector.Id,
+                Role = Persons[4].Role,
+                UserId = Persons[4].User.Id
             },
             new PersonDto
             {
-                Id = 6,
-                FirstName = "FirstName6",
-                MiddleName = "MiddleName6",
-                LastName = "LastName6",
-                BirthdayDate = new DateTime(2000, 10, 20),
-                CategoryId = Categories[2].Id,
-                Comments = "PersonsComments6",
-                PositionId = Positions[2].Id,
-                SectorId = Sectors[1].Id,
-                Role = Roles[4],
-                UserId = Users[5].Id
+                Id = Persons[5].Id,
+                FirstName = Persons[5].FirstName,
+                MiddleName = Persons[5].MiddleName,
+                LastName = Persons[5].LastName,
+                BirthdayDate = Persons[5].BirthdayDate,
+                CategoryId = Persons[5].Category.Id,
+                Comments = Persons[5].Comments,
+                PositionId = Persons[5].Position.Id,
+                SectorId = Persons[5].Sector.Id,
+                Role = Persons[5].Role,
+                UserId = Persons[5].User.Id
             },
             new PersonDto
             {
-                Id = 7,
-                FirstName = "FirstName7",
-                MiddleName = "MiddleName7",
-                LastName = "LastName7",
-                BirthdayDate = new DateTime(2000, 10, 21),
-                CategoryId = Categories[1].Id,
-                Comments = "PersonsComments4",
-                PositionId = Positions[2].Id,
-                SectorId = Sectors[2].Id,
-                Role = Roles[3],
-                UserId = Users[6].Id
+                Id = Persons[6].Id,
+                FirstName = Persons[6].FirstName,
+                MiddleName = Persons[6].MiddleName,
+                LastName = Persons[6].LastName,
+                BirthdayDate = Persons[6].BirthdayDate,
+                CategoryId = Persons[6].Category.Id,
+                Comments = Persons[6].Comments,
+                PositionId = Persons[6].Position.Id,
+                SectorId = Persons[6].Sector.Id,
+                Role = Persons[6].Role,
+                UserId = Persons[6].User.Id
             },
             new PersonDto
             {
-                Id = 8,
-                FirstName = "FirstName8",
-                MiddleName = "MiddleName8",
-                LastName = "LastName8",
-                BirthdayDate = new DateTime(2000, 10, 22),
-                CategoryId = Categories[2].Id,
-                Comments = "PersonsComments8",
-                PositionId = Positions[2].Id,
-                SectorId = Sectors[2].Id,
-                Role = Roles[4],
-                UserId = Users[7].Id
+                Id = Persons[7].Id,
+                FirstName = Persons[7].FirstName,
+                MiddleName = Persons[7].MiddleName,
+                LastName = Persons[7].LastName,
+                BirthdayDate = Persons[7].BirthdayDate,
+                CategoryId = Persons[7].Category.Id,
+                Comments = Persons[7].Comments,
+                PositionId = Persons[7].Position.Id,
+                SectorId = Persons[7].Sector.Id,
+                Role = Persons[7].Role,
+                UserId = Persons[7].User.Id
             }
         ];
         #endregion
@@ -910,8 +906,8 @@ public abstract class BaseTestFixture
                 Name = Workplaces[0].Name,
                 ShortName = Workplaces[0].ShortName,
                 Comments = Workplaces[0].Comments,
-                ResponsibleId = Persons[0].Id,
-                RoomId = Rooms[4].Id,
+                ResponsibleId = Workplaces[0].Responsible.Id,
+                RoomId = Workplaces[0].Room.Id,
                 ImagePath = Workplaces[0].ImagePath
             },
             new WorkplaceDto
@@ -920,8 +916,8 @@ public abstract class BaseTestFixture
                 Name = Workplaces[1].Name,
                 ShortName = Workplaces[1].ShortName,
                 Comments = Workplaces[1].Comments,
-                ResponsibleId = Persons[1].Id,
-                RoomId = Rooms[4].Id,
+                ResponsibleId = Workplaces[1].Responsible.Id,
+                RoomId = Workplaces[1].Room.Id,
                 ImagePath = Workplaces[1].ImagePath
             },
             new WorkplaceDto
@@ -930,8 +926,8 @@ public abstract class BaseTestFixture
                 Name = Workplaces[2].Name,
                 ShortName = Workplaces[2].ShortName,
                 Comments = Workplaces[2].Comments,
-                ResponsibleId = Persons[2].Id,
-                RoomId = Rooms[2].Id,
+                ResponsibleId = Workplaces[2].Responsible.Id,
+                RoomId = Workplaces[2].Room.Id,
                 ImagePath = Workplaces[2].ImagePath
             },
             new WorkplaceDto
@@ -940,8 +936,8 @@ public abstract class BaseTestFixture
                 Name = Workplaces[3].Name,
                 ShortName = Workplaces[3].ShortName,
                 Comments = Workplaces[3].Comments,
-                ResponsibleId = Persons[3].Id,
-                RoomId = Rooms[3].Id,
+                ResponsibleId = Workplaces[3].Responsible.Id,
+                RoomId = Workplaces[3].Room.Id,
                 ImagePath = Workplaces[3].ImagePath
             },
             new WorkplaceDto
@@ -950,8 +946,8 @@ public abstract class BaseTestFixture
                 Name = Workplaces[4].Name,
                 ShortName = Workplaces[4].ShortName,
                 Comments = Workplaces[4].Comments,
-                ResponsibleId = Persons[4].Id,
-                RoomId = Rooms[0].Id,
+                ResponsibleId = Workplaces[4].Responsible.Id,
+                RoomId = Workplaces[4].Room.Id,
                 ImagePath = Workplaces[4].ImagePath
             },
             new WorkplaceDto
@@ -960,8 +956,8 @@ public abstract class BaseTestFixture
                 Name = Workplaces[5].Name,
                 ShortName = Workplaces[5].ShortName,
                 Comments = Workplaces[5].Comments,
-                ResponsibleId = Persons[5].Id,
-                RoomId = Rooms[1].Id,
+                ResponsibleId = Workplaces[5].Responsible.Id,
+                RoomId = Workplaces[5].Room.Id,
                 ImagePath = Workplaces[5].ImagePath
             }
         ];
@@ -1074,18 +1070,18 @@ public abstract class BaseTestFixture
         [
             new QuantityDto
             {
-                Id = 1,
-                Name = "QuantityName1"
-            },
-            new QuantityDto
-            { 
-                Id = 2,
-                Name = "QuantityName2"
+                Id = Quantities[0].Id,
+                Name = Quantities[0].Name
             },
             new QuantityDto
             {
-                Id = 3,
-                Name = "QuantityName3"
+                Id = Quantities[1].Id,
+                Name = Quantities[1].Name
+            },
+            new QuantityDto
+            {
+                Id = Quantities[2].Id,
+                Name = Quantities[2].Name
             }
         ];
         #endregion
@@ -1126,30 +1122,30 @@ public abstract class BaseTestFixture
         [
             new UnitDto
             {
-                Id = 1,
+                Id = Units[0].Id,
                 QuantityId = Units[0].Quantity.Id,
-                Name = "UnitName1",
-                RuName = "UnitRuName1",
-                Symbol = "UnitSymbol1",
-                RuSymbol = "UnitRuSymbol1"
+                Name = Units[0].Name,
+                RuName = Units[0].RuName,
+                Symbol = Units[0].Symbol,
+                RuSymbol = Units[0].RuSymbol
             },
             new UnitDto
             {
-                Id = 2,
+                Id = Units[1].Id,
                 QuantityId = Units[1].Quantity.Id,
-                Name = "UnitName2",
-                RuName = "UnitRuName2",
-                Symbol = "UnitSymbol2",
-                RuSymbol = "UnitRuSymbol2"
+                Name = Units[1].Name,
+                RuName = Units[1].RuName,
+                Symbol = Units[1].Symbol,
+                RuSymbol = Units[1].RuSymbol
             },
             new UnitDto
             {
-                Id = 3,
+                Id = Units[2].Id,
                 QuantityId = Units[2].Quantity.Id,
-                Name = "UnitName3",
-                RuName = "UnitRuName3",
-                Symbol = "UnitSymbol3",
-                RuSymbol = "UnitRuSymbol3"
+                Name = Units[2].Name,
+                RuName = Units[2].RuName,
+                Symbol = Units[2].Symbol,
+                RuSymbol = Units[2].RuSymbol
             }
         ];
         #endregion
@@ -1195,27 +1191,27 @@ public abstract class BaseTestFixture
         [
             new MaterialDto
             {
-                Id = 1,
-                Name = "MaterialName1",
-                ShortName = "MaterialShortName1",
+                Id = Materials[0].Id,
+                Name = Materials[0].Name,
+                ShortName = Materials[0].ShortName,
                 UnitId = Materials[0].Unit.Id,
-                Comments = "Comments1"
+                Comments = Materials[0].Comments
             },
             new MaterialDto
             {
-                Id = 2,
-                Name = "MaterialName2",
-                ShortName = "MaterialShortName2",
+                Id = Materials[1].Id,
+                Name = Materials[1].Name,
+                ShortName = Materials[1].ShortName,
                 UnitId = Materials[1].Unit.Id,
-                Comments = "Comments2"
+                Comments = Materials[1].Comments
             },
             new MaterialDto
             {
-                Id = 3,
-                Name = "MaterialName3",
-                ShortName = "MaterialShortName3",
+                Id = Materials[2].Id,
+                Name = Materials[2].Name,
+                ShortName = Materials[2].ShortName,
                 UnitId = Materials[2].Unit.Id,
-                Comments = "Comments3"
+                Comments = Materials[2].Comments
             }
         ];
         #endregion
@@ -1259,7 +1255,7 @@ public abstract class BaseTestFixture
         [
             new ServiceDto
             {
-                Id = 1,
+                Id = Services[0].Id,
                 Name = Services[0].Name,
                 ShortName = Services[0].ShortName,
                 Comments = Services[0].Comments,
@@ -1269,7 +1265,7 @@ public abstract class BaseTestFixture
             },
             new ServiceDto
             {
-                Id = 2,
+                Id = Services[1].Id,
                 Name = Services[1].Name,
                 ShortName = Services[1].ShortName,
                 Comments = Services[1].Comments,
@@ -1279,7 +1275,7 @@ public abstract class BaseTestFixture
             },
             new ServiceDto
             {
-                Id = 3,
+                Id = Services[2].Id,
                 Name = Services[2].Name,
                 ShortName = Services[2].ShortName,
                 Comments = Services[2].Comments,
@@ -1341,45 +1337,45 @@ public abstract class BaseTestFixture
         [
             new CharacteristicDto
             {
-                Id = 1,
-                Name = "CharacteristicName1",
-                ShortName = "CharacteristicShortName1",
-                Comments = "Comments1",
-                GradeId = Grades[0].Id,
-                GradeValue = 3d,
-                GradeValueStart = 0d,
-                GradeValueEnd = 7d,
-                RangeStart = -10d,
-                RangeEnd = 10d,
-                UnitId = Units[0].Id
+                Id = Characteristics[0].Id,
+                Name = Characteristics[0].Name,
+                ShortName = Characteristics[0].ShortName,
+                Comments = Characteristics[0].Comments,
+                GradeId = Characteristics[0].Grade.Id,
+                GradeValue = Characteristics[0].GradeValue,
+                GradeValueStart = Characteristics[0].GradeValueStart,
+                GradeValueEnd = Characteristics[0].GradeValueEnd,
+                RangeStart = Characteristics[0].RangeStart,
+                RangeEnd = Characteristics[0].RangeEnd,
+                UnitId = Characteristics[0].Unit.Id
             },
             new CharacteristicDto
             {
-                Id = 2,
-                Name = "CharacteristicName2",
-                ShortName = "CharacteristicShortName2",
-                Comments = "Comments2",
-                GradeId = Grades[1].Id,
-                GradeValue = 1d,
-                GradeValueStart = 0d,
-                GradeValueEnd = 4d,
-                RangeStart = -5d,
-                RangeEnd = 10d,
-                UnitId = Units[1].Id
+                Id = Characteristics[1].Id,
+                Name = Characteristics[1].Name,
+                ShortName = Characteristics[1].ShortName,
+                Comments = Characteristics[1].Comments,
+                GradeId = Characteristics[1].Grade.Id,
+                GradeValue = Characteristics[1].GradeValue,
+                GradeValueStart = Characteristics[1].GradeValueStart,
+                GradeValueEnd = Characteristics[1].GradeValueEnd,
+                RangeStart = Characteristics[1].RangeStart,
+                RangeEnd = Characteristics[1].RangeEnd,
+                UnitId = Characteristics[1].Unit.Id
             },
             new CharacteristicDto
             {
-                Id = 3,
-                Name = "CharacteristicName3",
-                ShortName = "CharacteristicShortName3",
-                Comments = "Comments3",
-                GradeId = Grades[2].Id,
-                GradeValue = 4d,
-                GradeValueStart = 0d,
-                GradeValueEnd = 10d,
-                RangeStart = 0d,
-                RangeEnd = 10d,
-                UnitId = Units[2].Id
+                Id = Characteristics[2].Id,
+                Name = Characteristics[2].Name,
+                ShortName = Characteristics[2].ShortName,
+                Comments = Characteristics[2].Comments,
+                GradeId = Characteristics[2].Grade.Id,
+                GradeValue = Characteristics[2].GradeValue,
+                GradeValueStart = Characteristics[2].GradeValueStart,
+                GradeValueEnd = Characteristics[2].GradeValueEnd,
+                RangeStart = Characteristics[2].RangeStart,
+                RangeEnd = Characteristics[2].RangeEnd,
+                UnitId = Characteristics[2].Unit.Id
             }
         ];
         #endregion
@@ -1482,7 +1478,7 @@ public abstract class BaseTestFixture
         [
             new ServiceJournalItemDto
             {
-                Id = 1,
+                Id = ServiceJournalItems[0].Id,
                 Name = ServiceJournalItems[0].Name,
                 ShortName = ServiceJournalItems[0].ShortName,
                 Comments = ServiceJournalItems[0].Comments,
@@ -1493,7 +1489,7 @@ public abstract class BaseTestFixture
             },
             new ServiceJournalItemDto
             {
-                Id = 2,
+                Id = ServiceJournalItems[1].Id,
                 Name = ServiceJournalItems[1].Name,
                 ShortName = ServiceJournalItems[1].ShortName,
                 Comments = ServiceJournalItems[1].Comments,
@@ -1504,7 +1500,7 @@ public abstract class BaseTestFixture
             },
             new ServiceJournalItemDto
             {
-                Id = 3,
+                Id = ServiceJournalItems[2].Id,
                 Name = ServiceJournalItems[2].Name,
                 ShortName = ServiceJournalItems[2].ShortName,
                 Comments = ServiceJournalItems[2].Comments,
