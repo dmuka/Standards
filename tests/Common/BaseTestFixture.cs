@@ -52,6 +52,9 @@ public abstract class BaseTestFixture
     
     protected static List<ServiceType> ServiceTypes { get; private set; } = [];
     
+    protected static List<Service> Services { get; private set; } = [];
+    protected static List<ServiceDto> ServiceDtos { get; private set; } = [];
+    
     protected static List<Standard> Standards { get; private set; } = [];
     
     protected static List<Place> Places { get; private set; } = [];
@@ -589,7 +592,7 @@ public abstract class BaseTestFixture
         SectorDtos[1].RoomIds = Sectors[1].Rooms.Select(r => r.Id).ToList();
         SectorDtos[2].RoomIds = Sectors[2].Rooms.Select(r => r.Id).ToList();
         
-        #region Persons
+        #region Persons + PersonDtos
         Persons =
         [
             new Person
@@ -831,7 +834,7 @@ public abstract class BaseTestFixture
         SectorDtos[1].PersonIds = Sectors[1].Persons.Select(s => s.Id).ToList();
         SectorDtos[2].PersonIds = Sectors[2].Persons.Select(s => s.Id).ToList();
         
-        #region Workplaces
+        #region Workplaces + WorkplaceDtos
         Workplaces =
         [
             new Workplace
@@ -1044,7 +1047,7 @@ public abstract class BaseTestFixture
         ];
         #endregion
 
-        #region Quantities
+        #region Quantities + QuantityDtos
         Quantities =
         [
             new Quantity
@@ -1084,7 +1087,7 @@ public abstract class BaseTestFixture
         ];
         #endregion
 
-        #region Units
+        #region Units + UnitDtos
         Units =
         [
             new Unit
@@ -1210,6 +1213,76 @@ public abstract class BaseTestFixture
                 ShortName = "MaterialShortName3",
                 UnitId = Materials[2].Unit.Id,
                 Comments = "Comments3"
+            }
+        ];
+        #endregion
+
+        #region Services + ServiceDtos
+        Services =
+        [
+            new Service
+            {
+                Id = 1,
+                Name = "ServiceName1",
+                ShortName = "ServiceShortName1",
+                Comments = "ServiceComments1",
+                ServiceType = ServiceTypes[0],
+                Materials = [Materials[0]],
+                MaterialsQuantities = [Quantities[0]]
+            },
+            new Service
+            {
+                Id = 2,
+                Name = "ServiceName2",
+                ShortName = "ServiceShortName2",
+                Comments = "ServiceComments2",
+                ServiceType = ServiceTypes[1],
+                Materials = [Materials[1]],
+                MaterialsQuantities = [Quantities[1]]
+            },
+            new Service
+            {
+                Id = 3,
+                Name = "Service",
+                ShortName = "ServiceShortName3",
+                Comments = "ServiceComments3",
+                ServiceType = ServiceTypes[2],
+                Materials = [Materials[2]],
+                MaterialsQuantities = [Quantities[2]]
+            }
+        ];
+        
+        ServiceDtos =
+        [
+            new ServiceDto
+            {
+                Id = 1,
+                Name = Services[0].Name,
+                ShortName = Services[0].ShortName,
+                Comments = Services[0].Comments,
+                ServiceTypeId = Services[0].ServiceType.Id,
+                MaterialIds = Services[0].Materials.Select(m => m.Id).ToList(),
+                MaterialsQuantityIds = Services[0].MaterialsQuantities.Select(q => q.Id).ToList()
+            },
+            new ServiceDto
+            {
+                Id = 2,
+                Name = Services[1].Name,
+                ShortName = Services[1].ShortName,
+                Comments = Services[1].Comments,
+                ServiceTypeId = Services[1].ServiceType.Id,
+                MaterialIds = Services[1].Materials.Select(m => m.Id).ToList(),
+                MaterialsQuantityIds = Services[1].MaterialsQuantities.Select(q => q.Id).ToList()
+            },
+            new ServiceDto
+            {
+                Id = 3,
+                Name = Services[2].Name,
+                ShortName = Services[2].ShortName,
+                Comments = Services[2].Comments,
+                ServiceTypeId = Services[2].ServiceType.Id,
+                MaterialIds = Services[2].Materials.Select(m => m.Id).ToList(),
+                MaterialsQuantityIds = Services[2].MaterialsQuantities.Select(q => q.Id).ToList()
             }
         ];
         #endregion
