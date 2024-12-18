@@ -67,7 +67,7 @@ public class QuantitiesController(ISender sender) : ControllerBase
 
     [HttpPost]
     [Route("filter")]
-    public async Task<IActionResult> GetMaterialsByFilter([FromBody] QueryParameters parameters)
+    public async Task<IActionResult> GetQuantitiesByFilter([FromBody] QueryParameters parameters)
     {
         var query = new GetFiltered<Quantity>.Query(parameters);
 

@@ -69,7 +69,7 @@ public class UnitsController(ISender sender) : ControllerBase
 
     [HttpPost]
     [Route("filter")]
-    public async Task<IActionResult> GetDepartmentsByFilter([FromBody] QueryParameters parameters)
+    public async Task<IActionResult> GetUnitsByFilter([FromBody] QueryParameters parameters)
     {
         var query = new GetFiltered<Unit>.Query(parameters);
 

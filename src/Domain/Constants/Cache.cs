@@ -17,6 +17,7 @@ public class Cache
     public const string Places = "Places";
     public const string Materials = "Materials";
     public const string Services = "Services";
+    public const string ServiceJournal = "ServiceJournal";
     public const string ServiceTypes = "ServiceTypes";
     public const string Characteristics = "Characteristics";
     public const string Grades = "Grades";

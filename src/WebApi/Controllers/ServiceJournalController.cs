@@ -1,7 +1,7 @@
 ﻿using Application.CQRS.Common.GenericCRUD;
-using Application.CQRS.Sectors;
-using Domain.Models.Departments;
+using Application.CQRS.ServicesJournal;
 using Domain.Models.DTOs;
+using Domain.Models.Services;
 using Infrastructure.Filter.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -10,11 +10,11 @@ namespace WebApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class SectorsController(ISender sender) : ControllerBase
+public class ServiceJournalController(ISender sender) : ControllerBase
 {
     [HttpGet]
     [Route("list")]
-    public async Task<IActionResult> GetSectors()
+    public async Task<IActionResult> GetServiceJournalItems()
     {
         var query = new GetAll.Query();
 
@@ -25,9 +25,9 @@ public class SectorsController(ISender sender) : ControllerBase
 
     [HttpGet]
     [Route("{id:int}")]
-    public async Task<IActionResult> GetSector(int id)
+    public async Task<IActionResult> GetServiceJournalItem(int id)
     {
-        var query = new GetById.Query<Sector>(id);
+        var query = new GetById.Query<Service>(id);
 
         var result = await sender.Send(query);
 
@@ -36,9 +36,9 @@ public class SectorsController(ISender sender) : ControllerBase
 
     [HttpPost]
     [Route("add")]
-    public async Task<IActionResult> CreateSector([FromBody] SectorDto sector)
+    public async Task<IActionResult> CreateServiceJournalItem([FromBody] ServiceJournalItemDto serviceJournalItem)
     {
-        var query = new Create.Query(sector);
+        var query = new Create.Query(serviceJournalItem);
 
         var result = await sender.Send(query);
 
@@ -47,9 +47,9 @@ public class SectorsController(ISender sender) : ControllerBase
 
     [HttpPut]
     [Route("edit")]
-    public async Task<IActionResult>  EditSector([FromBody] SectorDto sector)
+    public async Task<IActionResult>  EditServiceJournalItem([FromBody] ServiceJournalItemDto serviceJournalItem)
     {
-        var query = new Edit.Query(sector);
+        var query = new Edit.Query(serviceJournalItem);
             
         var result = await sender.Send(query);
 
@@ -58,9 +58,9 @@ public class SectorsController(ISender sender) : ControllerBase
 
     [HttpDelete]
     [Route("delete/{id:int}")]
-    public async Task<IActionResult> DeleteSector(int id)
+    public async Task<IActionResult> DeleteServiceJournalItem(int id)
     {
-        var query = new Delete.Query<Sector>(id);
+        var query = new Delete.Query<Service>(id);
 
         var result = await sender.Send(query);
 
@@ -69,9 +69,9 @@ public class SectorsController(ISender sender) : ControllerBase
 
     [HttpPost]
     [Route("filter")]
-    public async Task<IActionResult> GetSectorsByFilter([FromBody] QueryParameters parameters)
+    public async Task<IActionResult> GetServiceJournalItemsByFilter([FromBody] QueryParameters parameters)
     {
-        var query = new GetFiltered<Sector>.Query(parameters);
+        var query = new GetFiltered<Service>.Query(parameters);
 
         var result = await sender.Send(query);
 

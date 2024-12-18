@@ -69,7 +69,7 @@ public class ServiceTypesController(ISender sender) : ControllerBase
     [HttpPost]
     [Route("filter")]
     
-    public async Task<IActionResult> GetCategoriesByFilter([FromBody] QueryParameters parameters)
+    public async Task<IActionResult> GetServiceTypesByFilter([FromBody] QueryParameters parameters)
     {
         var query = new GetFiltered<ServiceType>.Query(parameters);
 

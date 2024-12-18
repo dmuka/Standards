@@ -39,4 +39,8 @@
   <ItemGroup>
     <Using Include="NUnit.Framework" />
   </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Application\CQRS\ServicesJournal\" />
+  </ItemGroup>
 </Project>

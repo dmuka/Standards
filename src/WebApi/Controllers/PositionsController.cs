@@ -67,7 +67,7 @@ public class PositionsController(ISender sender) : ControllerBase
 
     [HttpPost]
     [Route("filter")]
-    public async Task<IActionResult> GetMaterialsByFilter([FromBody] QueryParameters parameters)
+    public async Task<IActionResult> GetPositionsByFilter([FromBody] QueryParameters parameters)
     {
         var query = new GetFiltered<Position>.Query(parameters);
 

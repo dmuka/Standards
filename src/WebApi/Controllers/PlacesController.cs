@@ -67,7 +67,7 @@ public class PlacesController(ISender sender) : ControllerBase
 
     [HttpPost]
     [Route("filter")]
-    public async Task<IActionResult> GetMaterialsByFilter([FromBody] QueryParameters parameters)
+    public async Task<IActionResult> GetPlacesByFilter([FromBody] QueryParameters parameters)
     {
         var query = new GetFiltered<Place>.Query(parameters);
 

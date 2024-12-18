@@ -33,7 +33,7 @@ namespace Infrastructure.Data;
 
         public DbSet<Material> Materials { get; set; }
         public DbSet<Service> Services { get; set; }
-        public DbSet<ServiceJournal> ServicesJournal { get; set; }
+        public DbSet<ServiceJournalItem> ServicesJournal { get; set; }
         public DbSet<ServiceType> ServiceTypes { get; set; }
 
         public DbSet<Characteristic> Characteristics { get; set; }
@@ -71,7 +71,8 @@ namespace Infrastructure.Data;
                 .WithMany(room => room.WorkPlaces)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<ServiceJournal>()
+            modelBuilder.Entity<ServiceJournalItem>()
+                .ToTable("ServiceJournal")
                 .HasOne(sj => sj.Standard)
                 .WithMany()
                 .OnDelete(DeleteBehavior.NoAction);
