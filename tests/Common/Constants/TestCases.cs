@@ -7,6 +7,9 @@ public class Cases
 
     public static readonly DateTime MinDateTime = DateTime.MinValue;
     public static readonly DateTime DateTimeInPast = new DateTime(2000, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+    
+    public const int InvalidVerificationInterval = Domain.Constants.Standards.MinVerificationInterval - 1;
+    public const int InvalidCalibrationInterval = Domain.Constants.Standards.MinCalibrationInterval - 1;
 
     public const object Null = null;
     public const string EmptyString = "";

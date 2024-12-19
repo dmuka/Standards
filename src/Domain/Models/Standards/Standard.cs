@@ -21,6 +21,7 @@ public class Standard : Entity, ICacheable
     {
         return new StandardDto
         {
+            Id = standard.Id,
             Name = standard.Name,
             ShortName = standard.ShortName,
             Comments = standard.Comments,

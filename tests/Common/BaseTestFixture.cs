@@ -56,6 +56,7 @@ public abstract class BaseTestFixture
     protected static List<ServiceDto> ServiceDtos { get; private set; } = [];
     
     protected static List<Standard> Standards { get; private set; } = [];
+    protected static List<StandardDto> StandardDtos { get; private set; } = [];
     
     protected static List<ServiceJournalItem> ServiceJournalItems { get; private set; } = [];
     protected static List<ServiceJournalItemDto> ServiceJournalItemDtos { get; private set; } = [];
@@ -1424,6 +1425,52 @@ public abstract class BaseTestFixture
                 Workplaces = [ Workplaces[4], Workplaces[5] ],
                 Characteristics = [ Characteristics[2] ],
                 Comments = "Comments3"
+            }
+        ];
+        
+        StandardDtos =
+        [
+            new StandardDto
+            {
+                Id = Standards[0].Id,
+                Name = Standards[0].Name,
+                ShortName = Standards[0].ShortName,
+                ServiceIds = Standards[0].Services.Select(s => s.Id).ToList(),
+                CalibrationInterval = Standards[0].CalibrationInterval,
+                VerificationInterval = Standards[0].VerificationInterval,
+                ImagePath = Standards[0].ImagePath,
+                ResponsibleId = Standards[0].Responsible.Id,
+                WorkplaceIds = Standards[0].Workplaces.Select(wp => wp.Id).ToList(),
+                CharacteristicIds = Standards[0].Characteristics.Select(c => c.Id).ToList(),
+                Comments = Standards[0].Comments
+            },
+            new StandardDto
+            {
+                Id = Standards[1].Id,
+                Name = Standards[1].Name,
+                ShortName = Standards[1].ShortName,
+                ServiceIds = Standards[1].Services.Select(s => s.Id).ToList(),
+                CalibrationInterval = Standards[1].CalibrationInterval,
+                VerificationInterval = Standards[1].VerificationInterval,
+                ImagePath = Standards[1].ImagePath,
+                ResponsibleId = Standards[1].Responsible.Id,
+                WorkplaceIds = Standards[1].Workplaces.Select(wp => wp.Id).ToList(),
+                CharacteristicIds = Standards[1].Characteristics.Select(c => c.Id).ToList(),
+                Comments = Standards[1].Comments
+            },
+            new StandardDto
+            {
+                Id = Standards[2].Id,
+                Name = Standards[2].Name,
+                ShortName = Standards[2].ShortName,
+                ServiceIds = Standards[2].Services.Select(s => s.Id).ToList(),
+                CalibrationInterval = Standards[2].CalibrationInterval,
+                VerificationInterval = Standards[2].VerificationInterval,
+                ImagePath = Standards[2].ImagePath,
+                ResponsibleId = Standards[2].Responsible.Id,
+                WorkplaceIds = Standards[2].Workplaces.Select(wp => wp.Id).ToList(),
+                CharacteristicIds = Standards[2].Characteristics.Select(c => c.Id).ToList(),
+                Comments = Standards[2].Comments
             }
         ];
         #endregion
