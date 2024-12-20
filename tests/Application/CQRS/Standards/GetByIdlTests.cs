@@ -78,7 +78,6 @@ public class GetByIdTests : BaseTestFixture
     public void Handler_IfStandardsInCache_ReturnCachedValue()
     {
         // Arrange
-        _cacheMock.Object.Create(Cache.Standards, Standards);
         var query = new GetById.Query<Standard>(IdInDb);
 
         // Act

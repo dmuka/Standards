@@ -73,7 +73,7 @@ public class GetByIdTests : BaseTestFixture
     }
 
     [Test]
-    public void Handler_IfHousingInCache_ReturnCachedValue()
+    public void Handler_IfPositionInCache_ReturnCachedValue()
     {
         // Arrange
         var query = new GetById.Query<Position>(IdInDb);

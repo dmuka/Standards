@@ -78,7 +78,6 @@ public class GetByIdTests : BaseTestFixture
     public void Handler_IfRoomInCache_ReturnCachedValue()
     {
         // Arrange
-        _cacheMock.Object.Create(Cache.Rooms, Rooms);
         var query = new GetById.Query<Room>(IdInDb);
 
         // Act
