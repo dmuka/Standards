@@ -20,8 +20,8 @@ namespace Infrastructure.Data;
         public DbSet<Department> Departments { get; set; }
         public DbSet<Sector> Sectors { get; set; }
 
-        public DbSet<CalibrationJournal> CalibrationsJournal { get; set; }
-        public DbSet<VerificationJournal> VerificationsJournal { get; set; }
+        public DbSet<CalibrationJournalItem> CalibrationsJournal { get; set; }
+        public DbSet<VerificationJournalItem> VerificationsJournal { get; set; }
         public DbSet<Place> Places { get; set; }
 
         public DbSet<Person> Persons { get; set; }

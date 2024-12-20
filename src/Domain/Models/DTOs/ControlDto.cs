@@ -1,11 +1,9 @@
-﻿using Domain.Models.Standards;
+﻿namespace Domain.Models.DTOs;
 
-namespace Domain.Models.MetrologyControl;
-
-public abstract class Control : BaseEntity
+public abstract class ControlDto : BaseEntity
 {
-    public required Standard Standard { get; set; }
-    public required Place Place { get; set; }
+    public required int StandardId { get; set; }
+    public required int PlaceId { get; set; }
     public required DateTime Date { get; set; }
     public required DateTime ValidTo { get; set; }
     public required string SertificateId { get; set; } 
