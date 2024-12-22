@@ -23,8 +23,8 @@ public class VerificationJournalItem : Control, ICacheable
             PlaceId = verificationJournalItem.Place.Id,
             Date = verificationJournalItem.Date,
             ValidTo = verificationJournalItem.ValidTo,
-            SertificateId = verificationJournalItem.SertificateId,
-            SertificateImage = verificationJournalItem.SertificateImage
+            CertificateId = verificationJournalItem.CertificateId,
+            CertificateImage = verificationJournalItem.CertificateImage
         };
     }
 
@@ -41,8 +41,8 @@ public class VerificationJournalItem : Control, ICacheable
             Place = place,
             Date = verificationJournalItemDto.Date,
             ValidTo = verificationJournalItemDto.ValidTo,
-            SertificateId = verificationJournalItemDto.SertificateId,
-            SertificateImage = verificationJournalItemDto.SertificateImage
+            CertificateId = verificationJournalItemDto.CertificateId,
+            CertificateImage = verificationJournalItemDto.CertificateImage
         };
     }
 }

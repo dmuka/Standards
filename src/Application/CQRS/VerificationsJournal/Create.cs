@@ -49,9 +49,9 @@ public class Create
                 .NotEmpty()
                 .ChildRules(service =>
                 {
-                    service.RuleFor(dto => dto.SertificateId)
+                    service.RuleFor(dto => dto.CertificateId)
                         .NotEmpty()
-                        .MaximumLength(Lengths.SertificateId);
+                        .MaximumLength(Lengths.CertificateId);
                     
                     service.RuleFor(dto => dto.StandardId)
                         .GreaterThan(0)

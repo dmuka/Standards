@@ -61,6 +61,9 @@ public abstract class BaseTestFixture
     protected static List<ServiceJournalItem> ServiceJournalItems { get; private set; } = [];
     protected static List<ServiceJournalItemDto> ServiceJournalItemDtos { get; private set; } = [];
     
+    protected static List<VerificationJournalItem> VerificationJournalItems { get; private set; } = [];
+    protected static List<VerificationJournalItemDto> VerificationJournalItemDtos { get; private set; } = [];
+    
     protected static List<Place> Places { get; private set; } = [];
 
     protected static IList<Housing> Housings { get; private set; } = [];
@@ -1483,6 +1486,54 @@ public abstract class BaseTestFixture
         CharacteristicsDtos[1].StandardId = Characteristics[1].Standard.Id;
         CharacteristicsDtos[2].StandardId = Characteristics[2].Standard.Id;
 
+        #region Places
+        Places =
+        [
+            new Place
+            {
+                Id = 1,
+                Name = "PlaceName1",
+                ShortName = "PlaceShortName1",
+                Comments = "Comments1"
+            },
+            new Place
+            { 
+                Id = 2,
+                Name = "PlaceName2",
+                ShortName = "PlaceShortName2",
+                Comments = "Comments2"
+            },
+            new Place
+            {
+                Id = 3,
+                Name = "PlaceName3",
+                ShortName = "PlaceShortName3",
+                Comments = "Comments3"
+            },
+            new Place
+            {
+                Id = 4,
+                Name = "PlaceName4",
+                ShortName = "PlaceShortName4",
+                Comments = "Comments4"
+            },
+            new Place
+            { 
+                Id = 5,
+                Name = "PlaceName5",
+                ShortName = "PlaceShortName5",
+                Comments = "Comments5"
+            },
+            new Place
+            {
+                Id = 6,
+                Name = "PlaceName6",
+                ShortName = "PlaceShortName6",
+                Comments = "Comments6"
+            }
+        ];
+        #endregion
+
         #region ServiceJournalItems + ServiceJournalItemDtos
         ServiceJournalItems =
         [
@@ -1559,50 +1610,78 @@ public abstract class BaseTestFixture
         ];
         #endregion
 
-        #region Places
-        Places =
+        #region VerificationJournalItems + VerificationJournalItemDtos
+        VerificationJournalItems =
         [
-            new Place
+            new VerificationJournalItem
             {
                 Id = 1,
-                Name = "PlaceName1",
-                ShortName = "PlaceShortName1",
-                Comments = "Comments1"
+                Standard = Standards[0],
+                Place = Places[0],
+                Date = new DateTime(2024, 12, 10, 0, 0, 0, DateTimeKind.Utc),
+                ValidTo = new DateTime(2025, 12, 10, 0, 0, 0, DateTimeKind.Utc),
+                CertificateId = "CertificateId1",
+                CertificateImage = "CertificateImage1",
+                Comments = "VerificationJournalItemComments1"
             },
-            new Place
-            { 
+            new VerificationJournalItem
+            {
                 Id = 2,
-                Name = "PlaceName2",
-                ShortName = "PlaceShortName2",
-                Comments = "Comments2"
+                Standard = Standards[1],
+                Place = Places[1],
+                Date = new DateTime(2024, 12, 11, 0, 0, 0, DateTimeKind.Utc),
+                ValidTo = new DateTime(2025, 12, 11, 0, 0, 0, DateTimeKind.Utc),
+                CertificateId = "CertificateId2",
+                CertificateImage = "CertificateImage2",
+                Comments = "VerificationJournalItemComments2"
             },
-            new Place
+            new VerificationJournalItem
             {
                 Id = 3,
-                Name = "PlaceName3",
-                ShortName = "PlaceShortName3",
-                Comments = "Comments3"
-            },
-            new Place
+                Standard = Standards[2],
+                Place = Places[2],
+                Date = new DateTime(2024, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                ValidTo = new DateTime(2025, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                CertificateId = "CertificateId3",
+                CertificateImage = "CertificateImage3",
+                Comments = "VerificationJournalItemComments3"
+            }
+        ];
+        
+        VerificationJournalItemDtos =
+        [
+            new VerificationJournalItemDto
             {
-                Id = 4,
-                Name = "PlaceName4",
-                ShortName = "PlaceShortName4",
-                Comments = "Comments4"
+                Id = VerificationJournalItems[0].Id,
+                StandardId = VerificationJournalItems[0].Standard.Id,
+                PlaceId = VerificationJournalItems[0].Place.Id,
+                Comments = VerificationJournalItems[0].Comments,
+                Date = VerificationJournalItems[0].Date,
+                ValidTo = VerificationJournalItems[0].ValidTo,
+                CertificateId = VerificationJournalItems[0].CertificateId,
+                CertificateImage = VerificationJournalItems[0].CertificateImage
             },
-            new Place
-            { 
-                Id = 5,
-                Name = "PlaceName5",
-                ShortName = "PlaceShortName5",
-                Comments = "Comments5"
-            },
-            new Place
+            new VerificationJournalItemDto
             {
-                Id = 6,
-                Name = "PlaceName6",
-                ShortName = "PlaceShortName6",
-                Comments = "Comments6"
+                Id = VerificationJournalItems[1].Id,
+                StandardId = VerificationJournalItems[1].Standard.Id,
+                PlaceId = VerificationJournalItems[1].Place.Id,
+                Comments = VerificationJournalItems[1].Comments,
+                Date = VerificationJournalItems[1].Date,
+                ValidTo = VerificationJournalItems[1].ValidTo,
+                CertificateId = VerificationJournalItems[1].CertificateId,
+                CertificateImage = VerificationJournalItems[1].CertificateImage
+            },
+            new VerificationJournalItemDto
+            {
+                Id = VerificationJournalItems[2].Id,
+                StandardId = VerificationJournalItems[2].Standard.Id,
+                PlaceId = VerificationJournalItems[2].Place.Id,
+                Comments = VerificationJournalItems[2].Comments,
+                Date = VerificationJournalItems[2].Date,
+                ValidTo = VerificationJournalItems[2].ValidTo,
+                CertificateId = VerificationJournalItems[2].CertificateId,
+                CertificateImage = VerificationJournalItems[2].CertificateImage
             }
         ];
         #endregion

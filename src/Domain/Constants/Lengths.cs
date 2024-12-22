@@ -4,7 +4,7 @@ public static class Lengths
 {
     public const int PersonName = 100;
     public const int EntityName = 200;
-    public const int SertificateId = 20;
+    public const int CertificateId = 20;
     public const int QuantityName = 50;
     public const int UnitName = 15;
     public const int UnitSymbol = 3;
