@@ -64,6 +64,9 @@ public abstract class BaseTestFixture
     protected static List<VerificationJournalItem> VerificationJournalItems { get; private set; } = [];
     protected static List<VerificationJournalItemDto> VerificationJournalItemDtos { get; private set; } = [];
     
+    protected static List<CalibrationJournalItem> CalibrationJournalItems { get; private set; } = [];
+    protected static List<CalibrationJournalItemDto> CalibrationJournalItemDtos { get; private set; } = [];
+    
     protected static List<Place> Places { get; private set; } = [];
 
     protected static IList<Housing> Housings { get; private set; } = [];
@@ -1682,6 +1685,82 @@ public abstract class BaseTestFixture
                 ValidTo = VerificationJournalItems[2].ValidTo,
                 CertificateId = VerificationJournalItems[2].CertificateId,
                 CertificateImage = VerificationJournalItems[2].CertificateImage
+            }
+        ];
+        #endregion
+
+        #region CalibrationJournalItems + CalibrationJournalItemDtos
+        CalibrationJournalItems =
+        [
+            new CalibrationJournalItem
+            {
+                Id = 1,
+                Standard = Standards[0],
+                Place = Places[0],
+                Date = new DateTime(2024, 12, 10, 0, 0, 0, DateTimeKind.Utc),
+                ValidTo = new DateTime(2025, 12, 10, 0, 0, 0, DateTimeKind.Utc),
+                CertificateId = "CertificateId1",
+                CertificateImage = "CertificateImage1",
+                Comments = "CalibrationJournalItemComments1"
+            },
+            new CalibrationJournalItem
+            {
+                Id = 2,
+                Standard = Standards[1],
+                Place = Places[1],
+                Date = new DateTime(2024, 12, 11, 0, 0, 0, DateTimeKind.Utc),
+                ValidTo = new DateTime(2025, 12, 11, 0, 0, 0, DateTimeKind.Utc),
+                CertificateId = "CertificateId2",
+                CertificateImage = "CertificateImage2",
+                Comments = "CalibrationJournalItemComments2"
+            },
+            new CalibrationJournalItem
+            {
+                Id = 3,
+                Standard = Standards[2],
+                Place = Places[2],
+                Date = new DateTime(2024, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                ValidTo = new DateTime(2025, 12, 12, 0, 0, 0, DateTimeKind.Utc),
+                CertificateId = "CertificateId3",
+                CertificateImage = "CertificateImage3",
+                Comments = "CalibrationJournalItemComments3"
+            }
+        ];
+        
+        CalibrationJournalItemDtos =
+        [
+            new CalibrationJournalItemDto
+            {
+                Id = CalibrationJournalItems[0].Id,
+                StandardId = CalibrationJournalItems[0].Standard.Id,
+                PlaceId = CalibrationJournalItems[0].Place.Id,
+                Comments = CalibrationJournalItems[0].Comments,
+                Date = CalibrationJournalItems[0].Date,
+                ValidTo = CalibrationJournalItems[0].ValidTo,
+                CertificateId = CalibrationJournalItems[0].CertificateId,
+                CertificateImage = CalibrationJournalItems[0].CertificateImage
+            },
+            new CalibrationJournalItemDto
+            {
+                Id = CalibrationJournalItems[1].Id,
+                StandardId = CalibrationJournalItems[1].Standard.Id,
+                PlaceId = CalibrationJournalItems[1].Place.Id,
+                Comments = CalibrationJournalItems[1].Comments,
+                Date = CalibrationJournalItems[1].Date,
+                ValidTo = CalibrationJournalItems[1].ValidTo,
+                CertificateId = CalibrationJournalItems[1].CertificateId,
+                CertificateImage = CalibrationJournalItems[1].CertificateImage
+            },
+            new CalibrationJournalItemDto
+            {
+                Id = CalibrationJournalItems[2].Id,
+                StandardId = CalibrationJournalItems[2].Standard.Id,
+                PlaceId = CalibrationJournalItems[2].Place.Id,
+                Comments = CalibrationJournalItems[2].Comments,
+                Date = CalibrationJournalItems[2].Date,
+                ValidTo = CalibrationJournalItems[2].ValidTo,
+                CertificateId = CalibrationJournalItems[2].CertificateId,
+                CertificateImage = CalibrationJournalItems[2].CertificateImage
             }
         ];
         #endregion
