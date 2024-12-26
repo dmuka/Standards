@@ -1,26 +1,24 @@
 ﻿namespace Domain.Models.Users;
 
-public class User
+public class User : BaseEntity
 {
-    public int Id { get; set; }
-
     //public int PersonId { get; set; }
 
     //public Person Person { get; set; } = null!;
 
-    public string UserName { get; set; } = null!;
+    public required string UserName { get; set; }
 
-    public string Email { get; set; } = null!;
+    public required string Email { get; set; }
 
-    public bool IsEmailConfirmed { get; set; }
+    public bool IsEmailConfirmed { get; set; } 
 
     public string? RefreshToken { get; set; }
 
     public string? AccessToken { get; set; }
 
-    public byte[]? PasswordHash { get; set; } = null!;
+    public byte[]? PasswordHash { get; set; } 
 
-    public byte[]? PasswordSalt { get; set; } = null!;
+    public byte[]? PasswordSalt { get; set; }
 
     public bool IsTwoFactorEnabled { get; set; }
 

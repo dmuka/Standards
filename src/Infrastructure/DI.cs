@@ -47,7 +47,8 @@ public static class DI
                                ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
         var connectionStringPasswordSecret = configuration["Secrets:DefaultConnectionPassword"];
         connectionString = connectionString.Replace("passwordvalue", connectionStringPasswordSecret);
-        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString), ServiceLifetime.Transient);
+        
+        services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString, builder => builder.MigrationsAssembly("WebApi")));
 
         return services;
     }

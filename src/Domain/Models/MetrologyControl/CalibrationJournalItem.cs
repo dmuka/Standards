@@ -1,10 +1,11 @@
 ﻿using Domain.Constants;
 using Domain.Models.DTOs;
+using Domain.Models.Interfaces;
 using Domain.Models.Standards;
 
 namespace Domain.Models.MetrologyControl;
 
-public class CalibrationJournalItem : Control
+public class CalibrationJournalItem : Control, ICacheable
 {
     public static string GetCacheKey()
     {
