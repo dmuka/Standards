@@ -58,7 +58,7 @@ public class PlacesController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeletePlace(int id)
     {
-        var query = new Delete.Query<Place>(id);
+        var query = new Delete.Command<Place>(id);
 
         var result = await sender.Send(query);
 

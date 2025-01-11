@@ -59,7 +59,7 @@ public class ServiceTypesController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IResult> DeleteServiceType(int id)
     {
-        var query = new Delete.Query<ServiceType>(id);
+        var query = new Delete.Command<ServiceType>(id);
 
         await sender.Send(query);
 

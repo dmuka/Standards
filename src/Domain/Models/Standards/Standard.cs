@@ -9,7 +9,7 @@ namespace Domain.Models.Standards;
 
 public class Standard : Entity, ICacheable
 {
-    public required Person Responsible { get; set; }
+    public required Person? Responsible { get; set; }
     public required string? ImagePath { get; set; }
     public int VerificationInterval { get; set; }
     public int? CalibrationInterval { get; set; }
@@ -40,7 +40,7 @@ public class Standard : Entity, ICacheable
         IList<Workplace> workplaces,
         IList<Characteristic> characteristics,
         IList<Service> services,
-        Person responsible)
+        Person? responsible)
     {
         return new Standard
         {

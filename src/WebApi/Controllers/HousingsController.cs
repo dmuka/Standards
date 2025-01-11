@@ -60,7 +60,7 @@ public class HousingsController(ISender sender) : ApiBaseController
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteHousing(int id)
     {
-        var query = new Delete.Query<Housing>(id);
+        var query = new Delete.Command<Housing>(id);
 
         var result = await sender.Send(query);
 

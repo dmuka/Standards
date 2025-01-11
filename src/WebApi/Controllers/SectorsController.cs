@@ -60,7 +60,7 @@ public class SectorsController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteSector(int id)
     {
-        var query = new Delete.Query<Sector>(id);
+        var query = new Delete.Command<Sector>(id);
 
         var result = await sender.Send(query);
 

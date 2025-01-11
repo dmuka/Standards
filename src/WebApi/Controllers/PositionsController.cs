@@ -58,7 +58,7 @@ public class PositionsController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeletePosition(int id)
     {
-        var query = new Delete.Query<Position>(id);
+        var query = new Delete.Command<Position>(id);
 
         var result = await sender.Send(query);
 

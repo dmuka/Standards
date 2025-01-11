@@ -5,7 +5,7 @@ namespace Domain.Models.Services;
 
 public class Service : Entity, ICacheable
 {
-    public required ServiceType ServiceType { get; set; }
+    public required ServiceType? ServiceType { get; set; }
     public IList<Material> Materials { get; set; } = [];
     public IList<Quantity> MaterialsQuantities { get; set; } = [];
 

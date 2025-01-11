@@ -2,6 +2,8 @@ namespace Domain.Constants;
 
 public static class Lengths
 {
+    public const int AddressMinimum = 20;
+    public const int AddressMaximum = 200;
     public const int PersonName = 100;
     public const int EntityName = 200;
     public const int CertificateId = 20;

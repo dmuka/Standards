@@ -58,7 +58,7 @@ public class CharacteristicsController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteCharacteristic(int id)
     {
-        var query = new Delete.Query<Characteristic>(id);
+        var query = new Delete.Command<Characteristic>(id);
 
         var result = await sender.Send(query);
 

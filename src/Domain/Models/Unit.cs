@@ -5,7 +5,7 @@ namespace Domain.Models;
 
 public class Unit : BaseEntity, ICacheable
 {
-    public required Quantity Quantity { get; set; }
+    public required Quantity? Quantity { get; set; }
     public required string Name { get; set; }
     public required string Symbol { get; set; }
     public required string RuName { get; set; }

@@ -243,7 +243,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// <param name="id">The primary key value of the entity.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
-        Task<TEntity> GetByIdAsync<TEntity>(object id, CancellationToken cancellationToken = default) where TEntity : class;
+        Task<TEntity?> GetByIdAsync<TEntity>(object id, CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
@@ -256,7 +256,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
-        Task<TEntity> GetByIdAsync<TEntity>(object id, bool asNoTracking, CancellationToken cancellationToken = default) where TEntity : class;
+        Task<TEntity?> GetByIdAsync<TEntity>(object id, bool asNoTracking, CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
         /// This method takes <paramref name="id"/> which is the primary key value of the entity and returns the entity
@@ -267,7 +267,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// <param name="includes">The navigation properties to be loaded.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
-        Task<TEntity> GetByIdAsync<TEntity>(
+        Task<TEntity?> GetByIdAsync<TEntity>(
             object id,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -284,7 +284,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
-        Task<TEntity> GetByIdAsync<TEntity>(
+        Task<TEntity?> GetByIdAsync<TEntity>(
             object id,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             bool asNoTracking,
@@ -301,7 +301,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task"/> of <typeparamref name="TProjectedType"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="selectExpression"/> is <see langword="null"/>.</exception>
-        Task<TProjectedType> GetByIdAsync<TEntity, TProjectedType>(
+        Task<TProjectedType?> GetByIdAsync<TEntity, TProjectedType>(
             object id,
             Expression<Func<TEntity, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -315,7 +315,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// <param name="condition">The condition on which entity will be returned.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <typeparamref name="TEntity"/>.</returns>
-        Task<TEntity> GetAsync<TEntity>(Expression<Func<TEntity, bool>> condition, CancellationToken cancellationToken = default) where TEntity : class;
+        Task<TEntity?> GetAsync<TEntity>(Expression<Func<TEntity, bool>> condition, CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
         /// This method takes <see cref="Expression{Func}"/> as parameter and returns <typeparamref name="TEntity"/>.
@@ -327,7 +327,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <typeparamref name="TEntity"/>.</returns>
-        Task<TEntity> GetAsync<TEntity>(
+        Task<TEntity?> GetAsync<TEntity>(
             Expression<Func<TEntity, bool>> condition,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -340,7 +340,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// <param name="includes">Navigation properties to be loaded.</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <typeparamref name="TEntity"/>.</returns>
-        Task<TEntity> GetAsync<TEntity>(
+        Task<TEntity?> GetAsync<TEntity>(
             Expression<Func<TEntity, bool>> condition,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -356,7 +356,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <typeparamref name="TEntity"/>.</returns>
-        Task<TEntity> GetAsync<TEntity>(
+        Task<TEntity?> GetAsync<TEntity>(
             Expression<Func<TEntity, bool>> condition,
             Func<IQueryable<TEntity>, IIncludableQueryable<TEntity, object>> includes,
             bool asNoTracking,
@@ -371,7 +371,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
-        Task<TEntity> GetAsync<TEntity>(QueryDetails<TEntity> details, CancellationToken cancellationToken = default) where TEntity : class;
+        Task<TEntity?> GetAsync<TEntity>(QueryDetails<TEntity> details, CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
         /// This method takes an <see cref="object"/> of <see cref="QueryDetails{TEntity}"/> as parameter and returns <typeparamref name="TEntity"/>.
@@ -385,7 +385,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// </param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
-        Task<TEntity> GetAsync<TEntity>(
+        Task<TEntity?> GetAsync<TEntity>(
             QueryDetails<TEntity> details,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -400,7 +400,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <typeparamref name="TProjectedType"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="selectExpression"/> is <see langword="null"/>.</exception>
-        Task<TProjectedType> GetAsync<TEntity, TProjectedType>(
+        Task<TProjectedType?> GetAsync<TEntity, TProjectedType>(
             Expression<Func<TEntity, bool>> condition,
             Expression<Func<TEntity, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -418,7 +418,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <typeparamref name="TProjectedType"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="selectExpression"/> is <see langword="null"/>.</exception>
-        Task<TProjectedType> GetAsync<TEntity, TProjectedType>(
+        Task<TProjectedType?> GetAsync<TEntity, TProjectedType>(
             QueryDetails<TEntity> details,
             Expression<Func<TEntity, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default) where TEntity : class;
@@ -510,15 +510,17 @@ namespace Infrastructure.Data.Repositories.Interfaces
         #endregion
 
         #region Raw SQL
+
         /// <summary>
         /// This method takes <paramref name="sql"/> string as parameter and returns the result of the provided sql.
         /// </summary>
         /// <typeparam name="T">The <see langword="type"/> to which the result will be mapped.</typeparam>
         /// <param name="sql">The sql query string.</param>
+        /// <param name="parameters">Sql query parameters collection</param>
         /// <param name="cancellationToken"> A <see cref="CancellationToken"/> to observe while waiting for the task to complete.</param>
         /// <returns>Returns <see cref="Task{TResult}"/>.</returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="sql"/> is <see langword="null"/>.</exception>
-        Task<IList<T>> GetFromRawSqlAsync<T>(string sql, CancellationToken cancellationToken = default);
+        Task<IList<T>> GetFromRawSqlAsync<T>(string sql, List<object>? parameters, CancellationToken cancellationToken = default);
 
         /// <summary>
         /// This method takes <paramref name="sql"/> string and the value of <paramref name="parameter"/> mentioned in the sql query as parameters
@@ -673,7 +675,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         /// </summary>
         /// <typeparam name="TEntity">The type of the <paramref name="entityId"/> to be marked as deleted.</typeparam>
         /// <param name="entityId">The primary key value of the entity.</param>
-        void Delete<TEntity>(int entityId) where TEntity : class;
+        Task Delete<TEntity>(int entityId) where TEntity : class;
 
         /// <summary>
         /// This method takes <see cref="IEnumerable{TEntity}"/> objects, mark the objects as <see cref="EntityState.Deleted"/> to the <see cref="ChangeTracker"/> of the <see cref="DbContext"/>.
@@ -740,7 +742,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
         public Task<List<TProjectedType>> SelectEntitiesByCondition<T, TProjectedType>(
             Expression<Func<T, bool>> condition,
             Expression<Func<T, TProjectedType>> selectExpression,
-            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
             CancellationToken cancellationToken = default)
             where T : class
             where TProjectedType : class;

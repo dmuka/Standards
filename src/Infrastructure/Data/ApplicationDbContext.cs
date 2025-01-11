@@ -115,6 +115,15 @@ namespace Infrastructure.Data;
             
             Seed<Position>(modelBuilder, categories);
 
+            object[] grades =
+            [
+                new { Id = 1, Name = "Первый разряд", ShortName = "I", Comments = "Comments1" },
+                new { Id = 2, Name = "Второй разряд", ShortName = "II", Comments = "Comments1" },
+                new { Id = 3, Name = "Третий разряд", ShortName = "III", Comments = "Comments1" }
+            ];
+            
+            Seed<Grade>(modelBuilder, grades);
+
             object[] persons =
             [
                 new {
@@ -148,6 +157,17 @@ namespace Infrastructure.Data;
                 new { Id = 3, UserName = "user3", Email = "user3@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
                 new { Id = 4, UserName = "user4", Email = "user4@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false},
                 new { Id = 5, UserName = "user5", Email = "user5@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false }
+            ];
+            
+            Seed<User>(modelBuilder, users);
+
+            object[] standards =
+            [
+                new { Id = 1, Name = "Грузопоршневой манометр", ShortName = "", Email = "user1@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
+                new { Id = 2, Name = "Амперметр", ShortName = "", Email = "user2@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
+                new { Id = 3, Name = "Термогигрометр", ShortName = "", Email = "user3@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
+                new { Id = 4, Name = "Весы", ShortName = "", Email = "user4@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false},
+                new { Id = 5, Name = "Весы лабораторные электронные", ShortName = "Весы лабораторные", Email = "user5@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false }
             ];
             
             Seed<User>(modelBuilder, users);

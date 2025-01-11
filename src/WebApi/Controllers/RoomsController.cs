@@ -61,7 +61,7 @@ public class RoomsController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteRoom(int id)
     {
-        var query = new Delete.Query<Room>(id);
+        var query = new Delete.Command<Room>(id);
 
         var result = await sender.Send(query);
 

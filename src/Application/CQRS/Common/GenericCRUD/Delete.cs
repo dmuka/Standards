@@ -12,18 +12,20 @@ namespace Application.CQRS.Common.GenericCRUD;
 [TransactionScope]
 public class Delete 
 {
-    public class Query<T>(int id) : IRequest<int> where T : BaseEntity
+    public class Command<T>(int id) : IRequest<int> where T : BaseEntity
     {
         public int Id { get; } = id;
     }
 
-    public class QueryHandler<T>(
+    public class CommandHandler<T>(
         IRepository repository, 
-        ICacheService cacheService) : IRequestHandler<Query<T>, int> where T : BaseEntity, ICacheable
+        ICacheService cacheService) : IRequestHandler<Command<T>, int> where T : BaseEntity, ICacheable
     {
-        public async Task<int> Handle(Query<T> request, CancellationToken cancellationToken)
+        public async Task<int> Handle(Command<T> request, CancellationToken cancellationToken)
         {
             var entity = await repository.GetByIdAsync<T>(request.Id, cancellationToken);
+            
+            if (entity == null) return 0;
 
             await repository.DeleteAsync(entity, cancellationToken);
 
@@ -35,9 +37,9 @@ public class Delete
         }
     }
 
-    public class QueryValidator<T> : AbstractValidator<Query<T>> where T : BaseEntity, ICacheable
+    public class CommandValidator<T> : AbstractValidator<Command<T>> where T : BaseEntity, ICacheable
     {
-        public QueryValidator(IRepository repository)
+        public CommandValidator(IRepository repository)
         {
             RuleLevelCascadeMode = CascadeMode.Stop;
 

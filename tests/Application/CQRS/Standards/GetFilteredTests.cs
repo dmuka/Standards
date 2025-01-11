@@ -20,7 +20,7 @@ public class GetFilteredTests : BaseTestFixture
     private const string SearchQuery = "Name"; 
     
     private QueryParameters _parameters;
-    private IList<Standard> _standards;
+    private IList<Standard?> _standards;
     private IQueryBuilder<Standard> _queryBuilder;
 
     private Mock<IRepository> _repositoryMock;
@@ -64,7 +64,7 @@ public class GetFilteredTests : BaseTestFixture
     {
         // Arrange
         var query = new GetFiltered<Standard>.Query(_parameters);
-        var expected = new PaginatedListModel<Standard>(_standards, 1, 10);
+        var expected = new PaginatedListModel<Standard?>(_standards, 1, 10);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -95,7 +95,7 @@ public class GetFilteredTests : BaseTestFixture
         _parameters.PageNumber = default;
 
         var query = new GetFiltered<Standard>.Query(_parameters);
-        var expected = new PaginatedListModel<Standard>(_standards,1, 10);
+        var expected = new PaginatedListModel<Standard?>(_standards,1, 10);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;

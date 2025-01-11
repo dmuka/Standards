@@ -5,7 +5,7 @@ namespace Domain.Models.Services;
 
 public class Material : Entity, ICacheable
 {
-    public Unit Unit { get; set; }
+    public Unit? Unit { get; set; }
 
     public static string GetCacheKey()
     {

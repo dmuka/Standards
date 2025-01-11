@@ -12,7 +12,7 @@ using MediatR;
 using Moq;
 using Tests.Common;
 
-namespace Tests.Application.CQRS.BaseEntities.Places;
+namespace Tests.Application.CQRS.Places;
 
 [TestFixture]
 public class GetFilteredTests : BaseTestFixture

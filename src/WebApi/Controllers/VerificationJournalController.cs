@@ -60,7 +60,7 @@ public class VerificationJournalController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteVerificationJournalItem(int id)
     {
-        var query = new Delete.Query<VerificationJournalItem>(id);
+        var query = new Delete.Command<VerificationJournalItem>(id);
 
         var result = await sender.Send(query);
 

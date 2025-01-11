@@ -58,7 +58,7 @@ public class GradesController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteGrade(int id)
     {
-        var query = new Delete.Query<Grade>(id);
+        var query = new Delete.Command<Grade>(id);
 
         var result = await sender.Send(query);
 

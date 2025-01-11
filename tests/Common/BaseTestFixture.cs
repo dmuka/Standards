@@ -3,6 +3,7 @@ using Domain.Models.Departments;
 using Domain.Models.DTOs;
 using Domain.Models.Housings;
 using Domain.Models.MetrologyControl;
+using Domain.Models.MetrologyControl.Contacts;
 using Domain.Models.Persons;
 using Domain.Models.Services;
 using Domain.Models.Standards;
@@ -55,7 +56,7 @@ public abstract class BaseTestFixture
     protected static List<Service> Services { get; private set; } = [];
     protected static List<ServiceDto> ServiceDtos { get; private set; } = [];
     
-    protected static List<Standard> Standards { get; private set; } = [];
+    protected static List<Standard?> Standards { get; private set; } = [];
     protected static List<StandardDto> StandardDtos { get; private set; } = [];
     
     protected static List<ServiceJournalItem> ServiceJournalItems { get; private set; } = [];
@@ -68,6 +69,9 @@ public abstract class BaseTestFixture
     protected static List<CalibrationJournalItemDto> CalibrationJournalItemDtos { get; private set; } = [];
     
     protected static List<Place> Places { get; private set; } = [];
+    protected static List<PlaceDto> PlaceDtos { get; private set; } = [];
+    
+    protected static List<Contact> Contacts { get; private set; } = [];
 
     protected static IList<Housing> Housings { get; private set; } = [];
     protected static List<HousingDto> HousingDtos { get; private set; } = [];
@@ -1488,7 +1492,7 @@ public abstract class BaseTestFixture
         CharacteristicsDtos[0].StandardId = Characteristics[0].Standard.Id;
         CharacteristicsDtos[1].StandardId = Characteristics[1].Standard.Id;
         CharacteristicsDtos[2].StandardId = Characteristics[2].Standard.Id;
-
+        
         #region Places
         Places =
         [
@@ -1497,45 +1501,163 @@ public abstract class BaseTestFixture
                 Id = 1,
                 Name = "PlaceName1",
                 ShortName = "PlaceShortName1",
-                Comments = "Comments1"
+                Comments = "Comments1",
+                Address = "Address1"
             },
             new Place
             { 
                 Id = 2,
                 Name = "PlaceName2",
                 ShortName = "PlaceShortName2",
-                Comments = "Comments2"
+                Comments = "Comments2",
+                Address = "Address2"
             },
             new Place
             {
                 Id = 3,
                 Name = "PlaceName3",
                 ShortName = "PlaceShortName3",
-                Comments = "Comments3"
+                Comments = "Comments3",
+                Address = "Address3"
             },
             new Place
             {
                 Id = 4,
                 Name = "PlaceName4",
                 ShortName = "PlaceShortName4",
-                Comments = "Comments4"
+                Comments = "Comments4",
+                Address = "Address4"
             },
             new Place
             { 
                 Id = 5,
                 Name = "PlaceName5",
                 ShortName = "PlaceShortName5",
-                Comments = "Comments5"
+                Comments = "Comments5",
+                Address = "Address5"
             },
             new Place
             {
                 Id = 6,
                 Name = "PlaceName6",
                 ShortName = "PlaceShortName6",
-                Comments = "Comments6"
+                Comments = "Comments6",
+                Address = "Address6"
+            }
+        ];
+        
+        PlaceDtos =
+        [
+            new PlaceDto
+            {
+                Id = Places[0].Id,
+                Name = Places[0].Name,
+                ShortName = Places[0].ShortName,
+                Comments = Places[0].Comments,
+                Address = Places[0].Address
+            },
+            new PlaceDto
+            {
+                Id = Places[1].Id,
+                Name = Places[1].Name,
+                ShortName = Places[1].ShortName,
+                Comments = Places[1].Comments,
+                Address = Places[1].Address
+            },
+            new PlaceDto
+            {
+                Id = Places[2].Id,
+                Name = Places[2].Name,
+                ShortName = Places[2].ShortName,
+                Comments = Places[2].Comments,
+                Address = Places[2].Address
+            },
+            new PlaceDto
+            {
+                Id = Places[3].Id,
+                Name = Places[3].Name,
+                ShortName = Places[3].ShortName,
+                Comments = Places[3].Comments,
+                Address = Places[3].Address
+            },
+            new PlaceDto
+            {
+                Id = Places[4].Id,
+                Name = Places[4].Name,
+                ShortName = Places[4].ShortName,
+                Comments = Places[4].Comments,
+                Address = Places[4].Address
+            },
+            new PlaceDto
+            {
+                Id = Places[5].Id,
+                Name = Places[5].Name,
+                ShortName = Places[5].ShortName,
+                Comments = Places[5].Comments,
+                Address = Places[5].Address
             }
         ];
         #endregion
+        
+        #region Contacts
+        Contacts =
+        [
+            new Contact
+            {
+                Id = 1,
+                Name = "ContactName1",
+                ShortName = "ContactShortName1",
+                Comments = "Comments1",
+                Place = Places[0]
+            },
+            new Contact
+            {
+                Id = 2,
+                Name = "ContactName2",
+                ShortName = "ContactShortName2",
+                Comments = "Comments2",
+                Place = Places[1]
+            },
+            new Contact
+            {
+                Id = 3,
+                Name = "ContactName3",
+                ShortName = "ContactShortName3",
+                Comments = "Comments3",
+                Place = Places[2]
+            },
+            new Contact
+            {
+                Id = 4,
+                Name = "ContactName4",
+                ShortName = "ContactShortName4",
+                Comments = "Comments4",
+                Place = Places[3]
+            },
+            new Contact
+            {
+                Id = 5,
+                Name = "ContactName5",
+                ShortName = "ContactShortName5",
+                Comments = "Comments5",
+                Place = Places[4]
+            },
+            new Contact
+            {
+                Id = 6,
+                Name = "ContactName6",
+                ShortName = "ContactShortName6",
+                Comments = "Comments6",
+                Place = Places[5]
+            },
+        ];
+        #endregion
+
+        for(var i = 0; i < Places.Count; i++)
+        {
+            Places[i].Contacts.Add(Contacts[i]);
+            PlaceDtos[i].ContactIds = Places[i].Contacts.Select(c => c.Id).ToArray();
+        }
 
         #region ServiceJournalItems + ServiceJournalItemDtos
         ServiceJournalItems =

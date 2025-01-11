@@ -60,7 +60,7 @@ public class CalibrationJournalController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteCalibrationJournalItem(int id)
     {
-        var query = new Delete.Query<CalibrationJournalItem>(id);
+        var query = new Delete.Command<CalibrationJournalItem>(id);
 
         var result = await sender.Send(query);
 

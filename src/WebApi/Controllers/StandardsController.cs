@@ -60,7 +60,7 @@ public class StandardsController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteStandard(int id)
     {
-        var query = new Delete.Query<Standard>(id);
+        var query = new Delete.Command<Standard>(id);
 
         var result = await sender.Send(query);
 

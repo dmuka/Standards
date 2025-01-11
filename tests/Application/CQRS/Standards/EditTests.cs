@@ -23,7 +23,7 @@ public class EditTests : BaseTestFixture
     private const int IdNotInDb = 2;
     
     private StandardDto _standardDto;
-    private Standard _standard;
+    private Standard? _standard;
 
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;

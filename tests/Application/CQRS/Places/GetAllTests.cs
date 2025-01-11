@@ -1,37 +1,39 @@
 using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
-using Application.CQRS.Common.GenericCRUD;
+using Application.CQRS.Places;
 using Domain.Constants;
+using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;
-using Infrastructure.Errors;
 using MediatR;
 using Moq;
 using Tests.Common;
 
-namespace Tests.Application.CQRS.BaseEntities.Places;
+namespace Tests.Application.CQRS.Places;
 
 [TestFixture]
 public class GetAllTests : BaseTestFixture
 {
     private const string AbsoluteExpirationPath = "Cache:AbsoluteExpiration";
     private const string SlidingExpirationPath = "Cache:SlidingExpiration";
-        
+    
     private IList<Place> _places;
+    private IList<PlaceDto> _placeDtos;
         
     private Mock<IRepository> _repository;
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
     private Mock<IConfigService> _configService;
         
-    private IRequestHandler<GetAllBaseEntity.Query<Place>, Result<List<Place>>> _handler;
+    private IRequestHandler<GetAll.Query, IList<PlaceDto>> _handler;
 
     [SetUp]
     public void Setup()
     {
         _places = Places;
+        _placeDtos = PlaceDtos;
 
         _cancellationToken = CancellationToken.None;
 
@@ -47,33 +49,33 @@ public class GetAllTests : BaseTestFixture
         _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Places, It.IsAny<Expression<Func<Place, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
             .Returns(Task.FromResult(_places));
 
-        _handler = new GetAllBaseEntity.QueryHandler<Place>(_cacheService.Object, _configService.Object); 
+        _handler = new GetAll.QueryHandler(_cacheService.Object, _configService.Object); 
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new GetAllBaseEntity.Query<Place>();
+        var query = new GetAll.Query();
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        result.Value.Should().BeEquivalentTo(_places);
+        result.Should().BeEquivalentTo(_placeDtos);
     }
 
     [Test]
     public void Handler_IfCancellationTokenIsActive_ReturnEmptyCollection()
     {
         // Arrange
-        var query = new GetAllBaseEntity.Query<Place>();
+        var query = new GetAll.Query();
         _cancellationToken = new CancellationToken(true);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result.Value, Has.Count.EqualTo(0));
+        Assert.That(result, Has.Count.EqualTo(0));
     }
 }

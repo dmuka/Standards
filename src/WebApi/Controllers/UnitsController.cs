@@ -60,7 +60,7 @@ public class UnitsController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteUnit(int id)
     {
-        var query = new Delete.Query<Unit>(id);
+        var query = new Delete.Command<Unit>(id);
 
         var result = await sender.Send(query);
 

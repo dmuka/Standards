@@ -15,6 +15,10 @@ public class Cache
     public const string Persons = "Persons";
     public const string Workplaces = "Workplaces";
     public const string Places = "Places";
+    public const string Emails = "Emails";
+    public const string Phones = "Phones";
+    public const string Contacts = "Contacts";
+    public const string Socials = "Socials";
     public const string Materials = "Materials";
     public const string Services = "Services";
     public const string ServiceJournal = "ServiceJournal";

@@ -5,7 +5,6 @@ using Application.CQRS.Housings;
 using Domain.Constants;
 using Domain.Models.DTOs;
 using Domain.Models.Housings;
-using Domain.Models.Persons;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;

@@ -9,7 +9,7 @@ using MediatR;
 using Moq;
 using Tests.Common;
 
-namespace Tests.Application.CQRS.BaseEntities.Places;
+namespace Tests.Application.CQRS.Places;
 
 public class DeleteTests : BaseTestFixture
 {
@@ -22,8 +22,8 @@ public class DeleteTests : BaseTestFixture
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
 
-    private IRequestHandler<Delete.Query<Place>, int> _handler;
-    private IValidator<Delete.Query<Place>> _validator;
+    private IRequestHandler<Delete.Command<Place>, int> _handler;
+    private IValidator<Delete.Command<Place>> _validator;
 
     [SetUp]
     public void Setup()
@@ -33,22 +33,22 @@ public class DeleteTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repository = new Mock<IRepository>();
-        _repository.Setup(_ => _.GetByIdAsync<Place>(IdInDb, _cancellationToken))
-            .Returns(Task.FromResult(_place));
-        _repository.Setup(_ => _.DeleteAsync(_place, _cancellationToken));
-        _repository.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repository.Setup(repository => repository.GetByIdAsync<Place>(IdInDb, _cancellationToken))
+            .Returns(Task.FromResult<Place?>(_place));
+        _repository.Setup(repository => repository.DeleteAsync(_place, _cancellationToken));
+        _repository.Setup(repository => repository.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
         _cacheService = new Mock<ICacheService>();
 
-        _handler = new Delete.QueryHandler<Place>(_repository.Object, _cacheService.Object);
-        _validator = new Delete.QueryValidator<Place>(_repository.Object);
+        _handler = new Delete.CommandHandler<Place>(_repository.Object, _cacheService.Object);
+        _validator = new Delete.CommandValidator<Place>(_repository.Object);
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new Delete.Query<Place>(IdInDb);
+        var query = new Delete.Command<Place>(IdInDb);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -61,10 +61,10 @@ public class DeleteTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
     {
         // Arrange
-        var query = new Delete.Query<Place>(IdInDb);
+        var query = new Delete.Command<Place>(IdInDb);
 
         // Act
-        var result = _handler.Handle(query, _cancellationToken).Result;
+        _handler.Handle(query, _cancellationToken);
 
         // Assert
         _repository.Verify(repository => repository.GetByIdAsync<Place>(IdInDb, _cancellationToken), Times.Once);
@@ -77,7 +77,7 @@ public class DeleteTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new Delete.Query<Place>(IdInDb);
+        var query = new Delete.Command<Place>(IdInDb);
         _cancellationToken = new CancellationToken(true);
 
         // Act
@@ -92,12 +92,12 @@ public class DeleteTests : BaseTestFixture
     public void Validator_IfIdInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
-        var query = new Delete.Query<Place>(id);
+        var query = new Delete.Command<Place>(id);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.Id);
+        result.ShouldHaveValidationErrorFor(place => place.Id);
     }
 }

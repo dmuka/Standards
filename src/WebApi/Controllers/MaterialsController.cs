@@ -60,7 +60,7 @@ public class MaterialsController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteMaterial(int id)
     {
-        var query = new Delete.Query<Material>(id);
+        var query = new Delete.Command<Material>(id);
 
         var result = await sender.Send(query);
 

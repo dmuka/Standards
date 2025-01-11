@@ -27,7 +27,7 @@ public class CategoriesControllerTests : BaseTestFixture
         // Arrange
         var categories = Categories;
         _senderMock
-            .Setup(s => s.Send(It.IsAny<GetAllBaseEntity.Query<Category>>(), default))
+            .Setup(s => s.Send(It.IsAny<GetAllBaseEntity.Query<Category>>(), CancellationToken.None))
             .ReturnsAsync(categories);
 
         // Act
@@ -37,7 +37,7 @@ public class CategoriesControllerTests : BaseTestFixture
         Assert.That(result, Is.InstanceOf<Ok<List<Category>>>());
         var okResult = result as Ok<List<Category>>;
         Assert.That(okResult, Is.Not.Null);
-        Assert.That((List<Category>)okResult.Value, Is.EquivalentTo(categories));
+        Assert.That(okResult.Value, Is.EquivalentTo(categories));
     }
 
     [Test]
@@ -46,7 +46,7 @@ public class CategoriesControllerTests : BaseTestFixture
         // Arrange
         var category = Categories[0];
         _senderMock
-            .Setup(s => s.Send(It.IsAny<GetById.Query<Category>>(), default))
+            .Setup(s => s.Send(It.IsAny<GetById.Query<Category>>(), CancellationToken.None))
             .ReturnsAsync(category);
 
         // Act
@@ -56,7 +56,7 @@ public class CategoriesControllerTests : BaseTestFixture
         Assert.That(result, Is.InstanceOf<Ok<Category>>());
         var okResult = result as Ok<Category>;
         Assert.That(okResult, Is.Not.Null);
-        Assert.That((Category)okResult.Value, Is.EqualTo(category));
+        Assert.That(okResult.Value, Is.EqualTo(category));
     }
 
     [Test]
@@ -65,7 +65,7 @@ public class CategoriesControllerTests : BaseTestFixture
         // Arrange
         var category = Categories[0];
         _senderMock
-            .Setup(s => s.Send(It.IsAny<CreateBaseEntity.Query<Category>>(), default))
+            .Setup(s => s.Send(It.IsAny<CreateBaseEntity.Query<Category>>(), CancellationToken.None))
             .ReturnsAsync(category.Id);
 
         // Act
@@ -84,7 +84,7 @@ public class CategoriesControllerTests : BaseTestFixture
         // Arrange
         var category = Categories[0];
         _senderMock
-            .Setup(s => s.Send(It.IsAny<EditBaseEntity.Query<Category>>(), default))
+            .Setup(s => s.Send(It.IsAny<EditBaseEntity.Query<Category>>(), CancellationToken.None))
             .ReturnsAsync(1);
 
         // Act
@@ -98,9 +98,8 @@ public class CategoriesControllerTests : BaseTestFixture
     public async Task DeleteCategory_ShouldReturnOkWithDeletedCategory()
     {
         // Arrange
-        var category = Categories[0];
         _senderMock
-            .Setup(s => s.Send(It.IsAny<Delete.Query<Category>>(), default))
+            .Setup(s => s.Send(It.IsAny<Delete.Command<Category>>(), CancellationToken.None))
             .ReturnsAsync(1);
 
         // Act

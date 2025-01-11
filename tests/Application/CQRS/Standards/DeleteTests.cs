@@ -16,14 +16,14 @@ public class DeleteTests : BaseTestFixture
 {
     private const int IdInDb = 1;
     private const int IdNotInDb = 2;
-    private Standard _standard;
+    private Standard? _standard;
         
     private Mock<IRepository> _repository;
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
 
-    private IRequestHandler<Delete.Query<Standard>, int> _handler;
-    private IValidator<Delete.Query<Standard>> _validator;
+    private IRequestHandler<Delete.Command<Standard>, int> _handler;
+    private IValidator<Delete.Command<Standard>> _validator;
 
     [SetUp]
     public void Setup()
@@ -40,18 +40,18 @@ public class DeleteTests : BaseTestFixture
 
         _cacheService = new Mock<ICacheService>();
 
-        _handler = new Delete.QueryHandler<Standard>(_repository.Object, _cacheService.Object);
-        _validator = new Delete.QueryValidator<Standard>(_repository.Object);
+        _handler = new Delete.CommandHandler<Standard>(_repository.Object, _cacheService.Object);
+        _validator = new Delete.CommandValidator<Standard>(_repository.Object);
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new Delete.Query<Standard>(IdInDb);
+        var command = new Delete.Command<Standard>(IdInDb);
 
         // Act
-        var result = _handler.Handle(query, _cancellationToken).Result;
+        var result = _handler.Handle(command, _cancellationToken).Result;
 
         // Assert
         Assert.That(result, Is.EqualTo(1));
@@ -61,10 +61,10 @@ public class DeleteTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
     {
         // Arrange
-        var query = new Delete.Query<Standard>(IdInDb);
+        var command = new Delete.Command<Standard>(IdInDb);
 
         // Act
-        var result = _handler.Handle(query, _cancellationToken).Result;
+        var result = _handler.Handle(command, _cancellationToken).Result;
 
         // Assert
         _repository.Verify(repository => repository.GetByIdAsync<Standard>(IdInDb, _cancellationToken), Times.Once);
@@ -77,11 +77,11 @@ public class DeleteTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new Delete.Query<Standard>(IdInDb);
+        var command = new Delete.Command<Standard>(IdInDb);
         _cancellationToken = new CancellationToken(true);
 
         // Act
-        var result = _handler.Handle(query, _cancellationToken).Result;
+        var result = _handler.Handle(command, _cancellationToken).Result;
 
         // Assert
         Assert.That(result, Is.EqualTo(0));
@@ -92,10 +92,10 @@ public class DeleteTests : BaseTestFixture
     public void Validator_IfIdNotInDB_ShouldHaveValidationError(int id)
     {
         // Arrange
-        var query = new Delete.Query<Standard>(id);
+        var command = new Delete.Command<Standard>(id);
 
         // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+        var result = _validator.TestValidateAsync(command, cancellationToken: _cancellationToken).Result;
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.Id);

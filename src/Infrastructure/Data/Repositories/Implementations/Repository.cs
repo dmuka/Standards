@@ -41,7 +41,7 @@ namespace Infrastructure.Data.Repositories.Implementations
 
         public Task<IList<T>> GetListAsync<T>(bool asNoTracking, CancellationToken cancellationToken = default) where T : class
         {
-            Func<IQueryable<T>, IIncludableQueryable<T, object>> nullValue = null;
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? nullValue = null;
 
             return GetListAsync(nullValue, asNoTracking, cancellationToken);
         }
@@ -54,21 +54,15 @@ namespace Infrastructure.Data.Repositories.Implementations
         }
 
         public async Task<IList<T>> GetListAsync<T>(
-            Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
         {
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (includes != null)
-            {
-                query = includes(query);
-            }
+            if (includes != null) query = includes(query);
 
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
+            if (asNoTracking) query = query.AsNoTracking();
 
             var items = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
 
@@ -89,27 +83,18 @@ namespace Infrastructure.Data.Repositories.Implementations
         }
 
         public async Task<IList<T>> GetListAsync<T>(
-            Expression<Func<T, bool>> condition,
-            Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
+            Expression<Func<T, bool>>? condition,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
         {
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (condition != null)
-            {
-                query = query.Where(condition);
-            }
+            if (condition != null) query = query.Where(condition);
 
-            if (includes != null)
-            {
-                query = includes(query);
-            }
+            if (includes != null) query = includes(query);
 
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
+            if (asNoTracking) query = query.AsNoTracking();
 
             var items = await query.ToListAsync(cancellationToken).ConfigureAwait(false);
 
@@ -122,21 +107,15 @@ namespace Infrastructure.Data.Repositories.Implementations
         }
 
         public async Task<IList<T>> GetListAsync<T>(
-            QueryDetails<T> specification,
+            QueryDetails<T>? specification,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
         {
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (specification != null)
-            {
-                query = query.GetSpecifiedQuery(specification);
-            }
+            if (specification != null) query = query.GetSpecifiedQuery(specification);
 
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
+            if (asNoTracking) query = query.AsNoTracking();
 
             return await query.ToListAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -155,7 +134,7 @@ namespace Infrastructure.Data.Repositories.Implementations
         }
 
         public async Task<List<TProjectedType>> GetListAsync<T, TProjectedType>(
-            Expression<Func<T, bool>> condition,
+            Expression<Func<T, bool>>? condition,
             Expression<Func<T, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default)
             where T : class
@@ -164,10 +143,7 @@ namespace Infrastructure.Data.Repositories.Implementations
 
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (condition != null)
-            {
-                query = query.Where(condition);
-            }
+            if (condition != null) query = query.Where(condition);
 
             var projectedEntites = await query.Select(selectExpression)
                 .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -176,7 +152,7 @@ namespace Infrastructure.Data.Repositories.Implementations
         }
 
         public async Task<List<TProjectedType>> GetListAsync<T, TProjectedType>(
-            QueryDetails<T> details,
+            QueryDetails<T>? details,
             Expression<Func<T, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default)
             where T : class
@@ -185,10 +161,7 @@ namespace Infrastructure.Data.Repositories.Implementations
 
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (details != null)
-            {
-                query = query.GetSpecifiedQuery(details);
-            }
+            if (details != null) query = query.GetSpecifiedQuery(details);
 
             return await query.Select(selectExpression)
                 .ToListAsync(cancellationToken).ConfigureAwait(false);
@@ -226,14 +199,14 @@ namespace Infrastructure.Data.Repositories.Implementations
         #endregion
 
         #region GetByIdAsync
-        public Task<T> GetByIdAsync<T>(object id, CancellationToken cancellationToken = default) where T : class
+        public Task<T?> GetByIdAsync<T>(object id, CancellationToken cancellationToken = default) where T : class
         {
             ArgumentNullException.ThrowIfNull(id);
 
             return GetByIdAsync<T>(id, false, cancellationToken);
         }
 
-        public Task<T> GetByIdAsync<T>(object id, bool asNoTracking, CancellationToken cancellationToken = default)
+        public Task<T?> GetByIdAsync<T>(object id, bool asNoTracking, CancellationToken cancellationToken = default)
             where T : class
         {
             ArgumentNullException.ThrowIfNull(id);
@@ -241,7 +214,7 @@ namespace Infrastructure.Data.Repositories.Implementations
             return GetByIdAsync<T>(id, null, asNoTracking, cancellationToken);
         }
 
-        public Task<T> GetByIdAsync<T>(
+        public Task<T?> GetByIdAsync<T>(
             object id,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
             CancellationToken cancellationToken = default) where T : class
@@ -251,9 +224,9 @@ namespace Infrastructure.Data.Repositories.Implementations
             return GetByIdAsync(id, includes, false, cancellationToken);
         }
 
-        public async Task<T> GetByIdAsync<T>(
+        public async Task<T?> GetByIdAsync<T>(
             object id,
-            Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes,
             bool asNoTracking = false,
             CancellationToken cancellationToken = default) where T : class
         {
@@ -261,16 +234,16 @@ namespace Infrastructure.Data.Repositories.Implementations
 
             var entityType = dbContext.Model.FindEntityType(typeof(T));
 
-            var primaryKeyProperties = entityType.FindPrimaryKey().Properties;
-            var primaryKeyName = primaryKeyProperties.Select(p => p.Name).FirstOrDefault();
-            var primaryKeyType = primaryKeyProperties.Select(p => p.ClrType).FirstOrDefault();
+            var primaryKeyProperties = entityType?.FindPrimaryKey()?.Properties;
+            var primaryKeyName = primaryKeyProperties?.Select(p => p.Name).FirstOrDefault();
+            var primaryKeyType = primaryKeyProperties?.Select(p => p.ClrType).FirstOrDefault();
 
             if (primaryKeyName == null || primaryKeyType == null)
             {
                 throw new ArgumentException("Entity does not have any primary key defined", nameof(id));
             }
 
-            object primaryKeyValue = null;
+            object primaryKeyValue;
 
             try
             {
@@ -289,22 +262,16 @@ namespace Infrastructure.Data.Repositories.Implementations
 
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (includes != null)
-            {
-                query = includes(query);
-            }
+            if (includes != null) query = includes(query);
 
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
+            if (asNoTracking) query = query.AsNoTracking();
 
             var entity = await query.FirstOrDefaultAsync(expressionTree, cancellationToken).ConfigureAwait(true);
 
             return entity;
         }
 
-        public async Task<TProjectedType> GetByIdAsync<T, TProjectedType>(
+        public async Task<TProjectedType?> GetByIdAsync<T, TProjectedType>(
             object id,
             Expression<Func<T, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default) where T : class
@@ -315,16 +282,16 @@ namespace Infrastructure.Data.Repositories.Implementations
 
             var entityType = dbContext.Model.FindEntityType(typeof(T));
 
-            var primaryKeyProperties = entityType.FindPrimaryKey().Properties;
-            var primaryKeyName = primaryKeyProperties.Select(p => p.Name).FirstOrDefault();
-            var primaryKeyType = primaryKeyProperties.Select(p => p.ClrType).FirstOrDefault();
+            var primaryKeyProperties = entityType?.FindPrimaryKey()?.Properties;
+            var primaryKeyName = primaryKeyProperties?.Select(p => p.Name).FirstOrDefault();
+            var primaryKeyType = primaryKeyProperties?.Select(p => p.ClrType).FirstOrDefault();
 
             if (primaryKeyName == null || primaryKeyType == null)
             {
                 throw new ArgumentException("Entity does not have any primary key defined", nameof(id));
             }
 
-            object primaryKeyValue = null;
+            object primaryKeyValue;
 
             try
             {
@@ -351,14 +318,14 @@ namespace Infrastructure.Data.Repositories.Implementations
         #endregion
 
         #region GetAsyncByCondition
-        public Task<T> GetAsync<T>(
+        public Task<T?> GetAsync<T>(
             Expression<Func<T, bool>> condition,
             CancellationToken cancellationToken = default) where T : class
         {
             return GetAsync(condition, null, false, cancellationToken);
         }
 
-        public Task<T> GetAsync<T>(
+        public Task<T?> GetAsync<T>(
             Expression<Func<T, bool>> condition,
             bool asNoTracking,
             CancellationToken cancellationToken = default)
@@ -367,7 +334,7 @@ namespace Infrastructure.Data.Repositories.Implementations
             return GetAsync(condition, null, asNoTracking, cancellationToken);
         }
 
-        public Task<T> GetAsync<T>(
+        public Task<T?> GetAsync<T>(
             Expression<Func<T, bool>> condition,
             Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
             CancellationToken cancellationToken = default)
@@ -376,34 +343,25 @@ namespace Infrastructure.Data.Repositories.Implementations
             return GetAsync(condition, includes, false, cancellationToken);
         }
 
-        public async Task<T> GetAsync<T>(
-            Expression<Func<T, bool>> condition,
-            Func<IQueryable<T>, IIncludableQueryable<T, object>> includes,
+        public async Task<T?> GetAsync<T>(
+            Expression<Func<T, bool>>? condition,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? includes,
             bool asNoTracking,
             CancellationToken cancellationToken = default) where T : class
         {
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (condition != null)
-            {
-                query = query.Where(condition);
-            }
+            if (condition != null) query = query.Where(condition);
 
-            if (includes != null)
-            {
-                query = includes(query);
-            }
+            if (includes != null) query = includes(query);
 
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
+            if (asNoTracking) query = query.AsNoTracking();
 
             return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<TProjectedType> GetAsync<T, TProjectedType>(
-            Expression<Func<T, bool>> condition,
+        public async Task<TProjectedType?> GetAsync<T, TProjectedType>(
+            Expression<Func<T, bool>>? condition,
             Expression<Func<T, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default)
             where T : class
@@ -412,40 +370,34 @@ namespace Infrastructure.Data.Repositories.Implementations
 
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (condition != null)
-            {
-                query = query.Where(condition);
-            }
+            if (condition != null) query = query.Where(condition);
 
             return await query.Select(selectExpression).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
         #endregion
 
         #region GetAsyncByQueryDetails
-        public Task<T> GetAsync<T>(QueryDetails<T> details, CancellationToken cancellationToken = default) where T : class
+        public Task<T?> GetAsync<T>(QueryDetails<T> details, CancellationToken cancellationToken = default) where T : class
         {
             return GetAsync(details, false, cancellationToken);
         }
 
-        public async Task<T> GetAsync<T>(QueryDetails<T> details, bool asNoTracking, CancellationToken cancellationToken = default) where T : class
+        public async Task<T?> GetAsync<T>(
+            QueryDetails<T>? details, 
+            bool asNoTracking, 
+            CancellationToken cancellationToken = default) where T : class
         {
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (details != null)
-            {
-                query = query.GetSpecifiedQuery(details);
-            }
+            if (details != null) query = query.GetSpecifiedQuery(details);
 
-            if (asNoTracking)
-            {
-                query = query.AsNoTracking();
-            }
+            if (asNoTracking) query = query.AsNoTracking();
 
             return await query.FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<TProjectedType> GetAsync<T, TProjectedType>(
-            QueryDetails<T> details,
+        public async Task<TProjectedType?> GetAsync<T, TProjectedType>(
+            QueryDetails<T>? details,
             Expression<Func<T, TProjectedType>> selectExpression,
             CancellationToken cancellationToken = default) where T : class
         {
@@ -453,10 +405,7 @@ namespace Infrastructure.Data.Repositories.Implementations
 
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (details != null)
-            {
-                query = query.GetSpecifiedQuery(details);
-            }
+            if (details != null) query = query.GetSpecifiedQuery(details);
 
             return await query.Select(selectExpression).FirstOrDefaultAsync(cancellationToken).ConfigureAwait(false);
         }
@@ -468,14 +417,11 @@ namespace Infrastructure.Data.Repositories.Implementations
             return ExistsAsync<T>(null, cancellationToken);
         }
 
-        public async Task<bool> ExistsAsync<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default) where T : class
+        public async Task<bool> ExistsAsync<T>(Expression<Func<T, bool>>? condition, CancellationToken cancellationToken = default) where T : class
         {
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (condition == null)
-            {
-                return await query.AnyAsync(cancellationToken);
-            }
+            if (condition == null) return await query.AnyAsync(cancellationToken);
 
             var isExists = await query.AnyAsync(condition, cancellationToken).ConfigureAwait(false);
 
@@ -488,15 +434,15 @@ namespace Infrastructure.Data.Repositories.Implementations
 
             var entityType = dbContext.Model.FindEntityType(typeof(T));
 
-            var primaryKeyName = entityType.FindPrimaryKey().Properties.Select(p => p.Name).FirstOrDefault();
-            var primaryKeyType = entityType.FindPrimaryKey().Properties.Select(p => p.ClrType).FirstOrDefault();
+            var primaryKeyName = entityType?.FindPrimaryKey()?.Properties.Select(p => p.Name).FirstOrDefault();
+            var primaryKeyType = entityType?.FindPrimaryKey()?.Properties.Select(p => p.ClrType).FirstOrDefault();
 
             if (primaryKeyName == null || primaryKeyType == null)
             {
                 throw new ArgumentException("Entity does not have any primary key defined", nameof(id));
             }
 
-            object primaryKeyValue = null;
+            object primaryKeyValue;
 
             try
             {
@@ -524,26 +470,23 @@ namespace Infrastructure.Data.Repositories.Implementations
         #region GetCount
         public async Task<int> GetCountAsync<T>(CancellationToken cancellationToken = default) where T : class
         {
-            var count = await dbContext.Set<T>().CountAsync(cancellationToken).ConfigureAwait(false);
+            var count = await dbContext.Set<T>().AsNoTracking().CountAsync(cancellationToken).ConfigureAwait(false);
             
             return count;
         }
 
-        public async Task<int> GetCountAsync<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default) where T : class
+        public async Task<int> GetCountAsync<T>(Expression<Func<T, bool>>? condition, CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>().AsNoTracking();
 
-            if (condition != null)
-            {
-                query = query.Where(condition);
-            }
+            if (condition != null) query = query.Where(condition);
 
             return await query.CountAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<int> GetCountAsync<T>(IEnumerable<Expression<Func<T, bool>>> conditions, CancellationToken cancellationToken = default) where T : class
+        public async Task<int> GetCountAsync<T>(IEnumerable<Expression<Func<T, bool>>>? conditions, CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>().AsNoTracking();
 
             if (conditions == null) return await query.CountAsync(cancellationToken).ConfigureAwait(false);
             
@@ -557,27 +500,24 @@ namespace Infrastructure.Data.Repositories.Implementations
 
         public async Task<long> GetLongCountAsync<T>(CancellationToken cancellationToken = default) where T : class
         {
-            var count = await dbContext.Set<T>().LongCountAsync(cancellationToken).ConfigureAwait(false);
+            var count = await dbContext.Set<T>().AsNoTracking().LongCountAsync(cancellationToken).ConfigureAwait(false);
             
             return count;
         }
 
-        public async Task<long> GetLongCountAsync<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default)
+        public async Task<long> GetLongCountAsync<T>(Expression<Func<T, bool>>? condition, CancellationToken cancellationToken = default)
             where T : class
         {
-            IQueryable<T> query = dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>().AsNoTracking();
 
-            if (condition != null)
-            {
-                query = query.Where(condition);
-            }
+            if (condition != null) query = query.Where(condition);
 
             return await query.LongCountAsync(cancellationToken).ConfigureAwait(false);
         }
 
-        public async Task<long> GetLongCountAsync<T>(IEnumerable<Expression<Func<T, bool>>> conditions, CancellationToken cancellationToken = default) where T : class
+        public async Task<long> GetLongCountAsync<T>(IEnumerable<Expression<Func<T, bool>>>? conditions, CancellationToken cancellationToken = default) where T : class
         {
-            IQueryable<T> query = dbContext.Set<T>();
+            IQueryable<T> query = dbContext.Set<T>().AsNoTracking();
 
             if (conditions == null) return await query.LongCountAsync(cancellationToken).ConfigureAwait(false);
             
@@ -591,14 +531,11 @@ namespace Infrastructure.Data.Repositories.Implementations
         #endregion
 
         #region Raw SQL - returns items
-        public async Task<IList<T>> GetFromRawSqlAsync<T>(string sql, CancellationToken cancellationToken = default)
+        public async Task<IList<T>> GetFromRawSqlAsync<T>(string sql, List<object>? parameters, CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(sql))
-            {
-                throw new ArgumentNullException(nameof(sql));
-            }
-
-            var parameters = new List<object>();
+            if (string.IsNullOrWhiteSpace(sql)) throw new ArgumentNullException(nameof(sql));
+            
+            parameters ??= [];
 
             var items = await dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
 
@@ -610,12 +547,9 @@ namespace Infrastructure.Data.Repositories.Implementations
             object parameter,
             CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(sql))
-            {
-                throw new ArgumentNullException(nameof(sql));
-            }
+            if (string.IsNullOrWhiteSpace(sql)) throw new ArgumentNullException(nameof(sql));
 
-            var parameters = new List<object>() { parameter };
+            var parameters = new List<object> { parameter };
 
             var items = await dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
 
@@ -627,10 +561,7 @@ namespace Infrastructure.Data.Repositories.Implementations
             IEnumerable<DbParameter> parameters,
             CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(sql))
-            {
-                throw new ArgumentNullException(nameof(sql));
-            }
+            if (string.IsNullOrWhiteSpace(sql)) throw new ArgumentNullException(nameof(sql));
 
             var items = await dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
             
@@ -642,10 +573,7 @@ namespace Infrastructure.Data.Repositories.Implementations
             IEnumerable<object> parameters,
             CancellationToken cancellationToken = default)
         {
-            if (string.IsNullOrWhiteSpace(sql))
-            {
-                throw new ArgumentNullException(nameof(sql));
-            }
+            if (string.IsNullOrWhiteSpace(sql)) throw new ArgumentNullException(nameof(sql));
 
             var items = await dbContext.GetFromQueryAsync<T>(sql, parameters, cancellationToken);
 
@@ -654,14 +582,14 @@ namespace Infrastructure.Data.Repositories.Implementations
         #endregion
 
         #region Insert
-        public async Task<object[]> InsertAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class
+        public async Task<object?[]?> InsertAsync<TEntity>(TEntity entity, CancellationToken cancellationToken = default) where TEntity : class
         {
             ArgumentNullException.ThrowIfNull(entity);
 
             var entityEntry = await dbContext.Set<TEntity>().AddAsync(entity, cancellationToken).ConfigureAwait(false);
             await dbContext.SaveChangesAsync(cancellationToken).ConfigureAwait(false);
 
-            var primaryKeyValue = entityEntry.Metadata.FindPrimaryKey().Properties.
+            var primaryKeyValue = entityEntry.Metadata.FindPrimaryKey()?.Properties.
                 Select(p => entityEntry.Property(p.Name).CurrentValue).ToArray();
 
             return primaryKeyValue;
@@ -740,19 +668,23 @@ namespace Infrastructure.Data.Repositories.Implementations
                 throw new InvalidOperationException($"{typeof(TEntity).Name} is not part of EF Core DbContext model");
             }
 
-            var primaryKeyName = entityType.FindPrimaryKey().Properties.Select(p => p.Name).FirstOrDefault();
+            var primaryKeyName = entityType.FindPrimaryKey()?.Properties.Select(p => p.Name).FirstOrDefault();
 
             if (primaryKeyName != null)
             {
-                var primaryKeyType = entityType.FindPrimaryKey().Properties.Select(p => p.ClrType).FirstOrDefault();
+                var primaryKeyType = entityType.FindPrimaryKey()?.Properties.Select(p => p.ClrType).FirstOrDefault();
 
-                var primaryKeyDefaultValue = primaryKeyType.IsValueType ? Activator.CreateInstance(primaryKeyType) : null;
-
-                var primaryValue = entity.GetType().GetProperty(primaryKeyName).GetValue(entity, null);
-
-                if (primaryKeyDefaultValue.Equals(primaryValue))
+                if (primaryKeyType != null)
                 {
-                    throw new InvalidOperationException("The primary key value of the entity to be updated is not valid.");
+                    var primaryKeyDefaultValue =
+                        primaryKeyType.IsValueType ? Activator.CreateInstance(primaryKeyType) : null;
+
+                    var primaryValue = entity.GetType().GetProperty(primaryKeyName)?.GetValue(entity, null);
+
+                    if (primaryKeyDefaultValue != null && primaryKeyDefaultValue.Equals(primaryValue))
+                    {
+                        throw new InvalidOperationException("The primary key value of the entity to be updated is not valid.");
+                    }
                 }
             }
 
@@ -775,19 +707,24 @@ namespace Infrastructure.Data.Repositories.Implementations
             if (trackedEntity == null)
             {
                 var entityType = dbContext.Model.FindEntityType(typeof(TEntity)) ?? throw new InvalidOperationException($"{typeof(TEntity).Name} is not part of EF Core DbContext model");
-                var primaryKeyName = entityType.FindPrimaryKey().Properties.Select(p => p.Name).FirstOrDefault();
+                var primaryKeyName = entityType.FindPrimaryKey()?.Properties.Select(p => p.Name).FirstOrDefault();
 
                 if (primaryKeyName != null)
                 {
-                    var primaryKeyType = entityType.FindPrimaryKey().Properties.Select(p => p.ClrType).FirstOrDefault();
+                    var primaryKeyType = entityType.FindPrimaryKey()?.Properties.Select(p => p.ClrType).FirstOrDefault();
 
-                    var primaryKeyDefaultValue = primaryKeyType.IsValueType ? Activator.CreateInstance(primaryKeyType) : null;
-
-                    var primaryValue = entity.GetType().GetProperty(primaryKeyName).GetValue(entity, null);
-
-                    if (primaryKeyDefaultValue.Equals(primaryValue))
+                    if (primaryKeyType != null)
                     {
-                        throw new InvalidOperationException("The primary key value of the entity to be updated is not valid.");
+                        var primaryKeyDefaultValue =
+                            primaryKeyType.IsValueType ? Activator.CreateInstance(primaryKeyType) : null;
+
+                        var primaryValue = entity.GetType().GetProperty(primaryKeyName)?.GetValue(entity, null);
+
+                        if (primaryKeyDefaultValue != null && primaryKeyDefaultValue.Equals(primaryValue))
+                        {
+                            throw new InvalidOperationException(
+                                "The primary key value of the entity to be updated is not valid.");
+                        }
                     }
                 }
 
@@ -838,15 +775,17 @@ namespace Infrastructure.Data.Repositories.Implementations
             dbContext.Set<TEntity>().Remove(entity);
         }
 
-        public async void Delete<TEntity>(int entityId) where TEntity : class
+        public async Task Delete<TEntity>(int entityId) where TEntity : class
         {
             var entity = await dbContext.Set<TEntity>().FindAsync(entityId);
+            
             if (entity == null)
             {
                 throw new ArgumentOutOfRangeException(nameof(entityId), "The entity id value of the entity to be deleted is not valid.");
             }
 
             dbContext.Set<TEntity>().Remove(entity);
+            
             await dbContext.SaveChangesAsync();
         }
 
@@ -860,37 +799,28 @@ namespace Infrastructure.Data.Repositories.Implementations
 
         #region Where
 
-        public async Task<IList<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>> condition, CancellationToken cancellationToken = default) where T : class
+        public async Task<IList<T>> GetEntitiesByCondition<T>(Expression<Func<T, bool>>? condition, CancellationToken cancellationToken = default) where T : class
         {
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (condition != null)
-            {
-                query = query.Where(condition);
-            }
+            if (condition != null) query = query.Where(condition);
 
             return await query.ToListAsync(cancellationToken);
         }
 
         public async Task<List<TProjectedType>> SelectEntitiesByCondition<T, TProjectedType>(
-            Expression<Func<T, bool>> condition,
+            Expression<Func<T, bool>>? condition,
             Expression<Func<T, TProjectedType>> selectExpression,
-            Func<IQueryable<T>, IIncludableQueryable<T, object>> include = null,
+            Func<IQueryable<T>, IIncludableQueryable<T, object>>? include = null,
             CancellationToken cancellationToken = default) 
             where T : class
             where TProjectedType : class
         {
             IQueryable<T> query = dbContext.Set<T>();
 
-            if (condition != null)
-            {
-                query = query.Where(condition);
-            }    
+            if (condition != null) query = query.Where(condition);
             
-            if (include != null)
-            {
-                query = include(query);
-            }
+            if (include != null) query = include(query);
 
             return await query.Select(selectExpression).ToListAsync(cancellationToken);
         }

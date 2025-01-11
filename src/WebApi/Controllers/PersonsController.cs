@@ -61,7 +61,7 @@ public class PersonsController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeletePerson(int id)
     {
-        var query = new Delete.Query<Person>(id);
+        var query = new Delete.Command<Person>(id);
 
         var result = await sender.Send(query);
 

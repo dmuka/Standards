@@ -29,8 +29,8 @@ public class CalibrationJournalItem : Control, ICacheable
 
     public static CalibrationJournalItem ToEntity(
         CalibrationJournalItemDto calibrationJournalItemDto,
-        Place place,
-        Standard standard)
+        Place? place,
+        Standard? standard)
     {
         return new CalibrationJournalItem
         {

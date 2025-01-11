@@ -119,7 +119,7 @@ public class AuthService(IConfiguration configuration, IRepository repository) :
         return Encoding.ASCII.GetBytes(configuration["Secrets:JwtBearerKey"]);
     }
 
-    private static ClaimsIdentity GetClaimsIdentity(User user)
+    private static ClaimsIdentity GetClaimsIdentity(User? user)
     {
         return new ClaimsIdentity(new Claim[]
         {

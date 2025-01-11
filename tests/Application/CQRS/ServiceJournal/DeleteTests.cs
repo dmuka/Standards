@@ -21,8 +21,8 @@ public class DeleteTests : BaseTestFixture
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
 
-    private IRequestHandler<Delete.Query<ServiceJournalItem>, int> _handler;
-    private IValidator<Delete.Query<ServiceJournalItem>> _validator;
+    private IRequestHandler<Delete.Command<ServiceJournalItem>, int> _handler;
+    private IValidator<Delete.Command<ServiceJournalItem>> _validator;
 
     [SetUp]
     public void Setup()
@@ -32,25 +32,25 @@ public class DeleteTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repository = new Mock<IRepository>();
-        _repository.Setup(_ => _.GetByIdAsync<ServiceJournalItem>(IdInDb, _cancellationToken))
-            .Returns(Task.FromResult(_serviceJournalItem));
-        _repository.Setup(_ => _.DeleteAsync(_serviceJournalItem, _cancellationToken));
-        _repository.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repository.Setup(repository => repository.GetByIdAsync<ServiceJournalItem>(IdInDb, _cancellationToken))
+            .Returns(Task.FromResult<ServiceJournalItem?>(_serviceJournalItem));
+        _repository.Setup(repository => repository.DeleteAsync(_serviceJournalItem, _cancellationToken));
+        _repository.Setup(repository => repository.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
         _cacheService = new Mock<ICacheService>();
 
-        _handler = new Delete.QueryHandler<ServiceJournalItem>(_repository.Object, _cacheService.Object);
-        _validator = new Delete.QueryValidator<ServiceJournalItem>(_repository.Object);
+        _handler = new Delete.CommandHandler<ServiceJournalItem>(_repository.Object, _cacheService.Object);
+        _validator = new Delete.CommandValidator<ServiceJournalItem>(_repository.Object);
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new Delete.Query<ServiceJournalItem>(IdInDb);
+        var command = new Delete.Command<ServiceJournalItem>(IdInDb);
 
         // Act
-        var result = _handler.Handle(query, _cancellationToken).Result;
+        var result = _handler.Handle(command, _cancellationToken).Result;
 
         // Assert
         Assert.That(result, Is.EqualTo(1));
@@ -60,10 +60,10 @@ public class DeleteTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
     {
         // Arrange
-        var query = new Delete.Query<ServiceJournalItem>(IdInDb);
+        var command = new Delete.Command<ServiceJournalItem>(IdInDb);
 
         // Act
-        var result = _handler.Handle(query, _cancellationToken).Result;
+        _handler.Handle(command, _cancellationToken);
 
         // Assert
         _repository.Verify(repository => repository.GetByIdAsync<ServiceJournalItem>(IdInDb, _cancellationToken), Times.Once);
@@ -76,11 +76,11 @@ public class DeleteTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new Delete.Query<ServiceJournalItem>(IdInDb);
+        var command = new Delete.Command<ServiceJournalItem>(IdInDb);
         _cancellationToken = new CancellationToken(true);
 
         // Act
-        var result = _handler.Handle(query, _cancellationToken).Result;
+        var result = _handler.Handle(command, _cancellationToken).Result;
 
         // Assert
         Assert.That(result, Is.EqualTo(0));
@@ -91,12 +91,12 @@ public class DeleteTests : BaseTestFixture
     public void Validator_IfIdNotInDB_ShouldHaveValidationError(int id)
     {
         // Arrange
-        var query = new Delete.Query<ServiceJournalItem>(id);
+        var command = new Delete.Command<ServiceJournalItem>(id);
 
         // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
+        var result = _validator.TestValidateAsync(command, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.Id);
+        result.ShouldHaveValidationErrorFor(serviceJournalItem => serviceJournalItem.Id);
     }
 }

@@ -22,7 +22,7 @@ public class CreateTests : BaseTestFixture
     private const int ValidId = 1;
     private const int IdNotInDb = 2;
     
-    private Standard _standard;
+    private Standard? _standard;
     private StandardDto _standardDto;
     
     private Mock<IRepository> _repositoryMock;

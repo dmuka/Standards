@@ -58,7 +58,7 @@ public class QuantitiesController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IActionResult> DeleteQuantity(int id)
     {
-        var query = new Delete.Query<Quantity>(id);
+        var query = new Delete.Command<Quantity>(id);
 
         var result = await sender.Send(query);
 

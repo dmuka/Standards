@@ -39,8 +39,6 @@ public static class DI
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Grade>, int>), typeof(CreateBaseEntity.QueryHandler<Grade>))
             .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Material>, Result<List<Material>>>), typeof(GetAllBaseEntity.QueryHandler<Material>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Material>, int>), typeof(CreateBaseEntity.QueryHandler<Material>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Place>, Result<List<Place>>>), typeof(GetAllBaseEntity.QueryHandler<Place>))
-            .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Place>, int>), typeof(CreateBaseEntity.QueryHandler<Place>))
             .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Quantity>, Result<List<Quantity>>>), typeof(GetAllBaseEntity.QueryHandler<Quantity>))
             .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Quantity>, int>), typeof(CreateBaseEntity.QueryHandler<Quantity>))
             

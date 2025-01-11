@@ -59,7 +59,7 @@ public class CategoriesController(ISender sender) : ControllerBase
     [Route("delete/{id:int}")]
     public async Task<IResult> DeleteCategory(int id)
     {
-        var query = new Delete.Query<Category>(id);
+        var query = new Delete.Command<Category>(id);
 
         await sender.Send(query);
 

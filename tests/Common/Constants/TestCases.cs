@@ -17,6 +17,7 @@ public class Cases
     public const string Length4 = "0123";
     public const string Length16 = "0123456789012345";
     
+    public const string Length19 = "0123456789012345678";
     public const string Length21 = "012345678901234567890";
 
     public const string Length51 = "012345678901234567890123456789012345678901234567890";
