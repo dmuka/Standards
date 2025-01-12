@@ -113,7 +113,7 @@ namespace Infrastructure.Data;
                 new { Id = 4, Name = "Начальник отдела", ShortName = "Нач. отдела", Comments = "Comments1" }
             ];
             
-            Seed<Position>(modelBuilder, categories);
+            Seed<Position>(modelBuilder, positions);
 
             object[] grades =
             [
@@ -149,7 +149,7 @@ namespace Infrastructure.Data;
             ];
             
             Seed<Person>(modelBuilder, persons);
-
+            
             object[] users =
             [
                 new { Id = 1, UserName = "user1", Email = "user1@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
@@ -163,14 +163,14 @@ namespace Infrastructure.Data;
 
             object[] standards =
             [
-                new { Id = 1, Name = "Грузопоршневой манометр", ShortName = "", Email = "user1@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
-                new { Id = 2, Name = "Амперметр", ShortName = "", Email = "user2@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
-                new { Id = 3, Name = "Термогигрометр", ShortName = "", Email = "user3@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
-                new { Id = 4, Name = "Весы", ShortName = "", Email = "user4@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false},
-                new { Id = 5, Name = "Весы лабораторные электронные", ShortName = "Весы лабораторные", Email = "user5@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false }
+                new { Id = 1, Name = "Грузопоршневой манометр",  ShortName = "", VerificationInterval = 24,Email = "user1@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
+                new { Id = 2, Name = "Амперметр", ShortName = "", VerificationInterval = 12, Email = "user2@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
+                new { Id = 3, Name = "Термогигрометр", ShortName = "", VerificationInterval = 12, Email = "user3@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
+                new { Id = 4, Name = "Весы", ShortName = "", VerificationInterval = 12, Email = "user4@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false},
+                new { Id = 5, Name = "Весы лабораторные электронные", ShortName = "Весы лабораторные", VerificationInterval = 12, Email = "user5@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false }
             ];
             
-            Seed<User>(modelBuilder, users);
+            Seed<Standard>(modelBuilder, standards);
         }
 
         private void Seed<T>(ModelBuilder modelBuilder, object[] seedData) where T : BaseEntity
