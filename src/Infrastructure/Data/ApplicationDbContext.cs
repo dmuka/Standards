@@ -3,6 +3,7 @@ using Domain.Models;
 using Domain.Models.Departments;
 using Domain.Models.Housings;
 using Domain.Models.MetrologyControl;
+using Domain.Models.MetrologyControl.Contacts;
 using Domain.Models.Persons;
 using Domain.Models.Services;
 using Domain.Models.Standards;
@@ -163,7 +164,7 @@ namespace Infrastructure.Data;
 
             object[] standards =
             [
-                new { Id = 1, Name = "Грузопоршневой манометр",  ShortName = "", VerificationInterval = 24,Email = "user1@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
+                new { Id = 1, Name = "Грузопоршневой манометр", ShortName = "", VerificationInterval = 24,Email = "user1@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
                 new { Id = 2, Name = "Амперметр", ShortName = "", VerificationInterval = 12, Email = "user2@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
                 new { Id = 3, Name = "Термогигрометр", ShortName = "", VerificationInterval = 12, Email = "user3@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
                 new { Id = 4, Name = "Весы", ShortName = "", VerificationInterval = 12, Email = "user4@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false},
@@ -171,6 +172,42 @@ namespace Infrastructure.Data;
             ];
             
             Seed<Standard>(modelBuilder, standards);
+
+            object[] socialProfileIds =
+            [
+                new { Id = 1, Name = "PhoneNumber", ShortName = "Phone" },
+                new { Id = 2, Name = "Email", ShortName = "Mail" },
+                new { Id = 3, Name = "UserName", ShortName = "Name" }
+            ];
+            
+            Seed<SocialProfileId>(modelBuilder, socialProfileIds);
+
+            object[] contactSocials =
+            [
+                new { Id = 1, SocialId = 1, IdValue = "UserName1" }, //contactid
+                new { Id = 2, SocialId = 10, IdValue = "375447777777" },
+                new { Id = 3, SocialId = 1, IdValue = "UserName3" }
+            ];
+            
+            Seed<ContactSocial>(modelBuilder, contactSocials);
+
+            object[] socials =
+            [
+                new { Id = 1, Name = "Instagram",  ShortName = "I", BasePath = "https://www.instagram.com/", ProfileIdId = 3 },
+                new { Id = 2, Name = "Twitter",  ShortName = "X", BasePath = "https://twitter.com/", ProfileIdId = 3 },
+                new { Id = 3, Name = "Facebook Messenger",  ShortName = "Messenger", BasePath = "https://m.me/", ProfileIdId = 3 },
+                new { Id = 4, Name = "LinkedIn",  ShortName = "F", BasePath = "https://www.linkedin.com/in/", ProfileIdId = 3 },
+                new { Id = 5, Name = "Youtube",  ShortName = "Y", BasePath = "https://www.youtube.com/", ProfileIdId = 3 },
+                new { Id = 6, Name = "TikTok",  ShortName = "T", BasePath = "https://www.tiktok.com/", ProfileIdId = 3 },
+                new { Id = 7, Name = "Reddit",  ShortName = "R", BasePath = "https://www.reddit.com/user/", ProfileIdId = 3 },
+                new { Id = 8, Name = "GitHub",  ShortName = "G", BasePath = "https://github.com/", ProfileIdId = 3 },
+                new { Id = 9, Name = "SnapChat",  ShortName = "S", BasePath = "https://www.snapchat.com/add/", ProfileIdId = 3 },
+                new { Id = 10, Name = "WhatsUp",  ShortName = "W", BasePath = "https://wa.me/", ProfileIdId = 1 },
+                new { Id = 11, Name = "Telegram",  ShortName = "Tlg", BasePath = "https://t.me/", ProfileIdId = 3 },
+                new { Id = 12, Name = "Viber",  ShortName = "V", BasePath = "viber://chat?", ProfileIdId = 1 }
+            ];
+            
+            Seed<Social>(modelBuilder, socials);
         }
 
         private void Seed<T>(ModelBuilder modelBuilder, object[] seedData) where T : BaseEntity

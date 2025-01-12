@@ -8,7 +8,7 @@ public class Contact : Entity, ICacheable
     public required Place Place { get; set; }
     public IList<Email> Emails { get; set; } = [];
     public IList<Phone> Phones { get; set; } = [];
-    public IList<Social> Socials { get; set; } = [];
+    public IList<ContactSocial> Socials { get; set; } = [];
     
     public static string GetCacheKey()
     {

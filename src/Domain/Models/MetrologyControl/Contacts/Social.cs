@@ -7,9 +7,7 @@ public class Social : Entity, ICacheable
 {
     public required string BasePath { get; set; }
     
-    public required SocialIdType IdType { get; set; }
-    
-    public required Contact Contact { get; set; }
+    public required SocialProfileId ProfileId { get; set; }
     
     public static string GetCacheKey()
     {
