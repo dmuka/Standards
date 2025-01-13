@@ -49,7 +49,8 @@ public static class DI
             .AddTransient(typeof(IRequestHandler<GetById.Query<Department>, Department>), typeof(GetById.QueryHandler<Department>))   
             .AddTransient(typeof(IRequestHandler<GetById.Query<Sector>, Sector>), typeof(GetById.QueryHandler<Sector>)) 
             .AddTransient(typeof(IRequestHandler<GetById.Query<Material>, Material>), typeof(GetById.QueryHandler<Material>)) 
-            .AddTransient(typeof(IRequestHandler<GetById.Query<Quantity>, Quantity>), typeof(GetById.QueryHandler<Quantity>));
+            .AddTransient(typeof(IRequestHandler<GetById.Query<Quantity>, Quantity>), typeof(GetById.QueryHandler<Quantity>)) 
+            .AddTransient(typeof(IRequestHandler<GetById.Query<Place>, Place>), typeof(GetById.QueryHandler<Place>));
 
         services.AddValidatorsFromAssembly(typeof(DI).Assembly, includeInternalTypes: true);
 

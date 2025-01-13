@@ -1,4 +1,6 @@
 ﻿using Application.CQRS.Common.GenericCRUD;
+using Application.CQRS.Places;
+using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Infrastructure.Filter.Implementations;
 using MediatR;
@@ -14,7 +16,7 @@ public class PlacesController(ISender sender) : ControllerBase
     [Route("list")]
     public async Task<IActionResult> GetPlaces()
     {
-        var query = new GetAllBaseEntity.Query<Place>();
+        var query = new GetAll.Query();
 
         var result = await sender.Send(query);
 
@@ -34,9 +36,9 @@ public class PlacesController(ISender sender) : ControllerBase
 
     [HttpPost]
     [Route("add")]
-    public async Task<IActionResult> CreatePlace([FromBody] Place place)
+    public async Task<IActionResult> CreatePlace([FromBody] PlaceDto place)
     {
-        var query = new CreateBaseEntity.Query<Place>(place);
+        var query = new Create.Command(place);
 
         var result = await sender.Send(query);
 
@@ -45,9 +47,9 @@ public class PlacesController(ISender sender) : ControllerBase
 
     [HttpPut]
     [Route("edit")]
-    public async Task<IActionResult> EditPlace([FromBody] Place place)
+    public async Task<IActionResult> EditPlace([FromBody] PlaceDto place)
     {
-        var query = new EditBaseEntity.Query<Place>(place);
+        var query = new Edit.Command(place);
 
         var result = await sender.Send(query);
 

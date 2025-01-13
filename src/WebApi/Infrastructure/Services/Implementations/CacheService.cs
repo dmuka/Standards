@@ -41,7 +41,7 @@ public class CacheService(IMemoryCache cache, IRepository repository) : ICacheSe
     {
         var entities = cache.Get<IList<T>>(cacheKey);
         
-        var entity = entities.FirstOrDefault(entity => entity.Id == id);
+        var entity = entities?.FirstOrDefault(entity => entity.Id == id);
 
         return entity;
     }
