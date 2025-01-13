@@ -1,6 +1,6 @@
-namespace WebApi.Infrastructure.StartupExtensions;
+namespace WebApi.Infrastructure.Extensions;
 
-public static class BuilderExtensions
+public static class ApplicationBuilderExtensions
 {
     public static IApplicationBuilder UseSwaggerWithUi(this IApplicationBuilder builder)
     {

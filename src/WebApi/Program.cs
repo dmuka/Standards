@@ -4,8 +4,8 @@ using Infrastructure.Logging;
 using NLog;
 using NLog.Web;
 using WebApi.Infrastructure.Exceptions;
+using WebApi.Infrastructure.Extensions;
 using WebApi.Infrastructure.Logging;
-using WebApi.Infrastructure.StartupExtensions;
 
 namespace WebApi;
 
@@ -39,6 +39,8 @@ public class Program
                 app.UseDeveloperExceptionPage()
                     .UseMigrationsEndPoint()
                     .UseSwaggerWithUi();
+
+                app.ApplyMigrations();
             }
             else
             {
