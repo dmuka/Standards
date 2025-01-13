@@ -8,6 +8,7 @@ using Domain.Models.Persons;
 using Domain.Models.Services;
 using Domain.Models.Standards;
 using Domain.Models.Users;
+using Infrastructure.Data.ModelBuilderExtensions;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Data;
@@ -19,12 +20,20 @@ namespace Infrastructure.Data;
         public DbSet<Unit> Units { get; set; }
         public DbSet<Workplace> WorkPlaces { get; set; }
 
+        public DbSet<Housing> Housings { get; set; }        
         public DbSet<Department> Departments { get; set; }
         public DbSet<Sector> Sectors { get; set; }
 
         public DbSet<CalibrationJournalItem> CalibrationsJournal { get; set; }
         public DbSet<VerificationJournalItem> VerificationsJournal { get; set; }
+        
         public DbSet<Place> Places { get; set; }
+        public DbSet<Contact> Contacts { get; set; }
+        public DbSet<Email> Emails { get; set; }
+        public DbSet<Phone> Phones { get; set; }
+        public DbSet<SocialProfileIdType> SocialProfileIdTypes { get; set; }
+        public DbSet<SocialInfo> SocialInfos { get; set; }
+        public DbSet<Social> Socials { get; set; }
 
         public DbSet<Person> Persons { get; set; }
 
@@ -53,8 +62,7 @@ namespace Infrastructure.Data;
                 new { Id = 2, Name = "Housing2", ShortName = "h2", FloorsCount = 1, Address = "Address2", Comments = "Comments2" },
                 new { Id = 3, Name = "Housing3", ShortName = "h3", FloorsCount = 2, Address = "Address3", Comments = "Comments3" }
             ];
-
-            Seed<Housing>(modelBuilder, housings);
+            modelBuilder.Seed<Housing>(housings);
 
             object[] departments =
             [
@@ -62,21 +70,19 @@ namespace Infrastructure.Data;
                 new { Id = 2, Name = "Department2", ShortName = "d2", Comments = "Comments2" },
                 new { Id = 3, Name = "Department3", ShortName = "d3", Comments = "Comments3" }
             ];
-
-            Seed<Department>(modelBuilder, departments);
+            modelBuilder.Seed<Department>(departments);
 
             object[] sectors =
             [
                 new { Id = 1, Name = "Sector1", ShortName = "s1", Comments = "Comments1", DepartmentId = 1 },
-                new{ Id = 2, Name = "Sector2", ShortName = "s2", Comments = "Comments2", DepartmentId = 1 },
+                new { Id = 2, Name = "Sector2", ShortName = "s2", Comments = "Comments2", DepartmentId = 1 },
                 new { Id = 3, Name = "Sector3", ShortName = "s3", Comments = "Comments3", DepartmentId = 1 },
                 new { Id = 4, Name = "Sector4", ShortName = "s4", Comments = "Comments4", DepartmentId = 2 },
                 new { Id = 5, Name = "Sector5", ShortName = "s5", Comments = "Comments5", DepartmentId = 2 },
                 new { Id = 6, Name = "Sector6", ShortName = "s6", Comments = "Comments6", DepartmentId = 3 },
                 new { Id = 7, Name = "Sector7", ShortName = "s7", Comments = "Comments7", DepartmentId = 3 }
             ];
-
-            Seed<Sector>(modelBuilder, sectors);
+            modelBuilder.Seed<Sector>(sectors);
 
             object[] rooms =
             [
@@ -93,8 +99,7 @@ namespace Infrastructure.Data;
                 new { Id = 11, Name = "Room11", ShortName = "r11", Floor = 2, HousingId = 3, SectorId = 6, Length = 6.0, Height = 3.0, Width = 7.0, Comments = "Comments11" },
                 new { Id = 12, Name = "Room12", ShortName = "r12", Floor = 2, HousingId = 3, SectorId = 7, Length = 6.0, Height = 3.0, Width = 5.0, Comments = "Comments12" }
             ];
-
-            Seed<Room>(modelBuilder, rooms);
+            modelBuilder.Seed<Room>(rooms);
 
             object[] categories =
             [
@@ -103,8 +108,7 @@ namespace Infrastructure.Data;
                 new { Id = 3, Name = "Первая квалификационная категория", ShortName = "1 категория", Comments = "Comments1" },
                 new { Id = 4, Name = "Ведущий", ShortName = "Ведущий", Comments = "Comments1" }
             ];
-            
-            Seed<Category>(modelBuilder, categories);
+            modelBuilder.Seed<Category>(categories);
 
             object[] positions =
             [
@@ -113,8 +117,7 @@ namespace Infrastructure.Data;
                 new { Id = 3, Name = "Начальник сектора", ShortName = "Нач. сектора", Comments = "Comments1" },
                 new { Id = 4, Name = "Начальник отдела", ShortName = "Нач. отдела", Comments = "Comments1" }
             ];
-            
-            Seed<Position>(modelBuilder, positions);
+            modelBuilder.Seed<Position>(positions);
 
             object[] grades =
             [
@@ -122,8 +125,7 @@ namespace Infrastructure.Data;
                 new { Id = 2, Name = "Второй разряд", ShortName = "II", Comments = "Comments1" },
                 new { Id = 3, Name = "Третий разряд", ShortName = "III", Comments = "Comments1" }
             ];
-            
-            Seed<Grade>(modelBuilder, grades);
+            modelBuilder.Seed<Grade>(grades);
 
             object[] persons =
             [
@@ -148,8 +150,7 @@ namespace Infrastructure.Data;
                     Role = Role.Engineer, Comments = "Comments1", RoomId = 5
                 }
             ];
-            
-            Seed<Person>(modelBuilder, persons);
+            modelBuilder.Seed<Person>(persons);
             
             object[] users =
             [
@@ -159,8 +160,7 @@ namespace Infrastructure.Data;
                 new { Id = 4, UserName = "user4", Email = "user4@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false},
                 new { Id = 5, UserName = "user5", Email = "user5@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false }
             ];
-            
-            Seed<User>(modelBuilder, users);
+            modelBuilder.Seed<User>(users);
 
             object[] standards =
             [
@@ -170,54 +170,80 @@ namespace Infrastructure.Data;
                 new { Id = 4, Name = "Весы", ShortName = "", VerificationInterval = 12, Email = "user4@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false},
                 new { Id = 5, Name = "Весы лабораторные электронные", ShortName = "Весы лабораторные", VerificationInterval = 12, Email = "user5@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false }
             ];
-            
-            Seed<Standard>(modelBuilder, standards);
+            modelBuilder.Seed<Standard>(standards);
 
-            object[] socialProfileIds =
+            object[] emails =
             [
-                new { Id = 1, Name = "PhoneNumber", ShortName = "Phone" },
-                new { Id = 2, Name = "Email", ShortName = "Mail" },
-                new { Id = 3, Name = "UserName", ShortName = "Name" }
+                new { Id = 1, Value = "email1@domain.com", ContactId = 1 },
+                new { Id = 2, Value = "email2@domain.com", ContactId = 2 },
+                new { Id = 3, Value = "email3@domain.com", ContactId = 3 },
+                new { Id = 4, Value = "email4@domain.com", ContactId = 1 }
             ];
-            
-            Seed<SocialProfileId>(modelBuilder, socialProfileIds);
+            modelBuilder.Seed<Email>(emails);
 
-            object[] contactSocials =
+            object[] phones =
             [
-                new { Id = 1, SocialId = 1, IdValue = "UserName1" }, //contactid
-                new { Id = 2, SocialId = 10, IdValue = "375447777777" },
-                new { Id = 3, SocialId = 1, IdValue = "UserName3" }
+                new { Id = 1, Value = "375296666666", ContactId = 1 },
+                new { Id = 2, Value = "375447777777", ContactId = 2 },
+                new { Id = 3, Value = "375335555555", ContactId = 3 },
+                new { Id = 4, Value = "375292222222", ContactId = 1 }
             ];
-            
-            Seed<ContactSocial>(modelBuilder, contactSocials);
+            modelBuilder.Seed<Phone>(phones);
+
+            object[] socialProfileIdTypes =
+            [
+                new { Id = 1, Value = "PhoneNumber" },
+                new { Id = 2, Value = "Email" },
+                new { Id = 3, Value = "UserName" }
+            ];
+            modelBuilder.Seed<SocialProfileIdType>(socialProfileIdTypes);
+
+            object[] socialInfos =            
+            [
+                new { Id = 1, Name = "Instagram",  ShortName = "I", BasePath = "https://www.instagram.com/", ProfileIdTypeId = 3 },
+                new { Id = 2, Name = "Twitter",  ShortName = "X", BasePath = "https://twitter.com/", ProfileIdTypeId = 3 },
+                new { Id = 3, Name = "Facebook Messenger",  ShortName = "Messenger", BasePath = "https://m.me/", ProfileIdTypeId = 3 },
+                new { Id = 4, Name = "LinkedIn",  ShortName = "LI", BasePath = "https://www.linkedin.com/in/", ProfileIdTypeId = 3 },
+                new { Id = 5, Name = "Youtube",  ShortName = "Y", BasePath = "https://www.youtube.com/", ProfileIdTypeId = 3 },
+                new { Id = 6, Name = "TikTok",  ShortName = "T", BasePath = "https://www.tiktok.com/", ProfileIdTypeId = 3 },
+                new { Id = 7, Name = "Reddit",  ShortName = "R", BasePath = "https://www.reddit.com/user/", ProfileIdTypeId = 3 },
+                new { Id = 8, Name = "GitHub",  ShortName = "G", BasePath = "https://github.com/", ProfileIdTypeId = 3 },
+                new { Id = 9, Name = "SnapChat",  ShortName = "S", BasePath = "https://www.snapchat.com/add/", ProfileIdTypeId = 3 },
+                new { Id = 10, Name = "WhatsUp",  ShortName = "W", BasePath = "https://wa.me/", ProfileIdTypeId = 1 },
+                new { Id = 11, Name = "Telegram",  ShortName = "Tlg", BasePath = "https://t.me/", ProfileIdTypeId = 3 },
+                new { Id = 12, Name = "Viber",  ShortName = "V", BasePath = "viber://chat?", ProfileIdTypeId = 1 }
+            ];
+            modelBuilder.Seed<SocialInfo>(socialInfos);
 
             object[] socials =
             [
-                new { Id = 1, Name = "Instagram",  ShortName = "I", BasePath = "https://www.instagram.com/", ProfileIdId = 3 },
-                new { Id = 2, Name = "Twitter",  ShortName = "X", BasePath = "https://twitter.com/", ProfileIdId = 3 },
-                new { Id = 3, Name = "Facebook Messenger",  ShortName = "Messenger", BasePath = "https://m.me/", ProfileIdId = 3 },
-                new { Id = 4, Name = "LinkedIn",  ShortName = "F", BasePath = "https://www.linkedin.com/in/", ProfileIdId = 3 },
-                new { Id = 5, Name = "Youtube",  ShortName = "Y", BasePath = "https://www.youtube.com/", ProfileIdId = 3 },
-                new { Id = 6, Name = "TikTok",  ShortName = "T", BasePath = "https://www.tiktok.com/", ProfileIdId = 3 },
-                new { Id = 7, Name = "Reddit",  ShortName = "R", BasePath = "https://www.reddit.com/user/", ProfileIdId = 3 },
-                new { Id = 8, Name = "GitHub",  ShortName = "G", BasePath = "https://github.com/", ProfileIdId = 3 },
-                new { Id = 9, Name = "SnapChat",  ShortName = "S", BasePath = "https://www.snapchat.com/add/", ProfileIdId = 3 },
-                new { Id = 10, Name = "WhatsUp",  ShortName = "W", BasePath = "https://wa.me/", ProfileIdId = 1 },
-                new { Id = 11, Name = "Telegram",  ShortName = "Tlg", BasePath = "https://t.me/", ProfileIdId = 3 },
-                new { Id = 12, Name = "Viber",  ShortName = "V", BasePath = "viber://chat?", ProfileIdId = 1 }
+                new { Id = 1, SocialInfoId = 1,  SocialIdValue = "UserName1I", ContactId = 1 },
+                new { Id = 2, SocialInfoId = 11,  SocialIdValue = "UserName1Tlg", ContactId = 1 },
+                new { Id = 3, SocialInfoId = 10,  SocialIdValue = "375441111111", ContactId = 1 },
+                new { Id = 4, SocialInfoId = 2,  SocialIdValue = "UserName2T", ContactId = 2 },
+                new { Id = 5, SocialInfoId = 8,  SocialIdValue = "UserName1G", ContactId = 2 },
+                new { Id = 6, SocialInfoId = 12,  SocialIdValue = "375442222222", ContactId = 2 },
+                new { Id = 7, SocialInfoId = 4,  SocialIdValue = "UserName3LI", ContactId = 3 },
+                new { Id = 8, SocialInfoId = 3,  SocialIdValue = "UserName3F", ContactId = 3 },
+                new { Id = 9, SocialInfoId = 10,  SocialIdValue = "375441111111", ContactId = 3 },
             ];
-            
-            Seed<Social>(modelBuilder, socials);
-        }
+            modelBuilder.Seed<Social>(socials);
 
-        private void Seed<T>(ModelBuilder modelBuilder, object[] seedData) where T : BaseEntity
-        {
-            var index = 1;
-            
-            foreach (var entity in seedData)
-            {
-                Console.WriteLine($"Seeding {typeof(T).Name} {index++}.");
-                modelBuilder.Entity<T>().HasData(entity);
-            }
+            object[] places =
+            [
+                new { Id = 1, Name = "PlaceName1", ShortName = "PlaceShortName1", Address = "PlaceAddress1" },
+                new { Id = 2, Name = "PlaceName2", ShortName = "PlaceShortName2", Address = "PlaceAddress2" },
+                new { Id = 3, Name = "PlaceName3", ShortName = "PlaceShortName3", Address = "PlaceAddress3" },
+                new { Id = 4, Name = "PlaceName4", ShortName = "PlaceShortName4", Address = "PlaceAddress4" }
+            ];
+            modelBuilder.Seed<Place>(places);
+
+            object[] contacts =
+            [
+                new { Id = 1, Name = "ContactName1", ShortName = "ContactShortName1", PlaceId = 1 },
+                new { Id = 2, Name = "ContactName2", ShortName = "ContactShortName2", PlaceId = 2 },
+                new { Id = 3, Name = "ContactName3", ShortName = "ContactShortName3", PlaceId = 3 }
+            ];
+            modelBuilder.Seed<Contact>(contacts);
         }
     }

@@ -1,11 +1,7 @@
 ﻿using Domain.Constants;
-using Domain.Models.Departments;
 using Domain.Models.DTOs;
 using Domain.Models.Interfaces;
 using Domain.Models.MetrologyControl.Contacts;
-using Domain.Models.Persons;
-using Domain.Models.Services;
-using Domain.Models.Standards;
 
 namespace Domain.Models.MetrologyControl;
 

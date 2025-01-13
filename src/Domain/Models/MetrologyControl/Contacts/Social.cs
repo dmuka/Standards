@@ -1,16 +1,8 @@
-using Domain.Constants;
-using Domain.Models.Interfaces;
-
 namespace Domain.Models.MetrologyControl.Contacts;
 
-public class Social : Entity, ICacheable
+public class Social : BaseEntity
 {
-    public required string BasePath { get; set; }
-    
-    public required SocialProfileId ProfileId { get; set; }
-    
-    public static string GetCacheKey()
-    {
-        return Cache.Socials;
-    }
+    public required SocialInfo SocialInfo { get; set; }
+    public required string SocialIdValue { get; set; }
+    public required Contact Contact { get; set; }
 }
