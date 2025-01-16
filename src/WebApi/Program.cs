@@ -1,6 +1,6 @@
 ﻿using Application;
 using Infrastructure;
-using Infrastructure.Logging;
+using Microsoft.Extensions.FileProviders;
 using NLog;
 using NLog.Web;
 using WebApi.Infrastructure.Exceptions;
@@ -50,7 +50,12 @@ public class Program
             }
 
             app.UseHttpsRedirection();
-            app.UseStaticFiles();
+            app.UseStaticFiles(
+                new StaticFileOptions
+                {
+                    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")),
+                    RequestPath = new PathString("/wwwroot")
+                });
 
             app.UseRouting();
 
