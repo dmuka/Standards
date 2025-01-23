@@ -28,7 +28,7 @@ public class Edit
 
             var place = await repository.GetByIdAsync<Place>(request.CalibrationJournalItemDto.PlaceId, cancellationToken);
             
-            var calibrationJournalItem = CalibrationJournalItem.ToEntity(request.CalibrationJournalItemDto, place, standard);
+            var calibrationJournalItem = CalibrationJournalItem.ToEntity(request.CalibrationJournalItemDto, place!, standard!);
                 
             repository.Update(calibrationJournalItem);
 

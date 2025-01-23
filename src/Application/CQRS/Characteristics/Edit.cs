@@ -35,12 +35,12 @@ namespace Application.CQRS.Characteristics
                     ShortName = request.CharacteristicDto.ShortName,
                     RangeStart = request.CharacteristicDto.RangeStart,
                     RangeEnd = request.CharacteristicDto.RangeEnd,
-                    Unit = unit,
+                    Unit = unit!,
                     Grade = grade,
                     GradeValue = request.CharacteristicDto.GradeValue,
                     GradeValueStart = request.CharacteristicDto.GradeValueStart,
                     GradeValueEnd = request.CharacteristicDto.GradeValueEnd,
-                    Standard = standard
+                    Standard = standard!
                 };
                 
                 repository.Update(characteristic);

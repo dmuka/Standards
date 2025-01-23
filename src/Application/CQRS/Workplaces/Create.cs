@@ -32,8 +32,8 @@ public class Create
             {
                 Name = request.WorkplaceDto.Name,
                 ShortName = request.WorkplaceDto.ShortName,
-                Room = room,
-                Responsible = responsible
+                Room = room!,
+                Responsible = responsible!
             };
 
             if (request.WorkplaceDto.Comments is not null) workplace.Comments = request.WorkplaceDto.Comments;

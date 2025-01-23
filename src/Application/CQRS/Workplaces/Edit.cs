@@ -32,8 +32,8 @@ public class Edit
             {
                 Name = request.WorkplaceDto.Name,
                 ShortName = request.WorkplaceDto.ShortName,
-                Room = room,
-                Responsible = responsible,
+                Room = room!,
+                Responsible = responsible!,
                 Comments = request.WorkplaceDto.Comments
             };
                 

@@ -27,7 +27,7 @@ public class Create
 
             var place = await repository.GetByIdAsync<Place>(request.CalibrationJournalItemDto.PlaceId, cancellationToken);
             
-            var calibrationJournalItem = CalibrationJournalItem.ToEntity(request.CalibrationJournalItemDto, place, standard);
+            var calibrationJournalItem = CalibrationJournalItem.ToEntity(request.CalibrationJournalItemDto, place!, standard!);
             
             await repository.AddAsync(calibrationJournalItem, cancellationToken);
             
