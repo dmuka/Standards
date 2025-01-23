@@ -30,8 +30,8 @@ public class VerificationJournalItem : Control, ICacheable
 
     public static VerificationJournalItem ToEntity(
         VerificationJournalItemDto verificationJournalItemDto,
-        Place? place,
-        Standard? standard)
+        Place place,
+        Standard standard)
     {
         return new VerificationJournalItem
         {

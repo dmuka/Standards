@@ -12,7 +12,7 @@ namespace Infrastructure.Filter.Implementations
 
         public IQueryable<T> Execute(QueryParameters parameters)
         {
-            if (parameters.SearchBy != FilterBy.None)
+            if (parameters.SearchBy is not null && parameters.SearchBy != FilterBy.None)
             {
                 var expression = Expressions.GetContains<T>(
                     Enum.GetName(parameters.SearchBy.Value), 

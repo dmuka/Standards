@@ -15,7 +15,6 @@ public class GetAll
     }
 
     public class QueryHandler(
-        IRepository repository, 
         ICacheService cache, 
         IConfigService configService) : IRequestHandler<Query, IEnumerable<RoomDto>>
     {

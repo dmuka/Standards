@@ -5,7 +5,6 @@ namespace Domain.Models.DTOs;
 
 public class PersonDto : Entity
 {
-    public int Id { get; set; }
     [MaxLength(Lengths.PersonName)]
     public required string FirstName { get; set; }
     [MaxLength(Lengths.PersonName)]
@@ -19,6 +18,4 @@ public class PersonDto : Entity
     [MaxLength(Lengths.Role)]
     public required string Role { get; set; }
     public required int UserId { get; set; }
-    [MaxLength(Lengths.Comment)]
-    public string? Comments { get; set; }
 }

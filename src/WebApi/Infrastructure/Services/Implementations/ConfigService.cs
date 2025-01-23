@@ -20,6 +20,6 @@ public class ConfigService(IConfiguration configuration) : IConfigService
         throw new StandardsConfigValueNotFoundException(
             StatusCodeByError.NotFound,
             $"Wrong configuration value path ({valuePath}) or no such value.",
-            null);
+            string.Empty);
     }
 }

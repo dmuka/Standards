@@ -3,33 +3,28 @@ using Microsoft.Extensions.Logging;
 
 namespace Application.Abstractions.Behaviors;
 
-public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
+public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
+    : IPipelineBehavior<TRequest, TResponse>
+    where TRequest : notnull
 {
-    private readonly ILogger<LoggingBehavior<TRequest, TResponse>> _logger;
-
-    public LoggingBehavior(ILogger<LoggingBehavior<TRequest, TResponse>> logger)
-    {
-        _logger = logger;
-    }
-
     public async Task<TResponse> Handle(TRequest request, RequestHandlerDelegate<TResponse> next, CancellationToken cancellationToken)
     {
         var requestType = typeof(TRequest);
 
-        _logger.LogInformation("Handling {requestTypeName}", requestType.Name);
+        logger.LogInformation("Handling {requestTypeName}", requestType.Name);
 
         foreach (var requestProperty in requestType.GetProperties())
         {
             var propertyValue = requestProperty.GetValue(request, null);
 
-            _logger.LogInformation("{requestPropertyName} : { propertyValue }", requestProperty.Name, propertyValue);
+            logger.LogInformation("{requestPropertyName} : { propertyValue }", requestProperty.Name, propertyValue);
         }
 
         var response = await next();
 
         var responseType = typeof(TRequest);
 
-        _logger.LogInformation("Handled { responseTypeName }", responseType.Name);
+        logger.LogInformation("Handled { responseTypeName }", responseType.Name);
 
         return response;
     }

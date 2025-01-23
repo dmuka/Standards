@@ -17,11 +17,12 @@ using Microsoft.IdentityModel.Tokens;
 namespace Infrastructure;
 
 public static class DI
-{    
+{
     /// <summary>
     /// Adds application services
     /// </summary>
     /// <param name="services">Collection of service descriptors</param>
+    /// <param name="configuration">Represents a set of key/value application configuration properties</param>
     /// <returns>Collection of service descriptors</returns>
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {

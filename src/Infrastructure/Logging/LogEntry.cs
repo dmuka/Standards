@@ -14,16 +14,16 @@ public class LogEntry
     private const string Separator = "============";
 
 
-    public string Status { get; set; }
-    public string HttpMethod { get; set; }
-    public string RequestUrl { get; set; }
-    public Dictionary<string, string> QueryParams { get; set; }
-    public string JsonRequestBody { get; set; }
-    public string JsonResponseBody { get; set; }
+    public string Status { get; set; } = string.Empty;
+    public string HttpMethod { get; set; } = string.Empty;
+    public string RequestUrl { get; set; } = string.Empty;
+    public Dictionary<string, string> QueryParams { get; set; } = new();
+    public string JsonRequestBody { get; set; } = string.Empty;
+    public string JsonResponseBody { get; set; } = string.Empty;
     public DateTime TimeStamp { get; set; }
-    public string UserName { get; set; }
-    public string ResponseType { get; set; }
-    public string ErrorMessage { get; set; }
+    public string UserName { get; set; } = string.Empty;
+    public string ResponseType { get; set; } = string.Empty;
+    public string ErrorMessage { get; set; } = string.Empty;
 
     public override string ToString()
     {
@@ -38,7 +38,7 @@ public class LogEntry
         result.Append(' ');
         result.AppendLine(RequestUrl);
 
-        if (QueryParams != null && QueryParams.Count > 0)
+        if (QueryParams.Count > 0)
         {
             result.Append(Query);
 
@@ -50,7 +50,7 @@ public class LogEntry
             result.AppendLine();
         }
 
-        if (JsonRequestBody != null)
+        if (JsonRequestBody != string.Empty)
         {
             result.Append(Body);
             result.AppendLine(JsonRequestBody);
@@ -59,7 +59,7 @@ public class LogEntry
         result.Append(Response);
         result.Append(Status);
 
-        if (ResponseType != null)
+        if (ResponseType != string.Empty)
         {
             result.Append(Type);
             result.AppendLine(ResponseType);
@@ -69,13 +69,13 @@ public class LogEntry
             result.AppendLine();
         }
 
-        if (JsonResponseBody != null)
+        if (JsonResponseBody != string.Empty)
         {
             result.AppendLine(Body);
             result.AppendLine(JsonResponseBody);
         }
 
-        if (ErrorMessage != null)
+        if (ErrorMessage != string.Empty)
         {
             result.Append(LoggingError);
             result.AppendLine(ErrorMessage);

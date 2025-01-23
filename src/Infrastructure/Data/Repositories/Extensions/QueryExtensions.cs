@@ -48,7 +48,7 @@ internal static class QueryExtensions
             {
                 T obj;
                     
-                if (!(typeof(T).IsPrimitive || typeof(T).Equals(typeof(string))))
+                if (!(typeof(T).IsPrimitive || typeof(T) == typeof(string)))
                 {
                     obj = Activator.CreateInstance<T>();
                     foreach (var prop in obj.GetType().GetProperties())
@@ -123,29 +123,29 @@ internal static class QueryExtensions
                 {
                     obj = Activator.CreateInstance<T>();
 
+                    if (obj is null) continue;
+                    
                     foreach (var prop in obj.GetType().GetProperties())
                     {
                         var propertyName = prop.Name;
-                        var isColumnExistent = result.ColumnExists(propertyName);
+                        var columnExists = result.ColumnExists(propertyName);
 
-                        if (isColumnExistent)
+                        if (!columnExists) continue;
+                        
+                        var columnValue = result[propertyName];
+
+                        if (!Equals(columnValue, DBNull.Value))
                         {
-                            object columnValue = result[propertyName];
-
-                            if (!Equals(columnValue, DBNull.Value))
-                            {
-                                prop.SetValue(obj, columnValue, null);
-                            }
+                            prop.SetValue(obj, columnValue, null);
                         }
                     }
-
-                    list.Add(obj);
                 }
                 else
                 {
                     obj = (T)Convert.ChangeType(result[0], typeof(T), CultureInfo.InvariantCulture);
-                    list.Add(obj);
                 }
+
+                list.Add(obj);
             }
 
             return list;

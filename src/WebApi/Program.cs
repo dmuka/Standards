@@ -1,8 +1,16 @@
-﻿using Application;
+﻿using System.Reflection;
+using System.Reflection.Metadata;
+using Application;
 using Infrastructure;
+using Infrastructure.Exceptions;
+using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.FileProviders;
 using NLog;
 using NLog.Web;
+using OpenTelemetry.Logs;
+using OpenTelemetry.Metrics;
+using OpenTelemetry.Resources;
+using OpenTelemetry.Trace;
 using WebApi.Infrastructure.Exceptions;
 using WebApi.Infrastructure.Extensions;
 using WebApi.Infrastructure.Logging;
@@ -31,6 +39,24 @@ public class Program
             // NLog: Setup NLog for Dependency injection
             builder.Logging.ClearProviders();
             builder.Host.UseNLog();
+            
+            var serviceName = Assembly.GetEntryAssembly()?.GetName().Name ?? "Standards";
+
+            builder.Logging.AddOpenTelemetry(options =>
+            {
+                options.SetResourceBuilder(ResourceBuilder.CreateDefault()
+                        .AddService(serviceName))
+                    .AddConsoleExporter();
+            });
+            
+            builder.Services.AddOpenTelemetry()
+                .ConfigureResource(resource => resource.AddService(serviceName))
+                .WithTracing(tracing => tracing
+                    .AddAspNetCoreInstrumentation()
+                    .AddConsoleExporter())
+                .WithMetrics(metrics => metrics
+                    .AddAspNetCoreInstrumentation()
+                    .AddConsoleExporter());
 
             var app = builder.Build();
             
@@ -68,6 +94,7 @@ public class Program
 
             app.UseMiddleware<RequestLoggingMiddleware>();
             app.UseMiddleware<ExceptionHandlingMiddleware>();
+            app.UseMiddleware<ExceptionMiddleware>();
 
             app.MapFallbackToFile("index.html");
 

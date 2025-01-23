@@ -52,6 +52,6 @@
         /// <summary>
         /// Gets the items of the current page.
         /// </summary>
-        public List<T> Items { get; }
+        public List<T> Items { get; } = [];
     }
 }

@@ -14,7 +14,7 @@ public class AuthService(IConfiguration configuration, IRepository repository) :
     private const int AccessTokenExpirationInMinutes = 15;
     private const int RefreshTokenExpirationInMonths = 1;
 
-    public async Task<User> Authenticate(string username, string password)
+    public async Task<User?> Authenticate(string username, string password)
     {
         var user = await repository.GetAsync<User>(user => user.UserName == username);
 
@@ -80,6 +80,8 @@ public class AuthService(IConfiguration configuration, IRepository repository) :
         var key = GetKey();
 
         var user = await repository.GetByIdAsync<User>(userId);
+        
+        if (user is null) return string.Empty;
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {
@@ -95,31 +97,33 @@ public class AuthService(IConfiguration configuration, IRepository repository) :
         return tokenHandler.WriteToken(accessToken);
     }
 
-    private static bool VerifyPasswordHash(string password, byte[] passwordHash, byte[] storedSalt)
+    private static bool VerifyPasswordHash(string password, byte[]? passwordHash, byte[]? storedSalt)
     {
-        if (password == null) throw new ArgumentNullException(nameof(password));
+        ArgumentNullException.ThrowIfNull(password);
+        ArgumentNullException.ThrowIfNull(passwordHash);
+        ArgumentNullException.ThrowIfNull(storedSalt);
         if (string.IsNullOrWhiteSpace(password)) throw new ArgumentException("Value cannot be empty or whitespace only string.", nameof(password));
         if (passwordHash.Length != 64) throw new ArgumentException("Invalid length of password hash (64 bytes expected).", nameof(passwordHash));
         if (storedSalt.Length != 128) throw new ArgumentException("Invalid length of password salt (128 bytes expected).", nameof(storedSalt));
 
-        using (var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt))
+        using var hmac = new System.Security.Cryptography.HMACSHA512(storedSalt);
+        var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
+        for (var i = 0; i < computedHash.Length; i++)
         {
-            var computedHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
-            for (int i = 0; i < computedHash.Length; i++)
-            {
-                if (computedHash[i] != passwordHash[i]) return false;
-            }
+            if (computedHash[i] != passwordHash[i]) return false;
         }
 
         return true;
     }
 
-    private byte[]? GetKey()
+    private byte[] GetKey()
     {
-        return Encoding.ASCII.GetBytes(configuration["Secrets:JwtBearerKey"]);
+        var key = configuration["Secrets:JwtBearerKey"];
+        
+        return Encoding.ASCII.GetBytes(key ?? "");
     }
 
-    private static ClaimsIdentity GetClaimsIdentity(User? user)
+    private static ClaimsIdentity GetClaimsIdentity(User user)
     {
         return new ClaimsIdentity(new Claim[]
         {

@@ -50,7 +50,7 @@ public class GetAllTests : BaseTestFixture
         _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Characteristics, It.IsAny<Expression<Func<Characteristic, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
             .Returns(Task.FromResult(_characteristics));
 
-        _handler = new GetAll.QueryHandler(_repository.Object, _cacheService.Object, _configService.Object); 
+        _handler = new GetAll.QueryHandler(_cacheService.Object, _configService.Object); 
     }
 
     [Test]

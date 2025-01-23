@@ -6,7 +6,7 @@ namespace Application.Abstractions.Authentication
 {
     public interface IAuthService
     {
-        Task<User> Authenticate(string username, string password);
+        Task<User?> Authenticate(string username, string password);
 
         ClaimsPrincipal ValidateToken(string token);
 

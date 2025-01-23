@@ -19,9 +19,9 @@ public class PaginatedListModel<T>
 
     public IEnumerable<T> Items { get; set; }
 
-    public int TotalCount { get; set; }
+    public int TotalCount { get; }
 
-    public int CurrentPageSize { get; set; }
+    public int CurrentPageSize { get; }
 
     public int CurrentPageNumber { get; set; }
 
@@ -34,12 +34,7 @@ public class PaginatedListModel<T>
         int pageNumber,
         int itemsOnPage)
     {
-        PaginatedListModel<TEntity> result = null;
-                
-        if (entities is not null)
-        {
-            result = new PaginatedListModel<TEntity>(entities, pageNumber, itemsOnPage);
-        }
+        var result =  new PaginatedListModel<TEntity>(entities, pageNumber, itemsOnPage);
 
         return result;
     }

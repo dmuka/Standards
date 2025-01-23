@@ -164,17 +164,17 @@ namespace Infrastructure.Data;
 
             object[] standards =
             [
-                new { Id = 1, Name = "Грузопоршневой манометр", ShortName = "", VerificationInterval = 24,Email = "user1@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
-                new { Id = 2, Name = "Амперметр", ShortName = "", VerificationInterval = 12, Email = "user2@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
-                new { Id = 3, Name = "Термогигрометр", ShortName = "", VerificationInterval = 12, Email = "user3@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false },
-                new { Id = 4, Name = "Весы", ShortName = "", VerificationInterval = 12, Email = "user4@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false},
-                new { Id = 5, Name = "Весы лабораторные электронные", ShortName = "Весы лабораторные", VerificationInterval = 12, Email = "user5@email.com", AccessFailedCount = 0, IsEmailConfirmed = false, IsLockOutEnabled = false, IsTwoFactorEnabled = false }
+                new { Id = 1, Name = "Грузопоршневой манометр", ShortName = "", VerificationInterval = 24, ResponsibleId = 1 },
+                new { Id = 2, Name = "Амперметр", ShortName = "", VerificationInterval = 12, ResponsibleId = 2 },
+                new { Id = 3, Name = "Термогигрометр", ShortName = "", VerificationInterval = 12, ResponsibleId = 3 },
+                new { Id = 4, Name = "Весы", ShortName = "", VerificationInterval = 12, ResponsibleId = 4 },
+                new { Id = 5, Name = "Весы лабораторные электронные", ShortName = "Весы лабораторные", VerificationInterval = 12, ResponsibleId = 5 }
             ];
             modelBuilder.Seed<Standard>(standards);
 
             object[] emails =
             [
-                new { Id = 1, Value = "email1@domain.com", ContactId = 1 },
+                new { Id = 1, Value = "email1@domain.com", ContactId = 1 }, 
                 new { Id = 2, Value = "email2@domain.com", ContactId = 2 },
                 new { Id = 3, Value = "email3@domain.com", ContactId = 3 },
                 new { Id = 4, Value = "email4@domain.com", ContactId = 1 }

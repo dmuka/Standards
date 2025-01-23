@@ -15,8 +15,7 @@ public class GetAll
     {
     }
 
-    public class QueryHandler(
-        IRepository repository, 
+    public class QueryHandler( 
         ICacheService cache, 
         IConfigService configService) : IRequestHandler<Query, IList<WorkplaceDto>>
     {

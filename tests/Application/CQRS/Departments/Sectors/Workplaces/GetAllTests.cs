@@ -50,7 +50,7 @@ public class GetAllTests : BaseTestFixture
         _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Workplace>,IIncludableQueryable<Workplace,object>>>(), _cancellationToken))
             .Returns(Task.FromResult(_workplaces));
 
-        _handler = new GetAll.QueryHandler(_repository.Object, _cacheService.Object, _configService.Object); 
+        _handler = new GetAll.QueryHandler(_cacheService.Object, _configService.Object); 
     }
 
     [Test]

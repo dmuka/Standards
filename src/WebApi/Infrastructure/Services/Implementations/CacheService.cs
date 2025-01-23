@@ -16,7 +16,7 @@ public class CacheService(IMemoryCache cache, IRepository repository) : ICacheSe
         TimeSpan? absoluteExpiration = null,
         TimeSpan? slidingExpiration = null) where T : class
     {
-        if (cache.TryGetValue(cacheKey, out IList<T> cachedData)) return cachedData;
+        if (cache.TryGetValue(cacheKey, out IList<T>? cachedData) && cachedData is not null) return cachedData;
         
         var query = repository.GetQueryable<T>();
             
@@ -34,7 +34,7 @@ public class CacheService(IMemoryCache cache, IRepository repository) : ICacheSe
             
         cache.Set(cacheKey, cachedData, cacheEntryOptions);
 
-        return cachedData;
+        return cachedData ?? [];
     }
     
     public T? GetById<T>(string cacheKey, int id) where T : BaseEntity
@@ -52,20 +52,16 @@ public class CacheService(IMemoryCache cache, IRepository repository) : ICacheSe
         TimeSpan? absoluteExpiration = null,
         TimeSpan? slidingExpiration = null)
     {
-        if (!cache.TryGetValue(cacheKey, out _))
-        {
-            var cacheEntryOptions = GetOptions(absoluteExpiration, slidingExpiration);
+        if (cache.TryGetValue(cacheKey, out _)) return;
+        
+        var cacheEntryOptions = GetOptions(absoluteExpiration, slidingExpiration);
             
-            cache.Set(cacheKey, value, cacheEntryOptions);
-        }
+        cache.Set(cacheKey, value, cacheEntryOptions);
     }
 
     public void Remove(string cacheKey)
     {
-        if (cache.TryGetValue(cacheKey, out _))
-        {
-            cache.Remove(cacheKey);
-        }
+        if (cache.TryGetValue(cacheKey, out _)) cache.Remove(cacheKey);
     }
 
     private MemoryCacheEntryOptions GetOptions(
