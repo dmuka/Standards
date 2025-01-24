@@ -1,9 +1,7 @@
 ﻿using System.Reflection;
-using System.Reflection.Metadata;
 using Application;
 using Infrastructure;
 using Infrastructure.Exceptions;
-using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.Extensions.FileProviders;
 using NLog;
 using NLog.Web;
@@ -46,17 +44,23 @@ public class Program
             {
                 options.SetResourceBuilder(ResourceBuilder.CreateDefault()
                         .AddService(serviceName))
-                    .AddConsoleExporter();
+                    .AddConsoleExporter()
+                    .AddOtlpExporter();
             });
             
             builder.Services.AddOpenTelemetry()
                 .ConfigureResource(resource => resource.AddService(serviceName))
                 .WithTracing(tracing => tracing
                     .AddAspNetCoreInstrumentation()
-                    .AddConsoleExporter())
+                    .AddHttpClientInstrumentation()
+                    .AddConsoleExporter()
+                    .AddOtlpExporter())
                 .WithMetrics(metrics => metrics
+                    .AddRuntimeInstrumentation()
+                    .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
-                    .AddConsoleExporter());
+                    .AddConsoleExporter()
+                    .AddOtlpExporter());
 
             var app = builder.Build();
             
