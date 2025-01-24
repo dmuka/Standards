@@ -37,30 +37,8 @@ public class Program
             // NLog: Setup NLog for Dependency injection
             builder.Logging.ClearProviders();
             builder.Host.UseNLog();
-            
-            var serviceName = Assembly.GetEntryAssembly()?.GetName().Name ?? "Standards";
 
-            builder.Logging.AddOpenTelemetry(options =>
-            {
-                options.SetResourceBuilder(ResourceBuilder.CreateDefault()
-                        .AddService(serviceName))
-                    .AddConsoleExporter()
-                    .AddOtlpExporter();
-            });
-            
-            builder.Services.AddOpenTelemetry()
-                .ConfigureResource(resource => resource.AddService(serviceName))
-                .WithTracing(tracing => tracing
-                    .AddAspNetCoreInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddConsoleExporter()
-                    .AddOtlpExporter())
-                .WithMetrics(metrics => metrics
-                    .AddRuntimeInstrumentation()
-                    .AddHttpClientInstrumentation()
-                    .AddAspNetCoreInstrumentation()
-                    .AddConsoleExporter()
-                    .AddOtlpExporter());
+            builder.UseTelemetry();
 
             var app = builder.Build();
             

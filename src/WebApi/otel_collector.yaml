@@ -1,0 +1,32 @@
+receivers:
+  otlp:
+    protocols:
+      grpc:
+        endpoint: 0.0.0.0:4317 # collector listens for OTLP data over gRPC
+      http:
+        endpoint: 0.0.0.0:4318 # collector listens for OTLP data over HTTP
+
+exporters:
+  debug: # sends telemetry data to the console for debugging purposes
+    verbosity: detailed
+  prometheus: # exposes metrics in Prometheus format
+    endpoint: ":9201"
+    send_timestamps: true
+    metric_expiration: 180m
+    enable_open_metrics: true
+  otlp: # exports traces using the OTLP protocol
+    endpoint: tempo:4317 #sends telemetry data to a service named tempo
+    tls: # disables TLS verification for the connection (local testing)
+      insecure: true
+
+service:
+  pipelines: # pipelines define how telemetry data flows through the system
+    traces:
+      receivers: [otlp]
+      exporters: [debug, otlp]
+    metrics:
+      receivers: [otlp]
+      exporters: [debug, prometheus]
+    logs:
+      receivers: [otlp]
+      exporters: [debug]
