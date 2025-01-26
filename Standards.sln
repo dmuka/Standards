@@ -15,7 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "src\Infra
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{76BFCB03-B8CA-4E81-BDB4-A98182CC773A}"
 	ProjectSection(SolutionItems) = preProject
-		compose.yaml = compose.yaml
+		grafana.yaml = grafana.yaml
+		otel_collector.yaml = otel_collector.yaml
+		prometheus.yaml = prometheus.yaml
+		tempo.yaml = tempo.yaml
 	EndProjectSection
 EndProject
 Global

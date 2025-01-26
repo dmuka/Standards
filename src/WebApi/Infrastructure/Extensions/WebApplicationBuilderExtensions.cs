@@ -22,11 +22,11 @@ public static class WebApplicationBuilderExtensions
 
         // Note: Switch between Explicit/Exponential by setting HistogramAggregation in appsettings.json
         var histogramAggregation = builder.Configuration.GetValue("HistogramAggregation", defaultValue: "explicit")!.ToLowerInvariant();
-
-        // Create a service to expose ActivitySource, and Metric Instruments for manual instrumentation
-        builder.Services.AddSingleton<Instrumentation>();
         
         var serviceName = Assembly.GetEntryAssembly()?.GetName().Name ?? "Standards";
+
+        // Create a service to expose ActivitySource, and Metric Instruments for manual instrumentation
+        builder.Services.AddSingleton(new Instrumentation(serviceName));
 
         builder.Logging.AddOpenTelemetry(options =>
         {
