@@ -1,4 +1,4 @@
-﻿using Application.CQRS.Common.GenericCRUD;
+﻿using Application.UseCases.Common.GenericCRUD;
 using Domain.Models;
 using Domain.Models.Persons;
 using FluentAssertions;

@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
-using Application.CQRS.Places;
+using Application.UseCases.Places;
 using Domain.Constants;
 using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;

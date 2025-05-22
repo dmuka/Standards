@@ -1,5 +1,5 @@
 using Application.Abstractions.Cache;
-using Application.CQRS.Common.GenericCRUD;
+using Application.UseCases.Common.GenericCRUD;
 using Domain.Constants;
 using Domain.Models.MetrologyControl;
 using FluentValidation;

@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Cache;
-using Application.CQRS.Common.GenericCRUD;
+using Application.UseCases.Common.GenericCRUD;
 using Domain.Models.Services;
 using FluentValidation;
 using FluentValidation.TestHelper;

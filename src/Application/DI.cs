@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Behaviors;
-using Application.CQRS.Common.GenericCRUD;
+using Application.UseCases.Common.GenericCRUD;
 using Domain.Models;
 using Domain.Models.Departments;
 using Domain.Models.MetrologyControl;

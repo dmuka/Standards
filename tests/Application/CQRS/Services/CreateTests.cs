@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Cache;
-using Application.CQRS.Services;
+using Application.UseCases.Services;
 using Domain.Models;
 using Domain.Models.DTOs;
 using Domain.Models.Services;

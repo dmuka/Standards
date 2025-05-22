@@ -1,5 +1,5 @@
 ﻿using System.Data;
-using Application.CQRS.Common.Attributes;
+using Application.UseCases.Common.Attributes;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
 

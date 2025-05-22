@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Cache;
-using Application.CQRS.Departments;
+using Application.UseCases.Departments;
 using Domain.Models.DTOs;
 using FluentValidation;
 using FluentValidation.TestHelper;

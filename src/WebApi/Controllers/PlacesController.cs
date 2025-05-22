@@ -1,5 +1,5 @@
-﻿using Application.CQRS.Common.GenericCRUD;
-using Application.CQRS.Places;
+﻿using Application.UseCases.Common.GenericCRUD;
+using Application.UseCases.Places;
 using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Infrastructure.Filter.Implementations;

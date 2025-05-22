@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Cache;
-using Application.CQRS.Workplaces;
+using Application.UseCases.Workplaces;
 using Domain.Models.Departments;
 using Domain.Models.DTOs;
 using Domain.Models.Housings;

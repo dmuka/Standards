@@ -1,5 +1,5 @@
-﻿using Application.CQRS.Common.GenericCRUD;
-using Application.CQRS.CalibrationsJournal;
+﻿using Application.UseCases.CalibrationsJournal;
+using Application.UseCases.Common.GenericCRUD;
 using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Infrastructure.Filter.Implementations;

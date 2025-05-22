@@ -1,5 +1,5 @@
-﻿using Application.CQRS.Common.GenericCRUD;
-using Application.CQRS.Housings;
+﻿using Application.UseCases.Common.GenericCRUD;
+using Application.UseCases.Housings;
 using Domain.Models.DTOs;
 using Domain.Models.Housings;
 using Infrastructure.Filter.Implementations;

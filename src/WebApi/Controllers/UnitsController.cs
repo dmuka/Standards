@@ -1,5 +1,5 @@
-﻿using Application.CQRS.Common.GenericCRUD;
-using Application.CQRS.Units;
+﻿using Application.UseCases.Common.GenericCRUD;
+using Application.UseCases.Units;
 using Domain.Models.DTOs;
 using Infrastructure.Filter.Implementations;
 using MediatR;

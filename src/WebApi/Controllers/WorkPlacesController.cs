@@ -1,5 +1,5 @@
-﻿using Application.CQRS.Common.GenericCRUD;
-using Application.CQRS.Workplaces;
+﻿using Application.UseCases.Common.GenericCRUD;
+using Application.UseCases.Workplaces;
 using Domain.Models.Departments;
 using Domain.Models.DTOs;
 using Infrastructure.Filter.Implementations;

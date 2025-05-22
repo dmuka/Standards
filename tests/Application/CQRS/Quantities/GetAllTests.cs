@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
-using Application.CQRS.Quantities;
+using Application.UseCases.Quantities;
 using Domain.Constants;
 using Domain.Models;
 using Domain.Models.DTOs;

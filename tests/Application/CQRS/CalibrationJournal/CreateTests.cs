@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Cache;
-using Application.CQRS.CalibrationsJournal;
+using Application.UseCases.CalibrationsJournal;
 using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Domain.Models.Standards;

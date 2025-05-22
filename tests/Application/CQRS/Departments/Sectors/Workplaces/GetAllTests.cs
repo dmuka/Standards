@@ -1,7 +1,7 @@
 using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
-using Application.CQRS.Workplaces;
+using Application.UseCases.Workplaces;
 using Domain.Constants;
 using Domain.Models.Departments;
 using Domain.Models.DTOs;

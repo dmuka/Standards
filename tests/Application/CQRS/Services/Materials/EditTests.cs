@@ -1,5 +1,5 @@
 ﻿using Application.Abstractions.Cache;
-using Application.CQRS.Materials;
+using Application.UseCases.Materials;
 using Domain.Constants;
 using Domain.Models.DTOs;
 using Domain.Models.Services;
