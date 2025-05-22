@@ -1,14 +1,9 @@
-﻿using System.Reflection;
-using Application;
+﻿using Application;
 using Infrastructure;
 using Infrastructure.Exceptions;
 using Microsoft.Extensions.FileProviders;
 using NLog;
 using NLog.Web;
-using OpenTelemetry.Logs;
-using OpenTelemetry.Metrics;
-using OpenTelemetry.Resources;
-using OpenTelemetry.Trace;
 using WebApi.Infrastructure.Exceptions;
 using WebApi.Infrastructure.Extensions;
 using WebApi.Infrastructure.Logging;
