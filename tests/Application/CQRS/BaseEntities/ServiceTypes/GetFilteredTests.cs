@@ -76,7 +76,7 @@ public class GetFilteredTests : BaseTestFixture
     }
 
     [Test]
-    public void Handler_IfCancellationTokenIsActive_ReturnNull()
+    public void Handler_IfCancellationTokenIsActive_ReturnZero()
     {
         // Arrange
         var query = new GetFiltered<ServiceType>.Query(_parameters);
@@ -86,7 +86,7 @@ public class GetFilteredTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(null));
+        Assert.That(result.Items.Count(), Is.EqualTo(0));
     }
 
     [Test]

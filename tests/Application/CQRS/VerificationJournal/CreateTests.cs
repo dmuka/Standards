@@ -7,6 +7,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Tests.Common;
 using Tests.Common.Constants;
@@ -25,9 +26,10 @@ public class CreateTests : BaseTestFixture
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheMock;
+    private Mock<ILogger<Create>> _logger;
 
-    private IRequestHandler<Create.Query, int> _handler;
-    private IValidator<Create.Query> _validator;
+    private IRequestHandler<Create.Command, int> _handler;
+    private IValidator<Create.Command> _validator;
 
     [SetUp]
     public void Setup()
@@ -46,15 +48,17 @@ public class CreateTests : BaseTestFixture
 
         _cacheMock = new Mock<ICacheService>();
         
-        _handler = new Create.QueryHandler(_repositoryMock.Object, _cacheMock.Object);
-        _validator = new Create.QueryValidator(_repositoryMock.Object);
+        _logger = new Mock<ILogger<Create>>();
+        
+        _handler = new Create.CommandHandler(_repositoryMock.Object, _cacheMock.Object, _logger.Object);
+        _validator = new Create.CommandValidator(_repositoryMock.Object);
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new Create.Query(_verificationJournalItemDto);
+        var query = new Create.Command(_verificationJournalItemDto);
         var expected = 1;
 
         // Act
@@ -68,7 +72,7 @@ public class CreateTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new Create.Query(_verificationJournalItemDto);
+        var query = new Create.Command(_verificationJournalItemDto);
         _cancellationToken = new CancellationToken(true);
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(0));
 
@@ -85,7 +89,7 @@ public class CreateTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto = null;
 
-        var query = new Create.Query(_verificationJournalItemDto);
+        var query = new Create.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -100,7 +104,7 @@ public class CreateTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.CertificateId = id;
 
-        var query = new Create.Query(_verificationJournalItemDto);
+        var query = new Create.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -115,7 +119,7 @@ public class CreateTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.CertificateId = Cases.Length21;
 
-        var query = new Create.Query(_verificationJournalItemDto);
+        var query = new Create.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -130,7 +134,7 @@ public class CreateTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.StandardId = id;
 
-        var query = new Create.Query(_verificationJournalItemDto);
+        var query = new Create.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -145,7 +149,7 @@ public class CreateTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.PlaceId = id;
 
-        var query = new Create.Query(_verificationJournalItemDto);
+        var query = new Create.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -160,7 +164,7 @@ public class CreateTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.Date = date;
 
-        var query = new Create.Query(_verificationJournalItemDto);
+        var query = new Create.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -175,7 +179,7 @@ public class CreateTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.ValidTo = date;
 
-        var query = new Create.Query(_verificationJournalItemDto);
+        var query = new Create.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;

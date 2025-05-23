@@ -38,7 +38,7 @@ public class VerificationJournalController(ISender sender) : ControllerBase
     [Route("add")]
     public async Task<IActionResult> CreateVerificationJournalItem([FromBody] VerificationJournalItemDto standard)
     {
-        var query = new Create.Query(standard);
+        var query = new Create.Command(standard);
 
         var result = await sender.Send(query);
 
@@ -49,7 +49,7 @@ public class VerificationJournalController(ISender sender) : ControllerBase
     [Route("edit")]
     public async Task<IActionResult>  EditVerificationJournalItem([FromBody] VerificationJournalItemDto standard)
     {
-        var query = new Edit.Query(standard);
+        var query = new Edit.Command(standard);
             
         var result = await sender.Send(query);
 

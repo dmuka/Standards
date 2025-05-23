@@ -75,7 +75,7 @@ public class GetFilteredTests : BaseTestFixture
     }
 
     [Test]
-    public void Handler_IfCancellationTokenIsActive_ReturnNull()
+    public void Handler_IfCancellationTokenIsActive_ReturnZero()
     {
         // Arrange
         var query = new GetFiltered<Person>.Query(_parameters);
@@ -85,15 +85,15 @@ public class GetFilteredTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(null));
+        Assert.That(result.Items.Count(), Is.EqualTo(0));
     }
 
     [Test]
     public void Handler_IfInvalidPagePaginateValues_ReturnResultWithDefaultValues()
     {
         // Arrange
-        _parameters.ItemsOnPage = default;
-        _parameters.PageNumber = default;
+        _parameters.ItemsOnPage = 0;
+        _parameters.PageNumber = 0;
 
         var query = new GetFiltered<Person>.Query(_parameters);
         var expected = new PaginatedListModel<Person>(_persons, 1, 10);

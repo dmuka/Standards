@@ -21,7 +21,7 @@ public class GetAll
         {
             var absoluteExpiration = configService.GetValue<int>(Cache.AbsoluteExpirationConfigurationSectionKey);
             var slidingExpiration = configService.GetValue<int>(Cache.SlidingExpirationConfigurationSectionKey);
-                
+            
             var characteristics = await cache.GetOrCreateAsync<Characteristic>(
                 Cache.Characteristics,
                 [

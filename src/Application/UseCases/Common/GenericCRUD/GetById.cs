@@ -5,6 +5,7 @@ using FluentValidation;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Common.GenericCRUD;
 
@@ -17,17 +18,27 @@ public class GetById
 
     public class QueryHandler<T>(
         IRepository repository, 
-        ICacheService cacheService) : IRequestHandler<Query<T>, T> where T : BaseEntity, ICacheable
+        ICacheService cacheService,
+        ILogger<GetById> logger) : IRequestHandler<Query<T>, T?> where T : BaseEntity, ICacheable
     {
-        public async Task<T> Handle(Query<T> request, CancellationToken cancellationToken)
+        public async Task<T?> Handle(Query<T> request, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested) return null;
+            
             var entity = cacheService.GetById<T>(T.GetCacheKey(), request.Id);
-
-            if (!cancellationToken.IsCancellationRequested && entity is not null) return entity;
+            
+            if (entity is not null) return entity;
             
             entity = await repository.GetByIdAsync<T>(request.Id, cancellationToken);
-
-            return entity;
+            
+            if (entity is not null)
+            {
+                cacheService.Create(T.GetCacheKey(), entity);
+                
+                return entity;
+            }
+            
+            return null;
         }
     }
 

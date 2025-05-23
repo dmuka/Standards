@@ -8,6 +8,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Tests.Common;
 using Tests.Common.Constants;
@@ -26,9 +27,10 @@ public class EditTests : BaseTestFixture
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
+    private Mock<ILogger<Edit>> _logger;
 
-    private IRequestHandler<Edit.Query, int> _handler;
-    private IValidator<Edit.Query> _validator;
+    private IRequestHandler<Edit.Command, int> _handler;
+    private IValidator<Edit.Command> _validator;
 
     [SetUp]
     public void Setup()
@@ -47,15 +49,17 @@ public class EditTests : BaseTestFixture
 
         _cacheService = new Mock<ICacheService>();
 
-        _handler = new Edit.QueryHandler(_repositoryMock.Object, _cacheService.Object);
-        _validator = new Edit.QueryValidator(_repositoryMock.Object);
+        _logger = new Mock<ILogger<Edit>>();
+
+        _handler = new Edit.CommandHandler(_repositoryMock.Object, _cacheService.Object, _logger.Object);
+        _validator = new Edit.CommandValidator(_repositoryMock.Object);
     }
 
     [Test]
     public void Handler_IfAllDataIsValid_ReturnResult()
     {
         // Arrange
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
         var expected = 1;
 
         // Act
@@ -69,7 +73,7 @@ public class EditTests : BaseTestFixture
     public void Handler_IfAllDataIsValid_AllCallsToDbShouldBeMade()
     {
         // Arrange
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
 
         // Act
         var result = _handler.Handle(query, _cancellationToken).Result;
@@ -86,7 +90,7 @@ public class EditTests : BaseTestFixture
     public void Handler_IfCancellationTokenIsActive_ReturnNull()
     {
         // Arrange
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
         _cancellationToken = new CancellationToken(true);
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(0));
 
@@ -103,7 +107,7 @@ public class EditTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto = null;
 
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -119,7 +123,7 @@ public class EditTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.Id = id;
 
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -134,7 +138,7 @@ public class EditTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.CertificateId = id;
 
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -149,7 +153,7 @@ public class EditTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.CertificateId = Cases.Length21;
 
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -164,7 +168,7 @@ public class EditTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.StandardId = id;
 
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -179,7 +183,7 @@ public class EditTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.PlaceId = id;
 
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -194,7 +198,7 @@ public class EditTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.Date = date;
 
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
@@ -209,7 +213,7 @@ public class EditTests : BaseTestFixture
         // Arrange
         _verificationJournalItemDto.ValidTo = date;
 
-        var query = new Edit.Query(_verificationJournalItemDto);
+        var query = new Edit.Command(_verificationJournalItemDto);
 
         // Act
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;

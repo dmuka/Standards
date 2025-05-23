@@ -9,24 +9,40 @@ using FluentValidation;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.VerificationsJournal;
 
 [TransactionScope]
 public class Edit
 {
-    public class Query(VerificationJournalItemDto serviceJournalItemDto) : IRequest<int>
+    public class Command(VerificationJournalItemDto serviceJournalItemDto) : IRequest<int>
     {
         public VerificationJournalItemDto VerificationJournalItemDto { get; } = serviceJournalItemDto;
     }
 
-    public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>
+    public class CommandHandler(
+        IRepository repository, 
+        ICacheService cacheService,
+        ILogger<Edit> logger) : IRequestHandler<Command, int>
     {
-        public async Task<int> Handle(Query request, CancellationToken cancellationToken)
+        public async Task<int> Handle(Command request, CancellationToken cancellationToken)
         {
             var standard = await repository.GetByIdAsync<Standard>(request.VerificationJournalItemDto.StandardId, cancellationToken);
-
+            if (standard is null)
+            {
+                logger.LogWarning("Invalid standard id {standardId} in the verification journal item", request.VerificationJournalItemDto.StandardId);
+                
+                return 0;
+            }
+            
             var place = await repository.GetByIdAsync<Place>(request.VerificationJournalItemDto.PlaceId, cancellationToken);
+            if (place is null)
+            {
+                logger.LogWarning("Invalid place id {placeId} in the verification journal item", request.VerificationJournalItemDto.PlaceId);
+                
+                return 0;
+            }
             
             var verificationJournalItem = VerificationJournalItem.ToEntity(request.VerificationJournalItemDto, place, standard);
                 
@@ -40,9 +56,9 @@ public class Edit
         }
     }
 
-    public class QueryValidator : AbstractValidator<Query>
+    public class CommandValidator : AbstractValidator<Command>
     {
-        public QueryValidator(IRepository repository)
+        public CommandValidator(IRepository repository)
         {
             RuleLevelCascadeMode = CascadeMode.Stop;
 

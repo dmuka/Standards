@@ -14,26 +14,20 @@ internal static class QueryExtensions
     {
         ArgumentNullException.ThrowIfNull(dbContext);
 
-        if (string.IsNullOrWhiteSpace(sql))
-        {
-            throw new ArgumentNullException(nameof(sql));
-        }
+        if (string.IsNullOrWhiteSpace(sql)) throw new ArgumentNullException(nameof(sql));
 
         await using var command = dbContext.Database.GetDbConnection().CreateCommand();
         command.CommandText = sql;
+        
+        var index = 0;
 
-        if (parameters != null)
+        foreach (var item in parameters)
         {
-            var index = 0;
-
-            foreach (var item in parameters)
-            {
-                var dbParameter = command.CreateParameter();
-                dbParameter.ParameterName = "@p" + index;
-                dbParameter.Value = item;
-                command.Parameters.Add(dbParameter);
-                index++;
-            }
+            var dbParameter = command.CreateParameter();
+            dbParameter.ParameterName = "@p" + index;
+            dbParameter.Value = item;
+            command.Parameters.Add(dbParameter);
+            index++;
         }
 
         try
@@ -51,7 +45,10 @@ internal static class QueryExtensions
                 if (!(typeof(T).IsPrimitive || typeof(T) == typeof(string)))
                 {
                     obj = Activator.CreateInstance<T>();
-                    foreach (var prop in obj.GetType().GetProperties())
+                    
+                    var properties = obj is null ? [] : obj.GetType().GetProperties();
+                    
+                    foreach (var prop in properties)
                     {
                         var propertyName = prop.Name;
                         var isColumnExistent = result.ColumnExists(propertyName);
@@ -99,13 +96,10 @@ internal static class QueryExtensions
 
         await using var command = dbContext.Database.GetDbConnection().CreateCommand();
         command.CommandText = sql;
-
-        if (parameters != null)
+        
+        foreach (var dbParameter in parameters)
         {
-            foreach (DbParameter dbParameter in parameters)
-            {
-                command.Parameters.Add(dbParameter);
-            }
+            command.Parameters.Add(dbParameter);
         }
 
         try

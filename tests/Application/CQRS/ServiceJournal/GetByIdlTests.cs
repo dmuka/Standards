@@ -6,6 +6,7 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Tests.Common;
 
@@ -19,6 +20,7 @@ public class GetByIdTests : BaseTestFixture
 
     private Mock<IRepository> _repository;
     private Mock<ICacheService> _cacheMock;
+    private Mock<ILogger<GetById>> _logger;
     
     private CancellationToken _cancellationToken;
     
@@ -41,8 +43,9 @@ public class GetByIdTests : BaseTestFixture
         _cacheMock = new Mock<ICacheService>();
         _cacheMock.Setup(cache => cache.GetById<ServiceJournalItem>(Cache.ServiceJournal, IdInDb)).Returns(ServiceJournalItems[0]);
 
+        _logger = new Mock<ILogger<GetById>>();
 
-        _handler = new GetById.QueryHandler<ServiceJournalItem>(_repository.Object, _cacheMock.Object); 
+        _handler = new GetById.QueryHandler<ServiceJournalItem>(_repository.Object, _cacheMock.Object, _logger.Object); 
         _validator = new GetById.QueryValidator<ServiceJournalItem>(_repository.Object); 
     }
 
@@ -89,7 +92,7 @@ public class GetByIdTests : BaseTestFixture
     }
 
     [Test]
-    public void Handler_IfCancellationTokenIsActive_ReturnNull()
+    public void Handler_IfCancellationTokenIsActive_ShoulThrowException()
     {
         // Arrange
         var query = new GetById.Query<ServiceJournalItem>(IdInDb);
@@ -99,6 +102,6 @@ public class GetByIdTests : BaseTestFixture
         var result = _handler.Handle(query, _cancellationToken).Result;
 
         // Assert
-        Assert.That(result, Is.EqualTo(null));
+        Assert.That(result, Is.Null);
     }
 }

@@ -15,21 +15,21 @@ namespace Infrastructure.Filter.Implementations
             if (parameters.SearchBy is not null && parameters.SearchBy != FilterBy.None)
             {
                 var expression = Expressions.GetContains<T>(
-                    Enum.GetName(parameters.SearchBy.Value), 
+                    Enum.GetName(parameters.SearchBy.Value) ?? "", 
                     parameters.SearchString);
                 
                 _query = _query.Where(expression);
             }
-            
-            var keySelector = Expressions.GetKeySelector<T>(Enum.GetName(parameters.SortBy.Value));
-            
-            if (parameters.SortBy != SortBy.None)
+
+            if (parameters.SortBy is not null && parameters.SortBy != SortBy.None)
             {
+                var keySelector = Expressions.GetKeySelector<T>(Enum.GetName(parameters.SortBy.Value) ?? "");
+                
                 _query = parameters.SortDescending
                     ? _query.OrderByDescending(keySelector)
                     : _query.OrderBy(keySelector);
             }
-        
+
             _query = _query
                 .Skip((parameters.PageNumber - 1) * parameters.ItemsOnPage)
                 .Take(parameters.ItemsOnPage);

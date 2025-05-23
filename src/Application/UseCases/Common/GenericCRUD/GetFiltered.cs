@@ -26,8 +26,6 @@ public class GetFiltered<T> where T : BaseEntity, ICacheable
 
             var entities = await queryableWrapper.ToListAsync(query, cancellationToken) ?? [];
             
-            if (entities.Count == 0) return null;
-            
             var result = PaginatedListModel<T>.ApplyPagination(
                 entities, 
                 request.Parameters.PageNumber, 
