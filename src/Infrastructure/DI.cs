@@ -6,6 +6,7 @@ using Infrastructure.Data.Repositories.Implementations;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Filter.Implementations;
 using Infrastructure.Filter.Interfaces;
+using Infrastructure.Options.Authentication;
 using Infrastructure.QueryableWrapper.Implementation;
 using Infrastructure.QueryableWrapper.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -13,11 +14,15 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using NLog;
+using NLog.Fluent;
 
 namespace Infrastructure;
 
 public static class DI
 {
+    private static readonly Logger Logger = LogManager.GetCurrentClassLogger();
+    
     /// <summary>
     /// Adds application services
     /// </summary>
@@ -58,14 +63,23 @@ public static class DI
     /// Configure jwt authentication
     /// </summary>
     /// <param name="services">Collection of service descriptors</param>
-    /// <param name="configurationManager">Mutable configuration object</param>
+    /// <param name="configuration">Mutable configuration object</param>
     /// <returns>Collection of service descriptors</returns>
-    /// <exception cref="InvalidOperationException">Throws if configuration path with bearer key not found.</exception>
-    private static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration configurationManager)
+    /// <exception cref="InvalidOperationException">Throws if the configuration path with the bearer key not found.</exception>
+    private static IServiceCollection AddJwtAuth(this IServiceCollection services, IConfiguration configuration)
     {
-        var jwtBearerSecret = configurationManager["Secrets:JwtBearerKey"] 
-                              ?? throw new InvalidOperationException("Configuration path with bearer key not found.");;
-        var key = Encoding.ASCII.GetBytes(jwtBearerSecret);
+        services.AddOptions<AuthOptions>()
+            .BindConfiguration("Jwt")
+            .ValidateDataAnnotations()
+            .ValidateOnStart()
+            .PostConfigure(options =>
+            {
+                var jwtSecret = configuration["Jwt__Secret"];
+                if (string.IsNullOrEmpty(jwtSecret)) throw new InvalidOperationException("JWT secret value is not set in the configuration.");
+                 
+                options.Secret = jwtSecret;
+            });
+        
         services.AddAuthentication(authOptions =>
             {
                 authOptions.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -73,15 +87,43 @@ public static class DI
             })
             .AddJwtBearer(jwtBearerOptions =>
             {
+                
+                var jwtSecret = configuration["Jwt__Secret"];
+                if (string.IsNullOrEmpty(jwtSecret)) throw new InvalidOperationException("JWT secret value is not set in the configuration.");
+                
                 jwtBearerOptions.RequireHttpsMetadata = false;
                 jwtBearerOptions.SaveToken = true;
                 jwtBearerOptions.TokenValidationParameters = new TokenValidationParameters
                 {
-                    ValidateIssuerSigningKey = true,
-                    IssuerSigningKey = new SymmetricSecurityKey(key),
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
+                    IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+                    ValidIssuer = configuration["Jwt:Issuer"],
+                    ValidAudience = configuration["Jwt:Audience"],
                     ClockSkew = TimeSpan.Zero
+                };
+                jwtBearerOptions.Events = new JwtBearerEvents
+                {
+                    OnTokenValidated = context =>
+                    {
+                        var user = context.Principal;
+                        Logger.Info("Token validated for user: {UserName}", user?.Identity?.Name);
+                         
+                        if (user?.Claims is null) return Task.CompletedTask;
+                         
+                        foreach (var claim in user.Claims)
+                        {
+                            Logger.Info("Principal claim type: {ClaimType}, claim value: {ClaimValue}", claim.Type, claim.Value);
+                        }
+
+                        return Task.CompletedTask;
+                    },
+                    OnAuthenticationFailed = context =>
+                    {
+                        var user = context.Principal;
+                         
+                        Logger.Error(context.Exception, "Authentication failed ({User})", user?.Identity is null ? "Unknown" : user.Identity.Name);
+
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

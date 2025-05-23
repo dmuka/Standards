@@ -1,6 +1,7 @@
 ﻿using Application;
 using Infrastructure;
 using Infrastructure.Exceptions;
+using Infrastructure.Vault;
 using Microsoft.Extensions.FileProviders;
 using NLog;
 using NLog.Web;
@@ -34,6 +35,51 @@ public class Program
             builder.Host.UseNLog();
 
             builder.UseTelemetry();
+            
+            if (builder.Environment.IsDevelopment())
+            {
+                builder.Configuration.Add<SecretsConfigurationSource>(source =>
+                {
+                    var identityUrl = builder.Configuration["Vault:IdentityUrl"];
+                    if (identityUrl is null) throw new InvalidOperationException("Identity URL is not set.");
+                    source.IdentityUrl = identityUrl;
+                    var apiUrl = builder.Configuration["Vault:ApiUrl"];
+                    if (apiUrl is null) throw new InvalidOperationException("API URL is not set.");
+                    source.ApiUrl = apiUrl;
+                    
+                    var vaultAccessToken = builder.Configuration["Vault:AccessToken"];
+                    if (vaultAccessToken is null) throw new InvalidOperationException("Vault access token is not set.");
+                    source.AccessToken = vaultAccessToken;
+                    var vaultOrganizationId = builder.Configuration["Vault:OrganizationId"];
+                    if (vaultOrganizationId is null) throw new InvalidOperationException("Vault organization id is not set.");
+                    source.OrganizationId = vaultOrganizationId;
+                });
+            }
+            else
+            {
+                builder.Configuration.Add<SecretsConfigurationSource>(source =>
+                {
+                    var identityUrl = builder.Configuration["Vault:IdentityUrl"] 
+                                      ?? (Environment.GetEnvironmentVariable("Vault__IdentityUrl")
+                                          ?? throw new InvalidOperationException("Identity URL is not set."));
+                    source.IdentityUrl = identityUrl;
+                    
+                    var apiUrl = builder.Configuration["Vault:ApiUrl"]
+                                 ?? (Environment.GetEnvironmentVariable("Vault__ApiUrl")
+                                     ?? throw new InvalidOperationException("API URL is not set."));
+                    source.ApiUrl = apiUrl;
+                    
+                    var vaultAccessToken = builder.Configuration["Vault:AccessToken"]
+                                           ?? (Environment.GetEnvironmentVariable("Vault__AccessToken")
+                                               ?? throw new InvalidOperationException("Vault access token is not set."));
+                    source.AccessToken = vaultAccessToken;
+                    
+                    var vaultOrganizationId = builder.Configuration["Vault:OrganizationId"]
+                                              ?? (Environment.GetEnvironmentVariable("Vault__OrganizationId")
+                                                  ?? throw new InvalidOperationException("Vault organization id is not set."));
+                    source.OrganizationId = vaultOrganizationId;
+                });
+            }
 
             var app = builder.Build();
             
