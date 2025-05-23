@@ -1,13 +1,16 @@
 ﻿using Application.Abstractions.Cache;
 using Application.UseCases.Characteristics;
 using Domain.Models.DTOs;
+using Domain.Models.Standards;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Tests.Common;
 using Tests.Common.Constants;
+using Unit = Domain.Models.Unit;
 
 namespace Tests.Application.CQRS.Standards.Characteristics;
 
@@ -22,6 +25,7 @@ public class CreateTests : BaseTestFixture
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
+    private Mock<ILogger<Create>> _loggerMock;
 
     private IRequestHandler<Create.Query, int> _handler;
     private IValidator<Create.Query> _validator;
@@ -36,10 +40,14 @@ public class CreateTests : BaseTestFixture
         _repositoryMock = new Mock<IRepository>();
         _repositoryMock.Setup(_ => _.AddAsync(_characteristic, _cancellationToken));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(ValidId, _cancellationToken)).Returns(Task.FromResult(Standards[0]));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Unit>(ValidId, _cancellationToken)).Returns(Task.FromResult(Units[0]));
 
         _cacheService = new Mock<ICacheService>();
 
-        _handler = new Create.QueryHandler(_repositoryMock.Object, _cacheService.Object);
+        _loggerMock = new Mock<ILogger<Create>>();
+
+        _handler = new Create.QueryHandler(_repositoryMock.Object, _cacheService.Object, _loggerMock.Object);;
         _validator = new Create.QueryValidator(_repositoryMock.Object);
     }
 
@@ -159,7 +167,7 @@ public class CreateTests : BaseTestFixture
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.GradeId);
+        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.GradeId.Value);
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]

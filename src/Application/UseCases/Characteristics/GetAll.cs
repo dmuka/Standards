@@ -36,14 +36,14 @@ public class GetAll
             if (characteristics is null) return [];
                 
             var dtos = characteristics
-                .Select(c => new CharacteristicDto()
+                .Select(c => new CharacteristicDto
                 {
                     Id = c.Id,
                     Name = c.Name,
                     ShortName = c.ShortName,
                     Comments = c.Comments,
                     UnitId = c.Unit.Id,
-                    GradeId = c.Grade.Id,
+                    GradeId = c.Grade?.Id,
                     StandardId = c.Standard.Id,
                     RangeStart = c.RangeStart,
                     RangeEnd = c.RangeEnd,

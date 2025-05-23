@@ -85,9 +85,11 @@ namespace Application.UseCases.Characteristics
                             .GreaterThan(0)
                             .SetValidator(new IdValidator<Unit>(repository));
 
-                        dto.RuleFor(characteristic => characteristic.GradeId)
-                            .GreaterThan(0)
-                            .SetValidator(new IdValidator<Grade>(repository));
+                        dto.When(characteristic => characteristic.GradeId.HasValue, () => {
+                            dto.RuleFor(characteristic => characteristic.GradeId!.Value)
+                                .GreaterThan(0)
+                                .SetValidator(new IdValidator<Grade>(repository));
+                        });
 
                         dto.RuleFor(characteristic => characteristic.GradeValue)
                             .NotEmpty();

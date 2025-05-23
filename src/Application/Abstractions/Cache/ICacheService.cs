@@ -7,7 +7,7 @@ public interface ICacheService
 {
     Task<IList<T>> GetOrCreateAsync<T>(
         string cacheKey,
-        Expression<Func<T, object>>[] includes,
+        Expression<Func<T, object?>>[] includes,
         CancellationToken cancellationToken,
         TimeSpan? absoluteExpiration = null,
         TimeSpan? slidingExpiration = null) where T : class;

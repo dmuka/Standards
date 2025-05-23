@@ -7,6 +7,7 @@ using FluentValidation;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Unit = Domain.Models.Unit;
 
 namespace Application.UseCases.Characteristics;
@@ -19,16 +20,32 @@ public class Create
         public CharacteristicDto CharacteristicDto { get; } = characteristicDto;
     }
 
-    public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>
+    public class QueryHandler(IRepository repository, ICacheService cacheService, ILogger<Create> logger) : IRequestHandler<Query, int>
     {
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
             var unit = await repository.GetByIdAsync<Unit>(request.CharacteristicDto.UnitId, cancellationToken);
+            if (unit is null)
+            {
+                logger.LogWarning("Invalid unit id {unitId} in the characteristic item", request.CharacteristicDto.UnitId);
+                
+                return 0;
+            }
             
-            var grade = await repository.GetByIdAsync<Grade>(request.CharacteristicDto.GradeId, cancellationToken);
-            
-            var standard = await repository.GetByIdAsync<Standard>(request.CharacteristicDto.StandardId, cancellationToken);
+            Grade? grade = null;
+            if (request.CharacteristicDto.GradeId is not null)
+            {
+                grade = await repository.GetByIdAsync<Grade>(request.CharacteristicDto.GradeId, cancellationToken);
+            }
 
+            var standard = await repository.GetByIdAsync<Standard>(request.CharacteristicDto.StandardId, cancellationToken);
+            if (standard is null)
+            {
+                logger.LogWarning("Invalid standard id {standardId} in the characteristic item", request.CharacteristicDto.StandardId);
+                
+                return 0;
+            }
+            
             var characteristic = new Characteristic
             {
                 Name = request.CharacteristicDto.Name,
@@ -82,11 +99,13 @@ public class Create
                     dto.RuleFor(characteristic => characteristic.UnitId)
                         .GreaterThan(0)
                         .SetValidator(new IdValidator<Unit>(repository));
-
-                    dto.RuleFor(characteristic => characteristic.GradeId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Grade>(repository));
-
+                    
+                    dto.When(characteristic => characteristic.GradeId.HasValue, () => {
+                        dto.RuleFor(characteristic => characteristic.GradeId!.Value)
+                            .GreaterThan(0)
+                            .SetValidator(new IdValidator<Grade>(repository));
+                    });
+                    
                     // dto.RuleFor(characteristic => characteristic.GradeValue)
                     //     .NotEmpty();
                     //

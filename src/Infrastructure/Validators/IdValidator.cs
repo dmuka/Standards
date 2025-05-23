@@ -7,7 +7,7 @@ public class IdValidator<T> : AbstractValidator<int> where T : class
 {
     public IdValidator(IRepository repository) 
     {
-        RuleFor<int>(id => id)
+        RuleFor(id => id)
             .MustAsync(async (id, cancellationToken) =>
             {
                 var entity = await repository.GetByIdAsync<T>(id, cancellationToken);
