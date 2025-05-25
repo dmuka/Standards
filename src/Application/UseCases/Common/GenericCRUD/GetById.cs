@@ -30,15 +30,11 @@ public class GetById
             if (entity is not null) return entity;
             
             entity = await repository.GetByIdAsync<T>(request.Id, cancellationToken);
-            
-            if (entity is not null)
-            {
-                cacheService.Create(T.GetCacheKey(), entity);
+
+            if (entity is null) return null;
+            cacheService.Create(T.GetCacheKey(), entity);
                 
-                return entity;
-            }
-            
-            return null;
+            return entity;
         }
     }
 

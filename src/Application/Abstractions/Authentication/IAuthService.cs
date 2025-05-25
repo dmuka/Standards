@@ -8,7 +8,7 @@ namespace Application.Abstractions.Authentication
     {
         Task<User?> Authenticate(string username, string password);
 
-        ClaimsPrincipal ValidateToken(string token);
+        ClaimsPrincipal? ValidateToken(string token);
 
         Task<string> GenerateToken(int userId, TokenType tokenType);
 

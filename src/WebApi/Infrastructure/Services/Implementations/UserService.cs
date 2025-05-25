@@ -24,12 +24,12 @@ public class UserService(IAuthService authService, IRepository repository) : IUs
     public async Task<User> Create(UserDto userDto)
     {
         if (string.IsNullOrWhiteSpace(userDto.Password))
-            throw new StandardsException(StatusCodeByError.InternalServerError, "Password is required", null, null);
+            throw new StandardsException(StatusCodeByError.BadRequest, "Password is required", $"Password can't be null or empty ({userDto.Id})", null!);
 
-        var userInDB = await repository.GetAsync<User>(x => x.UserName == userDto.UserName);
+        var userInDb = await repository.GetAsync<User>(x => x.UserName == userDto.UserName);
 
-        if (userInDB is not null)
-            throw new StandardsException(StatusCodeByError.InternalServerError, "Username \"" + userInDB.UserName + "\" is already taken", null, null);
+        if (userInDb is not null)
+            throw new StandardsException(StatusCodeByError.Conflict, "Username \"" + userInDb.UserName + "\" is already taken", "Username \"" + userInDb.UserName + "\" is already taken", null!);
 
         var passwordSecrets = authService.GetPasswordHashAndSalt(userDto.Password);
 
@@ -50,40 +50,41 @@ public class UserService(IAuthService authService, IRepository repository) : IUs
 
     public async Task Update(UserDto userDto)
     {
-        var userInDB = await repository.GetByIdAsync<User>(userDto.Id) ?? throw new StandardsException(StatusCodeByError.NotFound, "User not found", null, null);
+        var userInDb = await repository.GetByIdAsync<User>(userDto.Id) 
+                       ?? throw new StandardsException(StatusCodeByError.NotFound, $"User not found (id: {userDto.Id})", "This user not found in the db.", null!);
 
-        if (userDto.UserName != userInDB.UserName)
+        if (userDto.UserName != userInDb.UserName)
         {
             var isUserNameExist = await repository.GetAsync<User>(user => user.UserName == userDto.UserName) is not null;
 
             if (isUserNameExist)
-                throw new StandardsException(StatusCodeByError.Conflict, "Username " + userDto.UserName + " is already taken.", null, null);
+                throw new StandardsException(StatusCodeByError.Conflict, "Username " + userDto.UserName + " is already taken.", "This user name already used.", null!);
         }
 
         var passwordSecrets = authService.GetPasswordHashAndSalt(userDto.Password);
 
-        userInDB.UserName = userDto.UserName;
-        userInDB.PasswordHash = passwordSecrets.hash;
-        userInDB.PasswordSalt = passwordSecrets.salt;
-        userInDB.Email = userDto.Email;
+        userInDb.UserName = userDto.UserName;
+        userInDb.PasswordHash = passwordSecrets.hash;
+        userInDb.PasswordSalt = passwordSecrets.salt;
+        userInDb.Email = userDto.Email;
 
-        repository.Update(userInDB);
+        repository.Update(userInDb);
 
         await repository.SaveChangesAsync();
     }
 
     public async Task Delete(int id)
     {
-        var userInDB = await repository.GetByIdAsync<User>(id);
+        var userInDb = await repository.GetByIdAsync<User>(id);
 
-        if (userInDB is not null)
+        if (userInDb is not null)
         {
-            await repository.DeleteAsync(userInDB);
+            await repository.DeleteAsync(userInDb);
             await repository.SaveChangesAsync();
         }
     }
 
-    public async Task<User> GetById(int id)
+    public async Task<User?> GetById(int id)
     {
         var user = await repository.GetByIdAsync<User>(id);
 

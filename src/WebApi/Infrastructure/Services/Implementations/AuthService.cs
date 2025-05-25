@@ -9,7 +9,10 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace WebApi.Infrastructure.Services.Implementations;
 
-public class AuthService(IConfiguration configuration, IRepository repository) : IAuthService
+public class AuthService(
+    IConfiguration configuration, 
+    IRepository repository,
+    ILogger<AuthService> logger) : IAuthService
 {
     private const int AccessTokenExpirationInMinutes = 15;
     private const int RefreshTokenExpirationInMonths = 1;
@@ -48,7 +51,7 @@ public class AuthService(IConfiguration configuration, IRepository repository) :
         return (salt, hash);
     }
 
-    public ClaimsPrincipal ValidateToken(string token)
+    public ClaimsPrincipal? ValidateToken(string token)
     {
         try
         {
@@ -70,7 +73,9 @@ public class AuthService(IConfiguration configuration, IRepository repository) :
         }
         catch (Exception ex)
         {
-            return null;
+            logger.LogError("Some error occured when validate token: {ErrorMessage}", ex.Message);
+            
+            return null!;
         }
     }
 

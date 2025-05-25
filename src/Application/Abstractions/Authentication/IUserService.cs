@@ -9,6 +9,6 @@ namespace Application.Abstractions.Authentication
 
         Task<IEnumerable<User>> GetAll();
 
-        Task<User> GetById(int id);
+        Task<User?> GetById(int id);
     }
 }

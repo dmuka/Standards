@@ -1,4 +1,5 @@
-﻿using Application.Abstractions.Authentication;
+﻿using System.Security.Claims;
+using Application.Abstractions.Authentication;
 using Application.Abstractions.Authentication.Enums;
 using Domain.Models.DTOs;
 using Microsoft.AspNetCore.Authorization;
@@ -27,19 +28,16 @@ namespace WebApi.Controllers
         {
             var principal = authService.ValidateToken(refreshToken);
 
-            if (principal != null)
-            {
-                var userId = int.Parse(principal.Claims.FirstOrDefault(x => x.Type.Equals("sid", StringComparison.OrdinalIgnoreCase))?.Value);
+            if (principal is null) return Unauthorized("Invalid refresh token");
+            
+            var userIdClaim = principal.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.Sid);
 
-                var accessToken = authService.GenerateToken(userId, TokenType.Access);
-                var newRefreshToken = authService.GenerateToken(userId, TokenType.Refresh);
-
-                return Ok(new { AccessToken = accessToken, RefreshToken = newRefreshToken });
-            }
-            else
-            {
-                return Unauthorized("Invalid refresh token");
-            }
+            if (userIdClaim is null || int.TryParse(userIdClaim.Value, out var userId)) return Unauthorized("Invalid refresh token");
+            
+            var accessToken = authService.GenerateToken(userId, TokenType.Access);
+            var newRefreshToken = authService.GenerateToken(userId, TokenType.Refresh);
+            
+            return Ok(new { AccessToken = accessToken, RefreshToken = newRefreshToken });
         }
 
         [AllowAnonymous]

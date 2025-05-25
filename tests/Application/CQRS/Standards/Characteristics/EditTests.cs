@@ -7,9 +7,11 @@ using FluentValidation;
 using FluentValidation.TestHelper;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Moq;
 using Tests.Common;
 using Tests.Common.Constants;
+using Unit = Domain.Models.Unit;
 
 namespace Tests.Application.CQRS.Standards.Characteristics;
 
@@ -24,6 +26,7 @@ public class EditTests : BaseTestFixture
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
     private Mock<ICacheService> _cacheService;
+    private Mock<ILogger<Edit>> _loggerMock;
 
     private IRequestHandler<Edit.Query, int> _handler;
     private IValidator<Edit.Query> _validator;
@@ -36,13 +39,17 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<CharacteristicDto>(ValidId, _cancellationToken)).Returns(Task.FromResult(_characteristic));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<CharacteristicDto>(ValidId, _cancellationToken)).ReturnsAsync(_characteristic);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Unit>(ValidId, _cancellationToken)).ReturnsAsync(Units[0]);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(ValidId, _cancellationToken)).ReturnsAsync(Standards[0]);
         _repositoryMock.Setup(_ => _.Update(_characteristic));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
         _cacheService = new Mock<ICacheService>();
+        
+        _loggerMock = new Mock<ILogger<Edit>>();
             
-        _handler = new Edit.QueryHandler(_repositoryMock.Object, _cacheService.Object);
+        _handler = new Edit.QueryHandler(_repositoryMock.Object, _cacheService.Object, _loggerMock.Object);
         _validator = new Edit.QueryValidator(_repositoryMock.Object);
     }
 
@@ -197,7 +204,7 @@ public class EditTests : BaseTestFixture
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.GradeId.Value);
+        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.GradeId!.Value);
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]

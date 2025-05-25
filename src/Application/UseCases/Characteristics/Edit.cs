@@ -7,6 +7,7 @@ using FluentValidation;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Validators;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Unit = Domain.Models.Unit;
 
 namespace Application.UseCases.Characteristics
@@ -19,15 +20,34 @@ namespace Application.UseCases.Characteristics
             public CharacteristicDto CharacteristicDto { get; } = characteristicDto;
         }
 
-        public class QueryHandler(IRepository repository, ICacheService cacheService) : IRequestHandler<Query, int>
+        public class QueryHandler(
+            IRepository repository, 
+            ICacheService cacheService,
+            ILogger<Edit> logger) : IRequestHandler<Query, int>
         {
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
                 var unit = await repository.GetByIdAsync<Unit>(request.CharacteristicDto.UnitId, cancellationToken);
+                if (unit is null)
+                {
+                    logger.LogWarning("Invalid unit id {unitId} in the characteristic item", request.CharacteristicDto.UnitId);
+                
+                    return 0;
+                }
             
-                var grade = await repository.GetByIdAsync<Grade>(request.CharacteristicDto.GradeId, cancellationToken);
-            
+                Grade? grade = null;
+                if (request.CharacteristicDto.GradeId is not null)
+                {
+                    grade = await repository.GetByIdAsync<Grade>(request.CharacteristicDto.GradeId, cancellationToken);
+                }
+
                 var standard = await repository.GetByIdAsync<Standard>(request.CharacteristicDto.StandardId, cancellationToken);
+                if (standard is null)
+                {
+                    logger.LogWarning("Invalid standard id {standardId} in the characteristic item", request.CharacteristicDto.StandardId);
+                
+                    return 0;
+                }
 
                 var characteristic = new Characteristic
                 {
@@ -35,12 +55,12 @@ namespace Application.UseCases.Characteristics
                     ShortName = request.CharacteristicDto.ShortName,
                     RangeStart = request.CharacteristicDto.RangeStart,
                     RangeEnd = request.CharacteristicDto.RangeEnd,
-                    Unit = unit!,
+                    Unit = unit,
                     Grade = grade,
                     GradeValue = request.CharacteristicDto.GradeValue,
                     GradeValueStart = request.CharacteristicDto.GradeValueStart,
                     GradeValueEnd = request.CharacteristicDto.GradeValueEnd,
-                    Standard = standard!
+                    Standard = standard
                 };
                 
                 repository.Update(characteristic);

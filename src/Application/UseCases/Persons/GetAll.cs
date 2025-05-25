@@ -3,8 +3,8 @@ using Application.Abstractions.Configuration;
 using Domain.Constants;
 using Domain.Models.DTOs;
 using Domain.Models.Persons;
-using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace Application.UseCases.Persons;
 
@@ -14,8 +14,7 @@ public class GetAll
     {
     }
 
-    public class QueryHandler(
-        IRepository repository, 
+    public class QueryHandler( 
         ICacheService cache, 
         IConfigService configService) : IRequestHandler<Query, IList<PersonDto>>
     {
