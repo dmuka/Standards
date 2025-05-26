@@ -10,6 +10,7 @@ using Infrastructure.Options.Authentication;
 using Infrastructure.QueryableWrapper.Implementation;
 using Infrastructure.QueryableWrapper.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -35,7 +36,8 @@ public static class DI
             .AddTransient<IRepository, Repository<ApplicationDbContext>>()
             .AddDbConnection(configuration)
             .AddJwtAuth(configuration)
-            .RegisterQueryBuilder();
+            .RegisterQueryBuilder()
+            .AddHttpClient();
     
         return services;
     }

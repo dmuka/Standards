@@ -11,6 +11,7 @@ using NLog.Web;
 using WebApi.Infrastructure.Exceptions;
 using WebApi.Infrastructure.Extensions;
 using WebApi.Infrastructure.Logging;
+using WebApi.Infrastructure.Middlewares;
 
 namespace WebApi;
 
@@ -101,7 +102,7 @@ public class Program
                     source.OrganizationId = vaultOrganizationId;
                 });
             }
-
+            
             var app = builder.Build();
             
             if (app.Environment.IsDevelopment())
@@ -129,6 +130,7 @@ public class Program
 
             app.UseRouting();
 
+            app.UseMiddleware<TokenRenewalMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
 

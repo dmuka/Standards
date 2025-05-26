@@ -2,11 +2,13 @@
 using Domain.Models.Persons;
 using Infrastructure.Filter.Implementations;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Infrastructure.Results;
 
 namespace WebApi.Controllers;
 
+[Authorize]
 [Route("api/persons/[controller]")]
 [ApiController]
 public class CategoriesController(ISender sender) : ControllerBase

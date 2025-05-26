@@ -3,6 +3,7 @@ using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
 using Infrastructure.Converters;
 using Infrastructure.Filter.Models;
+using WebApi.Infrastructure;
 using WebApi.Infrastructure.Services.Implementations;
 
 namespace WebApi;
@@ -19,6 +20,7 @@ public static class DI
         services
             .AddScoped<IUserService, UserService>()
             .AddScoped<IAuthService, AuthService>()
+            .AddScoped<ITokenProvider, TokenProvider>()
             .AddSingleton<IConfigService, ConfigService>()
             .AddCache()
             .AddControllersServices();

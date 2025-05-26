@@ -4,21 +4,11 @@ namespace Infrastructure.Options.Authentication;
 
 public record AuthOptions
 {
-    public required string Secret { get; set; }
+    public string Secret { get; set; } = string.Empty;
     [Required, MinLength(2)]
-    public required string Issuer { get; set; } 
+    public string Issuer { get; set; } = string.Empty;
     [Required, MinLength(4)]
-    public required string Audience { get; set; }
-    [Required, Range(0, 15)]
-    public required int AccessTokenExpirationInMinutes { get; set; }
-    [Required, Range(0, 30)]
-    public required int AccessTokenCookieExpirationInMinutes { get; set; }
+    public string Audience { get; set; } = string.Empty;
     [Required, Range(0, 24)]
     public required int SessionIdCookieExpirationInHours { get; set; }
-    [Required, Range(0, 30)]
-    public required int RefreshTokenExpirationInDays { get; set; }
-    [Required, Range(0, 30)]
-    public required int ResetPasswordTokenExpirationInMinutes { get; set; }
-    [Required, Range(0, 24)]
-    public required int EmailConfirmationTokenExpirationInHours { get; set; }
 }
