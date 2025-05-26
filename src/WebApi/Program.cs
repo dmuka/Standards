@@ -2,7 +2,10 @@
 using Infrastructure;
 using Infrastructure.Exceptions;
 using Infrastructure.Vault;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.Net.Http.Headers;
+using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
 using WebApi.Infrastructure.Exceptions;
@@ -23,7 +26,25 @@ public class Program
         {
             var builder = WebApplication.CreateBuilder(args);
                 
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(swaggerOptions =>
+            {
+                swaggerOptions.SwaggerDoc("v1", new OpenApiInfo { Title = "Standards", Version = "v1" });
+                
+                var security = new OpenApiSecurityScheme
+                {
+                    Name = HeaderNames.Authorization, 
+                    Type = SecuritySchemeType.ApiKey, 
+                    In = ParameterLocation.Header,
+                    Description = "JWT Authorization header", 
+                    Reference = new OpenApiReference
+                    {
+                        Id = JwtBearerDefaults.AuthenticationScheme, 
+                        Type = ReferenceType.SecurityScheme 
+                    }
+                };
+                swaggerOptions.AddSecurityDefinition(security.Reference.Id, security); 
+                swaggerOptions.AddSecurityRequirement(new OpenApiSecurityRequirement {{security, []}});
+            });
 
             builder.Services
                 .AddApplication()
