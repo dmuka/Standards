@@ -3,20 +3,24 @@ namespace WebApi.Infrastructure.Middlewares;
 public class TokenRenewalMiddleware(RequestDelegate next)
 {
 
-    public async Task InvokeAsync(HttpContext context, ITokenProvider tokenProvider)
+    public async Task InvokeAsync(
+        HttpContext context, 
+        ITokenProvider tokenProvider,
+        IConfiguration configuration)
     {
         var sessionId = context.Request.Cookies[CookiesNames.SessionId];
 
         if (sessionId is null)
         {
-            await next(context);
+            var returnUrl = Uri.EscapeDataString($"{context.Request.Scheme}://{context.Request.Host}{context.Request.Path}{context.Request.QueryString}");
+            context.Response.Redirect($"{configuration["UsersService:BaseUrl"]}/pages/users/signin?returnUrl={returnUrl}");
             
             return;
         }
         
         var accessToken = context.Request.Headers.Authorization.ToString().Replace("Bearer ", "");
 
-        if (!string.IsNullOrEmpty(accessToken) && tokenProvider.IsAccessTokenExpired(accessToken))
+        if (string.IsNullOrEmpty(accessToken) || tokenProvider.IsAccessTokenExpired(accessToken))
         {
             try
             {

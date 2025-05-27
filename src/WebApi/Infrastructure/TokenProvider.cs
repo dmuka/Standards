@@ -40,7 +40,7 @@ public class TokenProvider(
 
         using var client = httpClientFactory.CreateClient();
         var response = await client.PostAsJsonAsync(
-            $"{configuration["UsersService:BaseUrl"]}/api/users/signinbytoken",
+            $"{configuration["UsersService:BaseUrl"]}/api/users/signinbysessionid",
             request);
 
         if (!response.IsSuccessStatusCode) { throw new HttpRequestException($"Failed to refresh token: {response.ReasonPhrase}"); }
