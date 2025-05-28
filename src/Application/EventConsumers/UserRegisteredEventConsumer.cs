@@ -1,5 +1,5 @@
-using Application.Abstractions.Kafka;
 using Domain.Events.Integration;
+using Infrastructure.Kafka;
 using Microsoft.Extensions.Logging;
 
 namespace Application.EventConsumers;

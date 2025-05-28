@@ -1,4 +1,4 @@
-namespace Application.Abstractions.Kafka;
+namespace Infrastructure.Kafka;
 
 public interface IEventConsumer
 {
