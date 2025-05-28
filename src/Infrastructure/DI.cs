@@ -6,6 +6,7 @@ using Infrastructure.Data.Repositories.Implementations;
 using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Filter.Implementations;
 using Infrastructure.Filter.Interfaces;
+using Infrastructure.Kafka;
 using Infrastructure.Options.Authentication;
 using Infrastructure.QueryableWrapper.Implementation;
 using Infrastructure.QueryableWrapper.Interface;
@@ -147,6 +148,18 @@ public static class DI
             .AddScoped<IQueryableWrapper<Housing>, QueryableWrapper<Housing>>()
             .AddScoped<IQueryableWrapper<Room>, QueryableWrapper<Room>>()
             .AddScoped<IQueryableWrapper<Department>, QueryableWrapper<Department>>();
+
+        return services;
+    }
+
+    /// <summary>
+    /// Registers query builder and wrapper types
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
+    private static IServiceCollection AddKafkaConsumerHostedService(this IServiceCollection services)
+    {
+        services.AddHostedService<EventConsumer>();
 
         return services;
     }
