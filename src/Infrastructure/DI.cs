@@ -8,16 +8,15 @@ using Infrastructure.Filter.Implementations;
 using Infrastructure.Filter.Interfaces;
 using Infrastructure.Kafka;
 using Infrastructure.Options.Authentication;
+using Infrastructure.Options.Kafka;
 using Infrastructure.QueryableWrapper.Implementation;
 using Infrastructure.QueryableWrapper.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
-using NLog.Fluent;
 
 namespace Infrastructure;
 
@@ -38,7 +37,8 @@ public static class DI
             .AddDbConnection(configuration)
             .AddJwtAuth(configuration)
             .RegisterQueryBuilder()
-            .AddHttpClient();
+            .AddHttpClient()
+            .RegisterEventConsumer();
     
         return services;
     }
@@ -153,13 +153,18 @@ public static class DI
     }
 
     /// <summary>
-    /// Registers query builder and wrapper types
+    /// Registers event consumer
     /// </summary>
     /// <param name="services">Collection of service descriptors</param>
     /// <returns>Collection of service descriptors</returns>
-    private static IServiceCollection AddKafkaConsumerHostedService(this IServiceCollection services)
+    private static IServiceCollection RegisterEventConsumer(this IServiceCollection services)
     {
-        services.AddHostedService<EventConsumer>();
+        services.AddOptions<ConsumeOptions>()
+            .BindConfiguration("Kafka")
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        
+        services.AddSingleton<IEventConsumer, EventConsumer>();
 
         return services;
     }

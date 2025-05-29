@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Behaviors;
+using Application.EventConsumers;
 using Application.UseCases.Common.GenericCRUD;
 using Domain.Models;
 using Domain.Models.Departments;
@@ -54,9 +55,23 @@ public static class DI
 
         services.AddValidatorsFromAssembly(typeof(DI).Assembly, includeInternalTypes: true);
 
+        services.AddKafkaConsumerHostedService();
+        
         return services;
     }
     
+
+    /// <summary>
+    /// Registers query builder and wrapper types
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
+    private static IServiceCollection AddKafkaConsumerHostedService(this IServiceCollection services)
+    {
+        services.AddHostedService<UserRegisteredEventConsumer>();
+
+        return services;
+    }
     // /// <summary>
     // /// Adds application services
     // /// </summary>
