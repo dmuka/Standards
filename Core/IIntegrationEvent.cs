@@ -1,3 +1,3 @@
-﻿namespace Domain.Events;
+﻿namespace Core;
 
 public interface IIntegrationEvent;

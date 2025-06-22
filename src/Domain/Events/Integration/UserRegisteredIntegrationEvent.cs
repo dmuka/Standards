@@ -1,4 +1,5 @@
-﻿using Domain.Models.MetrologyControl.Contacts;
+﻿using Core;
+using Domain.Models.MetrologyControl.Contacts;
 
 namespace Domain.Events.Integration;
 
