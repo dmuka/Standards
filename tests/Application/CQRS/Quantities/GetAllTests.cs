@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
+using Application.UseCases.DTOs;
 using Application.UseCases.Quantities;
 using Domain.Constants;
 using Domain.Models;
-using Domain.Models.DTOs;
 using Domain.Models.Persons;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;

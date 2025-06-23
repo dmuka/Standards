@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
+using Application.UseCases.DTOs;
 using Application.UseCases.VerificationsJournal;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Domain.Models.Standards;
 using FluentValidation;

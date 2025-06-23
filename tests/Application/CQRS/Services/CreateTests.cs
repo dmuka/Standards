@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
+using Application.UseCases.DTOs;
 using Application.UseCases.Services;
 using Domain.Models;
-using Domain.Models.DTOs;
 using Domain.Models.Services;
 using FluentValidation;
 using FluentValidation.TestHelper;

@@ -1,7 +1,7 @@
 ﻿using System.Security.Claims;
 using Application.Abstractions.Authentication;
 using Application.Abstractions.Authentication.Enums;
-using Domain.Models.DTOs;
+using Application.UseCases.DTOs;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 

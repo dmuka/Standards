@@ -1,6 +1,6 @@
+using Application.UseCases.DTOs;
 using Domain.Models;
 using Domain.Models.Departments;
-using Domain.Models.DTOs;
 using Domain.Models.Housings;
 using Domain.Models.MetrologyControl;
 using Domain.Models.MetrologyControl.Contacts;

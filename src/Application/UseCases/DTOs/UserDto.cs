@@ -1,4 +1,4 @@
-﻿namespace Domain.Models.DTOs
+﻿namespace Application.UseCases.DTOs
 {
     public class UserDto
     {

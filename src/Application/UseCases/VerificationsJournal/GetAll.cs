@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
+using Application.UseCases.DTOs;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using MediatR;
 
@@ -35,7 +35,7 @@ public class GetAll
             if (verificationJournalItems is null) return [];
                 
             var dtos = verificationJournalItems
-                .Select(VerificationJournalItem.ToDto).ToList();
+                .Select(VerificationJournalItemDto.ToDto).ToList();
 
             return dtos;
         }

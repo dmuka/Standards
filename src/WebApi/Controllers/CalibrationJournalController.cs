@@ -1,6 +1,6 @@
 ﻿using Application.UseCases.CalibrationsJournal;
 using Application.UseCases.Common.GenericCRUD;
-using Domain.Models.DTOs;
+using Application.UseCases.DTOs;
 using Domain.Models.MetrologyControl;
 using Infrastructure.Filter.Implementations;
 using MediatR;

@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.UseCases.Common.Attributes;
+using Application.UseCases.DTOs;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Domain.Models.Services;
 using Domain.Models.Standards;
@@ -44,7 +44,7 @@ public class Edit
                 return 0;
             }
             
-            var verificationJournalItem = VerificationJournalItem.ToEntity(request.VerificationJournalItemDto, place, standard);
+            var verificationJournalItem = VerificationJournalItemDto.ToEntity(request.VerificationJournalItemDto, place, standard);
                 
             repository.Update(verificationJournalItem);
 

@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.Cache;
+using Application.UseCases.DTOs;
 using Application.UseCases.Persons;
-using Domain.Models.DTOs;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using Infrastructure.Data.Repositories.Interfaces;

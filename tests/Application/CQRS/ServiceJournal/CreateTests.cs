@@ -1,6 +1,6 @@
 ﻿using Application.Abstractions.Cache;
+using Application.UseCases.DTOs;
 using Application.UseCases.ServicesJournal;
-using Domain.Models.DTOs;
 using Domain.Models.Persons;
 using Domain.Models.Services;
 using Domain.Models.Standards;

@@ -1,4 +1,6 @@
-namespace Domain.Models.DTOs;
+using Domain.Models;
+
+namespace Application.UseCases.DTOs;
 
 public class CharacteristicDto : Entity
 {

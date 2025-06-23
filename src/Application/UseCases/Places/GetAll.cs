@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
+using Application.UseCases.DTOs;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using MediatR;
 
@@ -31,7 +31,7 @@ public class GetAll
 
             if (places is null) return [];
                 
-            var dtos = places.Select(Place.ToDto).ToList();
+            var dtos = places.Select(PlaceDto.ToDto).ToList();
 
             return dtos;
         }

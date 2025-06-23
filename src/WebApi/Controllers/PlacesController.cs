@@ -1,6 +1,6 @@
 ﻿using Application.UseCases.Common.GenericCRUD;
+using Application.UseCases.DTOs;
 using Application.UseCases.Places;
-using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Infrastructure.Filter.Implementations;
 using MediatR;

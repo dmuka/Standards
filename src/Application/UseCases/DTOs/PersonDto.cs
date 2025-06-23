@@ -1,7 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Domain.Constants;
+using Domain.Models;
 
-namespace Domain.Models.DTOs;
+namespace Application.UseCases.DTOs;
 
 public class PersonDto : Entity
 {

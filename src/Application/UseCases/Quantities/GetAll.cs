@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
+using Application.UseCases.DTOs;
 using Domain.Constants;
 using Domain.Models;
-using Domain.Models.DTOs;
 using MediatR;
 
 namespace Application.UseCases.Quantities;

@@ -1,7 +1,7 @@
 ﻿using Application.UseCases.Common.GenericCRUD;
 using Application.UseCases.Departments;
+using Application.UseCases.DTOs;
 using Domain.Models.Departments;
-using Domain.Models.DTOs;
 using Infrastructure.Filter.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;

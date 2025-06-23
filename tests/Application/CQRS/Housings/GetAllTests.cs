@@ -1,9 +1,9 @@
 using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
+using Application.UseCases.DTOs;
 using Application.UseCases.Housings;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.Housings;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;

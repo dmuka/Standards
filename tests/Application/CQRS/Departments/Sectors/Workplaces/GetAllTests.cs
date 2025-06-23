@@ -1,10 +1,10 @@
 using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
+using Application.UseCases.DTOs;
 using Application.UseCases.Workplaces;
 using Domain.Constants;
 using Domain.Models.Departments;
-using Domain.Models.DTOs;
 using FluentAssertions;
 using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;

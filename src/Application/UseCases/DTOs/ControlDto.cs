@@ -1,4 +1,6 @@
-﻿namespace Domain.Models.DTOs;
+﻿using Domain;
+
+namespace Application.UseCases.DTOs;
 
 public abstract class ControlDto : BaseEntity
 {

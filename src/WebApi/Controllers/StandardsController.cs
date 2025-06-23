@@ -1,6 +1,6 @@
 ﻿using Application.UseCases.Common.GenericCRUD;
+using Application.UseCases.DTOs;
 using Application.UseCases.Standards;
-using Domain.Models.DTOs;
 using Domain.Models.Standards;
 using Infrastructure.Filter.Implementations;
 using MediatR;

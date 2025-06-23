@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions.Cache;
+using Application.UseCases.DTOs;
 using Application.UseCases.Standards;
 using Domain.Models;
 using Domain.Models.Departments;
-using Domain.Models.DTOs;
 using Domain.Models.Persons;
 using Domain.Models.Services;
 using Domain.Models.Standards;

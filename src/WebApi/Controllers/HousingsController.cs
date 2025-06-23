@@ -1,6 +1,6 @@
 ﻿using Application.UseCases.Common.GenericCRUD;
+using Application.UseCases.DTOs;
 using Application.UseCases.Housings;
-using Domain.Models.DTOs;
 using Domain.Models.Housings;
 using Infrastructure.Filter.Implementations;
 using MediatR;

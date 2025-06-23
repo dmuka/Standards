@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.UseCases.Common.Attributes;
+using Application.UseCases.DTOs;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Domain.Models.Standards;
 using FluentValidation;
@@ -43,7 +43,7 @@ public class Create
                 return 0;
             }
             
-            var verificationJournalItem = VerificationJournalItem.ToEntity(request.VerificationJournalItemDto, place, standard);
+            var verificationJournalItem = VerificationJournalItemDto.ToEntity(request.VerificationJournalItemDto, place, standard);
             
             await repository.AddAsync(verificationJournalItem, cancellationToken);
             

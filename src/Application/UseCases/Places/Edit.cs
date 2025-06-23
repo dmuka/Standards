@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.UseCases.Common.Attributes;
+using Application.UseCases.DTOs;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Domain.Models.MetrologyControl.Contacts;
 using FluentValidation;
@@ -27,7 +27,7 @@ public class Edit
                 .Where(contact => request.PlaceDto.ContactIds.Contains(contact.Id))
                 .ToList();
 
-            var place = Place.ToEntity(request.PlaceDto, contacts);
+            var place = PlaceDto.ToEntity(request.PlaceDto, contacts);
                 
             repository.Update(place);
 

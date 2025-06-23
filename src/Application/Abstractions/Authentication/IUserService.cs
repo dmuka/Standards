@@ -1,4 +1,4 @@
-﻿using Domain.Models.DTOs;
+﻿using Application.UseCases.DTOs;
 using Domain.Models.Users;
 
 namespace Application.Abstractions.Authentication

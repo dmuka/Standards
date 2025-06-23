@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
+using Application.UseCases.DTOs;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.Standards;
 using MediatR;
 
@@ -36,7 +36,7 @@ public class GetAll
 
             if (standards is null) return [];
                 
-            var dtos = standards.Select(Standard.ToDto).ToList();
+            var dtos = standards.Select(StandardDto.ToDto).ToList();
 
             return dtos;
         }

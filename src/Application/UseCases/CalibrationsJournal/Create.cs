@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.UseCases.Common.Attributes;
+using Application.UseCases.DTOs;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Domain.Models.Standards;
 using FluentValidation;
@@ -27,7 +27,7 @@ public class Create
 
             var place = await repository.GetByIdAsync<Place>(request.CalibrationJournalItemDto.PlaceId, cancellationToken);
             
-            var calibrationJournalItem = CalibrationJournalItem.ToEntity(request.CalibrationJournalItemDto, place!, standard!);
+            var calibrationJournalItem = CalibrationJournalItemDto.ToEntity(request.CalibrationJournalItemDto, place!, standard!);
             
             await repository.AddAsync(calibrationJournalItem, cancellationToken);
             

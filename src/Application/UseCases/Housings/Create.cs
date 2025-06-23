@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.UseCases.Common.Attributes;
+using Application.UseCases.DTOs;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.Housings;
 using FluentValidation;
 using Infrastructure.Data.Repositories.Interfaces;

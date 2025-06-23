@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions.Cache;
+using Application.UseCases.DTOs;
 using Application.UseCases.Services;
 using Domain.Constants;
 using Domain.Models.Departments;
-using Domain.Models.DTOs;
 using Domain.Models.Housings;
 using Domain.Models.Persons;
 using Domain.Models.Services;

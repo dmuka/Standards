@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.UseCases.Common.Attributes;
+using Application.UseCases.DTOs;
 using Domain.Constants;
-using Domain.Models.DTOs;
 using Domain.Models.MetrologyControl;
 using Domain.Models.Services;
 using Domain.Models.Standards;
@@ -28,7 +28,7 @@ public class Edit
 
             var place = await repository.GetByIdAsync<Place>(request.CalibrationJournalItemDto.PlaceId, cancellationToken);
             
-            var calibrationJournalItem = CalibrationJournalItem.ToEntity(request.CalibrationJournalItemDto, place!, standard!);
+            var calibrationJournalItem = CalibrationJournalItemDto.ToEntity(request.CalibrationJournalItemDto, place!, standard!);
                 
             repository.Update(calibrationJournalItem);
 
