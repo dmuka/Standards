@@ -1,9 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Core;
+﻿using Core;
 using Domain.Aggregates.Rooms;
 using Domain.Constants;
-using Domain.Models;
-using Domain.Models.Housings;
 using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Housings;

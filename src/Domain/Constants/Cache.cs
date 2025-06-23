@@ -7,6 +7,7 @@ public class Cache
     
     // Cache keys
     public const string Housings = "Housings";
+    public const string Floors = "Floors";
     public const string Rooms = "Rooms";
     public const string Departments = "Departments";
     public const string Sectors = "Sectors";

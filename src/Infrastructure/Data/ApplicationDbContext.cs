@@ -1,4 +1,5 @@
 ﻿using Domain;
+using Domain.Aggregates.Floors;
 using Domain.Models;
 using Domain.Models.Departments;
 using Domain.Models.Housings;
@@ -20,7 +21,8 @@ namespace Infrastructure.Data;
         public DbSet<Unit> Units { get; set; }
         public DbSet<Workplace> WorkPlaces { get; set; }
 
-        public DbSet<Housing> Housings { get; set; }        
+        public DbSet<Housing> Housings { get; set; }
+        public DbSet<Floor> Floors { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Sector> Sectors { get; set; }
 
