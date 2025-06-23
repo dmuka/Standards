@@ -1,6 +1,6 @@
 ﻿namespace Core;
 
-public abstract class TypedId(Guid value) : IEquatable<TypedId>
+public abstract class TypedId(Guid value) : ValueObject, IEquatable<TypedId>
 {
     public Guid Value { get; } = value;
 
