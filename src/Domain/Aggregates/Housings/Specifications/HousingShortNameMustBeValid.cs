@@ -11,8 +11,8 @@ public class HousingShortNameMustBeValid(string housingShortName) : ISpecificati
         
         return housingShortName.Length switch
         {
-            < HousingConstants.AddressMinLength => Result.Failure<string>(HousingErrors.TooShortHousingShortName),
-            > HousingConstants.AddressMaxLength => Result.Failure<string>(HousingErrors.TooLargeHousingShortName),
+            < HousingConstants.HousingShortNameMinLength => Result.Failure<string>(HousingErrors.TooShortHousingShortName),
+            > HousingConstants.HousingShortNameMaxLength => Result.Failure<string>(HousingErrors.TooLargeHousingShortName),
             _ => Result.Success()
         };
     }
