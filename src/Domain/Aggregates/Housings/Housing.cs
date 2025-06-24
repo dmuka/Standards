@@ -1,5 +1,5 @@
 ﻿using Core;
-using Domain.Aggregates.Rooms;
+using Domain.Aggregates.Floors;
 using Domain.Constants;
 using Domain.Models.Interfaces;
 
@@ -7,11 +7,42 @@ namespace Domain.Aggregates.Housings;
 
 public class Housing : AggregateRoot<HousingId>, ICacheable
 {
-    public required Address Address { get; set; } = null!;
-    public required FloorCount FloorsCount { get; set; }
-    public IReadOnlyCollection<RoomId> RoomIds => _roomIds.AsReadOnly();
-    private List<RoomId> _roomIds = [];
+    public required HousingName HousingName { get; set; }
+    public HousingShortName? HousingShortName { get; set; }
+    public required Address Address { get; set; }
+    public string? Comments { get; set; }
+    public IReadOnlyCollection<FloorId> FloorIds => _floorIds.AsReadOnly();
+    private List<FloorId> _floorIds = [];
 
+    private Housing(
+        HousingId housingId, 
+        HousingName housingName, 
+        HousingShortName housingShortName, 
+        Address address, 
+        string? comments = null)
+    {
+        Id = housingId;
+        Address = address;
+        HousingName = housingName;
+        HousingShortName = housingShortName;
+        Comments = comments;
+    }
+
+    public static Result<Housing> Create(
+        HousingId housingId,
+        HousingName housingName,
+        HousingShortName housingShortName, 
+        Address address,
+        string? comments = null)
+    {
+        var housing = new Housing(housingId, housingName, housingShortName, address, comments)
+        {
+            HousingName = housingName,
+            Address = address
+        };
+            
+        return Result.Success(housing);
+    }
     public static string GetCacheKey()
     {
         return Cache.Housings;
