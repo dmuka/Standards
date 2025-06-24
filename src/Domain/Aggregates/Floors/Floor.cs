@@ -3,7 +3,6 @@ using Domain.Aggregates.Floors.Specifications;
 using Domain.Aggregates.Housings;
 using Domain.Constants;
 using Domain.Models.Housings;
-using Housing = Domain.Aggregates.Housings.Housing;
 
 namespace Domain.Aggregates.Floors;
 
