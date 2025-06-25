@@ -20,19 +20,12 @@ public class Floor : AggregateRoot<FloorId>
         HousingId = housingId;
     }
 
-    public static async Task<Result<Floor>> Create(
-        int floorNumber, 
-        HousingId housingId, 
-        IFloorUniqueness uniquenessChecker, 
-        CancellationToken cancellationToken = default)
+    public static Result<Floor> Create(int floorNumber, HousingId housingId, FloorId? floorId = null)
     {
         var floorNumberValidationResult = new FloorNumberMustBeValid(floorNumber).IsSatisfied();
         if (floorNumberValidationResult.IsFailure) return Result.Failure<Floor>(floorNumberValidationResult.Error);
 
-        if (!await uniquenessChecker.IsUniqueAsync(floorNumber, housingId, cancellationToken))
-            return Result.Failure<Floor>(FloorErrors.FloorAlreadyExist);
-
-        var floor = new Floor(new FloorId(Guid.CreateVersion7()), floorNumber, housingId);
+        var floor = new Floor(floorId ?? new FloorId(Guid.CreateVersion7()), floorNumber, housingId);
             
         return Result.Success(floor);
     }

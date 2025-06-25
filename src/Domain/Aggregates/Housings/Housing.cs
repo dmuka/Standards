@@ -29,13 +29,18 @@ public class Housing : AggregateRoot<HousingId>, ICacheable
     }
 
     public static Result<Housing> Create(
-        HousingId housingId,
         HousingName housingName,
         HousingShortName housingShortName, 
         Address address,
+        HousingId? housingId = null,
         string? comments = null)
     {
-        var housing = new Housing(housingId, housingName, housingShortName, address, comments)
+        var housing = new Housing(
+            housingId ?? new HousingId(Guid.CreateVersion7()), 
+            housingName, 
+            housingShortName, 
+            address, 
+            comments)
         {
             HousingName = housingName,
             Address = address

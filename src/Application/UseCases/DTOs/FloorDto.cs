@@ -1,11 +1,10 @@
 ﻿using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
 using Domain.Aggregates.Rooms;
-using Domain.Models;
 
 namespace Application.UseCases.DTOs;
 
-public class FloorDto : Entity
+public class FloorDto
 {
     public required FloorId FloorId { get; set; }
     public required HousingId HousingId { get; set; }
