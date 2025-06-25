@@ -21,7 +21,7 @@ public class Create
     {
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
-            var housing = new Housing()
+            var housing = new Housing
             {
                 Name = request.HousingDto.Name,
                 ShortName = request.HousingDto.ShortName,
