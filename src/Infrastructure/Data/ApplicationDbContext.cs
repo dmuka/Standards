@@ -22,6 +22,7 @@ namespace Infrastructure.Data;
         public DbSet<Workplace> WorkPlaces { get; set; }
 
         public DbSet<Housing> Housings { get; set; }
+        public DbSet<Domain.Aggregates.Housings.Housing> Housings2 { get; set; }
         public DbSet<Floor> Floors { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Sector> Sectors { get; set; }
