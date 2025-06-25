@@ -7,7 +7,7 @@ namespace Application.UseCases.Housings;
 
 public class AddHousing
 {
-    public class Command() : IRequest<int>
+    public class Command : IRequest<int>
     {
         public required HousingDto2 HousingDto { get; set; }
     };

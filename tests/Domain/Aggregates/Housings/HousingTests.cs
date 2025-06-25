@@ -16,7 +16,7 @@ public class HousingTests
     public void Create_ShouldReturnSuccess_WhenAllParametersAreValid()
     {
         // Arrange & Act
-        var result = Housing.Create(_housingId, _housingName, _housingShortName, _address, Comments);
+        var result = Housing.Create(_housingName, _housingShortName, _address, _housingId, Comments);
 
         using (Assert.EnterMultipleScope())
         {
@@ -34,7 +34,7 @@ public class HousingTests
     public void Create_ShouldReturnSuccess_WhenCommentsAreNull()
     {
         // Arrange & Act
-        var result = Housing.Create(_housingId, _housingName, _housingShortName, _address);
+        var result = Housing.Create(_housingName, _housingShortName, _address, _housingId);
 
         using (Assert.EnterMultipleScope())
         {
