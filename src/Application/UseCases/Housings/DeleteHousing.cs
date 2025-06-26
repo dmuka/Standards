@@ -7,9 +7,9 @@ namespace Application.UseCases.Housings;
 
 public class DeleteHousing
 {
-    public class Command : IRequest<Result<int>>
+    public class Command(HousingId housingId) : IRequest<Result<int>>
     {
-        public required HousingId HousingId { get; set; }
+        public HousingId HousingId { get; set; } = housingId;
     }
     
     public class CommandHandler(ApplicationDbContext dbContext) : IRequestHandler<Command, Result<int>>

@@ -1,22 +1,23 @@
 ﻿using Application.UseCases.Common.GenericCRUD;
 using Application.UseCases.DTOs;
 using Application.UseCases.Housings;
-using Domain.Models.Housings;
+using Domain.Aggregates.Housings;
 using Infrastructure.Filter.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Housing = Domain.Models.Housings.Housing;
 
 namespace WebApi.Controllers;
 
 [ApiController]
-[Route("api/v1/HousingsController")]
-public class HousingsController1(ISender sender) : ApiBaseController
+[Route("api/v2/HousingsController")]
+public class HousingsController2(ISender sender) : ApiBaseController
 {
     [HttpGet]
     [Route("list")]
     public async Task<IActionResult> GetHousings()
     {
-        var query = new GetAll.Query();
+        var query = new GetAllHousings.Query();
 
         var result = await sender.Send(query);
 
@@ -24,10 +25,10 @@ public class HousingsController1(ISender sender) : ApiBaseController
     }
 
     [HttpGet]
-    [Route("{id:int}")]
-    public async Task<IActionResult> GetHousing(int id)
+    [Route("{id:Guid}")]
+    public async Task<IActionResult> GetHousing(Guid id)
     {
-        var query = new GetById.Query<Housing>(id);
+        var query = new GetHousingById.Query(new HousingId(id));
 
         var result = await sender.Send(query);
 
@@ -36,9 +37,9 @@ public class HousingsController1(ISender sender) : ApiBaseController
 
     [HttpPost]
     [Route("add")]
-    public async Task<IActionResult> CreateHousing([FromBody] HousingDto housing)
+    public async Task<IActionResult> AddHousing([FromBody] HousingDto2 housing)
     {
-        var query = new Create.Query(housing);
+        var query = new AddHousing.Command(housing);
 
         var result = await sender.Send(query);
 
@@ -47,9 +48,9 @@ public class HousingsController1(ISender sender) : ApiBaseController
 
     [HttpPut]
     [Route("edit")]
-    public async Task<IActionResult> EditHousing([FromBody]HousingDto housing)
+    public async Task<IActionResult> EditHousing([FromBody]HousingDto2 housing)
     {
-        var query = new Edit.Query(housing);
+        var query = new EditHousing.Command(housing);
             
         var result = await sender.Send(query);
 
@@ -57,10 +58,10 @@ public class HousingsController1(ISender sender) : ApiBaseController
     }
 
     [HttpDelete]
-    [Route("delete/{id:int}")]
-    public async Task<IActionResult> DeleteHousing(int id)
+    [Route("delete/{id:Guid}")]
+    public async Task<IActionResult> DeleteHousing(Guid id)
     {
-        var query = new Delete.Command<Housing>(id);
+        var query = new DeleteHousing.Command(new HousingId(id));
 
         var result = await sender.Send(query);
 

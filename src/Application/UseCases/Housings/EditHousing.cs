@@ -8,9 +8,9 @@ namespace Application.UseCases.Housings;
 
 public class EditHousing
 {
-    public class Command : IRequest<Result<int>>
+    public class Command(HousingDto2 housing) : IRequest<Result<int>>
     {
-        public required HousingDto2 HousingDto { get; set; }
+        public HousingDto2 HousingDto { get; set; } = housing;
     }
 
     public class CommandHandler(ApplicationDbContext dbContext) 

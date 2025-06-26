@@ -7,9 +7,9 @@ namespace Application.UseCases.Housings;
 
 public class GetHousingById
 {
-    public class Query : IRequest<Housing?>
+    public class Query(HousingId housingId) : IRequest<Housing?>
     {
-        public required HousingId HousingId { get; set; }
+        public HousingId HousingId { get; set; } = housingId;
     }
     
     public class QueryHandler(ApplicationDbContext dbContext) : IRequestHandler<Query, Housing?>
