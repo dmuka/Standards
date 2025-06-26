@@ -1,5 +1,4 @@
 using Application.UseCases.DTOs;
-using Domain.Aggregates.Floors;
 using Infrastructure.Data;
 using MediatR;
 
@@ -12,7 +11,7 @@ public class AddHousing
         public required HousingDto2 HousingDto { get; set; }
     };
 
-    public class CommandHandler(ApplicationDbContext dbContext, IFloorUniqueness floorUniqueness) : IRequestHandler<Command, int>
+    public class CommandHandler(ApplicationDbContext dbContext) : IRequestHandler<Command, int>
     {
         public async Task<int> Handle(Command command, CancellationToken cancellationToken)
         {

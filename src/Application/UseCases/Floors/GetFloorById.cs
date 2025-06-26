@@ -16,11 +16,11 @@ public class GetFloorById
     {
         public async Task<Floor?> Handle(Query query, CancellationToken cancellationToken)
         {
-            var housing = await dbContext.Floors
+            var floor = await dbContext.Floors
                 .AsNoTracking()
                 .FirstOrDefaultAsync(housing => housing.Id == query.FloorId, cancellationToken);
 
-            return housing;
+            return floor;
         }
     }
 }
