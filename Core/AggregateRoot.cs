@@ -1,7 +1,6 @@
 namespace Core;
 
-public abstract class AggregateRoot<TId> : Entity<TId>
-    where TId : TypedId
+public abstract class AggregateRoot : Entity
 {
     /// <summary>
     /// A private list to hold domain events associated with this entity.

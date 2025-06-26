@@ -7,11 +7,11 @@ using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using Housing = Domain.Models.Housings.Housing;
 
-namespace WebApi.Controllers;
+namespace WebApi.Controllers.v2;
 
 [ApiController]
 [Route("api/v2/HousingsController")]
-public class HousingsController2(ISender sender) : ApiBaseController
+public class HousingsController(ISender sender) : ApiBaseController
 {
     [HttpGet]
     [Route("list")]

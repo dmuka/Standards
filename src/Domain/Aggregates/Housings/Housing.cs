@@ -5,7 +5,7 @@ using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Housings;
 
-public class Housing : AggregateRoot<HousingId>, ICacheable
+public class Housing : AggregateRoot, ICacheable
 {
     public required HousingName HousingName { get; set; }
     public HousingShortName? HousingShortName { get; set; }

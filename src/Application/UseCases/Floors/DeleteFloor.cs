@@ -8,9 +8,9 @@ namespace Application.UseCases.Floors;
 
 public class DeleteFloor
 {
-    public class Command : IRequest<Result<int>>
+    public class Command(FloorId floorId) : IRequest<Result<int>>
     {
-        public required FloorId FloorId { get; set; }
+        public FloorId FloorId { get; set; } = floorId;
     }
     
     public class CommandHandler(ApplicationDbContext dbContext) : IRequestHandler<Command, Result<int>>

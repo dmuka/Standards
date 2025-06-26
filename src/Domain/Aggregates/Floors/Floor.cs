@@ -3,10 +3,11 @@ using Domain.Aggregates.Floors.Specifications;
 using Domain.Aggregates.Housings;
 using Domain.Constants;
 using Domain.Models.Housings;
+using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Floors;
 
-public class Floor : AggregateRoot<FloorId>
+public class Floor : AggregateRoot, ICacheable
 {
     public int Number { get; private set; }
     public HousingId HousingId { get; private set; }

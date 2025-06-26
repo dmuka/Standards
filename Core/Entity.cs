@@ -1,6 +1,6 @@
 ﻿namespace Core;
 
-public abstract class Entity<TId> where TId : TypedId
+public abstract class Entity
 {
-    public TId Id { get; set; }
+    public TypedId Id { get; set; }
 }

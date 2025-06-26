@@ -8,9 +8,9 @@ namespace Application.UseCases.Floors;
 
 public class AddFloor
 {
-    public class Command() : IRequest<Result<int>>
+    public class Command(FloorDto floor) : IRequest<Result<int>>
     {
-        public required FloorDto FloorDto { get; set; }
+        public FloorDto FloorDto { get; set; } = floor;
     };
 
     public class CommandHandler(ApplicationDbContext dbContext, IFloorUniqueness floorUniqueness) : IRequestHandler<Command, Result<int>>

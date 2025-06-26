@@ -10,7 +10,7 @@ namespace WebApi.Controllers;
 
 [ApiController]
 [Route("api/v1/HousingsController")]
-public class HousingsController1(ISender sender) : ApiBaseController
+public class HousingsController(ISender sender) : ApiBaseController
 {
     [HttpGet]
     [Route("list")]

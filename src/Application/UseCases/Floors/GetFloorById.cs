@@ -7,9 +7,9 @@ namespace Application.UseCases.Floors;
 
 public class GetFloorById
 {
-    public class Query : IRequest<Floor?>
+    public class Query(FloorId floorId) : IRequest<Floor?>
     {
-        public required FloorId FloorId { get; set; }
+        public FloorId FloorId { get; set; } = floorId;
     }
     
     public class QueryHandler(ApplicationDbContext dbContext) : IRequestHandler<Query, Floor?>
