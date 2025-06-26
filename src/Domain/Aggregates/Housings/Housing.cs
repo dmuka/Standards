@@ -7,6 +7,7 @@ namespace Domain.Aggregates.Housings;
 
 public class Housing : AggregateRoot, ICacheable
 {
+    protected Housing() { }
     public required HousingName HousingName { get; set; }
     public HousingShortName? HousingShortName { get; set; }
     public required Address Address { get; set; }

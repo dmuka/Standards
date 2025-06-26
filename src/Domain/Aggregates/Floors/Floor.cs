@@ -13,6 +13,10 @@ public class Floor : AggregateRoot, ICacheable
     public HousingId HousingId { get; private set; }
     private readonly List<Room> _rooms = [];
     public IReadOnlyCollection<Room> Rooms => _rooms.AsReadOnly();
+    
+    public Floor()
+    {
+    }
 
     private Floor(FloorId floorId, int number, HousingId housingId)
     {

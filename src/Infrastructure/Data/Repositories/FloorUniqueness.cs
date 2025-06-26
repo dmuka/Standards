@@ -4,7 +4,7 @@ using Infrastructure.Data.Repositories.Interfaces;
 
 namespace Infrastructure.Data.Repositories;
 
-public class FloorUniquenessChecker(IRepository repository) : IFloorUniqueness
+public class FloorUniqueness(IRepository repository) : IFloorUniqueness
 {
     public async Task<bool> IsUniqueAsync(
         int floorNumber, 

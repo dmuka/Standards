@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Behaviors;
 using Application.EventConsumers;
 using Application.UseCases.Common.GenericCRUD;
+using Domain.Aggregates.Floors;
 using Domain.Models;
 using Domain.Models.Departments;
 using Domain.Models.MetrologyControl;
@@ -8,6 +9,7 @@ using Domain.Models.Persons;
 using Domain.Models.Services;
 using Domain.Models.Standards;
 using FluentValidation;
+using Infrastructure.Data.Repositories;
 using Infrastructure.Errors;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
@@ -56,6 +58,8 @@ public static class DI
         services.AddValidatorsFromAssembly(typeof(DI).Assembly, includeInternalTypes: true);
 
         services.AddKafkaConsumerHostedService();
+
+        services.AddAppServices();
         
         return services;
     }
@@ -72,6 +76,14 @@ public static class DI
 
         return services;
     }
+    
+    private static IServiceCollection AddAppServices(this IServiceCollection services)
+    {
+        services.AddScoped<IFloorUniqueness, FloorUniqueness>();
+    
+        return services;
+    }
+    
     // /// <summary>
     // /// Adds application services
     // /// </summary>
