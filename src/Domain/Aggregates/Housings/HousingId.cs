@@ -2,8 +2,14 @@ using Core;
 
 namespace Domain.Aggregates.Housings;
 
-public class HousingId(Guid value) : TypedId(value)
+public class HousingId : TypedId
 {
+    protected HousingId() { }
+    
+    public HousingId(Guid value) : base(value)
+    {
+        Value = value.ToString();
+    }
     /// <summary>
     /// Gets the housing id value.
     /// </summary>
