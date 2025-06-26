@@ -5,6 +5,7 @@ namespace Domain.Aggregates.Housings;
 
 public class HousingShortName : ValueObject
 {
+    protected HousingShortName() { }
     /// <summary>
     /// Gets the housing short name value.
     /// </summary>

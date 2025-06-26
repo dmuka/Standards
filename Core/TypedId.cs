@@ -1,8 +1,16 @@
-﻿namespace Core;
+﻿using Microsoft.EntityFrameworkCore;
 
-public abstract class TypedId(Guid value) : ValueObject, IEquatable<TypedId>
+namespace Core;
+
+public abstract class TypedId : ValueObject, IEquatable<TypedId>
 {
-    public Guid Value { get; } = value;
+    protected TypedId() { }
+    protected TypedId(Guid value)
+    {
+        Value = value;
+    }
+    
+    public Guid Value { get; }
 
     /// <summary>
     /// Implicitly converts a <see cref="Result{TypedId}" /> to a <see cref="TypedId" />.

@@ -1,5 +1,4 @@
-﻿using Domain;
-using Domain.Aggregates.Floors;
+﻿using Domain.Aggregates.Floors;
 using Domain.Models;
 using Domain.Models.Departments;
 using Domain.Models.Housings;

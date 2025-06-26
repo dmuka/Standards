@@ -5,6 +5,7 @@ namespace Domain.Aggregates.Housings;
 
 public class Address : ValueObject
 {
+    protected Address() { }
     /// <summary>
     /// Gets the address value.
     /// </summary>
