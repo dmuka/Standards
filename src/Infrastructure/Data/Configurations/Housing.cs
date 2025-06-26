@@ -13,7 +13,8 @@ internal sealed class HousingConfiguration : IEntityTypeConfiguration<Housing>
         builder.Property(housing => housing.Id)
             .HasConversion(
                 typedId => typedId.Value,
-                guid => new HousingId(guid));
+                guid => new HousingId(guid))
+            .ValueGeneratedNever();
         
         builder.OwnsOne(housing => housing.Address, a =>
         {

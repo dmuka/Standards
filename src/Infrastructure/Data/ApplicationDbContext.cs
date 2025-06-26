@@ -1,4 +1,5 @@
 ﻿using Domain.Aggregates.Floors;
+using Domain.Aggregates.Housings;
 using Domain.Models;
 using Domain.Models.Departments;
 using Domain.Models.Housings;
@@ -10,6 +11,7 @@ using Domain.Models.Standards;
 using Domain.Models.Users;
 using Infrastructure.Data.ModelBuilderExtensions;
 using Microsoft.EntityFrameworkCore;
+using Housing = Domain.Models.Housings.Housing;
 
 namespace Infrastructure.Data;
 
@@ -54,7 +56,9 @@ namespace Infrastructure.Data;
         public DbSet<Standard> Standards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
+        {    
+            modelBuilder.Ignore<FloorId>();
+            modelBuilder.Ignore<HousingId>();
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
             // Seeding data

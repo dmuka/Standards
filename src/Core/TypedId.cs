@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-
-namespace Core;
+﻿namespace Core;
 
 public abstract class TypedId : ValueObject, IEquatable<TypedId>
 {

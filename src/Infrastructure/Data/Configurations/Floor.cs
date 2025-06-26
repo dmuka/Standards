@@ -8,11 +8,12 @@ internal sealed class FloorConfiguration : IEntityTypeConfiguration<Floor>
 {
     public void Configure(EntityTypeBuilder<Floor> builder)
     {
-        builder.HasKey(f => f.Id);       
+        builder.HasKey(floor => floor.Id);       
         
         builder.Property(floor => floor.Id)
             .HasConversion(
-                v => v.Value,
-                v => new FloorId(v));
+                typedId => typedId.Value,
+                guid => new FloorId(guid))
+            .ValueGeneratedNever();
     }
 }
