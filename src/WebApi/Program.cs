@@ -56,7 +56,7 @@ public class Program
             builder.Logging.ClearProviders();
             builder.Host.UseNLog();
 
-            builder.UseTelemetry();
+            //builder.UseTelemetry();
             
             if (builder.Environment.IsDevelopment())
             {

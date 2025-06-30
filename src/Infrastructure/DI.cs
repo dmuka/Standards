@@ -165,7 +165,7 @@ public static class DI
             .ValidateOnStart();
         
         services.AddSingleton<IEventConsumer, EventConsumer>();
-
+    
         return services;
     }
 }

@@ -7,39 +7,34 @@ namespace Application.EventConsumers;
 
 public class UserRegisteredEventConsumer(
     IEventConsumer eventConsumer,
-    ILogger<UserRegisteredEventConsumer> logger) : IHostedService
+    ILogger<UserRegisteredEventConsumer> logger)
+    : BackgroundService
 {
-    private Task? _consumingTask;
-    private CancellationTokenSource _cts = new();
-    
-    public Task StartAsync(CancellationToken cancellationToken)
+    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         logger.LogInformation("Starting UserRegisteredEventConsumer");
-        _consumingTask = StartConsuming(_cts.Token);
-        return Task.CompletedTask;
-    }
-
-    private Task StartConsuming(CancellationToken cancellationToken)
-    {
-        return eventConsumer.ConsumeAsync<UserRegisteredIntegrationEvent>(
-            "user-registered",
-            async (@event) =>
-            {
-                logger.LogInformation("User with id {UserId} registered, Email={Email}", @event.UserId, @event.Email);
-                
-                await Task.CompletedTask;
-            },
-            cancellationToken);
-    }
-
-    public async Task StopAsync(CancellationToken cancellationToken)
-    {
-        logger.LogInformation("Stopping UserRegisteredEventConsumer");
-        await _cts.CancelAsync();
-        if (_consumingTask != null)
+        
+        try
         {
-            await Task.WhenAny(_consumingTask, Task.Delay(Timeout.Infinite, cancellationToken));
+            await eventConsumer.ConsumeAsync<UserRegisteredIntegrationEvent>(
+                "user-registered",
+                async (@event) =>
+                {
+                    logger.LogInformation(
+                        "User with id {UserId} registered, Email={Email}", 
+                        @event.UserId, @event.Email);
+                    await Task.CompletedTask;
+                },
+                stoppingToken);
         }
-        _cts.Dispose();
+        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        {
+            logger.LogInformation("Stopped UserRegisteredEventConsumer");
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Error in UserRegisteredEventConsumer");
+            throw;
+        }
     }
 }
