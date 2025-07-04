@@ -17,7 +17,11 @@ public static class FloorErrors
         Codes.InvalidFloorCount,
         "The provided floor count value is less than 1.");
 
-    public static readonly Error FloorAlreadyExist = Error.Problem(
-        Codes.FloorAlreadyExist,
-        "The provided floor count value is less than 1.");
+    public static readonly Error FloorAlreadyExistOrWrong = Error.Problem(
+        Codes.FloorAlreadyExistOrWrong,
+        "The provided floor value already exist or wrong.");
+
+    public static readonly Error InvalidFloorNumberValue = Error.Problem(
+        Codes.InvalidFloorNumberValue,
+        "The provided floor number value is invalid.");
 }

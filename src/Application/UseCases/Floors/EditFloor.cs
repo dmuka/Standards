@@ -27,7 +27,7 @@ public class EditFloor
                     command.FloorDto.Number, 
                     command.FloorDto.HousingId, 
                     cancellationToken))
-                return Result.Failure<int>(FloorErrors.FloorAlreadyExist);
+                return Result.Failure<int>(FloorErrors.FloorAlreadyExistOrWrong);
 
             dbContext.Update(existingFloor);
             var number = await dbContext.SaveChangesAsync(cancellationToken);

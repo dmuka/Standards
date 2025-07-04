@@ -21,7 +21,7 @@ public class AddFloor
                     command.FloorDto.Number, 
                     command.FloorDto.HousingId, 
                     cancellationToken))
-                return Result.Failure<int>(FloorErrors.FloorAlreadyExist);
+                return Result.Failure<int>(FloorErrors.FloorAlreadyExistOrWrong);
             
             var floorCreationResult = Floor.Create(command.FloorDto.Number, command.FloorDto.HousingId);
 
