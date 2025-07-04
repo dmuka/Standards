@@ -1,13 +1,12 @@
 using Application.UseCases.DTOs;
 using Application.UseCases.Floors;
 using Domain.Aggregates.Floors;
-using FloorAggregate = Domain.Aggregates.Floors.Floor;
 using Domain.Aggregates.Housings;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 
-namespace Tests.Application.UseCases.Floor;
+namespace Tests.Application.UseCases.Floors;
 
 [TestFixture]
 public class AddFloorTests
@@ -43,6 +42,7 @@ public class AddFloorTests
     [TearDown]
     public void TearDown()
     {
+        _dbContext.Database.EnsureDeleted();
         _dbContext.Dispose();
     }
 

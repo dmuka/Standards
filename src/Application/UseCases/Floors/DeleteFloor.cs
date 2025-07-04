@@ -2,7 +2,6 @@ using Core;
 using Domain.Aggregates.Floors;
 using Infrastructure.Data;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UseCases.Floors;
 
