@@ -49,6 +49,23 @@ public class Housing : AggregateRoot, ICacheable
             
         return Result.Success(housing);
     }
+    
+    public void AddFloor(FloorId floorId)
+    {
+        if (!_floorIds.Contains(floorId))
+        {
+            _floorIds.Add(floorId);
+        }
+    }
+    
+    public void AddFloors(IList<FloorId> floorIds)
+    {
+        if (!_floorIds.Any(floorIds.Contains))
+        {
+            _floorIds.AddRange(floorIds);
+        }
+    }
+    
     public static string GetCacheKey()
     {
         return Cache.Housings;
