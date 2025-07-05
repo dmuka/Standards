@@ -8,9 +8,9 @@ namespace Domain.Aggregates.Housings;
 public class Housing : AggregateRoot, ICacheable
 {
     protected Housing() { }
-    public required HousingName HousingName { get; set; }
-    public HousingShortName? HousingShortName { get; set; }
-    public required Address Address { get; set; }
+    public Address Address { get; private set; }
+    public HousingName HousingName { get; private set; }
+    public HousingShortName? HousingShortName { get; private set; }
     public string? Comments { get; set; }
     public IReadOnlyCollection<FloorId> FloorIds => _floorIds.AsReadOnly();
     private List<FloorId> _floorIds = [];
@@ -41,11 +41,7 @@ public class Housing : AggregateRoot, ICacheable
             housingName, 
             housingShortName, 
             address, 
-            comments)
-        {
-            HousingName = housingName,
-            Address = address
-        };
+            comments);
             
         return Result.Success(housing);
     }

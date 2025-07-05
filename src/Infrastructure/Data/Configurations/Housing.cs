@@ -16,19 +16,19 @@ internal sealed class HousingConfiguration : IEntityTypeConfiguration<Housing>
                 guid => new HousingId(guid))
             .ValueGeneratedNever();
         
-        builder.OwnsOne(housing => housing.Address, a =>
-        {
-            a.Property(p => p.Value).HasColumnName("Address");
-        });        
+        builder.Property(housing => housing.Address)
+            .HasConversion(
+                address => address.Value,
+                value => Address.Create(value).Value);
         
-        builder.OwnsOne(housing => housing.HousingName, a =>
-        {
-            a.Property(p => p.Value).HasColumnName("HousingName");
-        });     
+        builder.Property(housing => housing.HousingName)
+            .HasConversion(
+                housingName => housingName.Value,
+                value => HousingName.Create(value).Value);
         
-        builder.OwnsOne(housing => housing.HousingShortName, a =>
-        {
-            a.Property(p => p.Value).HasColumnName("HousingShortName");
-        });
+        builder.Property(housing => housing.HousingShortName)
+            .HasConversion(
+                housingShortName => housingShortName == null ? null : housingShortName.Value,
+                value => value == null ? null : HousingShortName.Create(value).Value);
     }
 }

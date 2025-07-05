@@ -16,12 +16,12 @@ public class DeleteHousing
     {
         public async Task<Result<int>> Handle(Command command, CancellationToken cancellationToken)
         {
-            var existingHousing = await dbContext.Housings.FindAsync(
+            var existingHousing = await dbContext.Housings2.FindAsync(
                 [command.HousingId], 
                 cancellationToken: cancellationToken);
             if (existingHousing is null) return Result.Failure<int>(HousingErrors.NotFound(command.HousingId));
             
-            dbContext.Housings.Remove(existingHousing);
+            dbContext.Housings2.Remove(existingHousing);
             var number = await dbContext.SaveChangesAsync(cancellationToken);
 
             return Result.Success(number);
