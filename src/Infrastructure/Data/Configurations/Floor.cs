@@ -1,4 +1,5 @@
 using Domain.Aggregates.Floors;
+using Domain.Aggregates.Housings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -15,5 +16,10 @@ internal sealed class FloorConfiguration : IEntityTypeConfiguration<Floor>
                 typedId => typedId.Value,
                 guid => new FloorId(guid))
             .ValueGeneratedNever();
+
+        builder.Property(floor => floor.HousingId)
+            .HasConversion(
+                housingId => housingId.Value,
+                guid => new HousingId(guid));
     }
 }

@@ -24,6 +24,7 @@ public class GetHousingById
             if (housing is null) return housing;
             
             var floorIds = dbContext.Floors
+                .Where(floor => floor.HousingId == housing.Id)
                 .Select(floor => (FloorId)floor.Id)
                 .ToList();
 

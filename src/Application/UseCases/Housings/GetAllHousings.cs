@@ -1,3 +1,4 @@
+using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
 using Infrastructure.Data;
 using MediatR;
@@ -15,8 +16,17 @@ public class GetAllHousings
         {
             var housings = await dbContext.Housings2
                 .AsNoTracking()
-                .Include(housing => housing.FloorIds)
                 .ToListAsync(cancellationToken);
+
+            foreach (var housing in housings)
+            {
+                var floorIds = await dbContext.Floors
+                    .Where(floor => floor.HousingId == (HousingId)housing.Id)
+                    .Select(floor => (FloorId)floor.Id)
+                    .ToListAsync(cancellationToken);
+
+                housing.AddFloors(floorIds);
+            }
 
             return housings;
         }
