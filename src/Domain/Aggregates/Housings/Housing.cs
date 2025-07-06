@@ -36,6 +36,8 @@ public class Housing : AggregateRoot, ICacheable
         HousingId? housingId = null,
         string? comments = null)
     {
+        if (housingName is null) return Result<Housing>.ValidationFailure(HousingErrors.EmptyHousingName);
+        
         var housing = new Housing(
             housingId ?? new HousingId(Guid.CreateVersion7()), 
             housingName, 
