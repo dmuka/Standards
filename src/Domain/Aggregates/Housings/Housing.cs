@@ -46,7 +46,22 @@ public class Housing : AggregateRoot, ICacheable
             comments);
             
         return Result.Success(housing);
-    }
+    }    
+    
+    public Result Update(
+        HousingName housingName,
+        HousingShortName housingShortName,
+        Address address,
+        string? comments = null)
+         {
+             if (housingName is null) return Result<Housing>.ValidationFailure(HousingErrors.EmptyHousingName);
+             if (!housingName.Equals(HousingName)) HousingName = housingName;
+             if (!housingShortName.Equals(HousingShortName)) HousingShortName = housingShortName;
+             if (!address.Equals(Address)) Address = address;
+             if (comments != Comments) Comments = comments;
+                 
+             return Result.Success();
+         }
     
     public void AddFloor(FloorId floorId)
     {

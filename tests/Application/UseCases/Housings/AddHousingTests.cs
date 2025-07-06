@@ -3,7 +3,6 @@ using Application.UseCases.Housings;
 using Domain.Aggregates.Housings;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
-using Moq;
 
 namespace Tests.Application.UseCases.Housings;
 
@@ -11,8 +10,6 @@ namespace Tests.Application.UseCases.Housings;
 public class AddHousingTests
 {
     private HousingDto2 _housingDto;
-
-    private Mock<HousingName> _housingNameMock;
     
     private ApplicationDbContext _dbContext;
     private AddHousing.CommandHandler _handler;
@@ -25,8 +22,6 @@ public class AddHousingTests
             .Options;
 
         _dbContext = new ApplicationDbContext(options);
-
-        _housingNameMock = new Mock<HousingName>();
         
         _housingDto = new HousingDto2
         {

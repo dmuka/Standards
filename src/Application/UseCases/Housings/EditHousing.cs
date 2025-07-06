@@ -23,16 +23,15 @@ public class EditHousing
                 cancellationToken: cancellationToken);
             if (existingHousing is null) return Result.Failure<int>(HousingErrors.NotFound(command.HousingDto.HousingId));
             
-            var housingCreationResult = Housing.Create(
+            var housingUpdateResult = existingHousing.Update(
                 command.HousingDto.HousingName,
                 command.HousingDto.HousingShortName,
                 command.HousingDto.Address,
-                command.HousingDto.HousingId,
                 command.HousingDto.Comments);
 
-            if (housingCreationResult.IsFailure) return Result.Failure<int>(housingCreationResult.Error);
+            if (housingUpdateResult.IsFailure) return Result.Failure<int>(housingUpdateResult.Error);
             
-            dbContext.Update(housingCreationResult.Value);
+            dbContext.Update(existingHousing);
             var number = await dbContext.SaveChangesAsync(cancellationToken);
 
             return number;
