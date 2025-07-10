@@ -8,6 +8,14 @@ public static class RoomErrors
     public static Error NotFound(Guid roomId) => Error.NotFound(
         Codes.NotFound, 
         $"The room with the id = '{roomId}' was not found.");
+    
+    public static Error PersonNotFound(Guid personId) => Error.NotFound(
+        Codes.NotFound, 
+        $"The person with the id = '{personId}' was not found.");
+    
+    public static Error WorkplaceNotFound(Guid workplaceId) => Error.NotFound(
+        Codes.NotFound, 
+        $"The workplace with the id = '{workplaceId}' was not found.");
 
     public static Error Unauthorized() => Error.Failure(
         Codes.Unauthorized,
@@ -36,4 +44,8 @@ public static class RoomErrors
     public static readonly Error WorkplaceAlreadyExist = Error.Problem(
         Codes.WorkplaceAlreadyExist,
         $"This workplace already exist in the room.");
+
+    public static readonly Error OneOfTheWorkplaceAlreadyExist = Error.Problem(
+        Codes.OneOfTheWorkplaceAlreadyExist,
+        $"One of the provided workplace already exist in the room.");
 }

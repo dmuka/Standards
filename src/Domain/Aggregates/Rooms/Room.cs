@@ -1,6 +1,5 @@
 ﻿using Core;
 using Domain.Aggregates.Floors;
-using Domain.Aggregates.Housings;
 using Domain.Aggregates.Persons;
 using Domain.Aggregates.Sectors;
 using Domain.Aggregates.Workplaces;
@@ -61,14 +60,14 @@ public class Room : AggregateRoot, ICacheable
         Width width,
         Height height,
         string? comments = null)
-         {
-             if (!length.Equals(Length)) Length = length;
-             if (!width.Equals(Width)) Width = width;
-             if (!height.Equals(Height)) Height = height;
-             if (comments != Comments) Comments = comments;
-                 
-             return Result.Success();
-         }
+    {
+        if (!length.Equals(Length)) Length = length;
+        if (!width.Equals(Width)) Width = width;
+        if (!height.Equals(Height)) Height = height;
+        if (comments != Comments) Comments = comments;
+        
+        return Result.Success();
+    }
     
     public Result AddPerson(PersonId personId)
     {
@@ -78,6 +77,18 @@ public class Room : AggregateRoot, ICacheable
         }
         
         _personIds.Add(personId);
+        
+        return Result.Success();
+    }
+    
+    public Result RemovePerson(PersonId personId)
+    {
+        if (!_personIds.Contains(personId))
+        {
+            return Result.Failure(RoomErrors.PersonNotFound(personId));
+        }
+        
+        _personIds.Remove(personId);
         
         return Result.Success();
     }
@@ -94,8 +105,44 @@ public class Room : AggregateRoot, ICacheable
         return Result.Success();
     }
     
+    public Result AddWorkplace(WorkplaceId workplaceId)
+    {
+        if (_workplaceIds.Contains(workplaceId))
+        {
+            return Result.Failure(RoomErrors.WorkplaceAlreadyExist);
+        }
+        
+        _workplaceIds.Add(workplaceId);
+        
+        return Result.Success();
+    }
+    
+    public Result RemoveWorkplace(WorkplaceId workplaceId)
+    {
+        if (!_workplaceIds.Contains(workplaceId))
+        {
+            return Result.Failure(RoomErrors.WorkplaceNotFound(workplaceId));
+        }
+        
+        _workplaceIds.Remove(workplaceId);
+        
+        return Result.Success();
+    }
+    
+    public Result AddWorkplaces(IList<WorkplaceId> workplaceIds)
+    {
+        if (_workplaceIds.Any(workplaceIds.Contains))
+        {
+            return Result.Failure(RoomErrors.OneOfTheWorkplaceAlreadyExist);
+        }
+        
+        _workplaceIds.AddRange(workplaceIds);
+        
+        return Result.Success();
+    }
+    
     public static string GetCacheKey()
     {
-        return Cache.Housings;
+        return Cache.Rooms;
     }
 }
