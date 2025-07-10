@@ -2,13 +2,14 @@ using Core;
 
 namespace Domain.Aggregates.Rooms;
 
-public class RoomId(Guid value) : TypedId(value)
+public class RoomId : TypedId
 {
-    /// <summary>
-    /// Gets the room id value.
-    /// </summary>
-    public string Value { get; }
-    
+    protected RoomId() { }
+
+    public RoomId(Guid value) : base(value)
+    {
+    }
+
     protected override IEnumerable<object> GetEqualityComponents()
     {
         yield return Value;

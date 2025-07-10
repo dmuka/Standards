@@ -12,6 +12,7 @@ using Domain.Models.Users;
 using Infrastructure.Data.ModelBuilderExtensions;
 using Microsoft.EntityFrameworkCore;
 using Housing = Domain.Models.Housings.Housing;
+using Room = Domain.Models.Housings.Room;
 
 namespace Infrastructure.Data;
 
