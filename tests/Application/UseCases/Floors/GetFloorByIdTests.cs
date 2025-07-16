@@ -1,8 +1,7 @@
 using Application.UseCases.Floors;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Tests.Application.UseCases.Floors;
 
@@ -19,8 +18,13 @@ public class GetFloorByIdTests
     
     private readonly Guid _validHousingIdGuid = Guid.CreateVersion7();
     private HousingId _validHousingId;
+
+    private Floor _floor;
     
-    private ApplicationDbContext _dbContext;
+    private readonly CancellationToken _cancellationToken = CancellationToken.None;
+    
+    private Mock<IFloorRepository> _floorRepositoryMock;
+    
     private GetFloorById.QueryHandler _handler;
 
     [SetUp]
@@ -31,29 +35,21 @@ public class GetFloorByIdTests
 
         _invalidFloorId = new FloorId(_invalidFloorIdGuid);
         
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
-            .Options;
+        _floor = Floor.Create(FloorNumber, _validHousingId, _validFloorId).Value;
 
-        _dbContext = new ApplicationDbContext(options);
-        _handler = new GetFloorById.QueryHandler(_dbContext);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        _floorRepositoryMock = new Mock<IFloorRepository>();
+        _floorRepositoryMock.Setup(r => r.ExistsAsync(_validFloorId, _cancellationToken))
+            .ReturnsAsync(true);
+        _floorRepositoryMock.Setup(r => r.GetByIdAsync(_validFloorId, _cancellationToken))
+            .ReturnsAsync(_floor);
+        
+        _handler = new GetFloorById.QueryHandler(_floorRepositoryMock.Object);
     }
 
     [Test]
     public async Task Handle_FloorExists_ReturnsFloor()
     {
         // Arrange
-        var floor = Floor.Create(FloorNumber, _validHousingId, _validFloorId).Value;
-        await _dbContext.Floors.AddAsync(floor);
-        await _dbContext.SaveChangesAsync();
-
         var query = new GetFloorById.Query(_validFloorId);
 
         // Act
@@ -62,8 +58,9 @@ public class GetFloorByIdTests
         using (Assert.EnterMultipleScope())
         {
             // Assert
-            Assert.That(result.Id, Is.EqualTo(_validFloorId));
-            Assert.That(result.Number, Is.EqualTo(FloorNumber));
+            Assert.That(result.IsSuccess, Is.True);
+            Assert.That(result.Value.Id, Is.EqualTo(_validFloorId));
+            Assert.That(result.Value.Number, Is.EqualTo(FloorNumber));
         }
     }
 
@@ -76,7 +73,11 @@ public class GetFloorByIdTests
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
 
-        // Assert
-        Assert.That(result, Is.Null);
+        using (Assert.EnterMultipleScope())
+        {
+            // Assert
+            Assert.That(result.IsFailure, Is.True);
+            Assert.That(result.Error, Is.EqualTo(FloorErrors.NotFound(_invalidFloorId)));
+        }
     }
 }

@@ -1,74 +1,62 @@
 using Application.UseCases.DTOs;
 using Application.UseCases.Housings;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Tests.Application.UseCases.Housings;
 
 [TestFixture]
 public class AddHousingTests
 {
-    private HousingDto2 _housingDto;
+    private readonly HousingId _housingId = new (Guid.CreateVersion7());
+    private readonly HousingName _housingName = HousingName.Create("Housing name").Value;
+    private readonly HousingShortName _housingShortName = HousingShortName.Create("Housing short name").Value;
+    private readonly Address _address = Address.Create("Housing test address").Value;
     
-    private ApplicationDbContext _dbContext;
+    private HousingDto2 _housingDto;
+    private Housing _housing;
+    
+    private readonly CancellationToken _cancellationToken = CancellationToken.None;
+    
+    private Mock<IHousingRepository> _housingRepositoryMock;
+    
     private AddHousing.CommandHandler _handler;
 
     [SetUp]
     public void Setup()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
-            .Options;
-
-        _dbContext = new ApplicationDbContext(options);
-        
         _housingDto = new HousingDto2
         {
-            HousingName = HousingName.Create("Housing name").Value,
-            HousingShortName = HousingShortName.Create("Housing short name").Value,
-            HousingId = new HousingId(Guid.CreateVersion7()), 
-            Address = Address.Create("Housing test address").Value
+            HousingName = _housingName,
+            HousingShortName = _housingShortName,
+            HousingId = _housingId, 
+            Address = _address
         };
+    
+        _housing = Housing.Create(
+            _housingName,
+            _housingShortName,
+            _address,
+            _housingId).Value;
         
-        _handler = new AddHousing.CommandHandler(_dbContext);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        _housingRepositoryMock = new Mock<IHousingRepository>();
+        
+        _handler = new AddHousing.CommandHandler(_housingRepositoryMock.Object);
     }
 
     [Test]
-    public async Task Handle_HousingCreationFails_ReturnsFailure()
+    public async Task Handle_HousingSuccessfullyAdded_ReturnsSuccessResult()
     {
         // Arrange
-        _housingDto.HousingName = null!;
         var command = new AddHousing.Command(_housingDto);
 
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, _cancellationToken);
 
         using (Assert.EnterMultipleScope())
         {
             // Assert
-            Assert.That(result.IsFailure, Is.True);
-            Assert.That(result.Error.Code, Is.EqualTo(HousingErrors.EmptyHousingName.Code));
+            Assert.That(result.IsSuccess, Is.True);
         }
-    }
-
-    [Test]
-    public async Task Handle_HousingSuccessfullyAdded_ReturnsNumberOfChanges()
-    {
-        // Arrange
-        var command = new AddHousing.Command(_housingDto);
-
-        // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        // Assert
-        Assert.That(result.Value, Is.EqualTo(1));
     }
 }

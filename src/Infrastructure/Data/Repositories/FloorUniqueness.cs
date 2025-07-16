@@ -1,6 +1,6 @@
+using Application.Abstractions.Data;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data.Repositories.Interfaces;
 
 namespace Infrastructure.Data.Repositories;
 

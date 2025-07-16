@@ -1,38 +1,37 @@
 using Application.UseCases.DTOs;
 using Core;
 using Domain.Aggregates.Floors;
-using Infrastructure.Data;
 using MediatR;
 
 namespace Application.UseCases.Floors;
 
 public class EditFloor
 {
-    public class Command(FloorDto floor) : IRequest<Result<int>>
+    public class Command(FloorDto floor) : IRequest<Result>
     {
         public FloorDto FloorDto { get; set; } = floor;
     }
     
-    public class CommandHandler(ApplicationDbContext dbContext, IFloorUniqueness floorUniqueness) 
-        : IRequestHandler<Command, Result<int>>
+    public class CommandHandler(IFloorRepository repository, IFloorUniqueness floorUniqueness) 
+        : IRequestHandler<Command, Result>
     {
-        public async Task<Result<int>> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var existingFloor = await dbContext.Floors.FindAsync(
-                [command.FloorDto.FloorId], 
-                cancellationToken: cancellationToken);
-            if (existingFloor is null) return Result.Failure<int>(FloorErrors.NotFound(command.FloorDto.FloorId));
+            var isFloorExist = await repository.ExistsAsync(command.FloorDto.FloorId, cancellationToken);
+            
+            if (!isFloorExist) return Result.Failure(FloorErrors.NotFound(command.FloorDto.FloorId));
             
             if (!await floorUniqueness.IsUniqueAsync(
                     command.FloorDto.Number, 
                     command.FloorDto.HousingId, 
                     cancellationToken))
-                return Result.Failure<int>(FloorErrors.FloorAlreadyExistOrWrong);
+                return Result.Failure(FloorErrors.FloorAlreadyExistOrWrong);
+            
+            var existingFloor = await repository.GetByIdAsync(command.FloorDto.FloorId, cancellationToken: cancellationToken);
+            
+            repository.Update(existingFloor);
 
-            dbContext.Update(existingFloor);
-            var number = await dbContext.SaveChangesAsync(cancellationToken);
-
-            return number;
+            return Result.Success();
         }
     }
 }

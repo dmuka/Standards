@@ -1,10 +1,10 @@
 ﻿using Application.Abstractions.Cache;
+using Application.Abstractions.Data;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
 using Domain.Constants;
 using Domain.Models.Housings;
 using FluentValidation;
-using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
 
 namespace Application.UseCases.Housings;

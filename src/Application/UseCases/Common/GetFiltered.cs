@@ -1,11 +1,11 @@
-﻿using Core;
+﻿using Application.Abstractions.Data;
+using Application.Abstractions.Data.Filter;
+using Application.Abstractions.Data.Filter.Models;
+using Application.Abstractions.Data.Validators.Constants;
+using Core;
 using Domain.Models;
 using Domain.Models.Interfaces;
 using FluentValidation;
-using Infrastructure.Filter.Implementations;
-using Infrastructure.Filter.Interfaces;
-using Infrastructure.QueryableWrapper.Interface;
-using Infrastructure.Validators.Constants;
 using MediatR;
 using Entity = Core.Entity;
 

@@ -1,6 +1,7 @@
-﻿using Application.UseCases.Common.GenericCRUD;
+﻿using Application.Abstractions.Data.Filter;
+using Application.Abstractions.Data.Filter.Models;
+using Application.UseCases.Common.GenericCRUD;
 using Domain.Models.Services;
-using Infrastructure.Filter.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Infrastructure.Results;
@@ -13,13 +14,13 @@ public class ServiceTypesController(ISender sender) : ControllerBase
 {
     [HttpGet]
     [Route("list")]
-    public async Task<IResult> GetServiceTypes()
+    public async Task<IActionResult> GetServiceTypes()
     {
         var query = new GetAllBaseEntity.Query<ServiceType>();
 
         var result = await sender.Send(query);
 
-        return result.Match(Results.Ok, CustomResults.Problem);
+        return Ok(result);
     }
 
     [HttpGet]

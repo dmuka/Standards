@@ -1,26 +1,27 @@
+using Core;
 using Domain.Aggregates.Floors;
-using Infrastructure.Data;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UseCases.Floors;
 
 public class GetFloorById
 {
-    public class Query(FloorId floorId) : IRequest<Floor?>
+    public class Query(FloorId floorId) : IRequest<Result<Floor>>
     {
         public FloorId FloorId { get; set; } = floorId;
     }
     
-    public class QueryHandler(ApplicationDbContext dbContext) : IRequestHandler<Query, Floor?>
+    public class QueryHandler(IFloorRepository repository) : IRequestHandler<Query, Result<Floor>>
     {
-        public async Task<Floor?> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<Result<Floor>> Handle(Query query, CancellationToken cancellationToken)
         {
-            var floor = await dbContext.Floors
-                .AsNoTracking()
-                .FirstOrDefaultAsync(housing => housing.Id == query.FloorId, cancellationToken);
+            var isFloorExist = await repository.ExistsAsync(query.FloorId, cancellationToken);
+            
+            if (!isFloorExist) return Result.Failure<Floor>(FloorErrors.NotFound(query.FloorId));
+            
+            var floor = await repository.GetByIdAsync(query.FloorId, cancellationToken);
 
-            return floor;
+            return floor ;
         }
     }
 }

@@ -2,8 +2,8 @@
 using System.Data.Common;
 using System.Globalization;
 using System.Linq.Expressions;
+using Application.Abstractions.Data;
 using Infrastructure.Data.Repositories.Extensions;
-using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Data.Repositories.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;

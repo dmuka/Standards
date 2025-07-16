@@ -1,12 +1,12 @@
 ﻿using Application.Abstractions.Cache;
+using Application.Abstractions.Data;
+using Application.Abstractions.Data.Validators;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
 using Domain.Constants;
 using Domain.Models;
 using Domain.Models.Departments;
 using FluentValidation;
-using Infrastructure.Data.Repositories.Interfaces;
-using Infrastructure.Validators;
 using MediatR;
 using Unit = Domain.Models.Unit;
 

@@ -1,11 +1,11 @@
 using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
+using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Units;
 using Domain.Constants;
 using FluentAssertions;
-using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;

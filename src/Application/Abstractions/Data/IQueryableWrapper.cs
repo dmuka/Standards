@@ -1,4 +1,4 @@
-﻿namespace Infrastructure.QueryableWrapper.Interface
+﻿namespace Application.Abstractions.Data
 {
     public interface IQueryableWrapper<T>
     {

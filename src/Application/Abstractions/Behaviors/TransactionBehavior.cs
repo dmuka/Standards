@@ -1,11 +1,10 @@
-﻿using System.Data;
+﻿using Application.Abstractions.Data;
 using Application.UseCases.Common.Attributes;
-using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
 
 namespace Application.Abstractions.Behaviors;
 
-public class TransactionBehavior<TRequest, TResponse>(IRepository repository)
+public class TransactionBehavior<TRequest, TResponse>(IUnitOfWork unitOfWork)
     : IPipelineBehavior<TRequest, TResponse>
     where TRequest : notnull
 {
@@ -19,18 +18,17 @@ public class TransactionBehavior<TRequest, TResponse>(IRepository repository)
             return await next();
         }
 
-        await using var transaction = await repository.BeginTransactionAsync(IsolationLevel.ReadCommitted, cancellationToken);
+        await unitOfWork.BeginTransactionAsync(cancellationToken);
         try
         {
-            var response = await next();
-            await repository.SaveChangesAsync(cancellationToken);
-            await transaction.CommitAsync(cancellationToken);
+            var response = await next(cancellationToken);
+            await unitOfWork.CommitAsync(cancellationToken);
 
             return response;
         }
         catch
         {
-            await transaction.RollbackAsync(cancellationToken);
+            await unitOfWork.RollbackAsync(cancellationToken);
             throw;
         }
     }

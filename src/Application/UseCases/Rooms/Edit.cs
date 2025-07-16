@@ -1,4 +1,6 @@
 ﻿using Application.Abstractions.Cache;
+using Application.Abstractions.Data;
+using Application.Abstractions.Data.Validators;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
 using Domain.Constants;
@@ -6,8 +8,6 @@ using Domain.Models.Departments;
 using Domain.Models.Housings;
 using Domain.Models.Persons;
 using FluentValidation;
-using Infrastructure.Data.Repositories.Interfaces;
-using Infrastructure.Validators;
 using MediatR;
 
 namespace Application.UseCases.Rooms

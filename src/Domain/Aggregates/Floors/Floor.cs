@@ -2,7 +2,6 @@ using Core;
 using Domain.Aggregates.Floors.Specifications;
 using Domain.Aggregates.Housings;
 using Domain.Constants;
-using Domain.Models.Housings;
 using Domain.Models.Interfaces;
 using Room = Domain.Models.Housings.Room;
 

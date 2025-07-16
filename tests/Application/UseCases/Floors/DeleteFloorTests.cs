@@ -1,8 +1,7 @@
 using Application.UseCases.Floors;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Tests.Application.UseCases.Floors;
 
@@ -19,8 +18,13 @@ public class DeleteFloorTests
     
     private readonly Guid _validHousingIdGuid = Guid.CreateVersion7();
     private HousingId _validHousingId;
+
+    private Floor _floor;
     
-    private ApplicationDbContext _dbContext;
+    private readonly CancellationToken _cancellationToken = CancellationToken.None;
+
+    private Mock<IFloorRepository> _floorRepositoryMock;
+    
     private DeleteFloor.CommandHandler _handler;
 
     [SetUp]
@@ -31,40 +35,32 @@ public class DeleteFloorTests
 
         _invalidFloorId = new FloorId(_invalidFloorIdGuid);
         
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
-            .Options;
-
-        _dbContext = new ApplicationDbContext(options);
-        _handler = new DeleteFloor.CommandHandler(_dbContext);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        _floor = Floor.Create(FloorNumber, _validHousingId, _validFloorId).Value;
+        
+        _floorRepositoryMock = new Mock<IFloorRepository>();
+        _floorRepositoryMock.Setup(r => r.ExistsAsync(_validFloorId, _cancellationToken))
+            .ReturnsAsync(true);
+        _floorRepositoryMock.Setup(r => r.GetByIdAsync(_validFloorId, _cancellationToken))
+            .ReturnsAsync(_floor);
+        
+        _handler = new DeleteFloor.CommandHandler(_floorRepositoryMock.Object);
     }
 
     [Test]
     public async Task Handle_FloorExists_DeletesFloorAndReturnsSuccess()
     {
         // Arrange
-        var floor = Floor.Create(FloorNumber, _validHousingId, _validFloorId).Value;
-        await _dbContext.Floors.AddAsync(floor);
-        await _dbContext.SaveChangesAsync();
-
         var command = new DeleteFloor.Command(_validFloorId);
 
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, _cancellationToken);
 
         using (Assert.EnterMultipleScope())
         {
             // Assert
             Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.Value, Is.EqualTo(1));
-            Assert.That(await _dbContext.Floors.FindAsync(_validFloorId), Is.Null);
+            _floorRepositoryMock.Verify(repository => repository.ExistsAsync(_validFloorId, _cancellationToken), Times.Once);
+            _floorRepositoryMock.Verify(repository => repository.GetByIdAsync(_validFloorId, _cancellationToken), Times.Once);
         }
     }
 
@@ -75,13 +71,15 @@ public class DeleteFloorTests
         var command = new DeleteFloor.Command(_invalidFloorId);
 
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, _cancellationToken);
 
         using (Assert.EnterMultipleScope())
         {
             // Assert
             Assert.That(result.IsSuccess, Is.False);
             Assert.That(result.Error, Is.EqualTo(FloorErrors.NotFound(_invalidFloorId)));
+            _floorRepositoryMock.Verify(repository => repository.ExistsAsync(_invalidFloorId, _cancellationToken), Times.Once);
+            _floorRepositoryMock.Verify(repository => repository.GetByIdAsync(_invalidFloorId, _cancellationToken), Times.Never);
         }
     }
 }

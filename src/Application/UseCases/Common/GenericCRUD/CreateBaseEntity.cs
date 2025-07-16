@@ -1,11 +1,11 @@
 using Application.Abstractions.Cache;
+using Application.Abstractions.Data;
+using Application.Abstractions.Data.Validators;
 using Application.UseCases.Common.Attributes;
 using Domain.Constants;
 using Domain.Models;
 using Domain.Models.Interfaces;
 using FluentValidation;
-using Infrastructure.Data.Repositories.Interfaces;
-using Infrastructure.Validators;
 using MediatR;
 
 namespace Application.UseCases.Common.GenericCRUD;

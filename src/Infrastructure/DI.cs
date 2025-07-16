@@ -1,22 +1,26 @@
 ﻿using System.Text;
+using Application.Abstractions.Data;
+using Application.Abstractions.Data.Filter;
+using Application.Abstractions.Messaging;
+using Domain.Aggregates.Floors;
+using Domain.Aggregates.Housings;
 using Domain.Models.Departments;
 using Domain.Models.Housings;
 using Infrastructure.Data;
+using Infrastructure.Data.Repositories;
 using Infrastructure.Data.Repositories.Implementations;
-using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Filter.Implementations;
-using Infrastructure.Filter.Interfaces;
 using Infrastructure.Kafka;
 using Infrastructure.Options.Authentication;
 using Infrastructure.Options.Kafka;
 using Infrastructure.QueryableWrapper.Implementation;
-using Infrastructure.QueryableWrapper.Interface;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
+using Housing = Domain.Models.Housings.Housing;
 
 namespace Infrastructure;
 
@@ -38,7 +42,9 @@ public static class DI
             .AddJwtAuth(configuration)
             .RegisterQueryBuilder()
             .AddHttpClient()
-            .RegisterEventConsumer();
+            .RegisterEventConsumer()
+            .AddAppServices()
+            .AddRepositories();
     
         return services;
     }
@@ -165,6 +171,23 @@ public static class DI
             .ValidateOnStart();
         
         services.AddSingleton<IEventConsumer, EventConsumer>();
+    
+        return services;
+    }
+    
+    private static IServiceCollection AddAppServices(this IServiceCollection services)
+    {
+        services.AddScoped<IFloorUniqueness, FloorUniqueness>();
+    
+        return services;
+    }
+    
+    private static IServiceCollection AddRepositories(this IServiceCollection services)
+    {
+        services.AddScoped<IFloorRepository, FloorRepository>();
+        services.AddScoped<IHousingRepository, HousingRepository>();
+        
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
     
         return services;
     }

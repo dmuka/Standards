@@ -1,6 +1,6 @@
-﻿using Infrastructure.Filter.Implementations;
+﻿using Application.Abstractions.Data.Filter.Models;
 
-namespace Infrastructure.Filter.Interfaces;
+namespace Application.Abstractions.Data.Filter;
 
 public interface IQueryBuilder<T> where T : class
 {

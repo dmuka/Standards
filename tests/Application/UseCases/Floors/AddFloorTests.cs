@@ -1,9 +1,12 @@
+using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Floors;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
 using Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
 namespace Tests.Application.UseCases.Floors;
@@ -12,18 +15,17 @@ namespace Tests.Application.UseCases.Floors;
 public class AddFloorTests
 {
     private FloorDto _floorDto;
-    private ApplicationDbContext _dbContext;
+    private Mock<IFloorRepository> _floorRepositoryMock;
     private Mock<IFloorUniqueness> _floorUniquenessMock;
+    private NullLogger<AddFloor> _loggerMock;
+    private Mock<IUnitOfWork> _unitOfWorkMock;
+    
     private AddFloor.CommandHandler _handler;
 
     [SetUp]
     public void Setup()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
-            .Options;
-
-        _dbContext = new ApplicationDbContext(options);
+        _floorRepositoryMock = new Mock<IFloorRepository>();
         
         _floorDto = new FloorDto
         {
@@ -35,15 +37,11 @@ public class AddFloorTests
         _floorUniquenessMock = new Mock<IFloorUniqueness>();
         _floorUniquenessMock.Setup(x => x.IsUniqueAsync(_floorDto.Number, _floorDto.HousingId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
-        
-        _handler = new AddFloor.CommandHandler(_dbContext, _floorUniquenessMock.Object);
-    }
 
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        _loggerMock = NullLogger<AddFloor>.Instance;
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
+        
+        _handler = new AddFloor.CommandHandler(_floorRepositoryMock.Object, _floorUniquenessMock.Object, _unitOfWorkMock.Object, _loggerMock);
     }
 
     [Test]
@@ -93,6 +91,6 @@ public class AddFloorTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.That(result.Value, Is.EqualTo(1));
+        Assert.That(result.IsSuccess, Is.True);
     }
 }

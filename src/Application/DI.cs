@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Behaviors;
 using Application.EventConsumers;
 using Application.UseCases.Common.GenericCRUD;
-using Domain.Aggregates.Floors;
+using Core;
 using Domain.Models;
 using Domain.Models.Departments;
 using Domain.Models.MetrologyControl;
@@ -9,8 +9,6 @@ using Domain.Models.Persons;
 using Domain.Models.Services;
 using Domain.Models.Standards;
 using FluentValidation;
-using Infrastructure.Data.Repositories;
-using Infrastructure.Errors;
 using MediatR;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -30,36 +28,37 @@ public static class DI
         });
         
         services
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Category>, Result<List<Category>>>), typeof(GetAllBaseEntity.QueryHandler<Category>))
-            .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Category>, int>), typeof(CreateBaseEntity.QueryHandler<Category>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<ServiceType>, Result<List<ServiceType>>>), typeof(GetAllBaseEntity.QueryHandler<ServiceType>))
-            .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<ServiceType>, int>), typeof(CreateBaseEntity.QueryHandler<ServiceType>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Position>, Result<List<Position>>>), typeof(GetAllBaseEntity.QueryHandler<Position>))
-            .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Position>, int>), typeof(CreateBaseEntity.QueryHandler<Position>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Characteristic>, Result<List<Characteristic>>>), typeof(GetAllBaseEntity.QueryHandler<Characteristic>))
-            .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Characteristic>, int>), typeof(CreateBaseEntity.QueryHandler<Characteristic>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Grade>, Result<List<Grade>>>), typeof(GetAllBaseEntity.QueryHandler<Grade>))
-            .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Grade>, int>), typeof(CreateBaseEntity.QueryHandler<Grade>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Material>, Result<List<Material>>>), typeof(GetAllBaseEntity.QueryHandler<Material>))
-            .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Material>, int>), typeof(CreateBaseEntity.QueryHandler<Material>))
-            .AddTransient(typeof(IRequestHandler<GetAllBaseEntity.Query<Quantity>, Result<List<Quantity>>>), typeof(GetAllBaseEntity.QueryHandler<Quantity>))
-            .AddTransient(typeof(IRequestHandler<CreateBaseEntity.Query<Quantity>, int>), typeof(CreateBaseEntity.QueryHandler<Quantity>))
+            .AddTransient<IRequestHandler<GetAllBaseEntity.Query<Category>, Result<List<Category>>>,
+                GetAllBaseEntity.QueryHandler<Category>>();
+        
+        services
+            .AddTransient<IRequestHandler<GetAllBaseEntity.Query<Category>, Result<List<Category>>>, GetAllBaseEntity.QueryHandler<Category>>()
+            .AddTransient<IRequestHandler<GetAllBaseEntity.Query<ServiceType>, Result<List<ServiceType>>>, GetAllBaseEntity.QueryHandler<ServiceType>>()
+            .AddTransient<IRequestHandler<CreateBaseEntity.Query<ServiceType>, int>, CreateBaseEntity.QueryHandler<ServiceType>>()
+            .AddTransient<IRequestHandler<GetAllBaseEntity.Query<Position>, Result<List<Position>>>, GetAllBaseEntity.QueryHandler<Position>>()
+            .AddTransient<IRequestHandler<CreateBaseEntity.Query<Position>, int>, CreateBaseEntity.QueryHandler<Position>>()
+            .AddTransient<IRequestHandler<GetAllBaseEntity.Query<Characteristic>, Result<List<Characteristic>>>, GetAllBaseEntity.QueryHandler<Characteristic>>()
+            .AddTransient<IRequestHandler<CreateBaseEntity.Query<Characteristic>, int>, CreateBaseEntity.QueryHandler<Characteristic>>()
+            .AddTransient<IRequestHandler<GetAllBaseEntity.Query<Grade>, Result<List<Grade>>>, GetAllBaseEntity.QueryHandler<Grade>>()
+            .AddTransient<IRequestHandler<CreateBaseEntity.Query<Grade>, int>, CreateBaseEntity.QueryHandler<Grade>>()
+            .AddTransient<IRequestHandler<GetAllBaseEntity.Query<Material>, Result<List<Material>>>, GetAllBaseEntity.QueryHandler<Material>>()
+            .AddTransient<IRequestHandler<CreateBaseEntity.Query<Material>, int>, CreateBaseEntity.QueryHandler<Material>>()
+            .AddTransient<IRequestHandler<GetAllBaseEntity.Query<Quantity>, Result<List<Quantity>>>, GetAllBaseEntity.QueryHandler<Quantity>>()
+            .AddTransient<IRequestHandler<CreateBaseEntity.Query<Quantity>, int>, CreateBaseEntity.QueryHandler<Quantity>>()
             
-            .AddTransient(typeof(IRequestHandler<GetById.Query<Position>, Position>), typeof(GetById.QueryHandler<Position>)) 
-            .AddTransient(typeof(IRequestHandler<GetById.Query<Characteristic>, Characteristic>), typeof(GetById.QueryHandler<Characteristic>))   
-            .AddTransient(typeof(IRequestHandler<GetById.Query<Grade>, Grade>), typeof(GetById.QueryHandler<Grade>))  
-            .AddTransient(typeof(IRequestHandler<GetById.Query<Category>, Category>), typeof(GetById.QueryHandler<Category>))    
-            .AddTransient(typeof(IRequestHandler<GetById.Query<Department>, Department>), typeof(GetById.QueryHandler<Department>))   
-            .AddTransient(typeof(IRequestHandler<GetById.Query<Sector>, Sector>), typeof(GetById.QueryHandler<Sector>)) 
-            .AddTransient(typeof(IRequestHandler<GetById.Query<Material>, Material>), typeof(GetById.QueryHandler<Material>)) 
-            .AddTransient(typeof(IRequestHandler<GetById.Query<Quantity>, Quantity>), typeof(GetById.QueryHandler<Quantity>)) 
-            .AddTransient(typeof(IRequestHandler<GetById.Query<Place>, Place>), typeof(GetById.QueryHandler<Place>));
+            .AddTransient<IRequestHandler<GetById.Query<Position>, Position>, GetById.QueryHandler<Position?>>() 
+            .AddTransient<IRequestHandler<GetById.Query<Characteristic>, Characteristic>, GetById.QueryHandler<Characteristic?>>()   
+            .AddTransient<IRequestHandler<GetById.Query<Grade>, Grade>, GetById.QueryHandler<Grade?>>()  
+            .AddTransient<IRequestHandler<GetById.Query<Category>, Category>, GetById.QueryHandler<Category?>>()    
+            .AddTransient<IRequestHandler<GetById.Query<Department>, Department>, GetById.QueryHandler<Department?>>()   
+            .AddTransient<IRequestHandler<GetById.Query<Sector>, Sector>, GetById.QueryHandler<Sector?>>() 
+            .AddTransient<IRequestHandler<GetById.Query<Material>, Material>, GetById.QueryHandler<Material?>>()
+            .AddTransient<IRequestHandler<GetById.Query<Quantity>, Quantity>, GetById.QueryHandler<Quantity?>>()
+            .AddTransient<IRequestHandler<GetById.Query<Place>, Place>, GetById.QueryHandler<Place?>>();
 
         services.AddValidatorsFromAssembly(typeof(DI).Assembly, includeInternalTypes: true);
 
         services.AddKafkaConsumerHostedService();
-
-        services.AddAppServices();
         
         return services;
     }
@@ -74,13 +73,6 @@ public static class DI
     {
         services.AddHostedService<UserRegisteredEventConsumer>();
 
-        return services;
-    }
-    
-    private static IServiceCollection AddAppServices(this IServiceCollection services)
-    {
-        services.AddScoped<IFloorUniqueness, FloorUniqueness>();
-    
         return services;
     }
     

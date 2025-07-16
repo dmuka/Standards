@@ -1,8 +1,6 @@
 using Application.UseCases.Housings;
-using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Tests.Application.UseCases.Housings;
 
@@ -18,8 +16,12 @@ public class DeleteHousingTests
     
     private readonly Guid _validHousingIdGuid = Guid.CreateVersion7();
     private HousingId _validHousingId;
+
+    private Housing _housing;
     
-    private ApplicationDbContext _dbContext;
+    private readonly CancellationToken _cancellationToken = CancellationToken.None;
+    private Mock<IHousingRepository> _housingRepositoryMock;
+    
     private DeleteHousing.CommandHandler _handler;
 
     [SetUp]
@@ -28,34 +30,26 @@ public class DeleteHousingTests
         _validHousingId = new HousingId(_validHousingIdGuid);
         _invalidHousingId = new HousingId(_invalidHousingIdGuid);
         
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
-            .Options;
-
-        _dbContext = new ApplicationDbContext(options);
-        _handler = new DeleteHousing.CommandHandler(_dbContext);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        _housing = Housing.Create(
+                               HousingName.Create(HousingNameValue).Value, 
+                               HousingShortName.Create(HousingShortNameValue).Value,
+                               Address.Create(AddressValue).Value,
+                               _validHousingId,
+                               "Comments").Value;
+        
+        _housingRepositoryMock = new Mock<IHousingRepository>();
+        _housingRepositoryMock.Setup(repository => repository.ExistsAsync(_validHousingId, _cancellationToken))
+            .ReturnsAsync(true);
+        _housingRepositoryMock.Setup(repository => repository.GetByIdAsync(_validHousingId, _cancellationToken))
+            .ReturnsAsync(_housing);
+        
+        _handler = new DeleteHousing.CommandHandler(_housingRepositoryMock.Object);
     }
 
     [Test]
     public async Task Handle_HousingExists_DeletesHousingAndReturnsSuccess()
     {
         // Arrange
-        var housing = Housing.Create(
-            HousingName.Create(HousingNameValue).Value, 
-            HousingShortName.Create(HousingShortNameValue).Value,
-            Address.Create(AddressValue).Value,
-            _validHousingId,
-            "Comments").Value;
-        await _dbContext.Housings2.AddAsync(housing);
-        await _dbContext.SaveChangesAsync();
-
         var command = new DeleteHousing.Command(_validHousingId);
 
         // Act
@@ -65,8 +59,8 @@ public class DeleteHousingTests
         {
             // Assert
             Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.Value, Is.EqualTo(1));
-            Assert.That(await _dbContext.Housings2.FindAsync(_validHousingId), Is.Null);
+            _housingRepositoryMock.Verify(repository => repository.ExistsAsync(_validHousingId, _cancellationToken), Times.Once);
+            _housingRepositoryMock.Verify(repository => repository.GetByIdAsync(_validHousingId, _cancellationToken), Times.Once);
         }
     }
 

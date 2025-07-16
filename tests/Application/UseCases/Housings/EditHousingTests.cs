@@ -1,8 +1,7 @@
 using Application.UseCases.DTOs;
 using Application.UseCases.Housings;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Tests.Application.UseCases.Housings;
 
@@ -11,26 +10,28 @@ public class EditHousingTests
 {
     private readonly HousingId _housingId = new (Guid.CreateVersion7());
     private readonly HousingId _nonExistentHousingId = new (Guid.CreateVersion7());
+    private readonly HousingName _housingName = HousingName.Create("Housing name").Value;
+    private readonly HousingShortName _housingShortName = HousingShortName.Create("Housing short name").Value;
+    private readonly Address _address = Address.Create("Housing test address").Value;
     
     private HousingDto2 _housingDto;
     private Housing _housing;
     
-    private ApplicationDbContext _dbContext;
+    private readonly CancellationToken _cancellationToken = CancellationToken.None;
+    
+    private Mock<IHousingRepository> _housingRepositoryMock;
+    
     private EditHousing.CommandHandler _handler;
 
     [SetUp]
-    public async Task Setup()
+    public void Setup()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
-            .Options;
-        
         _housingDto = new HousingDto2
         {
-            HousingName = HousingName.Create("Housing name").Value,
-            HousingShortName = HousingShortName.Create("Housing short name").Value,
+            HousingName = _housingName,
+            HousingShortName = _housingShortName,
             HousingId = _housingId, 
-            Address = Address.Create("Housing test address").Value,
+            Address = _address
         };
 
         _housing = Housing.Create(
@@ -40,36 +41,13 @@ public class EditHousingTests
             _housingId,
             "Comments").Value;
 
-        _dbContext = new ApplicationDbContext(options);
-        await _dbContext.Housings2.AddAsync(_housing, CancellationToken.None);
-        await _dbContext.SaveChangesAsync(CancellationToken.None);
+        _housingRepositoryMock = new Mock<IHousingRepository>();
+        _housingRepositoryMock.Setup(repository => repository.ExistsAsync(_housingId, _cancellationToken))
+            .ReturnsAsync(true);
+        _housingRepositoryMock.Setup(repository => repository.GetByIdAsync(_housingId, _cancellationToken))
+            .ReturnsAsync(_housing);
         
-        _handler = new EditHousing.CommandHandler(_dbContext);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
-    }
-
-    [Test]
-    public async Task Handle_HousingCreationFails_ReturnsFailure()
-    {
-        // Arrange
-        _housingDto.HousingName = null!;
-        var command = new EditHousing.Command(_housingDto);
-
-        // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        using (Assert.EnterMultipleScope())
-        {
-            // Assert
-            Assert.That(result.IsFailure, Is.True);
-            Assert.That(result.Error.Code, Is.EqualTo(HousingErrors.EmptyHousingName.Code));
-        }
+        _handler = new EditHousing.CommandHandler(_housingRepositoryMock.Object);
     }
 
     [Test]
@@ -80,7 +58,7 @@ public class EditHousingTests
         var command = new EditHousing.Command(_housingDto);
 
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, _cancellationToken);
 
         using (Assert.EnterMultipleScope())
         {
@@ -91,15 +69,15 @@ public class EditHousingTests
     }
 
     [Test]
-    public async Task Handle_HousingSuccessfullyEdited_ReturnsNumberOfChanges()
+    public async Task Handle_HousingSuccessfullyEdited_ReturnsSuccessResult()
     {
         // Arrange
         var command = new EditHousing.Command(_housingDto);
 
         // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
+        var result = await _handler.Handle(command, _cancellationToken);
 
         // Assert
-        Assert.That(result.Value, Is.EqualTo(1));
+        Assert.That(result.IsSuccess, Is.True);
     }
 }

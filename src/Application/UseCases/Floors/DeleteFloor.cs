@@ -1,6 +1,5 @@
 using Core;
 using Domain.Aggregates.Floors;
-using Infrastructure.Data;
 using MediatR;
 
 namespace Application.UseCases.Floors;
@@ -12,19 +11,19 @@ public class DeleteFloor
         public FloorId FloorId { get; set; } = floorId;
     }
     
-    public class CommandHandler(ApplicationDbContext dbContext) : IRequestHandler<Command, Result<int>>
+    public class CommandHandler(IFloorRepository repository) : IRequestHandler<Command, Result>
     {
-        public async Task<Result<int>> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var existingFloor = await dbContext.Floors.FindAsync(
-                [command.FloorId], 
-                cancellationToken: cancellationToken);
-            if (existingFloor is null) return Result.Failure<int>(FloorErrors.NotFound(command.FloorId));
+            var isFloorExist = await repository.ExistsAsync(command.FloorId, cancellationToken);
             
-            dbContext.Floors.Remove(existingFloor);
-            var number = await dbContext.SaveChangesAsync(cancellationToken);
+            if (!isFloorExist) return Result.Failure<int>(FloorErrors.NotFound(command.FloorId));
+            
+            var existingFloor = await repository.GetByIdAsync(command.FloorId, cancellationToken: cancellationToken);
+            
+            repository.Remove(existingFloor);
 
-            return Result.Success(number);
+            return Result.Success();
         }
     }
 }

@@ -1,8 +1,9 @@
-﻿using Application.UseCases.CalibrationsJournal;
+﻿using Application.Abstractions.Data.Filter;
+using Application.Abstractions.Data.Filter.Models;
+using Application.UseCases.CalibrationsJournal;
 using Application.UseCases.Common.GenericCRUD;
 using Application.UseCases.DTOs;
 using Domain.Models.MetrologyControl;
-using Infrastructure.Filter.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

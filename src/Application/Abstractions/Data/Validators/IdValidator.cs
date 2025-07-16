@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
-using Infrastructure.Data.Repositories.Interfaces;
 
-namespace Infrastructure.Validators;
+namespace Application.Abstractions.Data.Validators;
 
 public class IdValidator<T> : AbstractValidator<int> where T : class
 {

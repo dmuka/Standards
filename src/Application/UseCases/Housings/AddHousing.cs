@@ -1,21 +1,20 @@
 using Application.UseCases.DTOs;
 using Core;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
 using MediatR;
 
 namespace Application.UseCases.Housings;
 
 public class AddHousing
 {
-    public class Command(HousingDto2 housing) : IRequest<Result<int>>
+    public class Command(HousingDto2 housing) : IRequest<Result<Housing>>
     {
         public HousingDto2 HousingDto { get; set; } = housing;
     };
 
-    public class CommandHandler(ApplicationDbContext dbContext) : IRequestHandler<Command, Result<int>>
+    public class CommandHandler(IHousingRepository repository) : IRequestHandler<Command, Result<Housing>>
     {
-        public async Task<Result<int>> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<Result<Housing>> Handle(Command command, CancellationToken cancellationToken)
         {
             var housingCreationResult = Housing.Create(
                 command.HousingDto.HousingName, 
@@ -24,12 +23,13 @@ public class AddHousing
                 command.HousingDto.HousingId,
                 command.HousingDto.Comments);
 
-            if (housingCreationResult.IsFailure) return Result.Failure<int>(housingCreationResult.Error);
+            if (housingCreationResult.IsFailure) return Result.Failure<Housing>(housingCreationResult.Error);
+
+            var housing = housingCreationResult.Value;
             
-            await dbContext.Housings2.AddAsync(housingCreationResult.Value, cancellationToken);
-            var number = await dbContext.SaveChangesAsync(cancellationToken);
+            await repository.AddAsync(housing, cancellationToken);
             
-            return Result.Success(number);
+            return Result.Success(housing);
         }
     }
 }

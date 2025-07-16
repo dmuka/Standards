@@ -1,6 +1,7 @@
-﻿using Infrastructure.Data.Repositories.Interfaces;
+﻿using Application.Abstractions.Data;
+using Application.Abstractions.Data.Filter;
+using Application.Abstractions.Data.Filter.Models;
 using Infrastructure.ExpressionTrees;
-using Infrastructure.Filter.Interfaces;
 using Infrastructure.Filter.Models;
 
 namespace Infrastructure.Filter.Implementations

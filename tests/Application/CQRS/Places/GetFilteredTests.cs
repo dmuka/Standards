@@ -1,13 +1,13 @@
-﻿using Application.UseCases.Common.GenericCRUD;
+﻿using Application.Abstractions.Data;
+using Application.Abstractions.Data.Filter;
+using Application.Abstractions.Data.Filter.Models;
+using Application.UseCases.Common.GenericCRUD;
 using Domain.Models;
 using Domain.Models.MetrologyControl;
 using FluentAssertions;
 using FluentValidation;
 using FluentValidation.TestHelper;
-using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Filter.Implementations;
-using Infrastructure.Filter.Interfaces;
-using Infrastructure.QueryableWrapper.Interface;
 using MediatR;
 using Moq;
 using Tests.Common;

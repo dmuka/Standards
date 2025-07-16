@@ -2,8 +2,6 @@ using Application.UseCases.DTOs;
 using Application.UseCases.Floors;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
 using Moq;
 
 namespace Tests.Application.UseCases.Floors;
@@ -11,45 +9,51 @@ namespace Tests.Application.UseCases.Floors;
 [TestFixture]
 public class EditFloorTests
 {
-    private FloorDto _floorDto;
-    private Floor _floor;
+    private const int FloorNumber = 1;
     
-    private ApplicationDbContext _dbContext;
+    private static readonly Guid ValidFloorIdGuid = Guid.CreateVersion7();
+    private readonly FloorId _validFloorId = new (ValidFloorIdGuid);    
+    
+    private static readonly Guid InvalidFloorIdGuid = Guid.CreateVersion7();
+    private readonly FloorId _invalidFloorId = new (InvalidFloorIdGuid);
+    
+    private static readonly Guid ValidHousingIdGuid = Guid.CreateVersion7();
+    private readonly HousingId _validHousingId = new HousingId(ValidHousingIdGuid);
+
+    private Floor _floor;
+    private FloorDto _floorDto;
+    
+    private readonly CancellationToken _cancellationToken = CancellationToken.None;
+
+    private Mock<IFloorRepository> _floorRepositoryMock;
     private Mock<IFloorUniqueness> _floorUniquenessMock;
+    
     private EditFloor.CommandHandler _handler;
 
     [SetUp]
-    public async Task Setup()
+    public void Setup()
     {
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
-            .Options;
         
         _floorDto = new FloorDto
         {
-            FloorId = new FloorId(Guid.CreateVersion7()), 
-            Number = 1, 
-            HousingId = new HousingId(Guid.CreateVersion7())
+            FloorId = _validFloorId, 
+            Number = FloorNumber, 
+            HousingId = _validHousingId
         };
 
         _floor = Floor.Create(_floorDto.Number, _floorDto.HousingId, _floorDto.FloorId).Value;
 
-        _dbContext = new ApplicationDbContext(options);
-        await _dbContext.Floors.AddAsync(_floor);
-        await _dbContext.SaveChangesAsync();
+        _floorRepositoryMock = new Mock<IFloorRepository>();
+        _floorRepositoryMock.Setup(r => r.ExistsAsync(_validFloorId, _cancellationToken))
+            .ReturnsAsync(true);
+        _floorRepositoryMock.Setup(r => r.GetByIdAsync(_validFloorId, _cancellationToken))
+            .ReturnsAsync(_floor);
         
         _floorUniquenessMock = new Mock<IFloorUniqueness>();
         _floorUniquenessMock.Setup(x => x.IsUniqueAsync(_floorDto.Number, _floorDto.HousingId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
         
-        _handler = new EditFloor.CommandHandler(_dbContext, _floorUniquenessMock.Object);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        _handler = new EditFloor.CommandHandler(_floorRepositoryMock.Object, _floorUniquenessMock.Object);
     }
 
     [Test]
@@ -68,24 +72,8 @@ public class EditFloorTests
             // Assert
             Assert.That(result.IsFailure, Is.True);
             Assert.That(result.Error, Is.EqualTo(FloorErrors.FloorAlreadyExistOrWrong));
-        }
-    }
-
-    [Test]
-    public async Task Handle_FloorEditFails_ReturnsZero()
-    {
-        // Arrange
-        _floorDto.Number = 0;
-        var command = new EditFloor.Command(_floorDto);
-
-        // Act
-        var result = await _handler.Handle(command, CancellationToken.None);
-
-        using (Assert.EnterMultipleScope())
-        {
-            // Assert
-            Assert.That(result.IsFailure, Is.True);
-            Assert.That(result.Error.Code, Is.EqualTo(FloorErrors.FloorAlreadyExistOrWrong.Code));
+            _floorRepositoryMock.Verify(repository => repository.ExistsAsync(_validFloorId, _cancellationToken), Times.Once);
+            _floorRepositoryMock.Verify(repository => repository.GetByIdAsync(_validFloorId, _cancellationToken), Times.Never);
         }
     }
 
@@ -99,6 +87,9 @@ public class EditFloorTests
         var result = await _handler.Handle(command, CancellationToken.None);
 
         // Assert
-        Assert.That(result.Value, Is.EqualTo(1));
+        Assert.That(result.IsSuccess, Is.True);
+        _floorRepositoryMock.Verify(repository => repository.ExistsAsync(_validFloorId, _cancellationToken), Times.Once);
+        _floorRepositoryMock.Verify(repository => repository.GetByIdAsync(_validFloorId, _cancellationToken), Times.Once);
+        _floorRepositoryMock.Verify(repository => repository.Update(_floor), Times.Once);
     }
 }

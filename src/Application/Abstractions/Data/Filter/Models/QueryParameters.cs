@@ -1,7 +1,7 @@
 using Domain.Models.Constants;
 using Infrastructure.Filter.Models;
 
-namespace Infrastructure.Filter.Implementations;
+namespace Application.Abstractions.Data.Filter.Models;
 
 public class QueryParameters(
     string searchString = "",

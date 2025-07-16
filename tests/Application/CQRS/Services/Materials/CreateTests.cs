@@ -1,9 +1,9 @@
 ﻿using Application.Abstractions.Cache;
+using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Materials;
 using FluentValidation;
 using FluentValidation.TestHelper;
-using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
 using Moq;
 using Tests.Common;

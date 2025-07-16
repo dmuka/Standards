@@ -2,6 +2,7 @@ using Application.UseCases.Common.GenericCRUD;
 using Domain.Models.Persons;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Mvc;
 using Moq;
 using Tests.Common;
 using WebApi.Controllers;
@@ -34,10 +35,15 @@ public class CategoriesControllerTests : BaseTestFixture
         var result = await _controller.GetCategories();
 
         // Assert
-        Assert.That(result, Is.InstanceOf<Ok<List<Category>>>());
-        var okResult = result as Ok<List<Category>>;
-        Assert.That(okResult, Is.Not.Null);
-        Assert.That(okResult.Value, Is.EquivalentTo(categories));
+        Assert.That(result, Is.InstanceOf<OkObjectResult>());
+        var okResult = result as OkObjectResult;
+        using (Assert.EnterMultipleScope())
+        {
+            Assert.That(okResult.StatusCode, Is.EqualTo(200));
+            Assert.That(okResult.Value, Is.InstanceOf<Core.Result<List<Category>>>());
+        }
+        var actualCategories = okResult.Value as Core.Result<List<Category>>;
+        Assert.That(actualCategories.Value, Is.EquivalentTo(categories));
     }
 
     [Test]

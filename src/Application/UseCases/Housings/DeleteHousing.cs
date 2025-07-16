@@ -1,30 +1,29 @@
 using Core;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
 using MediatR;
 
 namespace Application.UseCases.Housings;
 
 public class DeleteHousing
 {
-    public class Command(HousingId housingId) : IRequest<Result<int>>
+    public class Command(HousingId housingId) : IRequest<Result>
     {
         public HousingId HousingId { get; set; } = housingId;
     }
     
-    public class CommandHandler(ApplicationDbContext dbContext) : IRequestHandler<Command, Result<int>>
+    public class CommandHandler(IHousingRepository repository) : IRequestHandler<Command, Result>
     {
-        public async Task<Result<int>> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var existingHousing = await dbContext.Housings2.FindAsync(
-                [command.HousingId], 
-                cancellationToken: cancellationToken);
-            if (existingHousing is null) return Result.Failure<int>(HousingErrors.NotFound(command.HousingId));
+            var isHousingExist = await repository.ExistsAsync(command.HousingId, cancellationToken);
             
-            dbContext.Housings2.Remove(existingHousing);
-            var number = await dbContext.SaveChangesAsync(cancellationToken);
+            if (!isHousingExist) return Result.Failure<int>(HousingErrors.NotFound(command.HousingId));
+            
+            var existingHousing = await repository.GetByIdAsync(command.HousingId, cancellationToken: cancellationToken);
+            
+            repository.Remove(existingHousing);
 
-            return Result.Success(number);
+            return Result.Success();
         }
     }
 }

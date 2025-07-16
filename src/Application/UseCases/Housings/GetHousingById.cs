@@ -1,36 +1,27 @@
-using Domain.Aggregates.Floors;
+using Core;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace Application.UseCases.Housings;
 
 public class GetHousingById
 {
-    public class Query(HousingId housingId) : IRequest<Housing?>
+    public class Query(HousingId housingId) : IRequest<Result<Housing>>
     {
         public HousingId HousingId { get; set; } = housingId;
     }
     
-    public class QueryHandler(ApplicationDbContext dbContext) : IRequestHandler<Query, Housing?>
+    public class QueryHandler(IHousingRepository repository) : IRequestHandler<Query, Result<Housing>>
     {
-        public async Task<Housing?> Handle(Query query, CancellationToken cancellationToken)
+        public async Task<Result<Housing>> Handle(Query query, CancellationToken cancellationToken)
         {
-            var housing = await dbContext.Housings2
-                .AsNoTracking()
-                .FirstOrDefaultAsync(housing => housing.Id == query.HousingId, cancellationToken);
-
-            if (housing is null) return housing;
+            var isHousingExist = await repository.ExistsAsync(query.HousingId, cancellationToken);
             
-            var floorIds = dbContext.Floors
-                .Where(floor => floor.HousingId == housing.Id)
-                .Select(floor => (FloorId)floor.Id)
-                .ToList();
+            if (!isHousingExist) return Result.Failure<Housing>(HousingErrors.NotFound(query.HousingId));
+            
+            var floor = await repository.GetByIdAsync(query.HousingId, cancellationToken);
 
-            housing.AddFloors(floorIds);
-
-            return housing;
+            return floor ;
         }
     }
 }

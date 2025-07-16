@@ -3,8 +3,8 @@ using System.Security.Claims;
 using System.Text;
 using Application.Abstractions.Authentication;
 using Application.Abstractions.Authentication.Enums;
+using Application.Abstractions.Data;
 using Domain.Models.Users;
-using Infrastructure.Data.Repositories.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
 namespace WebApi.Infrastructure.Services.Implementations;

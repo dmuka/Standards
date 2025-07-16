@@ -1,11 +1,11 @@
 ﻿using Application.Abstractions.Cache;
+using Application.Abstractions.Data;
 using Application.UseCases.Common.GenericCRUD;
+using Core;
 using Domain.Constants;
 using Domain.Models.Persons;
 using FluentValidation;
 using FluentValidation.TestHelper;
-using Infrastructure.Data.Repositories.Interfaces;
-using Infrastructure.Errors;
 using MediatR;
 using Moq;
 using Tests.Common;

@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Application.Abstractions.Messaging;
 using Confluent.Kafka;
 using Infrastructure.Options.Kafka;
 using Microsoft.Extensions.Hosting;

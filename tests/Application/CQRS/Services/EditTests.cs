@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Cache;
+using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Services;
 using Domain.Constants;
@@ -8,7 +9,6 @@ using Domain.Models.Persons;
 using Domain.Models.Services;
 using FluentValidation;
 using FluentValidation.TestHelper;
-using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
 using Moq;
 using Tests.Common;

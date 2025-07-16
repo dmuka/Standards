@@ -1,6 +1,7 @@
-﻿using Application.UseCases.Common.GenericCRUD;
+﻿using Application.Abstractions.Data.Filter;
+using Application.Abstractions.Data.Filter.Models;
+using Application.UseCases.Common.GenericCRUD;
 using Domain.Models.Standards;
-using Infrastructure.Filter.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

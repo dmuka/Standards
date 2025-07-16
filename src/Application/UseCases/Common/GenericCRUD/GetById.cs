@@ -1,9 +1,9 @@
 ﻿using Application.Abstractions.Cache;
+using Application.Abstractions.Data;
+using Application.Abstractions.Data.Validators;
 using Domain;
 using Domain.Models.Interfaces;
 using FluentValidation;
-using Infrastructure.Data.Repositories.Interfaces;
-using Infrastructure.Validators;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

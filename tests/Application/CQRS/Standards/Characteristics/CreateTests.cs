@@ -1,10 +1,10 @@
 ﻿using Application.Abstractions.Cache;
+using Application.Abstractions.Data;
 using Application.UseCases.Characteristics;
 using Application.UseCases.DTOs;
 using Domain.Models.Standards;
 using FluentValidation;
 using FluentValidation.TestHelper;
-using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Logging;
 using Moq;

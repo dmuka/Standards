@@ -1,10 +1,10 @@
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
+using Core;
 using Domain.Constants;
-using Domain.Models;
 using Domain.Models.Interfaces;
-using Infrastructure.Errors;
 using MediatR;
+using Entity = Domain.Models.Entity;
 
 namespace Application.UseCases.Common.GenericCRUD;
 

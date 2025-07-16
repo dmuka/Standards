@@ -1,6 +1,6 @@
-﻿using Application.UseCases.Common.GenericCRUD;
+﻿using Application.Abstractions.Data.Filter.Models;
+using Application.UseCases.Common.GenericCRUD;
 using Domain.Models.Persons;
-using Infrastructure.Filter.Implementations;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +15,13 @@ public class CategoriesController(ISender sender) : ControllerBase
 {
     [HttpGet]
     [Route("list")]
-    public async Task<IResult> GetCategories()
+    public async Task<IActionResult> GetCategories()
     {
         var query = new GetAllBaseEntity.Query<Category>();
 
         var result = await sender.Send(query);
 
-        return result.Match(Results.Ok, CustomResults.Problem);
+        return Ok(result);
     }
 
     [HttpGet]

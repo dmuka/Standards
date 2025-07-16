@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Authentication;
+using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Domain.Models.Users;
-using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Exceptions;
 using Infrastructure.Exceptions.Enum;
 

@@ -1,8 +1,9 @@
+using Application.Abstractions.Data;
+using Application.Abstractions.Data.Filter;
+using Application.Abstractions.Data.Filter.Models;
 using Domain.Models.Housings;
 using FluentAssertions;
-using Infrastructure.Data.Repositories.Interfaces;
 using Infrastructure.Filter.Implementations;
-using Infrastructure.Filter.Interfaces;
 using Moq;
 using Tests.Common;
 

@@ -1,4 +1,4 @@
-namespace Infrastructure.Validators.Constants;
+namespace Application.Abstractions.Data.Validators.Constants;
 
 public static class ValidationErrors
 {

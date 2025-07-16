@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Storage;
 
-namespace Infrastructure.Data.Repositories.Interfaces
+namespace Application.Abstractions.Data
 {
     /// <summary>
     /// Contains all the repository methods. If you register the multiple DbContexts, it will use the last one.
@@ -131,7 +131,7 @@ namespace Infrastructure.Data.Repositories.Interfaces
             CancellationToken cancellationToken = default) where TEntity : class;
 
         /// <summary>
-        /// This method takes an object of <see cref="QueryDetails{TEntity}"/> as parameter and returns <see cref="List{TEntity}"/>.
+        /// This method takes an object of <see cref="QueryDetails{T}"/> as parameter and returns <see cref="List{TEntity}"/>.
         /// </summary>
         /// <typeparam name="TEntity">The type of the entity.</typeparam>
         /// <param name="details">A <see cref="QueryDetails{TEntity}"/> <see cref="object"/> which contains all the conditions and criteria

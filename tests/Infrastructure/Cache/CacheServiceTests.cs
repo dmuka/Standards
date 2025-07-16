@@ -1,7 +1,7 @@
 using Application.Abstractions.Cache;
+using Application.Abstractions.Data;
 using Domain.Models.Housings;
 using FluentAssertions;
-using Infrastructure.Data.Repositories.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
 using Moq;
 using Tests.Common;

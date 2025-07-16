@@ -1,7 +1,6 @@
 using Application.UseCases.Housings;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
+using Moq;
 
 namespace Tests.Application.UseCases.Housings;
 
@@ -14,7 +13,10 @@ public class GetAllHousingsTests
     private Housing _housing1;
     private Housing _housing2;
     
-    private ApplicationDbContext _dbContext;
+    private readonly CancellationToken _cancellationToken = CancellationToken.None;
+    
+    private Mock<IHousingRepository> _housingRepositoryMock;
+    
     private GetAllHousings.QueryHandler _handler;
 
     [SetUp]
@@ -30,38 +32,26 @@ public class GetAllHousingsTests
             HousingShortName.Create("Housing short name 2").Value,
             Address.Create("Housing address line 2").Value,
             _housingId2).Value;
+
+        _housingRepositoryMock = new Mock<IHousingRepository>();
+        _housingRepositoryMock.Setup(repository => repository.GetAllAsync(_cancellationToken))
+            .ReturnsAsync([_housing1, _housing2]);
         
-        var options = new DbContextOptionsBuilder<ApplicationDbContext>()
-            .UseInMemoryDatabase(databaseName: $"TestDb_{Guid.NewGuid()}")
-            .Options;
-
-        _dbContext = new ApplicationDbContext(options);
-        _handler = new GetAllHousings.QueryHandler(_dbContext);
-    }
-
-    [TearDown]
-    public void TearDown()
-    {
-        _dbContext.Database.EnsureDeleted();
-        _dbContext.Dispose();
+        _handler = new GetAllHousings.QueryHandler(_housingRepositoryMock.Object);
     }
 
     [Test]
     public async Task Handle_WhenCalled_ReturnsAllHousings()
     {
         // Arrange
-        await _dbContext.Housings2.AddRangeAsync(_housing1, _housing2);
-        await _dbContext.SaveChangesAsync();
-
         var query = new GetAllHousings.Query();
 
         // Act
-        var result = await _handler.Handle(query, CancellationToken.None);
+        var result = await _handler.Handle(query, _cancellationToken);
 
         using (Assert.EnterMultipleScope())
         {
             // Assert
-            Assert.That(result, Is.Not.Null);
             Assert.That(result, Has.Count.EqualTo(2));
             Assert.That(result, Has.Exactly(1).Matches<Housing>(h => h.Id == _housing1.Id));
             Assert.That(result, Has.Exactly(1).Matches<Housing>(h => h.Id == _housing2.Id));
@@ -73,6 +63,8 @@ public class GetAllHousingsTests
     {
         // Arrange
         var query = new GetAllHousings.Query();
+        _housingRepositoryMock.Setup(repository => repository.GetAllAsync(_cancellationToken))
+            .ReturnsAsync([]);
 
         // Act
         var result = await _handler.Handle(query, CancellationToken.None);
@@ -80,7 +72,6 @@ public class GetAllHousingsTests
         using (Assert.EnterMultipleScope())
         {
             // Assert
-            Assert.That(result, Is.Not.Null);
             Assert.That(result, Is.Empty);
         }
     }

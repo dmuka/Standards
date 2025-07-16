@@ -8,33 +8,24 @@ namespace Application.UseCases.Housings;
 
 public class EditHousing
 {
-    public class Command(HousingDto2 housing) : IRequest<Result<int>>
+    public class Command(HousingDto2 housing) : IRequest<Result>
     {
         public HousingDto2 HousingDto { get; set; } = housing;
     }
 
-    public class CommandHandler(ApplicationDbContext dbContext) 
-        : IRequestHandler<Command, Result<int>>
+    public class CommandHandler(IHousingRepository repository) : IRequestHandler<Command, Result>
     {
-        public async Task<Result<int>> Handle(Command command, CancellationToken cancellationToken)
+        public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var existingHousing = await dbContext.Housings2.FindAsync(
-                [command.HousingDto.HousingId], 
-                cancellationToken: cancellationToken);
-            if (existingHousing is null) return Result.Failure<int>(HousingErrors.NotFound(command.HousingDto.HousingId));
+            var isHousingExist = await repository.ExistsAsync(command.HousingDto.HousingId, cancellationToken);
             
-            var housingUpdateResult = existingHousing.Update(
-                command.HousingDto.HousingName,
-                command.HousingDto.HousingShortName,
-                command.HousingDto.Address,
-                command.HousingDto.Comments);
-
-            if (housingUpdateResult.IsFailure) return Result.Failure<int>(housingUpdateResult.Error);
+            if (!isHousingExist) return Result.Failure(HousingErrors.NotFound(command.HousingDto.HousingId));
             
-            dbContext.Update(existingHousing);
-            var number = await dbContext.SaveChangesAsync(cancellationToken);
+            var existingHousing = await repository.GetByIdAsync(command.HousingDto.HousingId, cancellationToken: cancellationToken);
+            
+            repository.Update(existingHousing);
 
-            return number;
+            return Result.Success();
         }
     }
 }

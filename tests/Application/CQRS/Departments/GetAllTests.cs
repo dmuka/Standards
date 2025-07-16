@@ -1,13 +1,13 @@
 using System.Linq.Expressions;
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
+using Application.Abstractions.Data;
 using Application.UseCases.Departments;
 using Application.UseCases.DTOs;
 using Domain.Constants;
 using Domain.Models.Departments;
 using Domain.Models.Persons;
 using FluentAssertions;
-using Infrastructure.Data.Repositories.Interfaces;
 using MediatR;
 using Microsoft.EntityFrameworkCore.Query;
 using Moq;

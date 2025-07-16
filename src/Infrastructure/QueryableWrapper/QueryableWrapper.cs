@@ -1,4 +1,4 @@
-﻿using Infrastructure.QueryableWrapper.Interface;
+﻿using Application.Abstractions.Data;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.QueryableWrapper.Implementation;
