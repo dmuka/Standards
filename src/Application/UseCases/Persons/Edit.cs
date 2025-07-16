@@ -28,10 +28,6 @@ public class Edit
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
             var position =  await repository.GetByIdAsync<Position>(request.PersonDto.PositionId, cancellationToken);
-            if (position is null) throw new StandardsException(
-                StatusCodeByError.BadRequest, 
-                $"{PositionErrors.NotFound} (id: {request.PersonDto.PositionId})", 
-                PositionErrors.NotFound);
             
             var category = await repository.GetByIdAsync<Category>(request.PersonDto.CategoryId, cancellationToken);
             
@@ -48,7 +44,7 @@ public class Edit
                 BirthdayDate = request.PersonDto.BirthdayDate,
                 Role = request.PersonDto.Role,
                 Category = category!,
-                Position = position,
+                Position = position!,
                 Sector = sector!,
                 User = user!,
                 Comments = request.PersonDto.Comments
