@@ -10,11 +10,11 @@ namespace Domain.Aggregates.Floors;
 public class Floor : AggregateRoot, ICacheable
 {
     public int Number { get; private set; }
-    public HousingId HousingId { get; private set; }
+    public HousingId HousingId { get; private set; } = null!;
     private readonly List<Room> _rooms = [];
     public IReadOnlyCollection<Room> Rooms => _rooms.AsReadOnly();
     
-    public Floor()
+    protected Floor()
     {
     }
 

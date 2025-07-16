@@ -25,7 +25,7 @@ public class Edit
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
             var rooms = repository.GetQueryable<Room>()
-                .Where(room => room.Sector.Id == request.SectorDto.Id)
+                .Where(room => room.Sector!.Id == request.SectorDto.Id)
                 .ToList();
 
             var workplaces = repository.GetQueryable<Workplace>()

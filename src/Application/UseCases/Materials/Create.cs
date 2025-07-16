@@ -30,7 +30,7 @@ public class Create
                 Id = request.MaterialDto.Id,
                 Name = request.MaterialDto.Name,
                 ShortName = request.MaterialDto.ShortName,
-                Unit = unit
+                Unit = unit!
             };
 
             if (request.MaterialDto.Comments is not null) dto.Comments = request.MaterialDto.Comments;

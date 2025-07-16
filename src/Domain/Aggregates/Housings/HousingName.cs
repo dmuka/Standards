@@ -6,10 +6,11 @@ namespace Domain.Aggregates.Housings;
 public class HousingName : ValueObject
 {
     protected HousingName() { }
+
     /// <summary>
     /// Gets the housing name value.
     /// </summary>
-    public string Value { get; }
+    public string Value { get; } = null!;
 
     private HousingName(string value) => Value = value;
 

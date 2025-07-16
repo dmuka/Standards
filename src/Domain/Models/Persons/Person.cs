@@ -7,17 +7,17 @@ namespace Domain.Models.Persons;
 
 public class Person : BaseEntity, ICacheable
 {
-    public string FirstName { get; set; } = null!;
-    public string MiddleName { get; set; } = null!;
-    public string LastName { get; set; } = null!;
-    public Category? Category { get; set; } = null!;
-    public Position? Position { get; set; } = null!;
+    public required string FirstName { get; set; }
+    public required string MiddleName { get; set; }
+    public required string LastName { get; set; }
+    public required Category Category { get; set; } 
+    public required Position Position { get; set; }
     public DateTime BirthdayDate { get; set; }
-    public Sector? Sector { get; set; } = null!;
-    public string Role { get; set; } = null!;
+    public required Sector Sector { get; set; }
+    public required string Role { get; set; }
     public int UserId { get; set; }
-    public User? User { get; set; } = null!;
-    public string Comments { get; set; } = null!;
+    public required User User { get; set; }
+    public string? Comments { get; set; }
     public static string GetCacheKey()
     {
         return Cache.Persons;

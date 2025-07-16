@@ -15,8 +15,8 @@ public class CacheServiceTests : BaseTestFixture
     private const string CacheKey = "CacheKey";
     private const int ValidId = 1;
     private const int InvalidId = 10;
-    private readonly TimeSpan AbsoluteExpiration = new TimeSpan(0, 5, 0);
-    private readonly TimeSpan SlidingExpiration = new TimeSpan(0, 2, 0);
+    private readonly TimeSpan _absoluteExpiration = new (0, 5, 0);
+    private readonly TimeSpan _slidingExpiration = new (0, 2, 0);
 
     
     private ICacheService _cacheService;
@@ -31,15 +31,17 @@ public class CacheServiceTests : BaseTestFixture
     [SetUp]
     public void Setup()
     {
+        _housings = Housings;
+        
         _cancellationToken = CancellationToken.None;
         
         _memoryCache = new MemoryCache(new MemoryCacheOptions());
-        _memoryCache.Set(CacheKey, Housings);
+        _memoryCache.Set(CacheKey, _housings);
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(repository => repository.GetQueryable<Housing>()).Returns(Housings.AsQueryable);
+        _repositoryMock.Setup(repository => repository.GetQueryable<Housing>()).Returns(_housings.AsQueryable);
         _repositoryMock.Setup(repository => repository.QueryableToListAsync(It.IsAny<IQueryable<Housing>>(), _cancellationToken))
-             .ReturnsAsync(Housings);
+             .ReturnsAsync(_housings);
         
         _queryableMock = new Mock<IQueryable<Housing>>();
         
@@ -60,8 +62,8 @@ public class CacheServiceTests : BaseTestFixture
         var result = _cacheService.GetOrCreateAsync<Housing>(CacheKey,
             [h => h.Rooms],
             _cancellationToken,
-            AbsoluteExpiration,
-            SlidingExpiration).Result;
+            _absoluteExpiration,
+            _slidingExpiration).Result;
 
         // Assert
         Assert.That(result, Has.Count.EqualTo(3));
@@ -155,7 +157,7 @@ public class CacheServiceTests : BaseTestFixture
         _memoryCache.Remove(CacheKey);
         
         // Act
-        _cacheService.Create(CacheKey, Housings, AbsoluteExpiration, SlidingExpiration);
+        _cacheService.Create(CacheKey, Housings, _absoluteExpiration, _slidingExpiration);
 
         // Assert
         Assert.That(_memoryCache.TryGetValue(CacheKey, out _), Is.True);
@@ -166,7 +168,7 @@ public class CacheServiceTests : BaseTestFixture
     {
         // Arrange
         // Act
-        _cacheService.Create(CacheKey, Housings, AbsoluteExpiration, SlidingExpiration);
+        _cacheService.Create(CacheKey, Housings, _absoluteExpiration, _slidingExpiration);
 
         // Assert
         Assert.That(_memoryCache.TryGetValue(CacheKey, out _), Is.True);

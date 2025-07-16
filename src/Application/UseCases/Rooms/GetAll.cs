@@ -46,8 +46,8 @@ public class GetAll
                     Length = r.Length,
                     Width = r.Width,
                     Height = r.Height,
-                    HousingId = r.Housing.Id,
-                    SectorId = r.Sector.Id,
+                    HousingId = r.Housing!.Id,
+                    SectorId = r.Sector!.Id,
                     Comments = r.Comments,
                     WorkplaceIds = r.WorkPlaces.Select(d => d.Id).ToList(),
                     PersonIds = r.Persons.Select(d => d.Id).ToList()

@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.Abstractions.Data;
 using Application.Abstractions.Data.Validators;
+using Application.Exceptions;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
 using Domain.Constants;
@@ -8,6 +9,8 @@ using Domain.Models.Departments;
 using Domain.Models.Persons;
 using Domain.Models.Users;
 using FluentValidation;
+using Infrastructure.Exceptions;
+using Infrastructure.Exceptions.Enum;
 using MediatR;
 
 namespace Application.UseCases.Persons;
@@ -25,6 +28,10 @@ public class Edit
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
             var position =  await repository.GetByIdAsync<Position>(request.PersonDto.PositionId, cancellationToken);
+            if (position is null) throw new StandardsException(
+                StatusCodeByError.BadRequest, 
+                $"{PositionErrors.NotFound} (id: {request.PersonDto.PositionId})", 
+                PositionErrors.NotFound);
             
             var category = await repository.GetByIdAsync<Category>(request.PersonDto.CategoryId, cancellationToken);
             
@@ -40,10 +47,10 @@ public class Edit
                 LastName = request.PersonDto.LastName,
                 BirthdayDate = request.PersonDto.BirthdayDate,
                 Role = request.PersonDto.Role,
-                Category = category,
+                Category = category!,
                 Position = position,
-                Sector = sector,
-                User = user,
+                Sector = sector!,
+                User = user!,
                 Comments = request.PersonDto.Comments
             };
                 

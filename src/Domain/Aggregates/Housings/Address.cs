@@ -9,7 +9,7 @@ public class Address : ValueObject
     /// <summary>
     /// Gets the address value.
     /// </summary>
-    public string Value { get; }
+    public string Value { get; } = null!;
 
     private Address(string value) => Value = value;
 

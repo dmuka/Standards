@@ -42,9 +42,9 @@ public class GetAll
                     Name = si.Name,
                     ShortName = si.ShortName,
                     Comments = si.Comments,
-                    ServiceId = si.Service.Id,
-                    StandardId = si.Standard.Id,
-                    PersonId = si.Person.Id,
+                    ServiceId = si.Service!.Id,
+                    StandardId = si.Standard!.Id,
+                    PersonId = si.Person!.Id,
                     Date = si.Date
                 }).ToList();
 

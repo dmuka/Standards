@@ -9,7 +9,7 @@ public class PersonDto : Entity
     [MaxLength(Lengths.PersonName)]
     public required string FirstName { get; set; }
     [MaxLength(Lengths.PersonName)]
-    public string? MiddleName { get; set; }
+    public required string MiddleName { get; set; }
     [MaxLength(Lengths.PersonName)]
     public required string LastName { get; set; }
     public required int CategoryId { get; set; }

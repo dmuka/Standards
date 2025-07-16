@@ -39,7 +39,7 @@ public class Edit
 
             var responsible = await repository.GetByIdAsync<Person>(request.StandardDto.ResponsibleId, cancellationToken);
             
-            var standard = StandardDto.ToEntity(request.StandardDto, workplaces, characteristics, standards, responsible);
+            var standard = StandardDto.ToEntity(request.StandardDto, workplaces, characteristics, standards, responsible!);
                 
             repository.Update(standard);
 

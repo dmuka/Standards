@@ -8,8 +8,8 @@ namespace Domain.Aggregates.Housings;
 public class Housing : AggregateRoot, ICacheable
 {
     protected Housing() { }
-    public Address Address { get; private set; }
-    public HousingName HousingName { get; private set; }
+    public Address Address { get; private set; } = null!;
+    public HousingName HousingName { get; private set; } = null!;
     public HousingShortName? HousingShortName { get; private set; }
     public string? Comments { get; set; }
     public IReadOnlyCollection<FloorId> FloorIds => _floorIds.AsReadOnly();

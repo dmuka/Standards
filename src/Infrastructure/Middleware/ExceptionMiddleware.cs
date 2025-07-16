@@ -1,11 +1,14 @@
 ﻿using System.Net;
 using System.Security;
+using Application.Exceptions;
 using Infrastructure.Exceptions.Enum;
 using Infrastructure.Logging;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
+using NLog;
 
-namespace Infrastructure.Exceptions
+namespace Infrastructure.Middleware
 {
     public class ExceptionMiddleware(RequestDelegate next, ILogger<ExceptionMiddleware> logger)
     {

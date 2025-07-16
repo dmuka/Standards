@@ -11,11 +11,11 @@ namespace Domain.Aggregates.Rooms;
 public class Room : AggregateRoot, ICacheable
 {
     protected Room() { }
-    
-    public Length Length { get; private set; }
-    public Height Height { get; private set; }
-    public Width Width { get; private set; }
-    public FloorId FloorId { get; private set; }
+
+    public Length Length { get; private set; } = null!;
+    public Height Height { get; private set; } = null!;
+    public Width Width { get; private set; } = null!;
+    public FloorId FloorId { get; private set; } = null!;
     public SectorId? SectorId { get; private set; }
     public string? Comments { get; set; }
     

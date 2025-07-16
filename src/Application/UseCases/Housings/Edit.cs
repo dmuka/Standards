@@ -28,7 +28,7 @@ public class Edit
             //         .Intersect(request.HousingDto.DepartmentIds).Any());
 
             var rooms = repository.GetQueryable<Room>()
-                .Where(room => room.Housing.Id == request.HousingDto.Id);
+                .Where(room => room.Housing!.Id == request.HousingDto.Id);
                 
             var housing = new Housing
             {

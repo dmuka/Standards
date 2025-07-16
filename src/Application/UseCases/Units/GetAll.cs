@@ -35,7 +35,7 @@ public class GetAll
                 .Select(unit => new UnitDto
                 {
                     Id = unit.Id,
-                    QuantityId = unit.Quantity.Id,
+                    QuantityId = unit.Quantity!.Id,
                     Name = unit.Name,
                     Symbol = unit.Symbol,
                     RuName = unit.RuName,

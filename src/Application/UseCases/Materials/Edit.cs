@@ -30,7 +30,7 @@ public class Edit
                 Id = request.MaterialDto.Id,
                 Name = request.MaterialDto.Name,
                 ShortName = request.MaterialDto.ShortName,
-                Unit = unit,
+                Unit = unit!,
                 Comments = request.MaterialDto.Comments
             };
                 

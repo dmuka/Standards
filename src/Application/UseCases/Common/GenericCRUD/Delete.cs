@@ -12,7 +12,7 @@ namespace Application.UseCases.Common.GenericCRUD;
 [TransactionScope]
 public class Delete 
 {
-    public class Command<T>(int id) : IRequest<int> where T : BaseEntity
+    public class Command<T>(int id) : IRequest<int> where T : BaseEntity, ICacheable
     {
         public int Id { get; } = id;
     }

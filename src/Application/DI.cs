@@ -46,15 +46,15 @@ public static class DI
             .AddTransient<IRequestHandler<GetAllBaseEntity.Query<Quantity>, Result<List<Quantity>>>, GetAllBaseEntity.QueryHandler<Quantity>>()
             .AddTransient<IRequestHandler<CreateBaseEntity.Query<Quantity>, int>, CreateBaseEntity.QueryHandler<Quantity>>()
             
-            .AddTransient<IRequestHandler<GetById.Query<Position>, Position>, GetById.QueryHandler<Position?>>() 
-            .AddTransient<IRequestHandler<GetById.Query<Characteristic>, Characteristic>, GetById.QueryHandler<Characteristic?>>()   
-            .AddTransient<IRequestHandler<GetById.Query<Grade>, Grade>, GetById.QueryHandler<Grade?>>()  
-            .AddTransient<IRequestHandler<GetById.Query<Category>, Category>, GetById.QueryHandler<Category?>>()    
-            .AddTransient<IRequestHandler<GetById.Query<Department>, Department>, GetById.QueryHandler<Department?>>()   
-            .AddTransient<IRequestHandler<GetById.Query<Sector>, Sector>, GetById.QueryHandler<Sector?>>() 
-            .AddTransient<IRequestHandler<GetById.Query<Material>, Material>, GetById.QueryHandler<Material?>>()
-            .AddTransient<IRequestHandler<GetById.Query<Quantity>, Quantity>, GetById.QueryHandler<Quantity?>>()
-            .AddTransient<IRequestHandler<GetById.Query<Place>, Place>, GetById.QueryHandler<Place?>>();
+            .AddTransient<IRequestHandler<GetById.Query<Position>, Position?>, GetById.QueryHandler<Position>>() 
+            .AddTransient<IRequestHandler<GetById.Query<Characteristic>, Characteristic?>, GetById.QueryHandler<Characteristic>>()   
+            .AddTransient<IRequestHandler<GetById.Query<Grade>, Grade?>, GetById.QueryHandler<Grade>>()  
+            .AddTransient<IRequestHandler<GetById.Query<Category>, Category?>, GetById.QueryHandler<Category>>()    
+            .AddTransient<IRequestHandler<GetById.Query<Department>, Department?>, GetById.QueryHandler<Department>>()   
+            .AddTransient<IRequestHandler<GetById.Query<Sector>, Sector?>, GetById.QueryHandler<Sector>>() 
+            .AddTransient<IRequestHandler<GetById.Query<Material>, Material?>, GetById.QueryHandler<Material>>()
+            .AddTransient<IRequestHandler<GetById.Query<Quantity>, Quantity?>, GetById.QueryHandler<Quantity>>()
+            .AddTransient<IRequestHandler<GetById.Query<Place>, Place?>, GetById.QueryHandler<Place>>();
 
         services.AddValidatorsFromAssembly(typeof(DI).Assembly, includeInternalTypes: true);
 

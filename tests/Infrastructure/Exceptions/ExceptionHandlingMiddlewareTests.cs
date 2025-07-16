@@ -1,4 +1,5 @@
 using System.Net;
+using Application.Exceptions;
 using FluentValidation;
 using Infrastructure.Exceptions;
 using Infrastructure.Exceptions.Enum;

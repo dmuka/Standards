@@ -1,6 +1,7 @@
-﻿using Infrastructure.Exceptions.Enum;
+﻿using Infrastructure.Exceptions;
+using Infrastructure.Exceptions.Enum;
 
-namespace Infrastructure.Exceptions
+namespace Application.Exceptions
 {
     public class StandardsException : StandardsBaseException
     {

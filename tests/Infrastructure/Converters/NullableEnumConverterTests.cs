@@ -32,7 +32,7 @@ public class NullableEnumConverterTests
     [TestCase("\"One\"", TestEnum.One)]
     [TestCase("\"Two\"", TestEnum.Two)]
     [TestCase("\"Three\"", TestEnum.Three)]
-    public void Read_IfValidStringEnumValue_ShouldReturnValue(string? json, TestEnum expected)
+    public void Read_IfValidStringEnumValue_ShouldReturnValue(string json, TestEnum expected)
     {
         // Arrange
         var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json), _readerOptions);
@@ -63,7 +63,7 @@ public class NullableEnumConverterTests
     [TestCase("\"One\"", TestEnum.One)]
     [TestCase("\"Two\"", TestEnum.Two)]
     [TestCase("\"Three\"", TestEnum.Three)]
-    public void ReadExtension_IfValidStringEnumValue_ShouldReturnValue(string? json, TestEnum expected)
+    public void ReadExtension_IfValidStringEnumValue_ShouldReturnValue(string json, TestEnum expected)
     {
         // Arrange
         // Act

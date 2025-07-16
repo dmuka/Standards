@@ -40,10 +40,10 @@ public class Create
                 LastName = request.PersonDto.LastName,
                 BirthdayDate = request.PersonDto.BirthdayDate,
                 Role = request.PersonDto.Role,
-                Category = category,
-                Position = position,
-                Sector = sector,
-                User = user
+                Category = category!,
+                Position = position!,
+                Sector = sector!,
+                User = user!
             };
 
             if (request.PersonDto.Comments is not null) person.Comments = request.PersonDto.Comments;

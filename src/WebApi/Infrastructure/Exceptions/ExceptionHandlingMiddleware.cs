@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using System.Text.Json;
+using Application.Exceptions;
 using FluentValidation;
 using Infrastructure.Exceptions;
 

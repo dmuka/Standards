@@ -1,6 +1,8 @@
 ﻿using Application;
+using Application.Exceptions;
 using Infrastructure;
 using Infrastructure.Exceptions;
+using Infrastructure.Middleware;
 using Infrastructure.Vault;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;

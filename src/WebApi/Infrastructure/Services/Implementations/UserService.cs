@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Data;
+using Application.Exceptions;
 using Application.UseCases.DTOs;
 using Domain.Models.Users;
 using Infrastructure.Exceptions;

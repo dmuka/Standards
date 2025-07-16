@@ -41,7 +41,7 @@ public class GetAll
                     Name = s.Name,
                     ShortName = s.ShortName,
                     Comments = s.Comments,
-                    ServiceTypeId = s.ServiceType.Id,
+                    ServiceTypeId = s.ServiceType!.Id,
                     MaterialIds = s.Materials.Select(m => m.Id).ToList(),
                     MaterialsQuantityIds = s.MaterialsQuantities.Select(mq => mq.Id).ToList()
                 }).ToList();

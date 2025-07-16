@@ -9,7 +9,7 @@ public class HousingShortName : ValueObject
     /// <summary>
     /// Gets the housing short name value.
     /// </summary>
-    public string Value { get; }
+    public string Value { get; } = null!;
 
     private HousingShortName(string value) => Value = value;
 
