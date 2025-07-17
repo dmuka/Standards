@@ -1,6 +1,6 @@
 using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
-using Core;
+using Core.Results;
 using Domain.Constants;
 using Domain.Models.Interfaces;
 using MediatR;

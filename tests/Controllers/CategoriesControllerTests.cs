@@ -1,4 +1,5 @@
 using Application.UseCases.Common.GenericCRUD;
+using Core.Results;
 using Domain.Models.Persons;
 using MediatR;
 using Microsoft.AspNetCore.Http.HttpResults;
@@ -40,9 +41,9 @@ public class CategoriesControllerTests : BaseTestFixture
         using (Assert.EnterMultipleScope())
         {
             Assert.That(okResult.StatusCode, Is.EqualTo(200));
-            Assert.That(okResult.Value, Is.InstanceOf<Core.Result<List<Category>>>());
+            Assert.That(okResult.Value, Is.InstanceOf<Result<List<Category>>>());
         }
-        var actualCategories = okResult.Value as Core.Result<List<Category>>;
+        var actualCategories = okResult.Value as Result<List<Category>>;
         Assert.That(actualCategories.Value, Is.EquivalentTo(categories));
     }
 

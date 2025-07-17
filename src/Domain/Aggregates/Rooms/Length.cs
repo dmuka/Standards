@@ -1,5 +1,5 @@
 using Core;
-using Domain.Aggregates.Housings.Specifications;
+using Core.Results;
 using Domain.Aggregates.Rooms.Specifications;
 
 namespace Domain.Aggregates.Rooms;

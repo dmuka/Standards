@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Behaviors;
 using Application.EventConsumers;
 using Application.UseCases.Common.GenericCRUD;
-using Core;
+using Core.Results;
 using Domain.Models;
 using Domain.Models.Departments;
 using Domain.Models.MetrologyControl;

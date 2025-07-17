@@ -1,4 +1,5 @@
 ﻿using Core;
+using Core.Results;
 using Domain.Aggregates.Rooms.Constants;
 
 namespace Domain.Aggregates.Rooms.Specifications;

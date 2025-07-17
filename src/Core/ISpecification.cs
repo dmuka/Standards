@@ -2,5 +2,5 @@
 
 public interface ISpecification
 {
-    Result IsSatisfied();
+    Results.Result IsSatisfied();
 }

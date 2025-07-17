@@ -1,4 +1,4 @@
-﻿using Core;
+﻿using Core.Results;
 using Domain.Aggregates.Housings.Constants;
 
 namespace Domain.Aggregates.Housings;

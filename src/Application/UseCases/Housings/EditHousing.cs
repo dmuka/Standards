@@ -1,7 +1,6 @@
 using Application.UseCases.DTOs;
-using Core;
+using Core.Results;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
 using MediatR;
 
 namespace Application.UseCases.Housings;

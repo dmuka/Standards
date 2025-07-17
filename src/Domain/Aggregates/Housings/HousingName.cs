@@ -1,4 +1,5 @@
 using Core;
+using Core.Results;
 using Domain.Aggregates.Housings.Specifications;
 
 namespace Domain.Aggregates.Housings;

@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 
-namespace Core;
+namespace Core.Results;
 
 public class Result
 {

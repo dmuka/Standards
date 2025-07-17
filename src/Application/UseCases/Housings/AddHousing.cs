@@ -1,5 +1,5 @@
 using Application.UseCases.DTOs;
-using Core;
+using Core.Results;
 using Domain.Aggregates.Housings;
 using MediatR;
 

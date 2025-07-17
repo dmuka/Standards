@@ -1,4 +1,4 @@
-﻿namespace Core;
+﻿namespace Core.Results;
 
 /// <summary>
 /// Represents an error with a code, description, and type.

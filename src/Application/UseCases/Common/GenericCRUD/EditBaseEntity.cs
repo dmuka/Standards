@@ -2,7 +2,7 @@ using Application.Abstractions.Cache;
 using Application.Abstractions.Data;
 using Application.Abstractions.Data.Validators;
 using Application.UseCases.Common.Attributes;
-using Core;
+using Core.Results;
 using Domain.Constants;
 using Domain.Models.Interfaces;
 using FluentValidation;

@@ -1,4 +1,6 @@
-﻿namespace Core;
+﻿using Core.Results;
+
+namespace Core;
 
 public abstract class TypedId : ValueObject, IEquatable<TypedId>
 {

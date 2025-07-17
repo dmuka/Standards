@@ -3,7 +3,7 @@ using Application.Abstractions.Cache;
 using Application.Abstractions.Configuration;
 using Application.Abstractions.Data;
 using Application.UseCases.Common.GenericCRUD;
-using Core;
+using Core.Results;
 using Domain.Constants;
 using Domain.Models.Services;
 using FluentAssertions;

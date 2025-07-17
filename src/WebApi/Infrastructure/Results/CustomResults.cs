@@ -1,4 +1,4 @@
-﻿using Infrastructure.Errors;
+﻿using Core.Results;
 
 namespace WebApi.Infrastructure.Results;
 
