@@ -3,9 +3,7 @@ using Application.UseCases.DTOs;
 using Application.UseCases.Floors;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
-using Infrastructure.Data;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
+using Domain.Services;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 
@@ -16,7 +14,7 @@ public class AddFloorTests
 {
     private FloorDto _floorDto;
     private Mock<IFloorRepository> _floorRepositoryMock;
-    private Mock<IFloorUniqueness> _floorUniquenessMock;
+    private Mock<IChildEntityUniqueness> _floorUniquenessMock;
     private NullLogger<AddFloor> _loggerMock;
     private Mock<IUnitOfWork> _unitOfWorkMock;
     
@@ -29,13 +27,13 @@ public class AddFloorTests
         
         _floorDto = new FloorDto
         {
-            FloorId = new FloorId(Guid.CreateVersion7()), 
+            Id = new FloorId(Guid.CreateVersion7()), 
             Number = 1, 
             HousingId = new HousingId(Guid.CreateVersion7())
         };
         
-        _floorUniquenessMock = new Mock<IFloorUniqueness>();
-        _floorUniquenessMock.Setup(x => x.IsUniqueAsync(_floorDto.Number, _floorDto.HousingId, It.IsAny<CancellationToken>()))
+        _floorUniquenessMock = new Mock<IChildEntityUniqueness>();
+        _floorUniquenessMock.Setup(x => x.IsUniqueAsync<FloorDto, HousingDto2>(_floorDto.Id, _floorDto.HousingId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(true);
 
         _loggerMock = NullLogger<AddFloor>.Instance;
@@ -49,7 +47,7 @@ public class AddFloorTests
     {
         // Arrange
         var command = new AddFloor.Command(_floorDto);
-        _floorUniquenessMock.Setup(x => x.IsUniqueAsync(_floorDto.Number, _floorDto.HousingId, It.IsAny<CancellationToken>()))
+        _floorUniquenessMock.Setup(x => x.IsUniqueAsync<FloorDto, HousingDto2>(_floorDto.Id, _floorDto.HousingId, It.IsAny<CancellationToken>()))
             .ReturnsAsync(false);
 
         // Act
@@ -77,7 +75,7 @@ public class AddFloorTests
         {
             // Assert
             Assert.That(result.IsFailure, Is.True);
-            Assert.That(result.Error.Code, Is.EqualTo(FloorErrors.FloorAlreadyExistOrWrong.Code));
+            Assert.That(result.Error.Code, Is.EqualTo(FloorErrors.InvalidFloorCount.Code));
         }
     }
 

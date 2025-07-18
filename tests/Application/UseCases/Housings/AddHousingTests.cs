@@ -29,7 +29,7 @@ public class AddHousingTests
         {
             HousingName = _housingName,
             HousingShortName = _housingShortName,
-            HousingId = _housingId, 
+            Id = _housingId, 
             Address = _address
         };
     

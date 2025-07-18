@@ -30,7 +30,7 @@ public class EditHousingTests
         {
             HousingName = _housingName,
             HousingShortName = _housingShortName,
-            HousingId = _housingId, 
+            Id = _housingId, 
             Address = _address
         };
 
@@ -54,7 +54,7 @@ public class EditHousingTests
     public async Task Handle_HousingIdNotExist_ReturnsFailure()
     {
         // Arrange
-        _housingDto.HousingId = _nonExistentHousingId; 
+        _housingDto.Id = _nonExistentHousingId; 
         var command = new EditHousing.Command(_housingDto);
 
         // Act

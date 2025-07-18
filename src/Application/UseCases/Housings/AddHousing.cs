@@ -20,7 +20,7 @@ public class AddHousing
                 command.HousingDto.HousingName, 
                 command.HousingDto.HousingShortName, 
                 command.HousingDto.Address,
-                command.HousingDto.HousingId,
+                command.HousingDto.Id,
                 command.HousingDto.Comments);
 
             if (housingCreationResult.IsFailure) return Result.Failure<Housing>(housingCreationResult.Error);

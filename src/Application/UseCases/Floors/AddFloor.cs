@@ -2,6 +2,7 @@ using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Core.Results;
 using Domain.Aggregates.Floors;
+using Domain.Services;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -16,14 +17,14 @@ public class AddFloor
 
     public class CommandHandler(
         IFloorRepository repository, 
-        IFloorUniqueness floorUniqueness,
+        IChildEntityUniqueness childEntityUniqueness,
         IUnitOfWork unitOfWork,
         ILogger<AddFloor> logger) : IRequestHandler<Command, Result<Floor>>
     {
         public async Task<Result<Floor>> Handle(Command command, CancellationToken cancellationToken)
         {
-            if (!await floorUniqueness.IsUniqueAsync(
-                    command.FloorDto.Number, 
+            if (!await childEntityUniqueness.IsUniqueAsync<FloorDto, HousingDto2>(
+                    command.FloorDto.Id, 
                     command.FloorDto.HousingId, 
                     cancellationToken))
                 return Result.Failure<Floor>(FloorErrors.FloorAlreadyExistOrWrong);

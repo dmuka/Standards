@@ -6,6 +6,7 @@ using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
 using Domain.Models.Departments;
 using Domain.Models.Housings;
+using Domain.Services;
 using Infrastructure.Data;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Data.Repositories.Implementations;
@@ -177,7 +178,7 @@ public static class DI
     
     private static IServiceCollection AddAppServices(this IServiceCollection services)
     {
-        services.AddScoped<IFloorUniqueness, FloorUniqueness>();
+        services.AddScoped<IChildEntityUniqueness, ChildEntityUniqueness>();
     
         return services;
     }

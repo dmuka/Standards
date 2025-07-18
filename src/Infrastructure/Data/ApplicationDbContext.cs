@@ -20,6 +20,7 @@ namespace Infrastructure.Data;
     {
         public DbSet<Quantity> Quantities { get; set; }
         public DbSet<Room> Rooms { get; set; }
+        public DbSet<Domain.Aggregates.Rooms.Room> Rooms2 { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<Workplace> WorkPlaces { get; set; }
 

@@ -2,6 +2,7 @@ using Application.UseCases.DTOs;
 using Application.UseCases.Floors;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
+using Domain.Services;
 using Moq;
 
 namespace Tests.Application.UseCases.Floors;
@@ -26,22 +27,21 @@ public class EditFloorTests
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
     private Mock<IFloorRepository> _floorRepositoryMock;
-    private Mock<IFloorUniqueness> _floorUniquenessMock;
+    private Mock<IChildEntityUniqueness> _floorUniquenessMock;
     
     private EditFloor.CommandHandler _handler;
 
     [SetUp]
     public void Setup()
     {
-        
         _floorDto = new FloorDto
         {
-            FloorId = _validFloorId, 
+            Id = _validFloorId, 
             Number = FloorNumber, 
             HousingId = _validHousingId
         };
 
-        _floor = Floor.Create(_floorDto.Number, _floorDto.HousingId, _floorDto.FloorId).Value;
+        _floor = Floor.Create(_floorDto.Number, _floorDto.HousingId, _floorDto.Id).Value;
 
         _floorRepositoryMock = new Mock<IFloorRepository>();
         _floorRepositoryMock.Setup(r => r.ExistsAsync(_validFloorId, _cancellationToken))
@@ -49,8 +49,8 @@ public class EditFloorTests
         _floorRepositoryMock.Setup(r => r.GetByIdAsync(_validFloorId, _cancellationToken))
             .ReturnsAsync(_floor);
         
-        _floorUniquenessMock = new Mock<IFloorUniqueness>();
-        _floorUniquenessMock.Setup(x => x.IsUniqueAsync(_floorDto.Number, _floorDto.HousingId, It.IsAny<CancellationToken>()))
+        _floorUniquenessMock = new Mock<IChildEntityUniqueness>();
+        _floorUniquenessMock.Setup(x => x.IsUniqueAsync<FloorDto, HousingDto2>(_floorDto.Id, _floorDto.HousingId, _cancellationToken))
             .ReturnsAsync(true);
         
         _handler = new EditFloor.CommandHandler(_floorRepositoryMock.Object, _floorUniquenessMock.Object);
@@ -61,7 +61,7 @@ public class EditFloorTests
     {
         // Arrange
         var command = new EditFloor.Command(_floorDto);
-        _floorUniquenessMock.Setup(x => x.IsUniqueAsync(_floorDto.Number, _floorDto.HousingId, It.IsAny<CancellationToken>()))
+        _floorUniquenessMock.Setup(x => x.IsUniqueAsync<FloorDto, HousingDto2>(_floorDto.Id, _floorDto.HousingId, _cancellationToken))
             .ReturnsAsync(false);
 
         // Act

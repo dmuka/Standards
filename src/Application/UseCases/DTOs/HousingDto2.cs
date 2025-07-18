@@ -1,10 +1,11 @@
-﻿using Domain.Aggregates.Housings;
+﻿using Core;
+using Domain.Aggregates.Housings;
 
 namespace Application.UseCases.DTOs;
 
-public class HousingDto2
+public class HousingDto2 : Entity
 {
-    public required HousingId HousingId { get; set; }
+    public new required HousingId Id { get; set; }
     public required HousingName HousingName { get; set; }
     public required HousingShortName HousingShortName { get; set; }
     public required Address Address { get; set; }

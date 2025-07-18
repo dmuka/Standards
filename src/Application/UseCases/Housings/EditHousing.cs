@@ -16,11 +16,11 @@ public class EditHousing
     {
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
-            var isHousingExist = await repository.ExistsAsync(command.HousingDto.HousingId, cancellationToken);
+            var isHousingExist = await repository.ExistsAsync(command.HousingDto.Id, cancellationToken);
             
-            if (!isHousingExist) return Result.Failure(HousingErrors.NotFound(command.HousingDto.HousingId));
+            if (!isHousingExist) return Result.Failure(HousingErrors.NotFound(command.HousingDto.Id));
             
-            var existingHousing = await repository.GetByIdAsync(command.HousingDto.HousingId, cancellationToken: cancellationToken);
+            var existingHousing = await repository.GetByIdAsync(command.HousingDto.Id, cancellationToken: cancellationToken);
             
             repository.Update(existingHousing!);
 
