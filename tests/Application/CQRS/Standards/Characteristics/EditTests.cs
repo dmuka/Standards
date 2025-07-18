@@ -104,7 +104,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfCharacteristicDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _characteristic = null;
+        _characteristic = null!;
 
         var query = new Edit.Query(_characteristic);
 
@@ -134,7 +134,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _characteristic.Name = name;
+        _characteristic.Name = name!;
 
         var query = new Edit.Query(_characteristic);
 
@@ -164,7 +164,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _characteristic.ShortName = shortName;
+        _characteristic.ShortName = shortName!;
 
         var query = new Edit.Query(_characteristic);
 

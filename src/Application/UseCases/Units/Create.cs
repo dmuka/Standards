@@ -1,12 +1,14 @@
 ﻿using Application.Abstractions.Cache;
 using Application.Abstractions.Data;
 using Application.Abstractions.Data.Validators;
+using Application.Exceptions;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
 using Domain.Constants;
 using Domain.Models;
 using Domain.Models.Departments;
 using FluentValidation;
+using Infrastructure.Exceptions.Enum;
 using MediatR;
 using Unit = Domain.Models.Unit;
 
@@ -24,7 +26,12 @@ public class Create
     {
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested) return 0;
+            
             var quantity = await repository.GetByIdAsync<Quantity>(request.UnitDto.QuantityId, cancellationToken);
+            if (quantity is null)
+                throw new StandardsException(StatusCodeByError.InternalServerError, "Every unit must have quantity",
+                    "Some error");
             
             var unit = new Unit
             {

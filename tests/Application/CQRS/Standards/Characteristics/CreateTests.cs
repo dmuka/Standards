@@ -39,9 +39,9 @@ public class CreateTests : BaseTestFixture
 
         _repositoryMock = new Mock<IRepository>();
         _repositoryMock.Setup(_ => _.AddAsync(_characteristic, _cancellationToken));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(ValidId, _cancellationToken)).Returns(Task.FromResult(Standards[0]));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Unit>(ValidId, _cancellationToken)).Returns(Task.FromResult(Units[0]));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(ValidId, _cancellationToken)).ReturnsAsync(Standards[0]);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Unit>(ValidId, _cancellationToken)).ReturnsAsync(Units[0]);
 
         _cacheService = new Mock<ICacheService>();
 
@@ -84,7 +84,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfCharacteristicDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _characteristic = null;
+        _characteristic = null!;
 
         var query = new Create.Query(_characteristic);
 
@@ -99,7 +99,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _characteristic.Name = name;
+        _characteristic.Name = name!;
 
         var query = new Create.Query(_characteristic);
 
@@ -128,7 +128,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _characteristic.ShortName = shortName;
+        _characteristic.ShortName = shortName!;
 
         var query = new Create.Query(_characteristic);
 

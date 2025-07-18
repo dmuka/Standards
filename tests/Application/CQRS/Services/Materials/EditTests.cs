@@ -37,9 +37,9 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<MaterialDto>(ValidId, _cancellationToken)).Returns(Task.FromResult(_material));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<MaterialDto>(ValidId, _cancellationToken)).ReturnsAsync(_material);
         _repositoryMock.Setup(_ => _.Update(_material));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
             
@@ -96,7 +96,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfMaterialDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _material = null;
+        _material = null!;
 
         var query = new Edit.Query(_material);
 
@@ -126,7 +126,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _material.Name = name;
+        _material.Name = name!;
 
         var query = new Edit.Query(_material);
 
@@ -156,7 +156,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _material.ShortName = shortName;
+        _material.ShortName = shortName!;
 
         var query = new Edit.Query(_material);
 

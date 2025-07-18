@@ -34,7 +34,7 @@ public class DeleteTests : BaseTestFixture
 
         _repository = new Mock<IRepository>();
         _repository.Setup(_ => _.GetByIdAsync<Standard>(IdInDb, _cancellationToken))
-            .Returns(Task.FromResult(_standard));
+            .ReturnsAsync(_standard);
         _repository.Setup(_ => _.DeleteAsync(_standard, _cancellationToken));
         _repository.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 

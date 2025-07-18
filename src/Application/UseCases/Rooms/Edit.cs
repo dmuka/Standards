@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.Abstractions.Data;
 using Application.Abstractions.Data.Validators;
+using Application.Exceptions;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
 using Domain.Constants;
@@ -8,6 +9,7 @@ using Domain.Models.Departments;
 using Domain.Models.Housings;
 using Domain.Models.Persons;
 using FluentValidation;
+using Infrastructure.Exceptions.Enum;
 using MediatR;
 
 namespace Application.UseCases.Rooms
@@ -24,9 +26,14 @@ namespace Application.UseCases.Rooms
         {
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
-                var housing = await repository.GetByIdAsync<Housing>(request.RoomDto.HousingId, cancellationToken);
+                if (cancellationToken.IsCancellationRequested) return 0;
                 
-                var sector = await repository.GetByIdAsync<Sector>(request.RoomDto.SectorId, cancellationToken);
+                var housing = await repository.GetByIdAsync<Housing>(request.RoomDto.HousingId, cancellationToken);
+                if (housing is null) throw new StandardsException(StatusCodeByError.InternalServerError, "Every room must have relation to the housing", "Some error");
+                
+                var sector = request.RoomDto.SectorId is not null 
+                    ? await repository.GetByIdAsync<Sector>(request.RoomDto.SectorId, cancellationToken)
+                    : null;
 
                 var persons = repository.GetQueryable<Person>()
                     .Where(person => request.RoomDto.PersonIds.Contains(person.Id));

@@ -96,7 +96,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfPlaceIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        var command = new Edit.Command(null);
+        var command = new Edit.Command(null!);
 
         // Act
         var result = _validator.TestValidateAsync(command, cancellationToken: _cancellationToken).Result;
@@ -124,7 +124,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfAddressIsNull_ShouldHaveValidationError(string? address)
     {
         // Arrange
-        _place.Address = address;
+        _place.Address = address!;
 
         var commandObject = new Edit.Command(_placeDto);
 
@@ -171,7 +171,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _placeDto.Name = name;
+        _placeDto.Name = name!;
 
         var command = new Edit.Command(_placeDto);
 
@@ -201,7 +201,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _placeDto.ShortName = shortName;
+        _placeDto.ShortName = shortName!;
 
         var command = new Edit.Command(_placeDto);
 

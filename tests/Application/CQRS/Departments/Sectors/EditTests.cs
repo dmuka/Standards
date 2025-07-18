@@ -43,13 +43,13 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Sector>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_sector));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Department>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_department));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Sector>(IdInDb, _cancellationToken)).ReturnsAsync(_sector);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Department>(IdInDb, _cancellationToken)).ReturnsAsync(_department);
         _repositoryMock.Setup(repository => repository.GetQueryable<Room>()).Returns(new List<Room> { Rooms[0], Rooms[1] }.AsQueryable());
         _repositoryMock.Setup(repository => repository.GetQueryable<Person>()).Returns(new List<Person> { Persons[0], Persons[1], Persons[2] }.AsQueryable());
         _repositoryMock.Setup(repository => repository.GetQueryable<Workplace>()).Returns(new List<Workplace> { Workplaces[4], Workplaces[5] }.AsQueryable());
         _repositoryMock.Setup(_ => _.Update(_sector));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
 
@@ -106,7 +106,7 @@ public class EditTests : BaseTestFixture
     public void SectorDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _sectorDto = null;
+        _sectorDto = null!;
 
         var query = new Edit.Query(_sectorDto);
 
@@ -151,7 +151,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _sectorDto.Name = name;
+        _sectorDto.Name = name!;
 
         var query = new Edit.Query(_sectorDto);
 
@@ -181,7 +181,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _sectorDto.ShortName = shortName;
+        _sectorDto.ShortName = shortName!;
 
         var query = new Edit.Query(_sectorDto);
 

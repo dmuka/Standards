@@ -7,7 +7,7 @@ namespace Domain.Models.Housings;
 
 public class Room : Entity, ICacheable
 {
-    public required Housing? Housing { get; set; }
+    public required Housing Housing { get; set; }
     public required int Floor { get; set; }
     public required double Length { get; set; }
     public required double Height { get; set; }

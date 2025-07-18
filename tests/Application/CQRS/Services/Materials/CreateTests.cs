@@ -76,7 +76,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfMaterialDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _material = null;
+        _material = null!;
 
         var query = new Create.Query(_material);
 
@@ -91,7 +91,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _material.Name = name;
+        _material.Name = name!;
 
         var query = new Create.Query(_material);
 
@@ -121,7 +121,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _material.ShortName = shortName;
+        _material.ShortName = shortName!;
 
         var query = new Create.Query(_material);
 

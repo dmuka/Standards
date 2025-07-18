@@ -88,7 +88,7 @@ public class CreateTests : BaseTestFixture
     public void StandardDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _standardDto = null;
+        _standardDto = null!;
 
         var query = new Create.Query(_standardDto);
 
@@ -103,7 +103,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _standardDto.Name = name;
+        _standardDto.Name = name!;
 
         var query = new Create.Query(_standardDto);
 
@@ -133,7 +133,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _standardDto.ShortName = shortName;
+        _standardDto.ShortName = shortName!;
 
         var query = new Create.Query(_standardDto);
 

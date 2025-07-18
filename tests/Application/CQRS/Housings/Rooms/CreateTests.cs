@@ -16,7 +16,7 @@ namespace Tests.Application.CQRS.Housings.Rooms;
 [TestFixture]
 public class CreateTests : BaseTestFixture
 {
-    private const int ValidId = 1;
+    private const int ValidId = 3;
     private const int IdNotInDb = 2;
     
     private Room _room;
@@ -46,7 +46,7 @@ public class CreateTests : BaseTestFixture
 
         _repositoryMock = new Mock<IRepository>();
         _repositoryMock.Setup(repository => repository.AddAsync(_room, _cancellationToken));
-        _repositoryMock.Setup(repository => repository.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(repository => repository.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
         _repositoryMock.Setup(repository => repository.GetByIdAsync<Housing>(ValidId, _cancellationToken)).ReturnsAsync(_housing);
         _repositoryMock.Setup(repository => repository.GetByIdAsync<Sector>(ValidId, _cancellationToken)).ReturnsAsync(_sector);
 

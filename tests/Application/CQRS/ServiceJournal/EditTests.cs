@@ -40,10 +40,14 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<ServiceJournalItem>(IdInDb, _cancellationToken)).ReturnsAsync(_serviceJournalItem);
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Service>(IdInDb, _cancellationToken)).ReturnsAsync(Services[0]);
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(IdInDb, _cancellationToken)).ReturnsAsync(Standards[0]);
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Person>(IdInDb, _cancellationToken)).ReturnsAsync(Persons[0]);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<ServiceJournalItem>(IdInDb, _cancellationToken))
+            .ReturnsAsync(_serviceJournalItem);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Service>(IdInDb, _cancellationToken))
+            .ReturnsAsync(Services[0]);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(IdInDb, _cancellationToken))
+            .ReturnsAsync(Standards[0]);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Person>(IdInDb, _cancellationToken))
+            .ReturnsAsync(Persons[0]);
         _repositoryMock.Setup(_ => _.Update(_serviceJournalItem));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
@@ -164,7 +168,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _serviceJournalItemDto.ShortName = shortName;
+        _serviceJournalItemDto.ShortName = shortName!;
 
         var query = new Edit.Query(_serviceJournalItemDto);
 

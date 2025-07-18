@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Cache;
 using Application.Abstractions.Data;
 using Application.Abstractions.Data.Validators;
+using Application.Exceptions;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
 using Domain.Constants;
@@ -8,6 +9,7 @@ using Domain.Models.Persons;
 using Domain.Models.Services;
 using Domain.Models.Standards;
 using FluentValidation;
+using Infrastructure.Exceptions.Enum;
 using MediatR;
 
 namespace Application.UseCases.ServicesJournal;
@@ -24,11 +26,22 @@ public class Create
     {
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested) return 0;
+            
             var standard = await repository.GetByIdAsync<Standard>(request.ServiceJournalItemDto.StandardId, cancellationToken);
-
+            if (standard is null)
+                throw new StandardsException(StatusCodeByError.InternalServerError, "Every service journal item must have standard",
+                    "Some error");
+            
             var person = await repository.GetByIdAsync<Person>(request.ServiceJournalItemDto.PersonId, cancellationToken);
-
+            if (person is null)
+                throw new StandardsException(StatusCodeByError.InternalServerError, "Every service journal item must have person",
+                    "Some error");
+            
             var service = await repository.GetByIdAsync<Service>(request.ServiceJournalItemDto.ServiceId, cancellationToken);
+            if (service is null)
+                throw new StandardsException(StatusCodeByError.InternalServerError, "Every service journal item must have service",
+                    "Some error");
             
             var serviceJournalItem = new ServiceJournalItem
             {

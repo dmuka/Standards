@@ -1,12 +1,14 @@
 ﻿using Application.Abstractions.Cache;
 using Application.Abstractions.Data;
 using Application.Abstractions.Data.Validators;
+using Application.Exceptions;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
 using Domain.Constants;
 using Domain.Models;
 using Domain.Models.Services;
 using FluentValidation;
+using Infrastructure.Exceptions.Enum;
 using MediatR;
 
 namespace Application.UseCases.Services;
@@ -23,6 +25,8 @@ public class Create
     {
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested) return 0;
+            
             var materials = repository.GetQueryable<Material>()
                 .Where(material => request.ServiceDto.MaterialIds.Contains(material.Id))
                 .ToList();
@@ -32,6 +36,9 @@ public class Create
                 .ToList();
 
             var serviceType = await repository.GetByIdAsync<ServiceType>(request.ServiceDto.ServiceTypeId, cancellationToken);
+            if (serviceType is null)
+                throw new StandardsException(StatusCodeByError.InternalServerError, "Every service must have service type",
+                    "Some error");
             
             var service = new Service
             {

@@ -22,7 +22,6 @@ public class CreateTests : BaseTestFixture
     
     private ServiceJournalItem _serviceJournalItem;
     private ServiceJournalItemDto _serviceJournalItemDto;
-    private ServiceType _serviceType;
     
     private Mock<IRepository> _repositoryMock;
     private CancellationToken _cancellationToken;
@@ -86,7 +85,7 @@ public class CreateTests : BaseTestFixture
     public void ServiceJournalItemDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _serviceJournalItemDto = null;
+        _serviceJournalItemDto = null!;
 
         var query = new Create.Query(_serviceJournalItemDto);
 
@@ -101,7 +100,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _serviceJournalItemDto.Name = name;
+        _serviceJournalItemDto.Name = name!;
 
         var query = new Create.Query(_serviceJournalItemDto);
 
@@ -131,7 +130,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _serviceJournalItemDto.ShortName = shortName;
+        _serviceJournalItemDto.ShortName = shortName!;
 
         var query = new Create.Query(_serviceJournalItemDto);
 

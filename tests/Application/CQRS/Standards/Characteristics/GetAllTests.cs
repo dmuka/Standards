@@ -47,8 +47,8 @@ public class GetAllTests : BaseTestFixture
             .Returns(Task.FromResult(_characteristics));
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Characteristics, It.IsAny<Expression<Func<Characteristic, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
-            .Returns(Task.FromResult(_characteristics));
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Characteristics, It.IsAny<Expression<Func<Characteristic, object?>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+            .ReturnsAsync(_characteristics);
 
         _handler = new GetAll.QueryHandler(_cacheService.Object, _configService.Object); 
     }

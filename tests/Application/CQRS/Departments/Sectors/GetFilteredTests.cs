@@ -108,7 +108,7 @@ public class GetFilteredTests : BaseTestFixture
     public void Validator_IfParametersIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _parameters = null;
+        _parameters = null!;
 
         var query = new GetFiltered<Sector>.Query(_parameters);
         
@@ -123,7 +123,7 @@ public class GetFilteredTests : BaseTestFixture
     public void Validator_IfSearchStringIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _parameters.SearchString = null;
+        _parameters.SearchString = null!;
 
         var query = new GetFiltered<Sector>.Query(_parameters);
         

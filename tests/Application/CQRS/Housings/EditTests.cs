@@ -36,9 +36,9 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<HousingDto>(ValidId, _cancellationToken)).Returns(Task.FromResult(_housing));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<HousingDto>(ValidId, _cancellationToken)).ReturnsAsync(_housing);
         _repositoryMock.Setup(_ => _.Update(_housing));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
             
@@ -96,7 +96,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfHousingDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _housing = null;
+        _housing = null!;
 
         var query = new Edit.Query(_housing);
 
@@ -126,7 +126,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _housing.Name = name;
+        _housing.Name = name!;
 
         var query = new Edit.Query(_housing);
 
@@ -156,7 +156,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _housing.ShortName = shortName;
+        _housing.ShortName = shortName!;
 
         var query = new Edit.Query(_housing);
 
@@ -186,7 +186,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfAddressIsNull_ShouldHaveValidationError(string? address)
     {
         // Arrange
-        _housing.Address = address;
+        _housing.Address = address!;
 
         var query = new Edit.Query(_housing);
 

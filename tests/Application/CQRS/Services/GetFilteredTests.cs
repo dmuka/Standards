@@ -109,7 +109,7 @@ public class GetFilteredTests : BaseTestFixture
     public void Validator_IfParametersIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _parameters = null;
+        _parameters = null!;
 
         var query = new GetFiltered<Service>.Query(_parameters);
         

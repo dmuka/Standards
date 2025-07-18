@@ -2,6 +2,7 @@
 using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Units;
+using Domain.Models;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using MediatR;
@@ -35,6 +36,8 @@ public class EditTests : BaseTestFixture
 
         _repositoryMock = new Mock<IRepository>();
         _repositoryMock.Setup(_ => _.GetByIdAsync<UnitDto>(ValidId, _cancellationToken)).ReturnsAsync(_unit);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Quantity>(ValidId, _cancellationToken))
+            .ReturnsAsync(Quantities[0]);
         _repositoryMock.Setup(_ => _.Update(_unit));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 

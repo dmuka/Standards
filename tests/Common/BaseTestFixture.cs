@@ -56,7 +56,7 @@ public abstract class BaseTestFixture
     protected static List<Service> Services { get; private set; } = [];
     protected static List<ServiceDto> ServiceDtos { get; private set; } = [];
     
-    protected static List<Standard?> Standards { get; private set; } = [];
+    protected static List<Standard> Standards { get; private set; } = [];
     protected static List<StandardDto> StandardDtos { get; private set; } = [];
     
     protected static List<ServiceJournalItem> ServiceJournalItems { get; private set; } = [];
@@ -524,7 +524,7 @@ public abstract class BaseTestFixture
                 Name = Rooms[0].Name,
                 ShortName = Rooms[0].ShortName,
                 Comments = Rooms[0].Comments,
-                SectorId = Rooms[0].Sector.Id,
+                SectorId = Rooms[0].Sector?.Id,
                 Floor = Rooms[0].Floor,
                 Length = Rooms[0].Length,
                 Width = Rooms[0].Width,
@@ -537,7 +537,7 @@ public abstract class BaseTestFixture
                 Name = Rooms[1].Name,
                 ShortName = Rooms[1].ShortName,
                 Comments = Rooms[1].Comments,
-                SectorId = Rooms[1].Sector.Id,
+                SectorId = Rooms[1].Sector?.Id,
                 Floor = Rooms[1].Floor,
                 Length = Rooms[1].Length,
                 Width = Rooms[1].Width,
@@ -550,7 +550,7 @@ public abstract class BaseTestFixture
                 Name = Rooms[2].Name,
                 ShortName = Rooms[2].ShortName,
                 Comments = Rooms[2].Comments,
-                SectorId = Rooms[2].Sector.Id,
+                SectorId = Rooms[2].Sector?.Id,
                 Floor = Rooms[2].Floor,
                 Length = Rooms[2].Length,
                 Width = Rooms[2].Width,
@@ -563,7 +563,7 @@ public abstract class BaseTestFixture
                 Name = Rooms[3].Name,
                 ShortName = Rooms[3].ShortName,
                 Comments = Rooms[3].Comments,
-                SectorId = Rooms[3].Sector.Id,
+                SectorId = Rooms[3].Sector?.Id,
                 Floor = Rooms[3].Floor,
                 Length = Rooms[3].Length,
                 Width = Rooms[3].Width,
@@ -576,7 +576,7 @@ public abstract class BaseTestFixture
                 Name = Rooms[4].Name,
                 ShortName = Rooms[4].ShortName,
                 Comments = Rooms[4].Comments,
-                SectorId = Rooms[4].Sector.Id,
+                SectorId = Rooms[4].Sector?.Id,
                 Floor = Rooms[4].Floor,
                 Length = Rooms[4].Length,
                 Width = Rooms[4].Width,
@@ -1352,7 +1352,7 @@ public abstract class BaseTestFixture
                 Name = Characteristics[0].Name,
                 ShortName = Characteristics[0].ShortName,
                 Comments = Characteristics[0].Comments,
-                GradeId = Characteristics[0].Grade.Id,
+                GradeId = Characteristics[0].Grade?.Id,
                 GradeValue = Characteristics[0].GradeValue,
                 GradeValueStart = Characteristics[0].GradeValueStart,
                 GradeValueEnd = Characteristics[0].GradeValueEnd,
@@ -1366,7 +1366,7 @@ public abstract class BaseTestFixture
                 Name = Characteristics[1].Name,
                 ShortName = Characteristics[1].ShortName,
                 Comments = Characteristics[1].Comments,
-                GradeId = Characteristics[1].Grade.Id,
+                GradeId = Characteristics[1].Grade?.Id,
                 GradeValue = Characteristics[1].GradeValue,
                 GradeValueStart = Characteristics[1].GradeValueStart,
                 GradeValueEnd = Characteristics[1].GradeValueEnd,
@@ -1380,7 +1380,7 @@ public abstract class BaseTestFixture
                 Name = Characteristics[2].Name,
                 ShortName = Characteristics[2].ShortName,
                 Comments = Characteristics[2].Comments,
-                GradeId = Characteristics[2].Grade.Id,
+                GradeId = Characteristics[2].Grade?.Id,
                 GradeValue = Characteristics[2].GradeValue,
                 GradeValueStart = Characteristics[2].GradeValueStart,
                 GradeValueEnd = Characteristics[2].GradeValueEnd,

@@ -107,7 +107,7 @@ public class EditTests : BaseTestFixture
     public void ServiceDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _serviceDto = null;
+        _serviceDto = null!;
 
         var query = new Edit.Query(_serviceDto);
 
@@ -137,7 +137,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _serviceDto.Name = name;
+        _serviceDto.Name = name!;
 
         var query = new Edit.Query(_serviceDto);
 
@@ -167,7 +167,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _serviceDto.ShortName = shortName;
+        _serviceDto.ShortName = shortName!;
 
         var query = new Edit.Query(_serviceDto);
 

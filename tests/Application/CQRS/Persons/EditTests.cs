@@ -166,7 +166,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfMiddleNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _person.MiddleName = name;
+        _person.MiddleName = name!;
 
         var query = new Edit.Query(_person);
 
@@ -286,7 +286,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfRoleIsNull_ShouldHaveValidationError(string? role)
     {
         // Arrange
-        _person.Role = role;
+        _person.Role = role!;
 
         var query = new Edit.Query(_person);
 

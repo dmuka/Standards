@@ -96,7 +96,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfDepartmentDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _department = null;
+        _department = null!;
 
         var query = new Edit.Query(_department);
 
@@ -126,7 +126,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _department.Name = name;
+        _department.Name = name!;
 
         var query = new Edit.Query(_department);
 
@@ -156,7 +156,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _department.ShortName = shortName;
+        _department.ShortName = shortName!;
 
         var query = new Edit.Query(_department);
 

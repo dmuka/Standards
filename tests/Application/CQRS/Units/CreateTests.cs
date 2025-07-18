@@ -2,6 +2,7 @@
 using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Units;
+using Domain.Models;
 using FluentValidation;
 using FluentValidation.TestHelper;
 using MediatR;
@@ -35,7 +36,10 @@ public class CreateTests : BaseTestFixture
 
         _repositoryMock = new Mock<IRepository>();
         _repositoryMock.Setup(_ => _.AddAsync(_unit, _cancellationToken));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Quantity>(ValidId, _cancellationToken))
+            .ReturnsAsync(Quantities[0]);
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken))
+            .ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
 

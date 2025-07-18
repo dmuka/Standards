@@ -87,7 +87,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfServiceDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _serviceDto = null;
+        _serviceDto = null!;
 
         var query = new Create.Query(_serviceDto);
 
@@ -102,7 +102,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _serviceDto.Name = name;
+        _serviceDto.Name = name!;
 
         var query = new Create.Query(_serviceDto);
 
@@ -132,7 +132,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _serviceDto.ShortName = shortName;
+        _serviceDto.ShortName = shortName!;
 
         var query = new Create.Query(_serviceDto);
 

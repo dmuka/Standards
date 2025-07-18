@@ -241,7 +241,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfRoleIsNull_ShouldHaveValidationError(string? role)
     {
         // Arrange
-        _person.Role = role;
+        _person.Role = role!;
 
         var query = new Create.Query(_person);
 

@@ -75,7 +75,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfAddressIsNull_ShouldHaveValidationError(string? address)
     {
         // Arrange
-        _place.Address = address;
+        _place.Address = address!;
 
         var commandObject = new Create.Command(_place);
 
@@ -122,7 +122,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _place.Name = name;
+        _place.Name = name!;
 
         var commandObject = new Create.Command(_place);
 
@@ -153,7 +153,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _place.ShortName = shortName;
+        _place.ShortName = shortName!;
 
         var commandObject = new Create.Command(_place);
 

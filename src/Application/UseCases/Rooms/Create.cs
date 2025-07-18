@@ -1,6 +1,7 @@
 using Application.Abstractions.Cache;
 using Application.Abstractions.Data;
 using Application.Abstractions.Data.Validators;
+using Application.Exceptions;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
 using Domain.Constants;
@@ -8,6 +9,8 @@ using Domain.Models.Departments;
 using Domain.Models.Housings;
 using Domain.Models.Persons;
 using FluentValidation;
+using Infrastructure.Exceptions;
+using Infrastructure.Exceptions.Enum;
 using MediatR;
 
 namespace Application.UseCases.Rooms;
@@ -24,6 +27,8 @@ public class Create
     {
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
+            if (cancellationToken.IsCancellationRequested) return 0;
+            
             var persons = repository.GetQueryable<Person>()
                 .Where(person => person.Sector.Id == request.Room.SectorId)
                 .ToList();
@@ -32,9 +37,12 @@ public class Create
                 .Where(workplace => workplace.Room.Id == request.Room.Id)
                 .ToList();
 
-            var sector = await repository.GetByIdAsync<Sector>(request.Room.SectorId, cancellationToken);
+            var sector = request.Room.SectorId is not null 
+                ? await repository.GetByIdAsync<Sector>(request.Room.SectorId, cancellationToken)
+                : null;
             
             var housing = await repository.GetByIdAsync<Housing>(request.Room.HousingId, cancellationToken);
+            if (housing is null) throw new StandardsException(StatusCodeByError.InternalServerError, "Every room must have relation to the housing", "Some error");
 
             var room = new Room
             {

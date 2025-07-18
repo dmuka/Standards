@@ -11,5 +11,5 @@ public class RoomDto : Entity
     public required double Width { get; set; }
     public IList<int> PersonIds { get; set; } = [];
     public IList<int> WorkplaceIds { get; set; } = [];
-    public required int SectorId { get; set; }
+    public int? SectorId { get; set; }
 }

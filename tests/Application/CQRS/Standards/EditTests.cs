@@ -41,13 +41,13 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_standard));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Person>(IdInDb, _cancellationToken)).Returns(Task.FromResult(Persons[0]));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(IdInDb, _cancellationToken)).ReturnsAsync(_standard);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Person>(IdInDb, _cancellationToken)).ReturnsAsync(Persons[0]);
         _repositoryMock.Setup(repository => repository.GetQueryable<Service>()).Returns(Services.AsQueryable());
         _repositoryMock.Setup(repository => repository.GetQueryable<Characteristic>()).Returns(Characteristics.AsQueryable());
         _repositoryMock.Setup(repository => repository.GetQueryable<Workplace>()).Returns(Workplaces.AsQueryable());
         _repositoryMock.Setup(_ => _.Update(_standard));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
 
@@ -107,7 +107,7 @@ public class EditTests : BaseTestFixture
     public void StandardDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _standardDto = null;
+        _standardDto = null!;
 
         var query = new Edit.Query(_standardDto);
 
@@ -137,7 +137,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _standardDto.Name = name;
+        _standardDto.Name = name!;
 
         var query = new Edit.Query(_standardDto);
 
@@ -167,7 +167,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _standardDto.ShortName = shortName;
+        _standardDto.ShortName = shortName!;
 
         var query = new Edit.Query(_standardDto);
 

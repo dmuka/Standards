@@ -76,7 +76,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfQuantityDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _quantity = null;
+        _quantity = null!;
 
         var query = new Create.Query(_quantity);
 
@@ -91,7 +91,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _quantity.Name = name;
+        _quantity.Name = name!;
 
         var query = new Create.Query(_quantity);
 

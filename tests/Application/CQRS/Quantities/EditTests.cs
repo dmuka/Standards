@@ -36,9 +36,9 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<QuantityDto>(ValidId, _cancellationToken)).Returns(Task.FromResult(_quantity));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<QuantityDto>(ValidId, _cancellationToken)).ReturnsAsync(_quantity);
         _repositoryMock.Setup(_ => _.Update(_quantity));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
             
@@ -94,7 +94,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfQuantityDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _quantity = null;
+        _quantity = null!;
 
         var query = new Edit.Query(_quantity);
 
@@ -124,7 +124,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _quantity.Name = name;
+        _quantity.Name = name!;
 
         var query = new Edit.Query(_quantity);
 
