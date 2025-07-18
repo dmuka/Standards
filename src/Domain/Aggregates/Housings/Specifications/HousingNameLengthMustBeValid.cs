@@ -4,7 +4,7 @@ using Domain.Aggregates.Housings.Constants;
 
 namespace Domain.Aggregates.Housings.Specifications;
 
-public class HousingNameMustBeValid(string housingName) : ISpecification
+public class HousingNameLengthMustBeValid(string housingName) : ISpecification
 {
     public Result IsSatisfied()
     {

@@ -4,7 +4,7 @@ using Domain.Aggregates.Rooms.Constants;
 
 namespace Domain.Aggregates.Rooms.Specifications;
 
-public class LengthMustBeValid(float length) : ISpecification
+public class RoomLengthMustBeValid(float length) : ISpecification
 {
     public Result IsSatisfied()
     {

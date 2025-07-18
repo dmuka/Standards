@@ -13,7 +13,7 @@ public class Height : ValueObject
 
     public static Result<Height> Create(float height)
     {
-        var heightValidationResult = new HeightMustBeValid(height).IsSatisfied();
+        var heightValidationResult = new RoomHeightMustBeValid(height).IsSatisfied();
 
         return heightValidationResult.IsFailure 
             ? Result<Height>.ValidationFailure(heightValidationResult.Error) 

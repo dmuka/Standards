@@ -28,7 +28,7 @@ public class Floor : AggregateRoot, ICacheable
 
     public static Result<Floor> Create(int floorNumber, HousingId housingId, FloorId? floorId = null)
     {
-        var floorNumberValidationResult = new FloorNumberMustBeValid(floorNumber).IsSatisfied();
+        var floorNumberValidationResult = new FloorNumberMustBeGreaterThanZero(floorNumber).IsSatisfied();
         if (floorNumberValidationResult.IsFailure) return Result.Failure<Floor>(floorNumberValidationResult.Error);
 
         var floor = new Floor(floorId ?? new FloorId(Guid.CreateVersion7()), floorNumber, housingId);

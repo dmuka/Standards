@@ -4,12 +4,12 @@ using Domain.Aggregates.Rooms.Constants;
 
 namespace Domain.Aggregates.Rooms.Specifications;
 
-public class WidthMustBeValid(float width) : ISpecification
+public class RoomHeightMustBeValid(float height) : ISpecification
 {
     public Result IsSatisfied()
     {
-        return width < RoomConstants.MinWidth 
-                ? Result.Failure<float>(RoomErrors.WrongWidthValue)
+        return height < RoomConstants.MinHeight 
+                ? Result.Failure<float>(RoomErrors.WrongHeightValue)
                 : Result.Success();
     }
 }

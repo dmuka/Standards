@@ -3,6 +3,7 @@ namespace Domain.Aggregates.Floors;
 public interface IFloorRepository
 {
     public Task<Floor?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+    public Task<Floor[]> GetByIdsAsync(Guid[] ids, CancellationToken cancellationToken);
 
     public Task<Floor[]> GetAllAsync(CancellationToken cancellationToken);
 

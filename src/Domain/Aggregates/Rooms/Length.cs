@@ -13,7 +13,7 @@ public class Length : ValueObject
 
     public static Result<Length> Create(float length)
     {
-        var lengthValidationResult = new LengthMustBeValid(length).IsSatisfied();
+        var lengthValidationResult = new RoomLengthMustBeValid(length).IsSatisfied();
 
         return lengthValidationResult.IsFailure 
             ? Result<Length>.ValidationFailure(lengthValidationResult.Error) 

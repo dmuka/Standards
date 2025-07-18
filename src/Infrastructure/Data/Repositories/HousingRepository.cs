@@ -11,7 +11,15 @@ public class HousingRepository(ApplicationDbContext context) : IHousingRepositor
             .AsNoTracking()
             .FirstOrDefaultAsync(housing => housing.Id == id, cancellationToken);
     }
-    
+
+    public async Task<Housing[]> GetByIdsAsync(Guid[] ids, CancellationToken cancellationToken)
+    {
+        return await context.Housings2
+            .AsNoTracking()
+            .Where(housing => ids.Contains(housing.Id))
+            .ToArrayAsync(cancellationToken);
+    }
+
     public async Task<Housing[]> GetAllAsync(CancellationToken cancellationToken)
     {
         return await context.Housings2
@@ -36,6 +44,8 @@ public class HousingRepository(ApplicationDbContext context) : IHousingRepositor
 
     public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await context.Housings2.AnyAsync(housing => housing.Id == id, cancellationToken);
+        return await context.Housings2
+            .AsNoTracking()
+            .AnyAsync(housing => housing.Id == id, cancellationToken);
     }
 }

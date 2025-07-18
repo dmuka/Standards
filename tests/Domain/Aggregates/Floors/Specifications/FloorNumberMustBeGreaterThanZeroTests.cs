@@ -4,13 +4,13 @@ using Domain.Aggregates.Floors.Specifications;
 namespace Tests.Domain.Aggregates.Floors.Specifications;
 
 [TestFixture]
-public class FloorNumberMustBeValidTests
+public class FloorNumberMustBeGreaterThanZeroTests
 {
     [Test]
     public void IsSatisfied_ShouldReturnFailure_WhenFloorNumberIsLessThanOne()
     {
         // Arrange
-        var specification = new FloorNumberMustBeValid(0);
+        var specification = new FloorNumberMustBeGreaterThanZero(0);
 
         // Act
         var result = specification.IsSatisfied();
@@ -27,7 +27,7 @@ public class FloorNumberMustBeValidTests
     public void IsSatisfied_ShouldReturnSuccess_WhenFloorNumberIsOneOrGreater()
     {
         // Arrange
-        var specification = new FloorNumberMustBeValid(1);
+        var specification = new FloorNumberMustBeGreaterThanZero(1);
 
         // Act
         var result = specification.IsSatisfied();

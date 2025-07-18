@@ -5,13 +5,13 @@ using Domain.Aggregates.Housings.Constants;
 namespace Tests.Domain.Aggregates.Housings.Specifications;
 
 [TestFixture]
-public class HousingNameMustBeValidTests
+public class HousingNameLengthMustBeValidTests
 {
     [Test]
     public void IsSatisfied_ShouldReturnFailure_WhenNameIsEmpty()
     {
         // Arrange
-        var specification = new HousingNameMustBeValid(string.Empty);
+        var specification = new HousingNameLengthMustBeValid(string.Empty);
 
         // Act
         var result = specification.IsSatisfied();
@@ -29,7 +29,7 @@ public class HousingNameMustBeValidTests
     {
         // Arrange
         var shortName = new string('a', HousingConstants.HousingNameMinLength - 1);
-        var specification = new HousingNameMustBeValid(shortName);
+        var specification = new HousingNameLengthMustBeValid(shortName);
 
         // Act
         var result = specification.IsSatisfied();
@@ -47,7 +47,7 @@ public class HousingNameMustBeValidTests
     {
         // Arrange
         var longName = new string('a', HousingConstants.HousingNameMaxLength + 1);
-        var specification = new HousingNameMustBeValid(longName);
+        var specification = new HousingNameLengthMustBeValid(longName);
 
         // Act
         var result = specification.IsSatisfied();
@@ -65,7 +65,7 @@ public class HousingNameMustBeValidTests
     {
         // Arrange
         var validName = new string('a', (HousingConstants.HousingNameMinLength + HousingConstants.HousingNameMaxLength) / 2);
-        var specification = new HousingNameMustBeValid(validName);
+        var specification = new HousingNameLengthMustBeValid(validName);
 
         // Act
         var result = specification.IsSatisfied();

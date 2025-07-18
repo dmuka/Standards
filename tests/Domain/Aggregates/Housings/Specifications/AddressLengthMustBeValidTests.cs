@@ -5,13 +5,13 @@ using Domain.Aggregates.Housings.Constants;
 namespace Tests.Domain.Aggregates.Housings.Specifications;
 
 [TestFixture]
-public class AddressMustBeValidTests
+public class AddressLengthMustBeValidTests
 {
     [Test]
     public void IsSatisfied_ShouldReturnFailure_WhenAddressIsEmpty()
     {
         // Arrange
-        var specification = new AddressMustBeValid(string.Empty);
+        var specification = new AddressLengthMustBeValid(string.Empty);
 
         // Act
         var result = specification.IsSatisfied();
@@ -29,7 +29,7 @@ public class AddressMustBeValidTests
     {
         // Arrange
         var shortAddress = new string('a', HousingConstants.AddressMinLength - 1);
-        var specification = new AddressMustBeValid(shortAddress);
+        var specification = new AddressLengthMustBeValid(shortAddress);
 
         // Act
         var result = specification.IsSatisfied();
@@ -44,7 +44,7 @@ public class AddressMustBeValidTests
     {
         // Arrange
         var longAddress = new string('a', HousingConstants.AddressMaxLength + 1);
-        var specification = new AddressMustBeValid(longAddress);
+        var specification = new AddressLengthMustBeValid(longAddress);
 
         // Act
         var result = specification.IsSatisfied();
@@ -62,7 +62,7 @@ public class AddressMustBeValidTests
     {
         // Arrange
         var validAddress = new string('a', (HousingConstants.AddressMinLength + HousingConstants.AddressMaxLength) / 2);
-        var specification = new AddressMustBeValid(validAddress);
+        var specification = new AddressLengthMustBeValid(validAddress);
 
         // Act
         var result = specification.IsSatisfied();

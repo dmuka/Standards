@@ -16,7 +16,7 @@ public class Address : ValueObject
 
     public static Result<Address> Create(string address)
     {
-        var addressValidationResult = new AddressMustBeValid(address).IsSatisfied();
+        var addressValidationResult = new AddressLengthMustBeValid(address).IsSatisfied();
 
         return addressValidationResult.IsFailure 
             ? Result<Address>.ValidationFailure(addressValidationResult.Error) 

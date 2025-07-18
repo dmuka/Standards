@@ -3,7 +3,7 @@ using Core.Results;
 
 namespace Domain.Aggregates.Floors.Specifications;
 
-public class FloorNumberMustBeValid(int floorNumber) : ISpecification
+public class FloorNumberMustBeGreaterThanZero(int floorNumber) : ISpecification
 {
     public Result IsSatisfied()
     {

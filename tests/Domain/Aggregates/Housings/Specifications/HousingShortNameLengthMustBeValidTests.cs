@@ -5,13 +5,13 @@ using Domain.Aggregates.Housings.Constants;
 namespace Tests.Domain.Aggregates.Housings.Specifications;
 
 [TestFixture]
-public class HousingShortNameMustBeValidTests
+public class HousingShortNameLengthMustBeValidTests
 {
     [Test]
     public void IsSatisfied_ShouldReturnFailure_WhenShortNameIsEmpty()
     {
         // Arrange
-        var specification = new HousingShortNameMustBeValid(string.Empty);
+        var specification = new HousingShortNameLengthMustBeValid(string.Empty);
 
         // Act
         var result = specification.IsSatisfied();
@@ -29,7 +29,7 @@ public class HousingShortNameMustBeValidTests
     {
         // Arrange
         var shortName = new string('a', HousingConstants.HousingShortNameMinLength - 1);
-        var specification = new HousingShortNameMustBeValid(shortName);
+        var specification = new HousingShortNameLengthMustBeValid(shortName);
 
         // Act
         var result = specification.IsSatisfied();
@@ -47,7 +47,7 @@ public class HousingShortNameMustBeValidTests
     {
         // Arrange
         var longName = new string('a', HousingConstants.HousingShortNameMaxLength + 1);
-        var specification = new HousingShortNameMustBeValid(longName);
+        var specification = new HousingShortNameLengthMustBeValid(longName);
 
         // Act
         var result = specification.IsSatisfied();
@@ -65,7 +65,7 @@ public class HousingShortNameMustBeValidTests
     {
         // Arrange
         var validName = new string('a', (HousingConstants.HousingShortNameMinLength + HousingConstants.HousingShortNameMaxLength) / 2);
-        var specification = new HousingShortNameMustBeValid(validName);
+        var specification = new HousingShortNameLengthMustBeValid(validName);
 
         // Act
         var result = specification.IsSatisfied();

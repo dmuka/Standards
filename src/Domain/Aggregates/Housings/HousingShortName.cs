@@ -16,7 +16,7 @@ public class HousingShortName : ValueObject
 
     public static Result<HousingShortName> Create(string housingShortName)
     {
-        var housingShortNameValidationResult = new HousingShortNameMustBeValid(housingShortName).IsSatisfied();
+        var housingShortNameValidationResult = new HousingShortNameLengthMustBeValid(housingShortName).IsSatisfied();
 
         return housingShortNameValidationResult.IsFailure 
             ? Result<HousingShortName>.ValidationFailure(housingShortNameValidationResult.Error) 

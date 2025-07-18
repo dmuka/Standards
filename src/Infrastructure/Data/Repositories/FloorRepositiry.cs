@@ -11,6 +11,14 @@ public class FloorRepository(ApplicationDbContext context) : IFloorRepository
             .AsNoTracking()
             .FirstOrDefaultAsync(floor => floor.Id == id, cancellationToken);
     }
+
+    public async Task<Floor[]> GetByIdsAsync(Guid[] ids, CancellationToken cancellationToken)
+    {
+        return await context.Floors
+            .AsNoTracking()
+            .Where(floor => ids.Contains(floor.Id))
+            .ToArrayAsync(cancellationToken);
+    }
     
     public async Task<Floor[]> GetAllAsync(CancellationToken cancellationToken)
     {
@@ -36,6 +44,8 @@ public class FloorRepository(ApplicationDbContext context) : IFloorRepository
 
     public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken)
     {
-        return await context.Floors.AnyAsync(floor => floor.Id == id, cancellationToken);
+        return await context.Floors
+            .AsNoTracking()
+            .AnyAsync(floor => floor.Id == id, cancellationToken);
     }
 }

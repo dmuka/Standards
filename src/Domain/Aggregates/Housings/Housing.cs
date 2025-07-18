@@ -12,6 +12,7 @@ public class Housing : AggregateRoot, ICacheable
     public Address Address { get; private set; } = null!;
     public HousingName HousingName { get; private set; } = null!;
     public HousingShortName? HousingShortName { get; private set; }
+    public int FloorsCount { get; private set; }
     public string? Comments { get; set; }
     public IReadOnlyCollection<FloorId> FloorIds => _floorIds.AsReadOnly();
     private List<FloorId> _floorIds = [];
@@ -69,15 +70,16 @@ public class Housing : AggregateRoot, ICacheable
         if (!_floorIds.Contains(floorId))
         {
             _floorIds.Add(floorId);
+            FloorsCount++;
         }
     }
     
     public void AddFloors(IList<FloorId> floorIds)
     {
-        if (!_floorIds.Any(floorIds.Contains))
-        {
-            _floorIds.AddRange(floorIds);
-        }
+        if (_floorIds.Any(floorIds.Contains)) return;
+        
+        _floorIds.AddRange(floorIds);
+        FloorsCount += floorIds.Count;
     }
     
     public static string GetCacheKey()

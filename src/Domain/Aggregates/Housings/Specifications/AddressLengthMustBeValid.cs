@@ -4,7 +4,7 @@ using Domain.Aggregates.Housings.Constants;
 
 namespace Domain.Aggregates.Housings.Specifications;
 
-public class AddressMustBeValid(string address) : ISpecification
+public class AddressLengthMustBeValid(string address) : ISpecification
 {
     public Result IsSatisfied()
     {
