@@ -25,7 +25,7 @@ public class GetByIdTests : BaseTestFixture
     private Mock<ICacheService> _cacheService;
     private Mock<ILogger<GetById>> _logger;
         
-    private IRequestHandler<GetById.Query<Place>, Place> _handler;
+    private IRequestHandler<GetById.Query<Place>, Place?> _handler;
     private IValidator<GetById.Query<Place>> _validator;
 
     [SetUp]
@@ -37,7 +37,7 @@ public class GetByIdTests : BaseTestFixture
 
         _repository = new Mock<IRepository>();
         _repository.Setup(_ => _.GetByIdAsync<Place>(IdInDb, _cancellationToken))
-            .Returns(Task.FromResult(_places.First(_ => _.Id == IdInDb)));
+            .ReturnsAsync(_places.First(_ => _.Id == IdInDb));
 
         _cacheService = new Mock<ICacheService>();
         _cacheService.Setup(cache => cache.GetById<Place>(Cache.Places, IdInDb)).Returns(Places[0]);

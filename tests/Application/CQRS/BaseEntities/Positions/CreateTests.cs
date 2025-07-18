@@ -119,7 +119,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _position.ShortName = shortName;
+        _position.ShortName = shortName!;
 
         var query = new CreateBaseEntity.Query<Position>(_position);
 

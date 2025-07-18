@@ -26,7 +26,7 @@ public class GetByIdTests : BaseTestFixture
     
     private List<Room> _rooms;
     
-    private IRequestHandler<GetById.Query<Room>, Room> _handler;
+    private IRequestHandler<GetById.Query<Room>, Room?> _handler;
     private IValidator<GetById.Query<Room>> _validator;
 
     [SetUp]

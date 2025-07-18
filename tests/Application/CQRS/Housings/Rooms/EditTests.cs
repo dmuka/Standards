@@ -54,11 +54,11 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Room>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_room));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Housing>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_housing));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Sector>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_sector));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Room>(IdInDb, _cancellationToken)).ReturnsAsync(_room);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Housing>(IdInDb, _cancellationToken)).ReturnsAsync(_housing);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Sector>(IdInDb, _cancellationToken)).ReturnsAsync(_sector);
         _repositoryMock.Setup(_ => _.Update(_room));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
 
@@ -117,7 +117,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfRoomDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _roomDto = null;
+        _roomDto = null!;
 
         var query = new Edit.Query(_roomDto);
 
@@ -177,7 +177,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _roomDto.Name = name;
+        _roomDto.Name = name!;
 
         var query = new Edit.Query(_roomDto);
 
@@ -207,7 +207,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _roomDto.ShortName = shortName;
+        _roomDto.ShortName = shortName!;
 
         var query = new Edit.Query(_roomDto);
 

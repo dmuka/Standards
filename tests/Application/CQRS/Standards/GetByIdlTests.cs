@@ -27,7 +27,7 @@ public class GetByIdTests : BaseTestFixture
     
     private List<Standard?> _standards;
     
-    private IRequestHandler<GetById.Query<Standard>, Standard> _handler;
+    private IRequestHandler<GetById.Query<Standard>, Standard?> _handler;
     private IValidator<GetById.Query<Standard>> _validator;
 
     [SetUp]

@@ -76,7 +76,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfUnitDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _unit = null;
+        _unit = null!;
 
         var query = new Create.Query(_unit);
 
@@ -91,7 +91,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _unit.Name = name;
+        _unit.Name = name!;
 
         var query = new Create.Query(_unit);
 

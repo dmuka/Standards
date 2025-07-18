@@ -11,7 +11,7 @@ namespace Application.UseCases.Common.GenericCRUD;
 
 public class GetById
 {
-    public class Query<T>(int id) : IRequest<T> where T : BaseEntity, ICacheable
+    public class Query<T>(int id) : IRequest<T?> where T : BaseEntity, ICacheable
     {
         public int Id { get; } = id;
     }
@@ -37,7 +37,6 @@ public class GetById
             entity = await repository.GetByIdAsync<T>(request.Id, cancellationToken);
 
             if (entity is null) return null;
-            
             
             cacheService.Create(T.GetCacheKey(), entity);
             logger.LogInformation("Get entity {Type} with id: {Id} from db", typeof(T), request.Id);                

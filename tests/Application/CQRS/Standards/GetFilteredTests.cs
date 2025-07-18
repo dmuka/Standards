@@ -49,7 +49,7 @@ public class GetFilteredTests : BaseTestFixture
 
          _queryWrapperMock = new Mock<IQueryableWrapper<Standard>>();
          _queryWrapperMock.Setup(m => m.ToListAsync(It.IsAny<IQueryable<Standard>>(), _cancellationToken))
-               .Returns(Task.FromResult(_standards));
+               .ReturnsAsync(_standards);
 
         _queryMock = new Mock<IQueryable<Standard>>();
 
@@ -108,7 +108,7 @@ public class GetFilteredTests : BaseTestFixture
     public void Validator_IfParametersIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _parameters = null;
+        _parameters = null!;
 
         var query = new GetFiltered<Standard>.Query(_parameters);
         
@@ -123,7 +123,7 @@ public class GetFilteredTests : BaseTestFixture
     public void Validator_IfSearchStringIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _parameters.SearchString = null;
+        _parameters.SearchString = null!;
 
         var query = new GetFiltered<Standard>.Query(_parameters);
         

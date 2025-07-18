@@ -44,13 +44,13 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Service>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_service));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<ServiceType>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_serviceType));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Service>(IdInDb, _cancellationToken)).ReturnsAsync(_service);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<ServiceType>(IdInDb, _cancellationToken)).ReturnsAsync(_serviceType);
         _repositoryMock.Setup(repository => repository.GetQueryable<Room>()).Returns(new List<Room> { Rooms[0], Rooms[1] }.AsQueryable());
         _repositoryMock.Setup(repository => repository.GetQueryable<Person>()).Returns(new List<Person> { Persons[0], Persons[1], Persons[2] }.AsQueryable());
         _repositoryMock.Setup(repository => repository.GetQueryable<Workplace>()).Returns(new List<Workplace> { Workplaces[4], Workplaces[5] }.AsQueryable());
         _repositoryMock.Setup(_ => _.Update(_service));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
 

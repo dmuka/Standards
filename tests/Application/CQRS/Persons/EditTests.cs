@@ -108,7 +108,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfPersonDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _person = null;
+        _person = null!;
 
         var query = new Edit.Query(_person);
 
@@ -136,7 +136,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfFirstNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _person.FirstName = name;
+        _person.FirstName = name!;
 
         var query = new Edit.Query(_person);
 
@@ -196,7 +196,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfLastNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _person.LastName = name;
+        _person.LastName = name!;
 
         var query = new Edit.Query(_person);
 

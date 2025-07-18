@@ -26,7 +26,7 @@ public class GetByIdTests : BaseTestFixture
     
     private List<Workplace> _sectors;
     
-    private IRequestHandler<GetById.Query<Workplace>, Workplace> _handler;
+    private IRequestHandler<GetById.Query<Workplace>, Workplace?> _handler;
     private IValidator<GetById.Query<Workplace>> _validator;
 
     [SetUp]

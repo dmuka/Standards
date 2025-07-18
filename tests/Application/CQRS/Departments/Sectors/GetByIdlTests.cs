@@ -26,7 +26,7 @@ public class GetByIdTests : BaseTestFixture
     
     private List<Sector> _sectors;
     
-    private IRequestHandler<GetById.Query<Sector>, Sector> _handler;
+    private IRequestHandler<GetById.Query<Sector>, Sector?> _handler;
     private IValidator<GetById.Query<Sector>> _validator;
 
     [SetUp]

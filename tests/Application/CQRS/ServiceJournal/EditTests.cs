@@ -40,12 +40,12 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<ServiceJournalItem>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_serviceJournalItem));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Service>(IdInDb, _cancellationToken)).Returns(Task.FromResult(Services[0]));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(IdInDb, _cancellationToken)).Returns(Task.FromResult(Standards[0]));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Person>(IdInDb, _cancellationToken)).Returns(Task.FromResult(Persons[0]));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<ServiceJournalItem>(IdInDb, _cancellationToken)).ReturnsAsync(_serviceJournalItem);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Service>(IdInDb, _cancellationToken)).ReturnsAsync(Services[0]);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(IdInDb, _cancellationToken)).ReturnsAsync(Standards[0]);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Person>(IdInDb, _cancellationToken)).ReturnsAsync(Persons[0]);
         _repositoryMock.Setup(_ => _.Update(_serviceJournalItem));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
 
@@ -104,7 +104,7 @@ public class EditTests : BaseTestFixture
     public void ServiceJournalItemDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _serviceJournalItemDto = null;
+        _serviceJournalItemDto = null!;
 
         var query = new Edit.Query(_serviceJournalItemDto);
 
@@ -134,7 +134,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _serviceJournalItemDto.Name = name;
+        _serviceJournalItemDto.Name = name!;
 
         var query = new Edit.Query(_serviceJournalItemDto);
 

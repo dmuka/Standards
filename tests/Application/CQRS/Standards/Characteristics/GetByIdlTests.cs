@@ -25,7 +25,7 @@ public class GetByIdTests : BaseTestFixture
     private Mock<ICacheService> _cacheService;
     private Mock<ILogger<GetById>> _logger;
         
-    private IRequestHandler<GetById.Query<Characteristic>, Characteristic> _handler;
+    private IRequestHandler<GetById.Query<Characteristic>, Characteristic?> _handler;
     private IValidator<GetById.Query<Characteristic>> _validator;
 
     [SetUp]

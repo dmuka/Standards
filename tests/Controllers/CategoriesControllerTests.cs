@@ -41,14 +41,11 @@ public class CategoriesControllerTests : BaseTestFixture
         using (Assert.EnterMultipleScope())
         {
             Assert.That(okResult, Is.Not.Null);
-            Assert.That(okResult.StatusCode, Is.Not.Null);
-            Assert.That(okResult.StatusCode, Is.Not.Null);
-            Assert.That(okResult.StatusCode, Is.Not.Null);
-            Assert.That(okResult.StatusCode, Is.Not.Null);
-            Assert.That(okResult.StatusCode, Is.EqualTo(200));
-            Assert.That(okResult.Value, Is.InstanceOf<Result<List<Category>>>());
+            Assert.That(okResult?.StatusCode, Is.Not.Null);
+            Assert.That(okResult?.StatusCode, Is.EqualTo(200));
+            Assert.That(okResult?.Value, Is.InstanceOf<Result<List<Category>>>());
         }
-        var actualCategories = okResult.Value as Result<List<Category>>;
+        var actualCategories = okResult?.Value as Result<List<Category>>;
         Assert.That(actualCategories, Is.Not.Null);
         Assert.That(actualCategories.Value, Is.EquivalentTo(categories));
     }

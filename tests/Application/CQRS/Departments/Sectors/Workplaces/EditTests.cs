@@ -137,7 +137,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _workplaceDto.Name = name;
+        _workplaceDto.Name = name!;
 
         var query = new Edit.Query(_workplaceDto);
 
@@ -167,7 +167,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _workplaceDto.ShortName = shortName;
+        _workplaceDto.ShortName = shortName!;
 
         var query = new Edit.Query(_workplaceDto);
 

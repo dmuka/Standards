@@ -124,7 +124,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _category.Name = name;
+        _category.Name = name!;
             
         var query = new EditBaseEntity.Query<Category>(_category);
 

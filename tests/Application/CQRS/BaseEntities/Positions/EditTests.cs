@@ -36,9 +36,9 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Position>(ValidId, _cancellationToken)).Returns(Task.FromResult(_position));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Position>(ValidId, _cancellationToken)).ReturnsAsync(_position);
         _repositoryMock.Setup(_ => _.Update(_position));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
             
@@ -94,7 +94,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfPositionIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _position = null;
+        _position = null!;
 
         var query = new EditBaseEntity.Query<Position>(_position);
 
@@ -124,7 +124,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _position.Name = name;
+        _position.Name = name!;
 
         var query = new EditBaseEntity.Query<Position>(_position);
 
@@ -154,7 +154,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _position.ShortName = shortName;
+        _position.ShortName = shortName!;
 
         var query = new EditBaseEntity.Query<Position>(_position);
 

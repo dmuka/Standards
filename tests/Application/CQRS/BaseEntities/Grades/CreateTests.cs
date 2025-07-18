@@ -73,7 +73,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfGradeIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _grade = null;
+        _grade = null!;
 
         var query = new CreateBaseEntity.Query<Grade>(_grade);
 

@@ -26,7 +26,7 @@ public class GetByIdTests : BaseTestFixture
     
     private List<ServiceJournalItem> _services;
     
-    private IRequestHandler<GetById.Query<ServiceJournalItem>, ServiceJournalItem> _handler;
+    private IRequestHandler<GetById.Query<ServiceJournalItem>, ServiceJournalItem?> _handler;
     private IValidator<GetById.Query<ServiceJournalItem>> _validator;
 
     [SetUp]

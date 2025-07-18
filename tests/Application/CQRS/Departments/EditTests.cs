@@ -36,9 +36,9 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<DepartmentDto>(ValidId, _cancellationToken)).Returns(Task.FromResult(_department));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<DepartmentDto>(ValidId, _cancellationToken)).ReturnsAsync(_department);
         _repositoryMock.Setup(_ => _.Update(_department));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
             

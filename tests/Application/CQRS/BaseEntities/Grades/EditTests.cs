@@ -94,7 +94,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfHousingDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _grade = null;
+        _grade = null!;
 
         var query = new EditBaseEntity.Query<Grade>(_grade);
 

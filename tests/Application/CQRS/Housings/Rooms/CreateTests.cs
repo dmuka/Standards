@@ -89,7 +89,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _roomDto.Name = name;
+        _roomDto.Name = name!;
 
         var query = new Create.Query(_roomDto);
 
@@ -118,7 +118,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _roomDto.ShortName = shortName;
+        _roomDto.ShortName = shortName!;
 
         var query = new Create.Query(_roomDto);
 
@@ -148,7 +148,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfRoomDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _roomDto = null;
+        _roomDto = null!;
 
         var query = new Create.Query(_roomDto);
 
