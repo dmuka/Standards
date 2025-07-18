@@ -166,7 +166,7 @@ public class CreateTests : BaseTestFixture
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.GradeId.Value);
+        result.ShouldHaveValidationErrorFor(_ => _.CharacteristicDto.GradeId!.Value);
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]

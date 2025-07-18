@@ -20,7 +20,7 @@ public class GetFilteredTests : BaseTestFixture
     private const string SearchQuery = "Name"; 
     
     private QueryParameters _parameters;
-    private IList<Standard?> _standards;
+    private IList<Standard> _standards;
     private IQueryBuilder<Standard> _queryBuilder;
 
     private Mock<IRepository> _repositoryMock;

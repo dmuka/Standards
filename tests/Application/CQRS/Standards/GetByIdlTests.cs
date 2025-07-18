@@ -25,7 +25,7 @@ public class GetByIdTests : BaseTestFixture
     
     private CancellationToken _cancellationToken;
     
-    private List<Standard?> _standards;
+    private List<Standard> _standards;
     
     private IRequestHandler<GetById.Query<Standard>, Standard?> _handler;
     private IValidator<GetById.Query<Standard>> _validator;

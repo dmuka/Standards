@@ -20,7 +20,7 @@ public class GetAllTests : BaseTestFixture
     private const string AbsoluteExpirationPath = "Cache:AbsoluteExpiration";
     private const string SlidingExpirationPath = "Cache:SlidingExpiration";
 
-    private IList<Standard?> _standards;
+    private IList<Standard> _standards;
     private IList<StandardDto> _dtos;
     
     private Mock<IRepository> _repository;
