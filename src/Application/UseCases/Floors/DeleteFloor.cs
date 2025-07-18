@@ -21,7 +21,7 @@ public class DeleteFloor
             
             var existingFloor = await repository.GetByIdAsync(command.FloorId, cancellationToken: cancellationToken);
             
-            repository.Remove(existingFloor);
+            repository.Remove(existingFloor!);
 
             return Result.Success();
         }

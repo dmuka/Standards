@@ -41,11 +41,11 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<VerificationJournalItem>(IdInDb, _cancellationToken)).Returns(Task.FromResult(_verificationJournalItem));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(IdInDb, _cancellationToken)).Returns(Task.FromResult(Standards[0]));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Place>(IdInDb, _cancellationToken)).Returns(Task.FromResult(Places[0]));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<VerificationJournalItem>(IdInDb, _cancellationToken)).ReturnsAsync(_verificationJournalItem);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Standard>(IdInDb, _cancellationToken)).ReturnsAsync(Standards[0]);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Place>(IdInDb, _cancellationToken)).ReturnsAsync(Places[0]);
         _repositoryMock.Setup(_ => _.Update(_verificationJournalItem));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
 
@@ -105,7 +105,7 @@ public class EditTests : BaseTestFixture
     public void VerificationJournalItemDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _verificationJournalItemDto = null;
+        _verificationJournalItemDto = null!;
 
         var query = new Edit.Command(_verificationJournalItemDto);
 
@@ -135,7 +135,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfCertificateIdIsNullOrEmpty_ShouldHaveValidationError(string? id)
     {
         // Arrange
-        _verificationJournalItemDto.CertificateId = id;
+        _verificationJournalItemDto.CertificateId = id!;
 
         var query = new Edit.Command(_verificationJournalItemDto);
 

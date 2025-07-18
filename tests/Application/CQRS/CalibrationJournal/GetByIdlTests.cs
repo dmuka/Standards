@@ -39,7 +39,7 @@ public class GetByIdTests : BaseTestFixture
 
         _repository = new Mock<IRepository>();
         _repository.Setup(_ => _.GetByIdAsync<VerificationJournalItem>(IdInDb, _cancellationToken))
-            .Returns(Task.FromResult(_services.First(_ => _.Id == IdInDb)));
+            .ReturnsAsync(_services.First(_ => _.Id == IdInDb));
 
         _cacheMock = new Mock<ICacheService>();
         _cacheMock.Setup(cache => cache.GetById<VerificationJournalItem>(Cache.ServiceJournal, IdInDb)).Returns(VerificationJournalItems[0]);

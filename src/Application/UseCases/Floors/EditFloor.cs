@@ -29,7 +29,7 @@ public class EditFloor
             
             var existingFloor = await repository.GetByIdAsync(command.FloorDto.FloorId, cancellationToken: cancellationToken);
             
-            repository.Update(existingFloor);
+            repository.Update(existingFloor!);
 
             return Result.Success();
         }

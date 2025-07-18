@@ -417,7 +417,7 @@ public abstract class BaseTestFixture
                 Name = Sectors[0].Name,
                 ShortName = Sectors[0].ShortName,
                 Comments = Sectors[0].Comments,
-                DepartmentId = Sectors[0].Department.Id
+                DepartmentId = Sectors[0].Department?.Id
             },
             new SectorDto
             {
@@ -425,7 +425,7 @@ public abstract class BaseTestFixture
                 Name = Sectors[1].Name,
                 ShortName = Sectors[1].ShortName,
                 Comments = Sectors[1].Comments,
-                DepartmentId = Sectors[1].Department.Id
+                DepartmentId = Sectors[1].Department?.Id
             },
             new SectorDto
             {
@@ -433,7 +433,7 @@ public abstract class BaseTestFixture
                 Name = Sectors[2].Name,
                 ShortName = Sectors[2].ShortName,
                 Comments = Sectors[2].Comments,
-                DepartmentId = Sectors[2].Department.Id
+                DepartmentId = Sectors[2].Department?.Id
             }
         ];
         #endregion

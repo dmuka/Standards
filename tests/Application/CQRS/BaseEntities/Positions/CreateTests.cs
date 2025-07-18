@@ -73,7 +73,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfPositionIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _position = null;
+        _position = null!;
 
         var query = new CreateBaseEntity.Query<Position>(_position);
 
@@ -88,7 +88,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _position.Name = name;
+        _position.Name = name!;
         
         var query = new CreateBaseEntity.Query<Position>(_position);
 

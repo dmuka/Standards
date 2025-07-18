@@ -46,10 +46,10 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Room>(RoomIdInDb, _cancellationToken)).Returns(Task.FromResult(_room));
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Person>(PersonIdInDb, _cancellationToken)).Returns(Task.FromResult(_responsible));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Room>(RoomIdInDb, _cancellationToken)).ReturnsAsync(_room);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Person>(PersonIdInDb, _cancellationToken)).ReturnsAsync(_responsible);
         _repositoryMock.Setup(_ => _.Update(_workplace));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
 
@@ -107,7 +107,7 @@ public class EditTests : BaseTestFixture
     public void WorkplaceDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _workplaceDto = null;
+        _workplaceDto = null!;
 
         var query = new Edit.Query(_workplaceDto);
 

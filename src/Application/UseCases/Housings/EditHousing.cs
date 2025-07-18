@@ -22,7 +22,7 @@ public class EditHousing
             
             var existingHousing = await repository.GetByIdAsync(command.HousingDto.HousingId, cancellationToken: cancellationToken);
             
-            repository.Update(existingHousing);
+            repository.Update(existingHousing!);
 
             return Result.Success();
         }

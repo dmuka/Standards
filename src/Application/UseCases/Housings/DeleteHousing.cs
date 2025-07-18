@@ -21,7 +21,7 @@ public class DeleteHousing
             
             var existingHousing = await repository.GetByIdAsync(command.HousingId, cancellationToken: cancellationToken);
             
-            repository.Remove(existingHousing);
+            repository.Remove(existingHousing!);
 
             return Result.Success();
         }

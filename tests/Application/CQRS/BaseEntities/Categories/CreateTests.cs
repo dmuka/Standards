@@ -73,7 +73,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfGradeIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _category = null;
+        _category = null!;
 
         var query = new CreateBaseEntity.Query<Category>(_category);
 
@@ -88,7 +88,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _category.Name = name;
+        _category.Name = name!;
 
         var query = new CreateBaseEntity.Query<Category>(_category);
 
@@ -119,7 +119,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _category.ShortName = shortName;
+        _category.ShortName = shortName!;
 
         var query = new CreateBaseEntity.Query<Category>(_category);
 

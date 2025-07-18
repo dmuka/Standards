@@ -44,8 +44,8 @@ public class GetAllTests : BaseTestFixture
             .Returns(Task.FromResult(_grades));
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Grades, It.IsAny<Expression<Func<Grade, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
-            .Returns(Task.FromResult(_grades));
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Grades, It.IsAny<Expression<Func<Grade, object?>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+            .ReturnsAsync(_grades);
 
         _handler = new GetAllBaseEntity.QueryHandler<Grade>(_cacheService.Object, _configService.Object); 
     }

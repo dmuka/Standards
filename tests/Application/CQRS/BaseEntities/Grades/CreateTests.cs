@@ -88,7 +88,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _grade.Name = name;
+        _grade.Name = name!;
 
         var query = new CreateBaseEntity.Query<Grade>(_grade);
 
@@ -119,7 +119,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _grade.ShortName = shortName;
+        _grade.ShortName = shortName!;
 
         var query = new CreateBaseEntity.Query<Grade>(_grade);
 

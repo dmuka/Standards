@@ -83,7 +83,7 @@ public class CreateTests : BaseTestFixture
     public void CalibrationJournalItemDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _calibrationJournalItemDto = null;
+        _calibrationJournalItemDto = null!;
 
         var query = new Create.Query(_calibrationJournalItemDto);
 
@@ -98,7 +98,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfCertificateIdIsNullOrEmpty_ShouldHaveValidationError(string? id)
     {
         // Arrange
-        _calibrationJournalItemDto.CertificateId = id;
+        _calibrationJournalItemDto.CertificateId = id!;
 
         var query = new Create.Query(_calibrationJournalItemDto);
 

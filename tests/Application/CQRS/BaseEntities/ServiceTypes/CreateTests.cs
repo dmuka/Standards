@@ -73,7 +73,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfPositionIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _serviceType = null;
+        _serviceType = null!;
 
         var query = new CreateBaseEntity.Query<ServiceType>(_serviceType);
 
@@ -88,7 +88,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _serviceType.Name = name;
+        _serviceType.Name = name!;
         
         var query = new CreateBaseEntity.Query<ServiceType>(_serviceType);
 
@@ -119,7 +119,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _serviceType.ShortName = shortName;
+        _serviceType.ShortName = shortName!;
 
         var query = new CreateBaseEntity.Query<ServiceType>(_serviceType);
 

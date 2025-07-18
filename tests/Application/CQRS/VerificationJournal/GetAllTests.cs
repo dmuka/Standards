@@ -43,8 +43,8 @@ public class GetAllTests : BaseTestFixture
         _configService.Setup(config => config.GetValue<int>(SlidingExpirationPath)).Returns(2);
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.VerificationJournal, It.IsAny<Expression<Func<VerificationJournalItem, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
-            .Returns(Task.FromResult(_verificationJournalItems));
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.VerificationJournal, It.IsAny<Expression<Func<VerificationJournalItem, object?>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+            .ReturnsAsync(_verificationJournalItems);
 
         _repository = new Mock<IRepository>();
         _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<VerificationJournalItem>,IIncludableQueryable<VerificationJournalItem,object>>>(), _cancellationToken))

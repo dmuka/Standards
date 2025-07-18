@@ -39,7 +39,9 @@ public class Create
                 .Where(person => person.Sector.Id == request.SectorDto.Id)
                 .ToList();
 
-            var department = await repository.GetByIdAsync<Department>(request.SectorDto.DepartmentId, cancellationToken);
+            var department = request.SectorDto.DepartmentId is not null 
+                ? await repository.GetByIdAsync<Department>(request.SectorDto.DepartmentId, cancellationToken) 
+                : null;
             
             var sector = new Sector
             {

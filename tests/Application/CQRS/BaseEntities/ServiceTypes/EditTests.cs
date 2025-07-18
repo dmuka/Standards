@@ -36,7 +36,7 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<ServiceType>(ValidId, _cancellationToken)).Returns(Task.FromResult(_serviceType));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<ServiceType>(ValidId, _cancellationToken)).ReturnsAsync(_serviceType);
         _repositoryMock.Setup(_ => _.Update(_serviceType));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
@@ -94,7 +94,7 @@ public class EditTests : BaseTestFixture
     public void ServiceTypeIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _serviceType = null;
+        _serviceType = null!;
 
         var query = new EditBaseEntity.Query<ServiceType>(_serviceType);
 
@@ -124,7 +124,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _serviceType.Name = name;
+        _serviceType.Name = name!;
 
         var query = new EditBaseEntity.Query<ServiceType>(_serviceType);
 
@@ -154,7 +154,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _serviceType.ShortName = shortName;
+        _serviceType.ShortName = shortName!;
 
         var query = new EditBaseEntity.Query<ServiceType>(_serviceType);
 

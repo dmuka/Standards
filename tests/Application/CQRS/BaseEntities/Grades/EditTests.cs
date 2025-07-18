@@ -36,9 +36,9 @@ public class EditTests : BaseTestFixture
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Grade>(ValidId, _cancellationToken)).Returns(Task.FromResult(_grade));
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Grade>(ValidId, _cancellationToken)).ReturnsAsync(_grade);
         _repositoryMock.Setup(_ => _.Update(_grade));
-        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
+        _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);
 
         _cacheService = new Mock<ICacheService>();
             
@@ -124,7 +124,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfNameIsNullOrEmpty_ShouldHaveValidationError(string? name)
     {
         // Arrange
-        _grade.Name = name;
+        _grade.Name = name!;
 
         var query = new EditBaseEntity.Query<Grade>(_grade);
 
@@ -154,7 +154,7 @@ public class EditTests : BaseTestFixture
     public void Validator_IfShortNameIsNullOrEmpty_ShouldHaveValidationError(string? shortName)
     {
         // Arrange
-        _grade.ShortName = shortName;
+        _grade.ShortName = shortName!;
 
         var query = new EditBaseEntity.Query<Grade>(_grade);
 

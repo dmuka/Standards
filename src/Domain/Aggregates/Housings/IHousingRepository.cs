@@ -2,7 +2,7 @@ namespace Domain.Aggregates.Housings
 {
     public interface IHousingRepository
     {
-        public Task<Housing> GetByIdAsync(Guid id, CancellationToken cancellationToken);
+        public Task<Housing?> GetByIdAsync(Guid id, CancellationToken cancellationToken);
 
         public Task<Housing[]> GetAllAsync(CancellationToken cancellationToken);
 

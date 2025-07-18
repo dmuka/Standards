@@ -43,12 +43,12 @@ public class GetAllTests : BaseTestFixture
         _configService.Setup(config => config.GetValue<int>(SlidingExpirationPath)).Returns(2);
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Workplaces, It.IsAny<Expression<Func<Workplace, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
-            .Returns(Task.FromResult(_workplaces));
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Workplaces, It.IsAny<Expression<Func<Workplace, object?>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+            .ReturnsAsync(_workplaces);
 
         _repository = new Mock<IRepository>();
         _repository.Setup(repository => repository.GetListAsync(It.IsAny<Func<IQueryable<Workplace>,IIncludableQueryable<Workplace,object>>>(), _cancellationToken))
-            .Returns(Task.FromResult(_workplaces));
+            .ReturnsAsync(_workplaces);
 
         _handler = new GetAll.QueryHandler(_cacheService.Object, _configService.Object); 
     }

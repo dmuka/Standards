@@ -87,7 +87,7 @@ public class CreateTests : BaseTestFixture
     public void VerificationJournalItemDtoIsNull_ShouldHaveValidationError()
     {
         // Arrange
-        _verificationJournalItemDto = null;
+        _verificationJournalItemDto = null!;
 
         var query = new Create.Command(_verificationJournalItemDto);
 
@@ -102,7 +102,7 @@ public class CreateTests : BaseTestFixture
     public void Validator_IfCertificateIdIsNullOrEmpty_ShouldHaveValidationError(string? id)
     {
         // Arrange
-        _verificationJournalItemDto.CertificateId = id;
+        _verificationJournalItemDto.CertificateId = id!;
 
         var query = new Create.Command(_verificationJournalItemDto);
 

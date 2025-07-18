@@ -75,7 +75,7 @@ public class EventConsumer : IHostedService, IEventConsumer, IDisposable
         _consumptionTasks.Add(consumptionTask);
     }
 
-    private async Task InitializeConsumerAsync()
+    private Task InitializeConsumerAsync()
     {
         try
         {
@@ -93,6 +93,8 @@ public class EventConsumer : IHostedService, IEventConsumer, IDisposable
                 .SetLogHandler((_, log) => 
                     _logger.Log(GetLogLevel(log.Level), "Kafka log: {Message}", log.Message))
                 .Build();
+            
+            return Task.CompletedTask;
         }
         catch (Exception ex)
         {
@@ -101,7 +103,7 @@ public class EventConsumer : IHostedService, IEventConsumer, IDisposable
         }
     }
 
-    private LogLevel GetLogLevel(SyslogLevel level) => level switch
+    private static LogLevel GetLogLevel(SyslogLevel level) => level switch
     {
         SyslogLevel.Emergency or SyslogLevel.Alert or SyslogLevel.Critical or SyslogLevel.Error => LogLevel.Error,
         SyslogLevel.Warning => LogLevel.Warning,
@@ -121,7 +123,7 @@ public class EventConsumer : IHostedService, IEventConsumer, IDisposable
         
         try
         {
-            if (_consumptionTasks.Any())
+            if (_consumptionTasks.Count != 0)
             {
                 await Task.WhenAll(_consumptionTasks);
             }

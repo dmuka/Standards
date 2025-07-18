@@ -44,7 +44,7 @@ public class GetAllTests : BaseTestFixture
         _configService.Setup(config => config.GetValue<int>(SlidingExpirationPath)).Returns(2);
 
         _cacheService = new Mock<ICacheService>();
-        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Rooms, It.IsAny<Expression<Func<Room, object>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
+        _cacheService.Setup(cache => cache.GetOrCreateAsync(Cache.Rooms, It.IsAny<Expression<Func<Room, object?>>[]>(), _cancellationToken, It.IsAny<TimeSpan>(), It.IsAny<TimeSpan>()))
             .Returns(Task.FromResult(_rooms));
 
         _repository = new Mock<IRepository>();
