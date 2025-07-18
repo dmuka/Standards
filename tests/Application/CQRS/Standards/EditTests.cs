@@ -119,7 +119,6 @@ public class EditTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfIdIsInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
@@ -222,21 +221,6 @@ public class EditTests : BaseTestFixture
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.StandardDto.ServiceIds);
-    }
-
-    [Test]
-    public void Validator_IfCharacteristicIdsIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _standardDto.CharacteristicIds = new List<int> { IdNotInDb };
-
-        var query = new Edit.Query(_standardDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.StandardDto.CharacteristicIds);
     }
 
     [Test]

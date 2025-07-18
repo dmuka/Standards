@@ -118,7 +118,6 @@ public class EditTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfIdIsInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
@@ -134,7 +133,6 @@ public class EditTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfDepartmentIdIsInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
@@ -225,21 +223,6 @@ public class EditTests : BaseTestFixture
     }
 
     [Test]
-    public void Validator_IfPersonIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _sectorDto.PersonIds = new List<int> { IdNotInDb };
-
-        var query = new Edit.Query(_sectorDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.SectorDto.PersonIds);
-    }
-
-    [Test]
     public void Validator_IfWorkplaceIdsIsEmpty_ShouldHaveValidationError()
     {
         // Arrange
@@ -252,50 +235,5 @@ public class EditTests : BaseTestFixture
 
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.SectorDto.WorkplaceIds);
-    }
-
-    [Test]
-    public void Validator_IfWorkplaceIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _sectorDto.WorkplaceIds = new List<int> { IdNotInDb };
-
-        var query = new Edit.Query(_sectorDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.SectorDto.WorkplaceIds);
-    }
-
-    [Test]
-    public void Validator_IfRoomIdsIsEmpty_ShouldHaveValidationError()
-    {
-        // Arrange
-        _sectorDto.RoomIds = new List<int>();
-
-        var query = new Edit.Query(_sectorDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.SectorDto.RoomIds);
-    }
-
-    [Test]
-    public void Validator_IfRoomIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _sectorDto.RoomIds = new List<int> { IdNotInDb };
-
-        var query = new Edit.Query(_sectorDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.SectorDto.RoomIds);
     }
 }

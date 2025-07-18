@@ -106,7 +106,6 @@ public class EditTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfIdIsInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
@@ -156,21 +155,6 @@ public class EditTests : BaseTestFixture
     {
         // Arrange
         _quantity.UnitIds = new List<int>();
-
-        var query = new Edit.Query(_quantity);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.QuantityDto.UnitIds);
-    }
-
-    [Test]
-    public void Validator_IfUnitIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _quantity.UnitIds = new List<int> { IdNotInDb };
 
         var query = new Edit.Query(_quantity);
 

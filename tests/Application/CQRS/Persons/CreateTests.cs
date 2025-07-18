@@ -178,7 +178,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfCategoryIdIsInvalid_ShouldHaveValidationError(int categoryId)
     {
         // Arrange
@@ -194,7 +193,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfPositionIdIsInvalid_ShouldHaveValidationError(int positionId)
     {
         // Arrange
@@ -210,7 +208,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfSectorIdIsInvalid_ShouldHaveValidationError(int sectorId)
     {
         // Arrange
@@ -226,7 +223,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfUserIdIsInvalid_ShouldHaveValidationError(int userId)
     {
         // Arrange

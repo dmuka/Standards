@@ -88,7 +88,6 @@ public class DeleteTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfIdInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange

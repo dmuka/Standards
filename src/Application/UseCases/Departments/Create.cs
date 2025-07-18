@@ -23,7 +23,7 @@ public class Create
         public async Task<int> Handle(Query request, CancellationToken cancellationToken)
         {
             var sectors = repository.GetQueryable<Sector>()
-                .Where(sector => sector.Department.Id == request.DepartmentDto.Id)
+                .Where(sector => sector.Department != null && sector.Department.Id == request.DepartmentDto.Id)
                 .ToList();
 
             // var housings = repository.GetQueryable<Housing>()
@@ -75,8 +75,7 @@ public class Create
 
                     filter.RuleFor(department => department.SectorIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Sector>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
                 });
         }
     }

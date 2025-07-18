@@ -119,7 +119,6 @@ public class EditTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfIdIsInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
@@ -225,40 +224,10 @@ public class EditTests : BaseTestFixture
     }
 
     [Test]
-    public void Validator_IfWMaterialIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _serviceDto.MaterialIds = new List<int> { IdNotInDb };
-
-        var query = new Edit.Query(_serviceDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.ServiceDto.MaterialIds);
-    }
-
-    [Test]
     public void Validator_IfMaterialQuantityIdsIsEmpty_ShouldHaveValidationError()
     {
         // Arrange
         _serviceDto.MaterialsQuantityIds = new List<int>();
-
-        var query = new Edit.Query(_serviceDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.ServiceDto.MaterialsQuantityIds);
-    }
-
-    [Test]
-    public void Validator_IfMaterialQuantityIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _serviceDto.MaterialsQuantityIds = new List<int> { IdNotInDb };
 
         var query = new Edit.Query(_serviceDto);
 

@@ -61,8 +61,7 @@ public class Create
 
                     quantity.RuleFor(dto => dto.UnitIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Unit>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
                 });
         }
     }

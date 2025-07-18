@@ -73,18 +73,15 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
                     
                     service.RuleFor(dto => dto.ServiceTypeId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<ServiceType>(repository));
+                        .GreaterThan(0);
 
                     service.RuleFor(dto => dto.MaterialIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Material>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
 
                     service.RuleFor(dto => dto.MaterialsQuantityIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Quantity>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
                 });
         }
     }

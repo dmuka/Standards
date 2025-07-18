@@ -62,8 +62,7 @@ public class Edit
                 .ChildRules(housing =>
                 {
                     housing.RuleFor(housingDto => housingDto.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Housing>(repository));
+                        .GreaterThan(0);
 
                     housing.RuleFor(housingDto => housingDto.Name)
                         .NotEmpty()
@@ -86,8 +85,7 @@ public class Edit
 
                     housing.RuleFor(housingDto => housingDto.RoomIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Room>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
                 });
         }
     }

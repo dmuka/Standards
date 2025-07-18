@@ -66,8 +66,7 @@ public class Create
 
                     place.RuleFor(dto => dto.ContactIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Contact>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
                 });
         }
     }

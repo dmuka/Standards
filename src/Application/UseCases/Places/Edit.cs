@@ -50,8 +50,7 @@ public class Edit
                 .ChildRules(place =>
                 {
                     place.RuleFor(dto => dto.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Place>(repository));
+                        .GreaterThan(0);
                         
                     place.RuleFor(dto => dto.Name)
                         .NotEmpty()
@@ -68,8 +67,7 @@ public class Edit
 
                     place.RuleFor(dto => dto.ContactIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Contact>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
                 });
         }
     }

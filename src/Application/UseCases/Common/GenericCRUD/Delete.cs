@@ -44,8 +44,7 @@ public class Delete
             RuleLevelCascadeMode = CascadeMode.Stop;
 
             RuleFor(query => query.Id)
-                .GreaterThan(0)
-                .SetValidator(new IdValidator<T>(repository));
+                .GreaterThan(0);
         }
     }
 }

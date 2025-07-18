@@ -106,7 +106,6 @@ public class EditTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfIdIsInvalid_ShouldHaveValidationError(int id)
     {
         // Arrange
@@ -233,21 +232,6 @@ public class EditTests : BaseTestFixture
     {
         // Arrange
         _placeDto.ContactIds = new List<int>();
-
-        var command = new Edit.Command(_placeDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(command, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(c => c.PlaceDto.ContactIds);
-    }
-
-    [Test]
-    public void Validator_IfContactIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _placeDto.ContactIds = new List<int> { IdNotInDb };
 
         var command = new Edit.Command(_placeDto);
 

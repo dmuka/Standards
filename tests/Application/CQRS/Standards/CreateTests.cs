@@ -190,21 +190,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test]
-    public void Validator_IfCharacteristicIdsIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _standardDto.CharacteristicIds = new List<int> { IdNotInDb };
-
-        var query = new Create.Query(_standardDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.StandardDto.CharacteristicIds);
-    }
-
-    [Test]
     public void Validator_IfWorkplaceIdsIsEmpty_ShouldHaveValidationError()
     {
         // Arrange

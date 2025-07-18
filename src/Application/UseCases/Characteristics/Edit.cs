@@ -84,8 +84,7 @@ namespace Application.UseCases.Characteristics
                     .ChildRules(dto =>
                     {
                         dto.RuleFor(characteristic => characteristic.Id)
-                            .GreaterThan(0)
-                            .SetValidator(new IdValidator<Unit>(repository));
+                            .GreaterThan(0);
                         
                         dto.RuleFor(characteristic => characteristic.Name)
                             .NotEmpty()
@@ -102,13 +101,11 @@ namespace Application.UseCases.Characteristics
                             .NotEmpty();
 
                         dto.RuleFor(characteristic => characteristic.UnitId)
-                            .GreaterThan(0)
-                            .SetValidator(new IdValidator<Unit>(repository));
+                            .GreaterThan(0);
 
                         dto.When(characteristic => characteristic.GradeId.HasValue, () => {
                             dto.RuleFor(characteristic => characteristic.GradeId!.Value)
-                                .GreaterThan(0)
-                                .SetValidator(new IdValidator<Grade>(repository));
+                                .GreaterThan(0);
                         });
 
                         dto.RuleFor(characteristic => characteristic.GradeValue)
@@ -121,8 +118,7 @@ namespace Application.UseCases.Characteristics
                             .NotEmpty();
 
                         dto.RuleFor(characteristic => characteristic.StandardId)
-                            .GreaterThan(0)
-                            .SetValidator(new IdValidator<Standard>(repository));
+                            .GreaterThan(0);
                     });
             }
         }

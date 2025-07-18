@@ -205,7 +205,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfHousingIdIsInvalid_ShouldHaveValidationError(int housingId)
     {
         // Arrange
@@ -221,7 +220,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfSectorIdIsInvalid_ShouldHaveValidationError(int sectorId)
     {
         // Arrange

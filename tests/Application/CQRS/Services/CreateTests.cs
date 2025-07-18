@@ -189,40 +189,10 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test]
-    public void Validator_IfWMaterialIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _serviceDto.MaterialIds = new List<int> { IdNotInDb };
-
-        var query = new Create.Query(_serviceDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.ServiceDto.MaterialIds);
-    }
-
-    [Test]
     public void Validator_IfMaterialQuantityIdsIsEmpty_ShouldHaveValidationError()
     {
         // Arrange
         _serviceDto.MaterialsQuantityIds = new List<int>();
-
-        var query = new Create.Query(_serviceDto);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.ServiceDto.MaterialsQuantityIds);
-    }
-
-    [Test]
-    public void Validator_IfMaterialQuantityIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _serviceDto.MaterialsQuantityIds = new List<int> { IdNotInDb };
 
         var query = new Create.Query(_serviceDto);
 

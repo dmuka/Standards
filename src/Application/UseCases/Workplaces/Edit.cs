@@ -58,8 +58,7 @@ public class Edit
                 .ChildRules(workplace =>
                 {
                     workplace.RuleFor(dto => dto.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Workplace>(repository));
+                        .GreaterThan(0);
 
                     workplace.RuleFor(dto => dto.Name)
                         .NotEmpty()
@@ -70,12 +69,10 @@ public class Edit
                         .MaximumLength(Lengths.ShortName);
                     
                     workplace.RuleFor(dto => dto.RoomId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Room>(repository));
+                        .GreaterThan(0);
                     
                     workplace.RuleFor(dto => dto.ResponsibleId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Person>(repository));
+                        .GreaterThan(0);
                 });
         }
     }

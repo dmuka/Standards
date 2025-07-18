@@ -71,8 +71,7 @@ namespace Application.UseCases.Rooms
                     .ChildRules(room =>
                     {
                         room.RuleFor(dto => dto.Id)
-                            .GreaterThan(0)
-                            .SetValidator(new IdValidator<Room>(repository));;
+                            .GreaterThan(0);;
 
                         room.RuleFor(dto => dto.Name)
                             .NotEmpty()
@@ -95,22 +94,18 @@ namespace Application.UseCases.Rooms
                             .GreaterThan(default(double));
                         
                         room.RuleFor(dto => dto.HousingId)
-                            .GreaterThan(0)
-                            .SetValidator(new IdValidator<Housing>(repository));
+                            .GreaterThan(0);
                         
                         room.RuleFor(dto => dto.SectorId)
-                            .GreaterThan(0)
-                            .SetValidator(new IdValidator<Sector>(repository));
+                            .GreaterThan(0);
                         
                         room.RuleFor(dto => dto.PersonIds)
                             .NotEmpty()
-                            .ForEach(id => 
-                                id.SetValidator(new IdValidator<Person>(repository)));
+                            .ForEach(id => id.GreaterThan(0));
                         
                         room.RuleFor(dto => dto.WorkplaceIds)
                             .NotEmpty()
-                            .ForEach(id => 
-                                id.SetValidator(new IdValidator<Workplace>(repository)));
+                            .ForEach(id => id.GreaterThan(0));
                     });
             }
         }

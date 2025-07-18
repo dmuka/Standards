@@ -64,8 +64,7 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
 
                     dto.RuleFor(material => material.UnitId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Unit>(repository));
+                        .GreaterThan(0);
                 });
         }
     }

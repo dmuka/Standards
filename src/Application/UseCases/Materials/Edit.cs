@@ -55,8 +55,7 @@ public class Edit
                 .ChildRules(dto =>
                 {
                     dto.RuleFor(material => material.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Material>(repository));
+                        .GreaterThan(0);
                     
                     dto.RuleFor(material => material.Name)
                         .NotEmpty()
@@ -67,8 +66,7 @@ public class Edit
                         .MaximumLength(Lengths.ShortName);
 
                     dto.RuleFor(material => material.UnitId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Unit>(repository));
+                        .GreaterThan(0);
                 });
         }
     }

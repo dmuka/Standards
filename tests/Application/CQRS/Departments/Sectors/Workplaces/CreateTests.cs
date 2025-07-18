@@ -187,6 +187,6 @@ public class CreateTests : BaseTestFixture
         var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
 
         // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.WorkplaceDto.RoomId);
+        result.ShouldHaveValidationErrorFor(_ => _.WorkplaceDto.ResponsibleId);
     }
 }

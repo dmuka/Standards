@@ -72,8 +72,7 @@ public class Edit
                 .ChildRules(sector =>
                 {
                     sector.RuleFor(dto => dto.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Sector>(repository));
+                        .GreaterThan(0);
 
                     sector.RuleFor(dto => dto.Name)
                         .NotEmpty()
@@ -85,22 +84,18 @@ public class Edit
 
                     sector.RuleFor(dto => dto.PersonIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Person>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
 
                     sector.RuleFor(dto => dto.RoomIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Room>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
 
                     sector.RuleFor(dto => dto.WorkplaceIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Workplace>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
 
                     sector.RuleFor(dto => dto.DepartmentId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Department>(repository));
+                        .GreaterThan(0);
                 });
         }
     }

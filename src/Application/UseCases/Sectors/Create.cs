@@ -3,6 +3,7 @@ using Application.Abstractions.Data;
 using Application.Abstractions.Data.Validators;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
+using Domain.Aggregates.Persons;
 using Domain.Constants;
 using Domain.Models.Departments;
 using Domain.Models.Housings;
@@ -70,34 +71,32 @@ public class Create
 
             RuleFor(query => query.SectorDto)
                 .NotEmpty()
-                .ChildRules(filter =>
+                .ChildRules(sectorDto =>
                 {
-                    filter.RuleFor(sector => sector.Name)
+                    sectorDto.RuleFor(sector => sector.Name)
                         .NotEmpty()
                         .MaximumLength(Lengths.EntityName);
 
-                    filter.RuleFor(sector => sector.ShortName)
+                    sectorDto.RuleFor(sector => sector.ShortName)
                         .NotEmpty()
                         .MaximumLength(Lengths.ShortName);
                     
-                    filter.RuleFor(sector => sector.DepartmentId)
+                    sectorDto.RuleFor(sector => sector.DepartmentId)
                         .GreaterThan(0)
-                        .SetValidator(new IdValidator<Department>(repository));
+                        .WithMessage("Id value must be valid.")
+                        .When(s => s.DepartmentId != null);
 
-                    filter.RuleFor(sector => sector.PersonIds)
-                        .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Person>(repository)));
+                    sectorDto.RuleForEach(sector => sector.PersonIds)
+                        .GreaterThan(0)
+                        .WithMessage("Id value must be valid.");
 
-                    filter.RuleFor(sector => sector.RoomIds)
-                        .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Room>(repository)));
+                    sectorDto.RuleForEach(sector => sector.RoomIds)
+                        .GreaterThan(0)
+                        .WithMessage("Id value must be valid.");
 
-                    filter.RuleFor(sector => sector.WorkplaceIds)
-                        .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Workplace>(repository)));
+                    sectorDto.RuleForEach(sector => sector.WorkplaceIds)
+                        .GreaterThan(0)
+                        .WithMessage("Id value must be valid.");
                 });
         }
     }

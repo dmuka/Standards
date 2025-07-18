@@ -53,8 +53,7 @@ public class CreateBaseEntity
                 .ChildRules(entity =>
                 {
                     entity.RuleFor(e => e.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<T>(repository));
+                        .GreaterThan(0);
 
                     entity.RuleFor(e => e.Name)
                         .NotEmpty()

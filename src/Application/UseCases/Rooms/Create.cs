@@ -81,8 +81,7 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
 
                     room.RuleFor(dto => dto.HousingId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Housing>(repository));
+                        .GreaterThan(0);
 
                     room.RuleFor(dto => dto.Width)
                         .GreaterThan(0);
@@ -97,8 +96,7 @@ public class Create
                         .GreaterThan(0);
 
                     room.RuleFor(dto => dto.SectorId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Sector>(repository));
+                        .GreaterThan(0);
                 });
         }
     }

@@ -193,19 +193,4 @@ public class CreateTests : BaseTestFixture
         // Assert
         result.ShouldHaveValidationErrorFor(command => command.Place.ContactIds);
     }
-
-    [Test]
-    public void Validator_IfContactIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _place.ContactIds = new List<int> { IdNotInDb };
-
-        var commandObject = new Create.Command(_place);
-
-        // Act
-        var result = _validator.TestValidateAsync(commandObject, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(command => command.Place.ContactIds);
-    }
 }

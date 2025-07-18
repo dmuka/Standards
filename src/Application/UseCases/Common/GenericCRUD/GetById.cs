@@ -27,13 +27,21 @@ public class GetById
             
             var entity = cacheService.GetById<T>(T.GetCacheKey(), request.Id);
             
-            if (entity is not null) return entity;
+            if (entity is not null)
+            {
+                logger.LogInformation("Get entity {Type} with id: {Id} from cache", typeof(T), request.Id);
+                
+                return entity;
+            }
             
             entity = await repository.GetByIdAsync<T>(request.Id, cancellationToken);
 
             if (entity is null) return null;
+            
+            
             cacheService.Create(T.GetCacheKey(), entity);
-                
+            logger.LogInformation("Get entity {Type} with id: {Id} from db", typeof(T), request.Id);                
+            
             return entity;
         }
     }
@@ -45,8 +53,7 @@ public class GetById
             RuleLevelCascadeMode = CascadeMode.Stop;
 
             RuleFor(query => query.Id)
-                .GreaterThan(0)
-                .SetValidator(new IdValidator<T>(repository));
+                .GreaterThan(0);
         }
     }
 }

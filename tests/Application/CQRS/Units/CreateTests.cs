@@ -163,7 +163,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfQuantityIdIsInvalid_ShouldHaveValidationError(int quantityId)
     {
         // Arrange

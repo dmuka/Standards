@@ -97,13 +97,11 @@ public class Create
                     //     .NotEmpty();
 
                     dto.RuleFor(characteristic => characteristic.UnitId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Unit>(repository));
+                        .GreaterThan(0);
                     
                     dto.When(characteristic => characteristic.GradeId.HasValue, () => {
                         dto.RuleFor(characteristic => characteristic.GradeId!.Value)
-                            .GreaterThan(0)
-                            .SetValidator(new IdValidator<Grade>(repository));
+                            .GreaterThan(0);
                     });
                     
                     // dto.RuleFor(characteristic => characteristic.GradeValue)
@@ -116,8 +114,7 @@ public class Create
                     //     .NotEmpty();
 
                     dto.RuleFor(characteristic => characteristic.StandardId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Standard>(repository));
+                        .GreaterThan(0);
                 });
         }
     }

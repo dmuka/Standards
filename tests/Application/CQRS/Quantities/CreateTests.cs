@@ -131,19 +131,4 @@ public class CreateTests : BaseTestFixture
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.QuantityDto.UnitIds);
     }
-
-    [Test]
-    public void Validator_IfUnitIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _quantity.UnitIds = new List<int> { IdNotInDb };
-
-        var query = new Create.Query(_quantity);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.QuantityDto.UnitIds);
-    }
 }

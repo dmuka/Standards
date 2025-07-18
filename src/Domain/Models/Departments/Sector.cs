@@ -7,7 +7,7 @@ namespace Domain.Models.Departments;
 
 public class Sector : Entity, ICacheable
 {
-    public required Department Department { get; set; }
+    public Department? Department { get; set; }
     public IList<Room> Rooms { get; set; } = [];
     public IList<Workplace> Workplaces { get; set; } = [];
     public IList<Person> Persons { get; set; } = [];

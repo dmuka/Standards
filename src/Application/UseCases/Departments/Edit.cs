@@ -23,7 +23,7 @@ namespace Application.UseCases.Departments
             public async Task<int> Handle(Query request, CancellationToken cancellationToken)
             {
                 var sectors = repository.GetQueryable<Sector>()
-                    .Where(sector => sector.Department.Id == request.DepartmentDto.Id)
+                    .Where(sector => sector.Department != null && sector.Department.Id == request.DepartmentDto.Id)
                     .ToList();
 
                 // var housings = repository.GetQueryable<Housing>()
@@ -60,8 +60,7 @@ namespace Application.UseCases.Departments
                     .ChildRules(housing =>
                     {
                         housing.RuleFor(department => department.Id)
-                            .GreaterThan(0)
-                            .SetValidator(new IdValidator<Department>(repository));
+                            .GreaterThan(0);
 
                         housing.RuleFor(department => department.Name)
                             .NotEmpty()
@@ -78,8 +77,7 @@ namespace Application.UseCases.Departments
 
                         housing.RuleFor(department => department.SectorIds)
                             .NotEmpty()
-                            .ForEach(id => 
-                                id.SetValidator(new IdValidator<Sector>(repository)));
+                            .ForEach(id => id.GreaterThan(0));
                     });
             }
         }

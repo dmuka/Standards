@@ -161,19 +161,4 @@ public class CreateTests : BaseTestFixture
         // Assert
         result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.SectorIds);
     }
-
-    [Test]
-    public void Validator_IfSectorIdIsNotInDb_ShouldHaveValidationError()
-    {
-        // Arrange
-        _department.SectorIds = new List<int> { IdNotInDb };
-
-        var query = new Create.Query(_department);
-
-        // Act
-        var result = _validator.TestValidateAsync(query, cancellationToken: _cancellationToken).Result;
-
-        // Assert
-        result.ShouldHaveValidationErrorFor(_ => _.DepartmentDto.SectorIds);
-    }
 }

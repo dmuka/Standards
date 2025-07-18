@@ -148,7 +148,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfUnitIsInvalid_ShouldHaveValidationError(int unitId)
     {
         // Arrange

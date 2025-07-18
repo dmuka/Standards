@@ -62,8 +62,7 @@ public class Edit
                 .ChildRules(standard =>
                 {
                     standard.RuleFor(dto => dto.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Service>(repository));
+                        .GreaterThan(0);
                     
                     standard.RuleFor(dto => dto.Name)
                         .NotEmpty()
@@ -74,8 +73,7 @@ public class Edit
                         .MaximumLength(Lengths.ShortName);
                     
                     standard.RuleFor(dto => dto.ResponsibleId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Person>(repository));
+                        .GreaterThan(0);
 
                     standard.RuleFor(dto => dto.VerificationInterval)
                         .GreaterThan(Domain.Constants.Standards.MinVerificationInterval);
@@ -86,18 +84,15 @@ public class Edit
 
                     standard.RuleFor(dto => dto.CharacteristicIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Characteristic>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
 
                     standard.RuleFor(dto => dto.ServiceIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Service>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
 
                     standard.RuleFor(dto => dto.WorkplaceIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Workplace>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
                 });
         }
     }

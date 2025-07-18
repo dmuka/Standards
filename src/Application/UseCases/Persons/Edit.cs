@@ -71,8 +71,7 @@ public class Edit
                 .ChildRules(person =>
                 {
                     person.RuleFor(dto => dto.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Person>(repository));
+                        .GreaterThan(0);
 
                     person.RuleFor(dto => dto.FirstName)
                         .NotEmpty()
@@ -87,20 +86,16 @@ public class Edit
                         .MaximumLength(Lengths.PersonName);
 
                     person.RuleFor(dto => dto.CategoryId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Category>(repository));
+                        .GreaterThan(0);
 
                     person.RuleFor(dto => dto.PositionId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Position>(repository));
+                        .GreaterThan(0);
 
                     person.RuleFor(dto => dto.SectorId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Sector>(repository));
+                        .GreaterThan(0);
 
                     person.RuleFor(dto => dto.UserId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<User>(repository));
+                        .GreaterThan(0);
 
                     person.RuleFor(dto => dto.BirthdayDate)
                         .NotEmpty();

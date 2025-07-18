@@ -65,7 +65,6 @@ public class GetByIdTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfIdIsInvalid_ReturnResult(int id)
     {
         // Arrange

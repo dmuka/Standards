@@ -57,8 +57,7 @@ public class Edit
                 .ChildRules(unit =>
                 {
                     unit.RuleFor(dto => dto.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Unit>(repository));
+                        .GreaterThan(0);
                     
                     unit.RuleFor(dto => dto.Name)
                         .NotEmpty()
@@ -77,8 +76,7 @@ public class Edit
                         .MaximumLength(Lengths.UnitRuSymbol);
                     
                     unit.RuleFor(dto => dto.QuantityId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Department>(repository));
+                        .GreaterThan(0);
                 });
         }
     }

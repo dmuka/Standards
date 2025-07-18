@@ -43,7 +43,7 @@ public class GetAll
                     Name = s.Name,
                     ShortName = s.ShortName,
                     Comments = s.Comments,
-                    DepartmentId = s.Department.Id,
+                    DepartmentId = s.Department?.Id,
                     RoomIds = s.Rooms.Select(r => r.Id).ToList(),
                     WorkplaceIds = s.Workplaces.Select(wp => wp.Id).ToList(),
                     PersonIds = s.Persons.Select(p => p.Id).ToList()

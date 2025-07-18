@@ -64,8 +64,7 @@ public class Edit
                 .ChildRules(service =>
                 {
                     service.RuleFor(dto => dto.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Service>(repository));
+                        .GreaterThan(0);
                     
                     service.RuleFor(dto => dto.Name)
                         .NotEmpty()
@@ -76,18 +75,15 @@ public class Edit
                         .MaximumLength(Lengths.ShortName);
                     
                     service.RuleFor(dto => dto.ServiceTypeId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<ServiceType>(repository));
+                        .GreaterThan(0);
 
                     service.RuleFor(dto => dto.MaterialIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Material>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
 
                     service.RuleFor(dto => dto.MaterialsQuantityIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Quantity>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
                 });
         }
     }

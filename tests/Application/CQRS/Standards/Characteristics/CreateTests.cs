@@ -155,7 +155,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfGradeIdIsInvalid_ShouldHaveValidationError(int gradeId)
     {
         // Arrange
@@ -171,7 +170,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfStandardIdIsInvalid_ShouldHaveValidationError(int standardId)
     {
         // Arrange
@@ -187,7 +185,6 @@ public class CreateTests : BaseTestFixture
     }
 
     [Test, TestCaseSource(nameof(ZeroOrNegativeId))]
-    [TestCase(IdNotInDb)]
     public void Validator_IfUnitdIsInvalid_ShouldHaveValidationError(int unitId)
     {
         // Arrange

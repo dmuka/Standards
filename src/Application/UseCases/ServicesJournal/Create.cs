@@ -71,16 +71,13 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
                     
                     service.RuleFor(dto => dto.ServiceId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Service>(repository));
+                        .GreaterThan(0);
                     
                     service.RuleFor(dto => dto.StandardId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Standard>(repository));
+                        .GreaterThan(0);
                     
                     service.RuleFor(dto => dto.PersonId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Person>(repository));
+                        .GreaterThan(0);
                     
                     service.RuleFor(dto => dto.Date)
                         .NotEmpty()

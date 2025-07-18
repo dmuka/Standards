@@ -39,7 +39,7 @@ public class Create
 
             var responsible = await repository.GetByIdAsync<Person>(request.StandardDto.ResponsibleId, cancellationToken);
             
-            var standard = StandardDto.ToEntity(request.StandardDto, workplaces, characteristics, services, responsible);
+            var standard = StandardDto.ToEntity(request.StandardDto, workplaces, characteristics, services, responsible!);
             
             await repository.AddAsync(standard, cancellationToken);
             
@@ -70,8 +70,7 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
                     
                     service.RuleFor(dto => dto.ResponsibleId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Person>(repository));
+                        .GreaterThan(0);
 
                     service.RuleFor(dto => dto.VerificationInterval)
                         .GreaterThan(Domain.Constants.Standards.MinVerificationInterval);
@@ -82,18 +81,15 @@ public class Create
 
                     service.RuleFor(dto => dto.CharacteristicIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Characteristic>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
 
                     service.RuleFor(dto => dto.ServiceIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Service>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
 
                     service.RuleFor(dto => dto.WorkplaceIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Workplace>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
                 });
         }
     }

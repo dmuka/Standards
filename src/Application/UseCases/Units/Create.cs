@@ -72,8 +72,7 @@ public class Create
                         .MaximumLength(Lengths.UnitRuSymbol);
                     
                     unit.RuleFor(dto => dto.QuantityId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Department>(repository));
+                        .GreaterThan(0);
                 });
         }
     }

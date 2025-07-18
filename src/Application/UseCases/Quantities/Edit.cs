@@ -57,8 +57,7 @@ public class Edit
                 .ChildRules(quantity =>
                 {
                     quantity.RuleFor(dto => dto.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Quantity>(repository));
+                        .GreaterThan(0);
 
                     quantity.RuleFor(dto => dto.Name)
                         .NotEmpty()
@@ -66,8 +65,7 @@ public class Edit
 
                     quantity.RuleFor(dto => dto.UnitIds)
                         .NotEmpty()
-                        .ForEach(id => 
-                            id.SetValidator(new IdValidator<Unit>(repository)));
+                        .ForEach(id => id.GreaterThan(0));
                 });
         }
     }

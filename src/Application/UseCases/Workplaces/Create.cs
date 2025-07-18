@@ -67,12 +67,10 @@ public class Create
                         .MaximumLength(Lengths.ShortName);
                     
                     workplace.RuleFor(dto => dto.RoomId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Room>(repository));
+                        .GreaterThan(0);
                     
                     workplace.RuleFor(dto => dto.ResponsibleId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Person>(repository));
+                        .GreaterThan(0);
                 });
         }
     }

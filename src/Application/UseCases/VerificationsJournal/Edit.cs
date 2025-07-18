@@ -67,19 +67,16 @@ public class Edit
                 .ChildRules(service =>
                 {
                     service.RuleFor(dto => dto.Id)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Service>(repository));
+                        .GreaterThan(0);
                     service.RuleFor(dto => dto.CertificateId)
                         .NotEmpty()
                         .MaximumLength(Lengths.CertificateId);
                     
                     service.RuleFor(dto => dto.StandardId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Standard>(repository));
+                        .GreaterThan(0);
                     
                     service.RuleFor(dto => dto.PlaceId)
-                        .GreaterThan(0)
-                        .SetValidator(new IdValidator<Place>(repository));
+                        .GreaterThan(0);
                     
                     service.RuleFor(dto => dto.Date)
                         .NotEmpty()
