@@ -11,4 +11,5 @@ public static class Codes
     public const string OneOfThePersonAlreadyExist = "OneOfThePersonAlreadyExist";
     public const string WorkplaceAlreadyExist = "WorkplaceAlreadyExist";
     public const string OneOfTheWorkplaceAlreadyExist = "OneOfTheWorkplaceAlreadyExist";
+    public const string ThisSectorAlreadySetForThisRoom = "ThisSectorAlreadySetForThisRoom";
 }

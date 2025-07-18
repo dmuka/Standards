@@ -142,6 +142,15 @@ public class Room : AggregateRoot, ICacheable
         return Result.Success();
     }
     
+    public Result ChangeSector(SectorId sectorId)
+    {
+        if (sectorId == SectorId) return Result.Failure(RoomErrors.ThisSectorAlreadySetForThisRoom);
+        
+        SectorId = sectorId;
+        
+        return Result.Success();
+    }
+    
     public static string GetCacheKey()
     {
         return Cache.Rooms;

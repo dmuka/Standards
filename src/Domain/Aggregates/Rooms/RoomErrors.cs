@@ -48,4 +48,8 @@ public static class RoomErrors
     public static readonly Error OneOfTheWorkplaceAlreadyExist = Error.Problem(
         Codes.OneOfTheWorkplaceAlreadyExist,
         $"One of the provided workplace already exist in the room.");
+
+    public static readonly Error ThisSectorAlreadySetForThisRoom = Error.Problem(
+        Codes.ThisSectorAlreadySetForThisRoom,
+        $"This sector already set for this room.");
 }
