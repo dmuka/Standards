@@ -24,7 +24,7 @@ public class EditTests : BaseTestFixture
     
     private WorkplaceDto _workplaceDto;
     private Workplace _workplace;
-    private Room _room;
+    private Room _sector;
     private Person _responsible;
     
     private Mock<IRepository> _repositoryMock;
@@ -40,13 +40,13 @@ public class EditTests : BaseTestFixture
         _workplaceDto = WorkplaceDtos[0];
         _workplace = Workplaces[0];
 
-        _room = Rooms[0];
+        _sector = Rooms[0];
         _responsible = Persons[0];
 
         _cancellationToken = CancellationToken.None;
 
         _repositoryMock = new Mock<IRepository>();
-        _repositoryMock.Setup(_ => _.GetByIdAsync<Room>(RoomIdInDb, _cancellationToken)).ReturnsAsync(_room);
+        _repositoryMock.Setup(_ => _.GetByIdAsync<Room>(RoomIdInDb, _cancellationToken)).ReturnsAsync(_sector);
         _repositoryMock.Setup(_ => _.GetByIdAsync<Person>(PersonIdInDb, _cancellationToken)).ReturnsAsync(_responsible);
         _repositoryMock.Setup(_ => _.Update(_workplace));
         _repositoryMock.Setup(_ => _.SaveChangesAsync(_cancellationToken)).ReturnsAsync(1);

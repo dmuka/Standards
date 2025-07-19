@@ -22,7 +22,7 @@ public class CreateTests : BaseTestFixture
     
     private Workplace _workplace;
     private WorkplaceDto _workplaceDto;
-    private Room _room;
+    private Room _sector;
     private Person _responsible;
     
     private Mock<IRepository> _repositoryMock;
@@ -39,7 +39,7 @@ public class CreateTests : BaseTestFixture
         
         _workplaceDto = WorkplaceDtos[0];
 
-        _room = Rooms[0];
+        _sector = Rooms[0];
         _responsible = Persons[0];
 
         _cancellationToken = CancellationToken.None;
@@ -47,7 +47,7 @@ public class CreateTests : BaseTestFixture
         _repositoryMock = new Mock<IRepository>();
         _repositoryMock.Setup(repository => repository.AddAsync(_workplace, _cancellationToken));
         _repositoryMock.Setup(repository => repository.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
-        _repositoryMock.Setup(repository => repository.GetByIdAsync<Room>(ValidId, _cancellationToken)).ReturnsAsync(_room);
+        _repositoryMock.Setup(repository => repository.GetByIdAsync<Room>(ValidId, _cancellationToken)).ReturnsAsync(_sector);
         _repositoryMock.Setup(repository => repository.GetByIdAsync<Person>(ValidId, _cancellationToken)).ReturnsAsync(_responsible);
 
         _cacheMock = new Mock<ICacheService>();

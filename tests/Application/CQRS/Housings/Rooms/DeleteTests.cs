@@ -15,7 +15,7 @@ public class DeleteTests : BaseTestFixture
 {
     private const int IdInDb = 1;
     private const int IdNotInDb = 2;
-    private Room _room;
+    private Room _sector;
         
     private Mock<IRepository> _repository;
     private CancellationToken _cancellationToken;
@@ -27,14 +27,14 @@ public class DeleteTests : BaseTestFixture
     [SetUp]
     public void Setup()
     {
-        _room = Rooms[0];
+        _sector = Rooms[0];
 
         _cancellationToken = CancellationToken.None;
 
         _repository = new Mock<IRepository>();
         _repository.Setup(repository => repository.GetByIdAsync<Room>(IdInDb, _cancellationToken))
-            .Returns(Task.FromResult<Room?>(_room));
-        _repository.Setup(repository => repository.DeleteAsync(_room, _cancellationToken));
+            .Returns(Task.FromResult<Room?>(_sector));
+        _repository.Setup(repository => repository.DeleteAsync(_sector, _cancellationToken));
         _repository.Setup(repository => repository.SaveChangesAsync(_cancellationToken)).Returns(Task.FromResult(1));
 
         _cacheService = new Mock<ICacheService>();

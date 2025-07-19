@@ -29,6 +29,7 @@ namespace Infrastructure.Data;
         public DbSet<Floor> Floors { get; set; }
         public DbSet<Department> Departments { get; set; }
         public DbSet<Sector> Sectors { get; set; }
+        public DbSet<Domain.Aggregates.Sectors.Sector> Sectors2 { get; set; }
 
         public DbSet<CalibrationJournalItem> CalibrationsJournal { get; set; }
         public DbSet<VerificationJournalItem> VerificationsJournal { get; set; }
