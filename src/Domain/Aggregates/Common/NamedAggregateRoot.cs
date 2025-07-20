@@ -7,8 +7,8 @@ namespace Domain.Aggregates.Common;
 public abstract class NamedAggregateRoot<TId> : AggregateRoot<TId>
     where TId : TypedId
 {
-    public Name Name { get; protected set; }
-    public ShortName ShortName { get; protected set; }
+    public Name Name { get; protected set; } = null!;
+    public ShortName ShortName { get; protected set; } = null!;
     public string? Comments { get; protected set; }
     
     public Result ChangeName(Name name)

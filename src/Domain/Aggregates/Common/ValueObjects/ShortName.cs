@@ -7,7 +7,7 @@ namespace Domain.Aggregates.Common.ValueObjects;
 public class ShortName : ValueObject
 {
     protected ShortName() { }
-    public string Value { get; }
+    public string Value { get; } = string.Empty;
 
     private ShortName(string value) => Value = value;
 
