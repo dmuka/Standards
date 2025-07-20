@@ -5,5 +5,5 @@ namespace Core;
 public abstract class Entity
 {
     [Key] 
-    public TypedId Id { get; set; } = null!;
+    public TypedId Id { get; protected set; } = null!;
 }

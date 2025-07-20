@@ -9,7 +9,7 @@ using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Sectors;
 
-public class Sector : AggregateRoot, ICacheable
+public class Sector : AggregateRoot<SectorId>, ICacheable
 {
     protected Sector() { }
 

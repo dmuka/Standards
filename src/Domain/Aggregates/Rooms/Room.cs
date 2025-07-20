@@ -9,7 +9,7 @@ using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Rooms;
 
-public class Room : AggregateRoot, ICacheable
+public class Room : AggregateRoot<RoomId>, ICacheable
 {
     protected Room() { }
 

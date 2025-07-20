@@ -6,7 +6,7 @@ using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Housings;
 
-public class Housing : AggregateRoot, ICacheable
+public class Housing : AggregateRoot<HousingId>, ICacheable
 {
     protected Housing() { }
     public Address Address { get; private set; } = null!;

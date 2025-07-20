@@ -1,7 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace Core;
 
-public abstract class AggregateRoot : Entity
+public abstract class AggregateRoot<TId> : Entity
+    where TId : TypedId
 {
+    [Key] public new TId Id { get; protected set; } = null!;
     /// <summary>
     /// A private list to hold domain events associated with this entity.
     /// </summary>

@@ -8,7 +8,7 @@ using Room = Domain.Models.Housings.Room;
 
 namespace Domain.Aggregates.Floors;
 
-public class Floor : AggregateRoot, ICacheable
+public class Floor : AggregateRoot<FloorId>, ICacheable
 {
     public int Number { get; private set; }
     public HousingId HousingId { get; private set; } = null!;

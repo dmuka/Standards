@@ -1,8 +1,12 @@
-﻿using Domain.Aggregates.Floors;
+﻿using Domain.Aggregates.Departments;
+using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
+using Domain.Aggregates.Persons;
+using Domain.Aggregates.Rooms;
+using Domain.Aggregates.Sectors;
+using Domain.Aggregates.Workplaces;
 using Domain.Models;
 using Domain.Models.Departments;
-using Domain.Models.Housings;
 using Domain.Models.MetrologyControl;
 using Domain.Models.MetrologyControl.Contacts;
 using Domain.Models.Persons;
@@ -11,8 +15,10 @@ using Domain.Models.Standards;
 using Domain.Models.Users;
 using Infrastructure.Data.ModelBuilderExtensions;
 using Microsoft.EntityFrameworkCore;
+using Department = Domain.Models.Departments.Department;
 using Housing = Domain.Models.Housings.Housing;
 using Room = Domain.Models.Housings.Room;
+using Sector = Domain.Models.Departments.Sector;
 
 namespace Infrastructure.Data;
 
@@ -28,6 +34,7 @@ namespace Infrastructure.Data;
         public DbSet<Domain.Aggregates.Housings.Housing> Housings2 { get; set; }
         public DbSet<Floor> Floors { get; set; }
         public DbSet<Department> Departments { get; set; }
+        public DbSet<Domain.Aggregates.Departments.Department> Departments2 { get; set; }
         public DbSet<Sector> Sectors { get; set; }
         public DbSet<Domain.Aggregates.Sectors.Sector> Sectors2 { get; set; }
 
@@ -59,9 +66,14 @@ namespace Infrastructure.Data;
         public DbSet<Standard> Standards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {    
+        {     
+            modelBuilder.Ignore<RoomId>();   
             modelBuilder.Ignore<FloorId>();
             modelBuilder.Ignore<HousingId>();
+            modelBuilder.Ignore<SectorId>();
+            modelBuilder.Ignore<DepartmentId>();
+            modelBuilder.Ignore<WorkplaceId>();
+            modelBuilder.Ignore<PersonId>();
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
             // Seeding data
