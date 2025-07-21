@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		otel_collector.yaml = otel_collector.yaml
 		prometheus.yaml = prometheus.yaml
 		tempo.yaml = tempo.yaml
+		README.adoc = README.adoc
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{78346D49-AFEA-4D45-BA8F-300A07127570}"

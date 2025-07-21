@@ -49,6 +49,10 @@ Generated\ Files/
 TestResult.xml
 nunit-*.xml
 
+# Coverage
+[Cc]overage[Rr]eport
+[Tt]est[Rr]esults
+
 # Build Results of an ATL Project
 [Dd]ebugPS/
 [Rr]eleasePS/
