@@ -3,6 +3,7 @@ using Domain.Aggregates.Common;
 using Domain.Aggregates.Departments;
 using Domain.Aggregates.Persons;
 using Domain.Aggregates.Rooms;
+using Domain.Aggregates.Sectors.Specifications;
 using Domain.Aggregates.Workplaces;
 using Domain.Constants;
 using Domain.Models.Interfaces;

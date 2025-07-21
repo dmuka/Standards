@@ -7,7 +7,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Aggregates\Sectors\Specifications\" />
       <Folder Include="Events\Domain\" />
     </ItemGroup>
 

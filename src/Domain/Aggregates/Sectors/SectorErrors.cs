@@ -52,4 +52,8 @@ public static class SectorErrors
     public static readonly Error ThisDepartmentAlreadySetForThisSector = Error.Problem(
         Codes.ThisDepartmentAlreadySetForThisSector,
         $"This department already set for this sector.");
+
+    public static readonly Error ThisRoomAlreadySetForAnotherSector = Error.Problem(
+        Codes.ThisRoomAlreadySetForAnotherSector,
+        $"This room already set for another sector.");
 }

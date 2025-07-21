@@ -11,4 +11,5 @@ public static class Codes
     public const string RoomAlreadyExist = "RoomAlreadyExist";
     public const string OneOfTheRoomAlreadyExist = "OneOfTheRoomAlreadyExist";
     public const string ThisDepartmentAlreadySetForThisSector = "ThisDepartmentAlreadySetForThisSector";
+    public const string ThisRoomAlreadySetForAnotherSector = "ThisRoomAlreadySetForAnotherSector";
 }

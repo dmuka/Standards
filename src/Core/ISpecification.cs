@@ -1,6 +1,8 @@
-﻿namespace Core;
+﻿using Core.Results;
+
+namespace Core;
 
 public interface ISpecification
 {
-    Results.Result IsSatisfied();
+    Result IsSatisfied();
 }
