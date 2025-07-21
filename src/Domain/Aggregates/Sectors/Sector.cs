@@ -3,9 +3,9 @@ using Domain.Aggregates.Common;
 using Domain.Aggregates.Departments;
 using Domain.Aggregates.Persons;
 using Domain.Aggregates.Rooms;
-using Domain.Aggregates.Sectors.Specifications;
 using Domain.Aggregates.Workplaces;
 using Domain.Constants;
+using Domain.Events.Domain;
 using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Sectors;
@@ -126,6 +126,7 @@ public class Sector : NamedAggregateRoot<SectorId>, ICacheable
         }
         
         _roomIds.Add(roomId);
+        AddDomainEvent(new RoomAddedToSectorEvent(Id, roomId));
         
         return Result.Success();
     }
