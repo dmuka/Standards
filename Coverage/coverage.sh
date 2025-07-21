@@ -12,7 +12,7 @@ mkdir -p "$TEST_RESULTS_DIR" "$COLLECT_REPORTS_DIR"
 
 # Run tests with code coverage using modern collection
 echo "Running tests with code coverage collection..."
-dotnet test \
+dotnet test ../tests/ \
     --collect:"XPlat Code Coverage" \
     --settings coverlet.runsettings \
     --results-directory "$TEST_RESULTS_DIR" \

@@ -17,16 +17,27 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Core", "src\Core\Core.cspro
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{76BFCB03-B8CA-4E81-BDB4-A98182CC773A}"
 	ProjectSection(SolutionItems) = preProject
-		grafana.yaml = grafana.yaml
-		otel_collector.yaml = otel_collector.yaml
-		prometheus.yaml = prometheus.yaml
-		tempo.yaml = tempo.yaml
 		README.adoc = README.adoc
+		compose.yaml = compose.yaml
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{78346D49-AFEA-4D45-BA8F-300A07127570}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{F2DCCE8D-9CDD-4AF2-AA67-558F5FBC5C0B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sh", "sh", "{0E044A29-04AA-47A3-AC52-BBD2097EDEB3}"
+	ProjectSection(SolutionItems) = preProject
+		sh\grafana.yaml = sh\grafana.yaml
+		sh\otel_collector.yaml = sh\otel_collector.yaml
+		sh\prometheus.yaml = sh\prometheus.yaml
+		sh\tempo.yaml = sh\tempo.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Coverage", "Coverage", "{F1A7F82E-7523-47DF-B893-BABCD08D87E8}"
+	ProjectSection(SolutionItems) = preProject
+		Coverage\coverage.sh = Coverage\coverage.sh
+		Coverage\coverlet.runsettings = Coverage\coverlet.runsettings
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -72,5 +83,7 @@ Global
 		{EA2C3757-2CAB-40A9-8AFA-AB1494290AF2} = {78346D49-AFEA-4D45-BA8F-300A07127570}
 		{6334555E-B000-4813-B644-8B0F59548054} = {F2DCCE8D-9CDD-4AF2-AA67-558F5FBC5C0B}
 		{56DC139F-EDCF-44C9-8F88-5094691AABD4} = {78346D49-AFEA-4D45-BA8F-300A07127570}
+		{0E044A29-04AA-47A3-AC52-BBD2097EDEB3} = {76BFCB03-B8CA-4E81-BDB4-A98182CC773A}
+		{F1A7F82E-7523-47DF-B893-BABCD08D87E8} = {76BFCB03-B8CA-4E81-BDB4-A98182CC773A}
 	EndGlobalSection
 EndGlobal
