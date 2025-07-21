@@ -1,5 +1,5 @@
-﻿using Core;
-using Core.Results;
+﻿using Core.Results;
+using Domain.Aggregates.Common;
 using Domain.Aggregates.Departments;
 using Domain.Aggregates.Persons;
 using Domain.Aggregates.Rooms;
@@ -9,12 +9,11 @@ using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Sectors;
 
-public class Sector : AggregateRoot<SectorId>, ICacheable
+public class Sector : NamedAggregateRoot<SectorId>, ICacheable
 {
     protected Sector() { }
 
     public DepartmentId? DepartmentId { get; private set; }
-    public string? Comments { get; set; }
     
     public IReadOnlyCollection<RoomId> RoomIds => _roomIds.AsReadOnly();
     private List<RoomId> _roomIds = [];
@@ -114,6 +113,42 @@ public class Sector : AggregateRoot<SectorId>, ICacheable
         }
         
         _workplaceIds.AddRange(workplaceIds);
+        
+        return Result.Success();
+    }
+    
+    public Result AddRoom(RoomId roomId)
+    {
+        if (_roomIds.Contains(roomId))
+        {
+            return Result.Failure(SectorErrors.RoomAlreadyExist);
+        }
+        
+        _roomIds.Add(roomId);
+        
+        return Result.Success();
+    }
+    
+    public Result RemoveRoom(RoomId roomId)
+    {
+        if (!_roomIds.Contains(roomId))
+        {
+            return Result.Failure(SectorErrors.RoomNotFound(roomId));
+        }
+        
+        _roomIds.Remove(roomId);
+        
+        return Result.Success();
+    }
+    
+    public Result AddRooms(IList<RoomId> roomIds)
+    {
+        if (_roomIds.Any(roomIds.Contains))
+        {
+            return Result.Failure(SectorErrors.OneOfTheRoomAlreadyExist);
+        }
+        
+        _roomIds.AddRange(roomIds);
         
         return Result.Success();
     }
