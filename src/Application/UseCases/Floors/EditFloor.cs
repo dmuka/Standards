@@ -1,3 +1,4 @@
+using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Core.Results;
 using Domain.Aggregates.Floors;
@@ -13,8 +14,10 @@ public class EditFloor
         public FloorDto FloorDto { get; set; } = floor;
     }
     
-    public class CommandHandler(IFloorRepository repository, IChildEntityUniqueness childEntityUniqueness) 
-        : IRequestHandler<Command, Result>
+    public class CommandHandler(
+        IFloorRepository repository, 
+        IChildEntityUniqueness childEntityUniqueness,
+        IUnitOfWork unitOfWork) : IRequestHandler<Command, Result>
     {
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
@@ -31,6 +34,7 @@ public class EditFloor
             var existingFloor = await repository.GetByIdAsync(command.FloorDto.Id, cancellationToken: cancellationToken);
             
             repository.Update(existingFloor!);
+            await unitOfWork.CommitAsync(cancellationToken);
 
             return Result.Success();
         }

@@ -1,3 +1,4 @@
+using Application.Abstractions.Data;
 using Core.Results;
 using Domain.Aggregates.Housings;
 using MediatR;
@@ -11,7 +12,9 @@ public class DeleteHousing
         public HousingId HousingId { get; set; } = housingId;
     }
     
-    public class CommandHandler(IHousingRepository repository) : IRequestHandler<Command, Result>
+    public class CommandHandler(
+        IHousingRepository repository,
+        IUnitOfWork unitOfWork) : IRequestHandler<Command, Result>
     {
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
@@ -22,6 +25,7 @@ public class DeleteHousing
             var existingHousing = await repository.GetByIdAsync(command.HousingId, cancellationToken: cancellationToken);
             
             repository.Remove(existingHousing!);
+            await unitOfWork.CommitAsync(cancellationToken);
 
             return Result.Success();
         }

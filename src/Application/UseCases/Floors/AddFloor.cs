@@ -33,8 +33,6 @@ public class AddFloor
 
             if (floorCreationResult.IsFailure) return Result.Failure<Floor>(floorCreationResult.Error);
 
-            await unitOfWork.BeginTransactionAsync(cancellationToken);
-
             var floor = floorCreationResult.Value;
             
             try

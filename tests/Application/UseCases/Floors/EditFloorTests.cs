@@ -1,3 +1,4 @@
+using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Floors;
 using Domain.Aggregates.Floors;
@@ -28,6 +29,7 @@ public class EditFloorTests
 
     private Mock<IFloorRepository> _floorRepositoryMock;
     private Mock<IChildEntityUniqueness> _floorUniquenessMock;
+    private Mock<IUnitOfWork> _unitOfWorkMock;
     
     private EditFloor.CommandHandler _handler;
 
@@ -52,8 +54,10 @@ public class EditFloorTests
         _floorUniquenessMock = new Mock<IChildEntityUniqueness>();
         _floorUniquenessMock.Setup(x => x.IsUniqueAsync<FloorDto, HousingDto2>(_floorDto.Id, _floorDto.HousingId, _cancellationToken))
             .ReturnsAsync(true);
+
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
         
-        _handler = new EditFloor.CommandHandler(_floorRepositoryMock.Object, _floorUniquenessMock.Object);
+        _handler = new EditFloor.CommandHandler(_floorRepositoryMock.Object, _floorUniquenessMock.Object, _unitOfWorkMock.Object);
     }
 
     [Test]

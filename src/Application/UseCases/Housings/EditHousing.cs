@@ -1,3 +1,4 @@
+using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Core.Results;
 using Domain.Aggregates.Housings;
@@ -12,7 +13,9 @@ public class EditHousing
         public HousingDto2 HousingDto { get; set; } = housing;
     }
 
-    public class CommandHandler(IHousingRepository repository) : IRequestHandler<Command, Result>
+    public class CommandHandler(
+        IHousingRepository repository,
+        IUnitOfWork unitOfWork) : IRequestHandler<Command, Result>
     {
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
@@ -23,6 +26,7 @@ public class EditHousing
             var existingHousing = await repository.GetByIdAsync(command.HousingDto.Id, cancellationToken: cancellationToken);
             
             repository.Update(existingHousing!);
+            await unitOfWork.CommitAsync(cancellationToken);
 
             return Result.Success();
         }

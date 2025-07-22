@@ -1,4 +1,7 @@
-﻿using Domain.Aggregates.Departments;
+﻿using System.Text.Json;
+using Core;
+using Domain.Aggregates.Common.ValueObjects;
+using Domain.Aggregates.Departments;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
 using Domain.Aggregates.Persons;
@@ -14,6 +17,7 @@ using Domain.Models.Services;
 using Domain.Models.Standards;
 using Domain.Models.Users;
 using Infrastructure.Data.ModelBuilderExtensions;
+using Infrastructure.Data.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Department = Domain.Models.Departments.Department;
 using Housing = Domain.Models.Housings.Housing;
@@ -24,6 +28,8 @@ namespace Infrastructure.Data;
 
     public sealed class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : DbContext(options)
     {
+        public DbSet<OutboxMessage> OutboxMessages { get; set; }
+        
         public DbSet<Quantity> Quantities { get; set; }
         public DbSet<Room> Rooms { get; set; }
         public DbSet<Domain.Aggregates.Rooms.Room> Rooms2 { get; set; }
@@ -74,6 +80,9 @@ namespace Infrastructure.Data;
             modelBuilder.Ignore<DepartmentId>();
             modelBuilder.Ignore<WorkplaceId>();
             modelBuilder.Ignore<PersonId>();
+            modelBuilder.Ignore<Name>();
+            modelBuilder.Ignore<ShortName>();
+            
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
 
             // Seeding data
@@ -266,5 +275,29 @@ namespace Infrastructure.Data;
                 new { Id = 3, Name = "ContactName3", ShortName = "ContactShortName3", PlaceId = 3 }
             ];
             modelBuilder.Seed<Contact>(contacts);
+        }
+        
+        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
+        {
+            var domainEvents = ChangeTracker
+                .Entries<AggregateRoot<TypedId>>()
+                .SelectMany(e => e.Entity.DomainEvents)
+                .ToList();
+
+            var outboxMessages = domainEvents
+                .Select(domainEvent => new OutboxMessage
+                {
+                    Id = Guid.CreateVersion7(),
+                    Type = domainEvent.GetType().FullName ?? domainEvent.GetType().Name,
+                    Content = JsonSerializer.Serialize(domainEvent),
+                    OccurredAt = domainEvent.OccuredAt
+                })
+                .ToList();
+
+            await OutboxMessages.AddRangeAsync(outboxMessages, cancellationToken);
+            
+            var result = await base.SaveChangesAsync(cancellationToken);
+
+            return result;
         }
     }

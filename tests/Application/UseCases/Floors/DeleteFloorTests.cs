@@ -1,3 +1,4 @@
+using Application.Abstractions.Data;
 using Application.UseCases.Floors;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
@@ -24,6 +25,7 @@ public class DeleteFloorTests
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
 
     private Mock<IFloorRepository> _floorRepositoryMock;
+    private Mock<IUnitOfWork> _unitOfWorkMock;
     
     private DeleteFloor.CommandHandler _handler;
 
@@ -42,8 +44,10 @@ public class DeleteFloorTests
             .ReturnsAsync(true);
         _floorRepositoryMock.Setup(r => r.GetByIdAsync(_validFloorId, _cancellationToken))
             .ReturnsAsync(_floor);
+
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
         
-        _handler = new DeleteFloor.CommandHandler(_floorRepositoryMock.Object);
+        _handler = new DeleteFloor.CommandHandler(_floorRepositoryMock.Object, _unitOfWorkMock.Object);
     }
 
     [Test]

@@ -23,6 +23,7 @@ public class AddRoomTests
         
     private Mock<ISectorRepository> _sectorRepositoryMock;
     private Mock<IRoomRepository> _roomRepositoryMock;
+    private Mock<IUnitOfWork> _unitOfWorkMock;
     
     private AddRoom.CommandHandler _handler;
 
@@ -48,8 +49,10 @@ public class AddRoomTests
         _roomRepositoryMock = new Mock<IRoomRepository>();
         _roomRepositoryMock.Setup(repo => repo.GetByIdAsync(_roomId, _cancellationToken))
             .ReturnsAsync(_room);
+
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
             
-        _handler = new AddRoom.CommandHandler(_sectorRepositoryMock.Object, _roomRepositoryMock.Object);
+        _handler = new AddRoom.CommandHandler(_sectorRepositoryMock.Object, _roomRepositoryMock.Object, _unitOfWorkMock.Object);
     }
 
     [Test]

@@ -4,16 +4,19 @@ using Application.Abstractions.Data.Filter;
 using Application.Abstractions.Messaging;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
+using Domain.Aggregates.Rooms;
+using Domain.Aggregates.Sectors;
 using Domain.Models.Departments;
-using Domain.Models.Housings;
 using Domain.Services;
 using Infrastructure.Data;
+using Infrastructure.Data.Outbox;
 using Infrastructure.Data.Repositories;
 using Infrastructure.Data.Repositories.Implementations;
 using Infrastructure.Filter.Implementations;
 using Infrastructure.Kafka;
 using Infrastructure.Options.Authentication;
 using Infrastructure.Options.Kafka;
+using Infrastructure.Options.Outbox;
 using Infrastructure.QueryableWrapper.Implementation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
@@ -22,6 +25,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using NLog;
 using Housing = Domain.Models.Housings.Housing;
+using Room = Domain.Models.Housings.Room;
 
 namespace Infrastructure;
 
@@ -44,6 +48,7 @@ public static class DI
             .RegisterQueryBuilder()
             .AddHttpClient()
             .RegisterEventConsumer()
+            .RegisterOutboxWorker()
             .AddAppServices()
             .AddRepositories();
     
@@ -175,6 +180,23 @@ public static class DI
     
         return services;
     }
+
+    /// <summary>
+    /// Registers outbox worker
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
+    private static IServiceCollection RegisterOutboxWorker(this IServiceCollection services)
+    {
+        services.AddOptions<OutboxWorkerOptions>()
+            .BindConfiguration("OutboxWorker")
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        
+        services.AddHostedService<OutboxWorker>();
+    
+        return services;
+    }
     
     private static IServiceCollection AddAppServices(this IServiceCollection services)
     {
@@ -187,6 +209,8 @@ public static class DI
     {
         services.AddScoped<IFloorRepository, FloorRepository>();
         services.AddScoped<IHousingRepository, HousingRepository>();
+        services.AddScoped<ISectorRepository, SectorRepository>();
+        services.AddScoped<IRoomRepository, RoomRepository>();
         
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     

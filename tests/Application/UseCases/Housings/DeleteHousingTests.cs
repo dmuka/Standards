@@ -1,5 +1,7 @@
+using Application.Abstractions.Data;
 using Application.UseCases.Housings;
 using Domain.Aggregates.Housings;
+using Infrastructure.Data;
 using Moq;
 
 namespace Tests.Application.UseCases.Housings;
@@ -21,6 +23,7 @@ public class DeleteHousingTests
     
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
     private Mock<IHousingRepository> _housingRepositoryMock;
+    private Mock<IUnitOfWork> _unitOfWorkMock;
     
     private DeleteHousing.CommandHandler _handler;
 
@@ -42,8 +45,10 @@ public class DeleteHousingTests
             .ReturnsAsync(true);
         _housingRepositoryMock.Setup(repository => repository.GetByIdAsync(_validHousingId, _cancellationToken))
             .ReturnsAsync(_housing);
+
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
         
-        _handler = new DeleteHousing.CommandHandler(_housingRepositoryMock.Object);
+        _handler = new DeleteHousing.CommandHandler(_housingRepositoryMock.Object, _unitOfWorkMock.Object);
     }
 
     [Test]

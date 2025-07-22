@@ -1,3 +1,4 @@
+using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Housings;
 using Domain.Aggregates.Housings;
@@ -20,6 +21,7 @@ public class EditHousingTests
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
     
     private Mock<IHousingRepository> _housingRepositoryMock;
+    private Mock<IUnitOfWork> _unitOfWorkMock;
     
     private EditHousing.CommandHandler _handler;
 
@@ -46,8 +48,10 @@ public class EditHousingTests
             .ReturnsAsync(true);
         _housingRepositoryMock.Setup(repository => repository.GetByIdAsync(_housingId, _cancellationToken))
             .ReturnsAsync(_housing);
+
+        _unitOfWorkMock = new Mock<IUnitOfWork>();
         
-        _handler = new EditHousing.CommandHandler(_housingRepositoryMock.Object);
+        _handler = new EditHousing.CommandHandler(_housingRepositoryMock.Object, _unitOfWorkMock.Object);
     }
 
     [Test]

@@ -9,14 +9,14 @@ public class SectorRepository(ApplicationDbContext context) : ISectorRepository
     {
         return await context.Sectors2
             .AsNoTracking()
-            .FirstOrDefaultAsync(room => room.Id == id, cancellationToken);
+            .FirstOrDefaultAsync(sector => sector.Id == id, cancellationToken);
     }
 
     public async Task<Sector[]> GetByIdsAsync(Guid[] ids, CancellationToken cancellationToken)
     {
         return await context.Sectors2
             .AsNoTracking()
-            .Where(room => ids.Contains(room.Id))
+            .Where(sector => ids.Contains(sector.Id))
             .ToArrayAsync(cancellationToken);
     }
     
@@ -27,19 +27,19 @@ public class SectorRepository(ApplicationDbContext context) : ISectorRepository
             .ToArrayAsync(cancellationToken);
     }
 
-    public async Task AddAsync(Sector room, CancellationToken cancellationToken)
+    public async Task AddAsync(Sector sector, CancellationToken cancellationToken)
     {
-        await context.Sectors2.AddAsync(room, cancellationToken);
+        await context.Sectors2.AddAsync(sector, cancellationToken);
     }
 
-    public void Remove(Sector room)
+    public void Remove(Sector sector)
     {
-        context.Sectors2.Remove(room);
+        context.Sectors2.Remove(sector);
     }
 
-    public void Update(Sector room)
+    public void Update(Sector sector)
     {
-        context.Sectors2.Update(room);
+        context.Sectors2.Update(sector);
     }
 
     public async Task<bool> ExistsAsync(Guid id, CancellationToken cancellationToken)

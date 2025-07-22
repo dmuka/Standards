@@ -1,3 +1,4 @@
+using Application.Abstractions.Data;
 using Core.Results;
 using Domain.Aggregates.Floors;
 using MediatR;
@@ -11,7 +12,9 @@ public class DeleteFloor
         public FloorId FloorId { get; set; } = floorId;
     }
     
-    public class CommandHandler(IFloorRepository repository) : IRequestHandler<Command, Result>
+    public class CommandHandler(
+        IFloorRepository repository,
+        IUnitOfWork unitOfWork) : IRequestHandler<Command, Result>
     {
         public async Task<Result> Handle(Command command, CancellationToken cancellationToken)
         {
@@ -22,6 +25,7 @@ public class DeleteFloor
             var existingFloor = await repository.GetByIdAsync(command.FloorId, cancellationToken: cancellationToken);
             
             repository.Remove(existingFloor!);
+            await unitOfWork.CommitAsync(cancellationToken);
 
             return Result.Success();
         }

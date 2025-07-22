@@ -1,3 +1,4 @@
+using Application.Abstractions.Data;
 using Application.UseCases.Sectors.Specifications;
 using Core.Results;
 using Domain.Aggregates.Rooms;
@@ -32,7 +33,10 @@ public class AddRoom
     /// <summary>
     /// Handles the command to add a room to a sector.
     /// </summary>
-    public class CommandHandler(ISectorRepository sectorRepository, IRoomRepository roomRepository) : IRequestHandler<Command, Result>
+    public class CommandHandler(
+        ISectorRepository sectorRepository, 
+        IRoomRepository roomRepository,
+        IUnitOfWork unitOfWork) : IRequestHandler<Command, Result>
     {
         /// <summary>
         /// Handles the process of adding a room to a sector.
@@ -52,10 +56,11 @@ public class AddRoom
             if (specificationResult.IsFailure) return Result.Failure(specificationResult.Error);
             
             var result = sector.AddRoom(request.RoomId);
+            if (result.IsFailure) return Result.Failure(result.Error);
+            sectorRepository.Update(sector);
+            await unitOfWork.CommitAsync(cancellationToken);
             
-            return result.IsFailure 
-                ? Result.Failure(result.Error) 
-                : Result.Success();
+            return Result.Success();
         }
     }
 }
