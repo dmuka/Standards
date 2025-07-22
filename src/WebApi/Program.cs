@@ -22,7 +22,7 @@ public class Program
     public static void Main(string[] args)
     {
         // Early init of NLog to allow startup and exception logging, before host is built
-        var logger = LogManager.Setup().LoadConfigurationFromAppSettings().GetCurrentClassLogger();
+        var logger = LogManager.Setup().LoadConfigurationFromFile().GetCurrentClassLogger();
         logger.Debug("init main");
 
         try
