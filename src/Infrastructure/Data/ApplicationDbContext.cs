@@ -1,6 +1,4 @@
-﻿using System.Text.Json;
-using Core;
-using Domain.Aggregates.Common.ValueObjects;
+﻿using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Departments;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
@@ -22,6 +20,7 @@ using Microsoft.EntityFrameworkCore;
 using Department = Domain.Models.Departments.Department;
 using Entity = Core.Entity;
 using Housing = Domain.Models.Housings.Housing;
+using Person = Domain.Models.Persons.Person;
 using Room = Domain.Models.Housings.Room;
 using Sector = Domain.Models.Departments.Sector;
 
@@ -57,6 +56,7 @@ namespace Infrastructure.Data;
         public DbSet<Social> Socials { get; set; }
 
         public DbSet<Person> Persons { get; set; }
+        public DbSet<Domain.Aggregates.Persons.Person> Persons2 { get; set; }
 
         public DbSet<User> Users { get; set; }
 

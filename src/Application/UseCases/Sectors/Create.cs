@@ -1,15 +1,13 @@
 ﻿using Application.Abstractions.Cache;
 using Application.Abstractions.Data;
-using Application.Abstractions.Data.Validators;
 using Application.UseCases.Common.Attributes;
 using Application.UseCases.DTOs;
-using Domain.Aggregates.Persons;
 using Domain.Constants;
 using Domain.Models.Departments;
 using Domain.Models.Housings;
-using Domain.Models.Persons;
 using FluentValidation;
 using MediatR;
+using Person = Domain.Models.Persons.Person;
 
 namespace Application.UseCases.Sectors;
 

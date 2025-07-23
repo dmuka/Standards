@@ -19,9 +19,9 @@ public class GetHousingById
             
             if (!isHousingExist) return Result.Failure<Housing>(HousingErrors.NotFound(query.HousingId));
             
-            var floor = await repository.GetByIdAsync(query.HousingId, cancellationToken);
+            var housing = await repository.GetByIdAsync(query.HousingId, cancellationToken);
 
-            return floor ;
+            return housing;
         }
     }
 }

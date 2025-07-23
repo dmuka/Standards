@@ -6,4 +6,5 @@ public abstract class Entity
 {
     [Key] 
     public TypedId Id { get; protected set; } = null!;
+    public string? Comments { get; protected set; }
 }
