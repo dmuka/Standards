@@ -1,4 +1,7 @@
+using System.Text.Json;
 using Application.Abstractions.Data;
+using Core;
+using Infrastructure.Data.Outbox;
 using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Infrastructure.Data;
@@ -16,6 +19,23 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
     {
         try
         {
+            var domainEvents = context.ChangeTracker
+                .Entries<AggregateRoot<TypedId>>()
+                .SelectMany(e => e.Entity.DomainEvents)
+                .ToList();
+
+            var outboxMessages = domainEvents
+                .Select(domainEvent => new OutboxMessage
+                {
+                    Id = Guid.CreateVersion7(),
+                    Type = domainEvent.GetType().FullName ?? domainEvent.GetType().Name,
+                    Content = JsonSerializer.Serialize(domainEvent),
+                    OccurredAt = domainEvent.OccuredAt
+                })
+                .ToList();
+
+            await context.OutboxMessages.AddRangeAsync(outboxMessages, cancellationToken);
+            
             await context.SaveChangesAsync(cancellationToken);
             if (_transaction is not null)
             {

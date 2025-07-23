@@ -276,28 +276,4 @@ namespace Infrastructure.Data;
             ];
             modelBuilder.Seed<Contact>(contacts);
         }
-        
-        public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
-        {
-            var domainEvents = ChangeTracker
-                .Entries<AggregateRoot<TypedId>>()
-                .SelectMany(e => e.Entity.DomainEvents)
-                .ToList();
-
-            var outboxMessages = domainEvents
-                .Select(domainEvent => new OutboxMessage
-                {
-                    Id = Guid.CreateVersion7(),
-                    Type = domainEvent.GetType().FullName ?? domainEvent.GetType().Name,
-                    Content = JsonSerializer.Serialize(domainEvent),
-                    OccurredAt = domainEvent.OccuredAt
-                })
-                .ToList();
-
-            await OutboxMessages.AddRangeAsync(outboxMessages, cancellationToken);
-            
-            var result = await base.SaveChangesAsync(cancellationToken);
-
-            return result;
-        }
     }

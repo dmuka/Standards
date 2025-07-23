@@ -1,8 +1,7 @@
 ﻿using Core;
 using Domain.Aggregates.Rooms;
-using Domain.Aggregates.Sectors;
 
-namespace Domain.Events.Domain;
+namespace Domain.Aggregates.Sectors.Events.Domain;
 
 public sealed record RoomAddedToSectorEvent(SectorId SectorId, RoomId RoomId) : IDomainEvent
 {

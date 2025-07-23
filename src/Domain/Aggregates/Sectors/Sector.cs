@@ -3,9 +3,9 @@ using Domain.Aggregates.Common;
 using Domain.Aggregates.Departments;
 using Domain.Aggregates.Persons;
 using Domain.Aggregates.Rooms;
+using Domain.Aggregates.Sectors.Events.Domain;
 using Domain.Aggregates.Workplaces;
 using Domain.Constants;
-using Domain.Events.Domain;
 using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Sectors;
