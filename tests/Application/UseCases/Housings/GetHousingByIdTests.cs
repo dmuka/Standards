@@ -1,4 +1,5 @@
 using Application.UseCases.Housings;
+using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Housings;
 using Moq;
 
@@ -32,8 +33,8 @@ public class GetHousingByIdTests
         _invalidHousingId = new HousingId(_invalidHousingIdGuid);
         
         _housing = Housing.Create(
-            HousingName.Create(HousingNameValue).Value, 
-            HousingShortName.Create(HousingShortNameValue).Value,
+            Name.Create(HousingNameValue).Value, 
+            ShortName.Create(HousingShortNameValue).Value,
             Address.Create(AddressValue).Value,
             _validHousingId,
             "Comments").Value;        
@@ -63,8 +64,8 @@ public class GetHousingByIdTests
             Assert.That(result.Value.Id, Is.EqualTo(_validHousingId));
             Assert.That(result.Value.Address.Value, Is.EqualTo(AddressValue));
             Assert.That(result.Value.Address.Value, Is.EqualTo(AddressValue));
-            Assert.That(result.Value.HousingName.Value, Is.EqualTo(HousingNameValue));
-            Assert.That(result.Value.HousingShortName!.Value, Is.EqualTo(HousingShortNameValue));
+            Assert.That(result.Value.Name.Value, Is.EqualTo(HousingNameValue));
+            Assert.That(result.Value.ShortName!.Value, Is.EqualTo(HousingShortNameValue));
         }
     }
 
@@ -77,8 +78,11 @@ public class GetHousingByIdTests
         // Act
         var result = await _handler.Handle(query, _cancellationToken);
 
-        // Assert
-        Assert.That(result.IsFailure, Is.True);
-        Assert.That(result.Error, Is.EqualTo(HousingErrors.NotFound(_invalidHousingId)));
+        using (Assert.EnterMultipleScope())
+        {
+            // Assert
+            Assert.That(result.IsFailure, Is.True);
+            Assert.That(result.Error, Is.EqualTo(HousingErrors.NotFound(_invalidHousingId)));
+        }
     }
 }

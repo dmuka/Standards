@@ -1,4 +1,5 @@
 using Application.UseCases.Housings;
+using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Housings;
 using Moq;
 
@@ -23,13 +24,13 @@ public class GetAllHousingsTests
     public void Setup()
     {
         _housing1 = Housing.Create(
-            HousingName.Create("Housing name 1").Value,
-            HousingShortName.Create("Housing short name 1").Value,
+            Name.Create("Housing name 1").Value,
+            ShortName.Create("Housing short name 1").Value,
             Address.Create("Housing address line 1").Value,
             _housingId1).Value;
         _housing2 = Housing.Create(
-            HousingName.Create("Housing name 2").Value,
-            HousingShortName.Create("Housing short name 2").Value,
+            Name.Create("Housing name 2").Value,
+            ShortName.Create("Housing short name 2").Value,
             Address.Create("Housing address line 2").Value,
             _housingId2).Value;
 

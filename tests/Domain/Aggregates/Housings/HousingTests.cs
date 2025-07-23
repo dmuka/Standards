@@ -1,3 +1,4 @@
+using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Housings;
 using Domain.Constants;
 
@@ -7,8 +8,8 @@ namespace Tests.Domain.Aggregates.Housings;
 public class HousingTests
 {
     private readonly HousingId _housingId = new (Guid.CreateVersion7());
-    private readonly HousingName _housingName = HousingName.Create("Valid Housing Name").Value;
-    private readonly HousingShortName _housingShortName = HousingShortName.Create("Valid Housing Short Name").Value;
+    private readonly Name _housingName = Name.Create("Valid Housing Name").Value;
+    private readonly ShortName _housingShortName = ShortName.Create("Valid Housing Short Name").Value;
     private readonly Address _address = Address.Create("Valid Address Value").Value;
     private const string Comments = "Some comments";
     
@@ -23,8 +24,8 @@ public class HousingTests
             // Assert
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.Value.Id, Is.EqualTo(_housingId));
-            Assert.That(result.Value.HousingName, Is.EqualTo(_housingName));
-            Assert.That(result.Value.HousingShortName, Is.EqualTo(_housingShortName));
+            Assert.That(result.Value.Name, Is.EqualTo(_housingName));
+            Assert.That(result.Value.ShortName, Is.EqualTo(_housingShortName));
             Assert.That(result.Value.Address, Is.EqualTo(_address));
             Assert.That(result.Value.Comments, Is.EqualTo(Comments));
         }

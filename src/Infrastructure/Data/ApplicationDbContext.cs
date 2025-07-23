@@ -20,6 +20,7 @@ using Infrastructure.Data.ModelBuilderExtensions;
 using Infrastructure.Data.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Department = Domain.Models.Departments.Department;
+using Entity = Core.Entity;
 using Housing = Domain.Models.Housings.Housing;
 using Room = Domain.Models.Housings.Room;
 using Sector = Domain.Models.Departments.Sector;
@@ -93,6 +94,21 @@ namespace Infrastructure.Data;
                 new { Id = 3, Name = "Housing3", ShortName = "h3", FloorsCount = 2, Address = "Address3", Comments = "Comments3" }
             ];
             modelBuilder.Seed<Housing>(housings);
+            object[] housings2 =
+            [
+                new { Id = new HousingId(Guid.Parse("3daa72ed-655d-4672-a6da-8c5977f900a2")), Name = Name.Create("Housing1").Value, ShortName = ShortName.Create("h1").Value, FloorsCount = 2, Address = Address.Create("Housing1 Address1").Value, Comments = "Comments1" },
+                new { Id = new HousingId(Guid.Parse("e7382e43-067d-4e64-a216-21e008d9f392")), Name = Name.Create("Housing2").Value, ShortName = ShortName.Create("h2").Value, FloorsCount = 1, Address = Address.Create("Housing2 Address2").Value, Comments = "Comments2" },
+                new { Id = new HousingId(Guid.Parse("45697111-13c0-4e81-ae6d-fbfeab3453f9")), Name = Name.Create("Housing3").Value, ShortName = ShortName.Create("h3").Value, FloorsCount = 2, Address = Address.Create("Housing3 Address3").Value, Comments = "Comments3" }
+            ];
+            modelBuilder.SeedAggregates<Domain.Aggregates.Housings.Housing>(housings2);
+            
+            object[] floors =
+            [
+                new { Id = new FloorId(Guid.Parse("1374cbd5-6f40-429f-a120-f8434e7b62c7")), Number = 2, HousingId = ((dynamic)housings2[0]).Id, Comments = "Comments1" },
+                new { Id = new FloorId(Guid.Parse("a0126888-2e8b-40dd-8ab9-54bd9b80b41f")), Number = 1, HousingId = ((dynamic)housings2[1]).Id, Comments = "Comments2" },
+                new { Id = new FloorId(Guid.Parse("736b2459-8a42-4417-a4df-f7ff93991c1f")), Number = 2, HousingId = ((dynamic)housings2[2]).Id, Comments = "Comments3" }
+            ];
+            modelBuilder.SeedAggregates<Floor>(floors);
 
             object[] departments =
             [

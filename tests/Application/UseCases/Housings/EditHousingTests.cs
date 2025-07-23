@@ -1,6 +1,7 @@
 using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Housings;
+using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Housings;
 using Moq;
 
@@ -11,8 +12,8 @@ public class EditHousingTests
 {
     private readonly HousingId _housingId = new (Guid.CreateVersion7());
     private readonly HousingId _nonExistentHousingId = new (Guid.CreateVersion7());
-    private readonly HousingName _housingName = HousingName.Create("Housing name").Value;
-    private readonly HousingShortName _housingShortName = HousingShortName.Create("Housing short name").Value;
+    private readonly Name _housingName = Name.Create("Housing name").Value;
+    private readonly ShortName _housingShortName = ShortName.Create("Housing short name").Value;
     private readonly Address _address = Address.Create("Housing test address").Value;
     
     private HousingDto2 _housingDto;

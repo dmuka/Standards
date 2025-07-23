@@ -1,5 +1,6 @@
 using Application.Abstractions.Data;
 using Application.UseCases.Housings;
+using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Housings;
 using Infrastructure.Data;
 using Moq;
@@ -34,8 +35,8 @@ public class DeleteHousingTests
         _invalidHousingId = new HousingId(_invalidHousingIdGuid);
         
         _housing = Housing.Create(
-                               HousingName.Create(HousingNameValue).Value, 
-                               HousingShortName.Create(HousingShortNameValue).Value,
+                               Name.Create(HousingNameValue).Value, 
+                               ShortName.Create(HousingShortNameValue).Value,
                                Address.Create(AddressValue).Value,
                                _validHousingId,
                                "Comments").Value;

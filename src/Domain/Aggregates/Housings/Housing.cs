@@ -1,39 +1,37 @@
-﻿using Core;
-using Core.Results;
+﻿using Core.Results;
+using Domain.Aggregates.Common;
+using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Floors;
 using Domain.Constants;
 using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Housings;
 
-public class Housing : AggregateRoot<HousingId>, ICacheable
+public class Housing : NamedAggregateRoot<HousingId>, ICacheable
 {
     protected Housing() { }
     public Address Address { get; private set; } = null!;
-    public HousingName HousingName { get; private set; } = null!;
-    public HousingShortName? HousingShortName { get; private set; }
     public int FloorsCount { get; private set; }
-    public string? Comments { get; set; }
     public IReadOnlyCollection<FloorId> FloorIds => _floorIds.AsReadOnly();
     private List<FloorId> _floorIds = [];
 
     private Housing(
         HousingId housingId, 
-        HousingName housingName, 
-        HousingShortName housingShortName, 
+        Name housingName, 
+        ShortName housingShortName, 
         Address address, 
         string? comments = null)
     {
         Id = housingId;
         Address = address;
-        HousingName = housingName;
-        HousingShortName = housingShortName;
+        Name = housingName;
+        ShortName = housingShortName;
         Comments = comments;
     }
 
     public static Result<Housing> Create(
-        HousingName housingName,
-        HousingShortName housingShortName, 
+        Name housingName,
+        ShortName housingShortName, 
         Address address,
         HousingId? housingId = null,
         string? comments = null)
@@ -51,14 +49,14 @@ public class Housing : AggregateRoot<HousingId>, ICacheable
     }    
     
     public Result Update(
-        HousingName housingName,
-        HousingShortName housingShortName,
+        Name housingName,
+        ShortName housingShortName,
         Address address,
         string? comments = null)
          {
              if (housingName is null) return Result<Housing>.ValidationFailure(HousingErrors.EmptyHousingName);
-             if (!housingName.Equals(HousingName)) HousingName = housingName;
-             if (!housingShortName.Equals(HousingShortName)) HousingShortName = housingShortName;
+             if (!housingName.Equals(Name)) Name = housingName;
+             if (!housingShortName.Equals(ShortName)) ShortName = housingShortName;
              if (!address.Equals(Address)) Address = address;
              if (comments != Comments) Comments = comments;
                  

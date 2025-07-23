@@ -1,3 +1,4 @@
+using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Housings;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
@@ -21,14 +22,14 @@ internal sealed class HousingConfiguration : IEntityTypeConfiguration<Housing>
                 address => address.Value,
                 value => Address.Create(value).Value);
         
-        builder.Property(housing => housing.HousingName)
+        builder.Property(housing => housing.Name)
             .HasConversion(
                 housingName => housingName.Value,
-                value => HousingName.Create(value).Value);
+                value => Name.Create(value).Value);
         
-        builder.Property(housing => housing.HousingShortName)
+        builder.Property(housing => housing.ShortName)
             .HasConversion(
                 housingShortName => housingShortName == null ? null : housingShortName.Value,
-                value => value == null ? null : HousingShortName.Create(value).Value);
+                value => value == null ? null : ShortName.Create(value).Value);
     }
 }
