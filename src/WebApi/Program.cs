@@ -1,19 +1,13 @@
 ﻿using Application;
-using Application.Exceptions;
 using Infrastructure;
-using Infrastructure.Exceptions;
 using Infrastructure.Middleware;
-using Infrastructure.Vault;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Net.Http.Headers;
-using Microsoft.OpenApi.Models;
 using NLog;
 using NLog.Web;
+using Swashbuckle.AspNetCore.Swagger;
 using WebApi.Infrastructure.Exceptions;
 using WebApi.Infrastructure.Extensions;
 using WebApi.Infrastructure.Logging;
-using WebApi.Infrastructure.Middlewares;
 
 namespace WebApi;
 
@@ -21,33 +15,13 @@ public class Program
 {
     public static void Main(string[] args)
     {
-        // Early init of NLog to allow startup and exception logging, before host is built
+        // Early init of NLog to allow startup and exception logging before the host is built
         var logger = LogManager.Setup().LoadConfigurationFromFile().GetCurrentClassLogger();
         logger.Debug("init main");
 
         try
         {
             var builder = WebApplication.CreateBuilder(args);
-                
-            builder.Services.AddSwaggerGen(swaggerOptions =>
-            {
-                swaggerOptions.SwaggerDoc("v1", new OpenApiInfo { Title = "Standards", Version = "v1" });
-                
-                var security = new OpenApiSecurityScheme
-                {
-                    Name = HeaderNames.Authorization, 
-                    Type = SecuritySchemeType.ApiKey, 
-                    In = ParameterLocation.Header,
-                    Description = "JWT Authorization header", 
-                    Reference = new OpenApiReference
-                    {
-                        Id = JwtBearerDefaults.AuthenticationScheme, 
-                        Type = ReferenceType.SecurityScheme 
-                    }
-                };
-                swaggerOptions.AddSecurityDefinition(security.Reference.Id, security); 
-                swaggerOptions.AddSecurityRequirement(new OpenApiSecurityRequirement {{security, []}});
-            });
 
             builder.Services
                 .AddApplication()
@@ -62,47 +36,11 @@ public class Program
             
             if (builder.Environment.IsDevelopment())
             {
-                builder.Configuration.Add<SecretsConfigurationSource>(source =>
-                {
-                    var identityUrl = builder.Configuration["Vault:IdentityUrl"];
-                    if (identityUrl is null) throw new InvalidOperationException("Identity URL is not set.");
-                    source.IdentityUrl = identityUrl;
-                    var apiUrl = builder.Configuration["Vault:ApiUrl"];
-                    if (apiUrl is null) throw new InvalidOperationException("API URL is not set.");
-                    source.ApiUrl = apiUrl;
-                    
-                    var vaultAccessToken = builder.Configuration["Vault:AccessToken"];
-                    if (vaultAccessToken is null) throw new InvalidOperationException("Vault access token is not set.");
-                    source.AccessToken = vaultAccessToken;
-                    var vaultOrganizationId = builder.Configuration["Vault:OrganizationId"];
-                    if (vaultOrganizationId is null) throw new InvalidOperationException("Vault organization id is not set.");
-                    source.OrganizationId = vaultOrganizationId;
-                });
+                builder.UseDevelopmentSecrets();
             }
             else
             {
-                builder.Configuration.Add<SecretsConfigurationSource>(source =>
-                {
-                    var identityUrl = builder.Configuration["Vault:IdentityUrl"] 
-                                      ?? (Environment.GetEnvironmentVariable("Vault__IdentityUrl")
-                                          ?? throw new InvalidOperationException("Identity URL is not set."));
-                    source.IdentityUrl = identityUrl;
-                    
-                    var apiUrl = builder.Configuration["Vault:ApiUrl"]
-                                 ?? (Environment.GetEnvironmentVariable("Vault__ApiUrl")
-                                     ?? throw new InvalidOperationException("API URL is not set."));
-                    source.ApiUrl = apiUrl;
-                    
-                    var vaultAccessToken = builder.Configuration["Vault:AccessToken"]
-                                           ?? (Environment.GetEnvironmentVariable("Vault__AccessToken")
-                                               ?? throw new InvalidOperationException("Vault access token is not set."));
-                    source.AccessToken = vaultAccessToken;
-                    
-                    var vaultOrganizationId = builder.Configuration["Vault:OrganizationId"]
-                                              ?? (Environment.GetEnvironmentVariable("Vault__OrganizationId")
-                                                  ?? throw new InvalidOperationException("Vault organization id is not set."));
-                    source.OrganizationId = vaultOrganizationId;
-                });
+                builder.UseProductionSecrets();
             }
             
             var app = builder.Build();
@@ -132,7 +70,7 @@ public class Program
 
             app.UseRouting();
 
-            app.UseMiddleware<TokenRenewalMiddleware>();
+            //app.UseMiddleware<TokenRenewalMiddleware>();
             app.UseAuthentication();
             app.UseAuthorization();
 
@@ -145,7 +83,7 @@ public class Program
             app.UseMiddleware<ExceptionMiddleware>();
 
             app.MapFallbackToFile("index.html");
-
+            
             app.Run();
         }
         catch (Exception exception)
