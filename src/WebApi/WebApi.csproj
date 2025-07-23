@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="tempkey.jwk" />
+    <None Remove="NLog.xsd" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="..\..\.dockerignore">

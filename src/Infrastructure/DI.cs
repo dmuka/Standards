@@ -49,6 +49,7 @@ public static class DI
             .AddHttpClient()
             .RegisterEventConsumer()
             .RegisterOutboxWorker()
+            .RegisterOutboxCleanupWorker()
             .AddAppServices()
             .AddRepositories();
     
@@ -194,6 +195,23 @@ public static class DI
             .ValidateOnStart();
         
         services.AddHostedService<OutboxWorker>();
+    
+        return services;
+    }
+
+    /// <summary>
+    /// Registers outbox cleanup worker
+    /// </summary>
+    /// <param name="services">Collection of service descriptors</param>
+    /// <returns>Collection of service descriptors</returns>
+    private static IServiceCollection RegisterOutboxCleanupWorker(this IServiceCollection services)
+    {
+        services.AddOptions<OutboxCleanupWorkerOptions>()
+            .BindConfiguration("OutboxCleanupWorker")
+            .ValidateDataAnnotations()
+            .ValidateOnStart();
+        
+        services.AddHostedService<OutboxCleanupWorker>();
     
         return services;
     }
