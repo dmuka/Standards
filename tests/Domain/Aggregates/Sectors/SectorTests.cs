@@ -23,7 +23,7 @@ public class SectorTests
     [SetUp]
     public void Setup()
     {
-        _sector = Sector.Create();
+        _sector = Sector.Create("Sector name", "Sector short name");
         _roomId = new RoomId(Guid.CreateVersion7());
         _workplaceId = new WorkplaceId(Guid.CreateVersion7());
         _departmentId = new DepartmentId(Guid.CreateVersion7());
@@ -53,7 +53,7 @@ public class SectorTests
         var expectedId = new SectorId(Guid.CreateVersion7());
         
         // Act
-        var result = Sector.Create(expectedId);
+        var result = Sector.Create("Sector name", "Sector short name",expectedId);
 
         //Assert
         using (Assert.EnterMultipleScope())

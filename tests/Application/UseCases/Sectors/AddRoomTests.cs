@@ -9,6 +9,9 @@ namespace Tests.Application.UseCases.Sectors;
 [TestFixture]
 public class AddRoomTests
 {
+    private readonly Guid _roomIdValue = Guid.CreateVersion7();
+    private readonly Guid _sectorIdValue = Guid.CreateVersion7();
+    
     private static readonly SectorId AnotherSectorId = new (Guid.CreateVersion7());
 
     private RoomId _roomId;
@@ -30,10 +33,13 @@ public class AddRoomTests
     [SetUp]
     public void SetUp()
     {
-        _roomId = new RoomId(Guid.CreateVersion7());
-        _sectorId = new SectorId(Guid.CreateVersion7());
+        _roomId = new RoomId(_roomIdValue);
+        _sectorId = new SectorId(_sectorIdValue);
             
-        _sector = Sector.Create(_sectorId).Value;
+        _sector = Sector.Create(
+            "Sector name", 
+            "Sector short name",  
+            _sectorIdValue).Value;
         _room = Room.Create(5, 2, 5, _roomId).Value;
             
         _command = new AddRoom.Command(_sectorId, _roomId);

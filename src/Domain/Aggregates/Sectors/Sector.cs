@@ -1,5 +1,6 @@
 ﻿using Core.Results;
 using Domain.Aggregates.Common;
+using Domain.Aggregates.Common.Specifications;
 using Domain.Aggregates.Departments;
 using Domain.Aggregates.Persons;
 using Domain.Aggregates.Rooms;
@@ -34,13 +35,19 @@ public class Sector : NamedAggregateRoot<SectorId>, ICacheable
     }
 
     public static Result<Sector> Create(
-        SectorId? sectorId = null,
-        DepartmentId? departmentId = null,
+        string sectorName,
+        string shortSectorName,
+        Guid? sectorId = null,
+        Guid? departmentId = null,
         string? comments = null)
     {
+        var validationResults = ValidateSectorDetails(sectorName, shortSectorName);
+        if (validationResults.Length != 0)
+            return Result<Sector>.ValidationFailure(ValidationError.FromResults(validationResults));
+        
         var sector = new Sector( 
-            sectorId ?? new SectorId(Guid.CreateVersion7()),
-            departmentId,
+            sectorId is null ? new SectorId(Guid.CreateVersion7()) : new SectorId(sectorId.Value),
+            departmentId is null ? null : new DepartmentId(departmentId.Value),
             comments);
             
         return Result.Success(sector);
@@ -167,5 +174,21 @@ public class Sector : NamedAggregateRoot<SectorId>, ICacheable
     public static string GetCacheKey()
     {
         return Cache.Sectors;
+    }
+
+    /// <summary>
+    /// Validates sector details.
+    /// </summary>
+    private static Result[] ValidateSectorDetails(string sectorName, string shortSectorName)
+    {
+        var validationResults = new []
+        {
+            new NameMustHaveValidLength(sectorName).IsSatisfied(),
+            new ShortNameMustHaveValidLength(shortSectorName).IsSatisfied()
+        };
+            
+        var results = validationResults.Where(result => result.IsFailure);
+
+        return results.ToArray();
     }
 }
