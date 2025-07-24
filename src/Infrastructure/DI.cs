@@ -4,8 +4,10 @@ using Application.Abstractions.Data.Filter;
 using Application.Abstractions.Messaging;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
+using Domain.Aggregates.Persons;
 using Domain.Aggregates.Rooms;
 using Domain.Aggregates.Sectors;
+using Domain.Aggregates.Users;
 using Domain.Models.Departments;
 using Domain.Services;
 using Infrastructure.Data;
@@ -229,6 +231,8 @@ public static class DI
         services.AddScoped<IHousingRepository, HousingRepository>();
         services.AddScoped<ISectorRepository, SectorRepository>();
         services.AddScoped<IRoomRepository, RoomRepository>();
+        services.AddScoped<IPersonRepository, PersonRepository>();
+        services.AddScoped<IUserRepository, UserRepository>();
         
         services.AddScoped<IUnitOfWork, UnitOfWork>();
     

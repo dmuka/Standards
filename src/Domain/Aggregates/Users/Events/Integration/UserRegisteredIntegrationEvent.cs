@@ -6,5 +6,5 @@ public sealed record UserRegisteredIntegrationEvent(
     Guid UserId, 
     string FirstName, 
     string LastName, 
-    Email Email, 
+    string Email, 
     DateTime RegisteredAt) : IIntegrationEvent;

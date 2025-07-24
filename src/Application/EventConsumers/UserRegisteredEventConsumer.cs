@@ -1,5 +1,7 @@
 using Application.Abstractions.Messaging;
 using Domain.Aggregates.Users.Events.Integration;
+using MediatR;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 
@@ -7,10 +9,11 @@ namespace Application.EventConsumers;
 
 public class UserRegisteredEventConsumer(
     IEventConsumer eventConsumer,
+    IServiceProvider serviceProvider,
     ILogger<UserRegisteredEventConsumer> logger)
     : BackgroundService
 {
-    protected override async Task ExecuteAsync(CancellationToken stoppingToken)
+    protected override async Task ExecuteAsync(CancellationToken cancellationToken)
     {
         logger.LogInformation("Starting UserRegisteredEventConsumer");
         
@@ -18,16 +21,23 @@ public class UserRegisteredEventConsumer(
         {
             await eventConsumer.ConsumeAsync<UserRegisteredIntegrationEvent>(
                 "user-registered",
-                async (@event) =>
+                async @event =>
                 {
+                    await using (var scope = serviceProvider.CreateAsyncScope())
+                    {
+                        var mediator = scope.ServiceProvider.GetRequiredService<IMediator>();
+                        
+                        await mediator.Publish(@event, cancellationToken);
+                    }
+
                     logger.LogInformation(
                         "User with id {UserId} registered, Email={Email}", 
                         @event.UserId, @event.Email);
                     await Task.CompletedTask;
                 },
-                stoppingToken);
+                cancellationToken);
         }
-        catch (OperationCanceledException) when (stoppingToken.IsCancellationRequested)
+        catch (OperationCanceledException) when (cancellationToken.IsCancellationRequested)
         {
             logger.LogInformation("Stopped UserRegisteredEventConsumer");
         }

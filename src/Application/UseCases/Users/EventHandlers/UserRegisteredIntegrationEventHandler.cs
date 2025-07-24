@@ -29,7 +29,7 @@ public sealed class UserRegisteredIntegrationEventHandler(
             notification.UserId,
             notification.FirstName,
             notification.LastName,
-            notification.Email.Value);
+            notification.Email);
         if (userCreationResult.IsFailure) throw new StandardsException(
             StatusCodeByError.InternalServerError,
             $"User {notification.UserId} creation error ({nameof(UserRegisteredIntegrationEventHandler)}, {userCreationResult.Error.Description}).",
@@ -40,7 +40,6 @@ public sealed class UserRegisteredIntegrationEventHandler(
         try
         {
             await userRepository.AddAsync(userCreationResult.Value, cancellationToken);
-            await unitOfWork.CommitAsync(cancellationToken);
 
             var personCreationResult = Person.Create(
                 notification.FirstName,

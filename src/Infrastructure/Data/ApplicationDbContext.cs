@@ -58,7 +58,8 @@ namespace Infrastructure.Data;
         public DbSet<Person> Persons { get; set; }
         public DbSet<Domain.Aggregates.Persons.Person> Persons2 { get; set; }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<User> Users { get; set; }        
+        public DbSet<Domain.Aggregates.Users.User> Users2 { get; set; }
 
         public DbSet<Category> Categories { get; set; }
         public DbSet<Position> Positions { get; set; }
@@ -96,9 +97,9 @@ namespace Infrastructure.Data;
             modelBuilder.Seed<Housing>(housings);
             object[] housings2 =
             [
-                new { Id = new HousingId(Guid.Parse("3daa72ed-655d-4672-a6da-8c5977f900a2")), Name = Name.Create("Housing1").Value, ShortName = ShortName.Create("h1").Value, FloorsCount = 2, Address = Address.Create("Housing1 Address1").Value, Comments = "Comments1" },
-                new { Id = new HousingId(Guid.Parse("e7382e43-067d-4e64-a216-21e008d9f392")), Name = Name.Create("Housing2").Value, ShortName = ShortName.Create("h2").Value, FloorsCount = 1, Address = Address.Create("Housing2 Address2").Value, Comments = "Comments2" },
-                new { Id = new HousingId(Guid.Parse("45697111-13c0-4e81-ae6d-fbfeab3453f9")), Name = Name.Create("Housing3").Value, ShortName = ShortName.Create("h3").Value, FloorsCount = 2, Address = Address.Create("Housing3 Address3").Value, Comments = "Comments3" }
+                new { Id = new HousingId(Guid.Parse("3daa72ed-655d-4672-a6da-8c5977f900a2")), HousingName = HousingName.Create("Housing1").Value, HousingShortName = HousingShortName.Create("h1").Value, FloorsCount = 2, Address = Address.Create("Housing1 Address1").Value, Comments = "Comments1" },
+                new { Id = new HousingId(Guid.Parse("e7382e43-067d-4e64-a216-21e008d9f392")), HousingName = HousingName.Create("Housing2").Value, HousingShortName = HousingShortName.Create("h2").Value, FloorsCount = 1, Address = Address.Create("Housing2 Address2").Value, Comments = "Comments2" },
+                new { Id = new HousingId(Guid.Parse("45697111-13c0-4e81-ae6d-fbfeab3453f9")), HousingName = HousingName.Create("Housing3").Value, HousingShortName = HousingShortName.Create("h3").Value, FloorsCount = 2, Address = Address.Create("Housing3 Address3").Value, Comments = "Comments3" }
             ];
             modelBuilder.SeedAggregates<Domain.Aggregates.Housings.Housing>(housings2);
             
