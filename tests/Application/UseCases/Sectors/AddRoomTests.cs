@@ -34,11 +34,7 @@ public class AddRoomTests
         _sectorId = new SectorId(Guid.CreateVersion7());
             
         _sector = Sector.Create(_sectorId).Value;
-        _room = Room.Create(
-            Length.Create(5).Value,
-            Height.Create(2).Value,
-            Width.Create(5).Value,
-            _roomId).Value;
+        _room = Room.Create(5, 2, 5, _roomId).Value;
             
         _command = new AddRoom.Command(_sectorId, _roomId);
             

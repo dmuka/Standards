@@ -2,6 +2,7 @@
 using Core.Results;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Persons;
+using Domain.Aggregates.Rooms.Specifications;
 using Domain.Aggregates.Sectors;
 using Domain.Aggregates.Workplaces;
 using Domain.Constants;
@@ -39,17 +40,21 @@ public class Room : AggregateRoot<RoomId>, ICacheable
     }
 
     public static Result<Room> Create(
-        Length length, 
-        Height height, 
-        Width width,
-        RoomId? roomId = null,
+        float length, 
+        float height, 
+        float width,
+        Guid? roomId = null,
         string? comments = null)
     {
+        var validationResults = ValidateRoomDetails(length, height, width);
+        if (validationResults.Length != 0)
+            return Result<Room>.ValidationFailure(ValidationError.FromResults(validationResults));
+        
         var room = new Room(
-            roomId ?? new RoomId(Guid.CreateVersion7()), 
-            length, 
-            width, 
-            height, 
+            roomId is null ? new RoomId(Guid.CreateVersion7()) : new RoomId(roomId.Value), 
+            Length.Create(length).Value, 
+            Width.Create(width).Value, 
+            Height.Create(height).Value, 
             comments);
             
         return Result.Success(room);
@@ -153,5 +158,25 @@ public class Room : AggregateRoot<RoomId>, ICacheable
     public static string GetCacheKey()
     {
         return Cache.Rooms;
+    }
+
+    /// <summary>
+    /// Validates room details.
+    /// </summary>
+    private static Result[] ValidateRoomDetails(
+        float length,
+        float width,  
+        float height)
+    {
+        var validationResults = new []
+        {
+            new RoomLengthMustBeValid(length).IsSatisfied(),
+            new RoomWidthMustBeValid(width).IsSatisfied(),
+            new RoomHeightMustBeValid(height).IsSatisfied()
+        };
+            
+        var results = validationResults.Where(result => result.IsFailure);
+
+        return results.ToArray();
     }
 }

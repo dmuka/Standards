@@ -9,6 +9,10 @@ namespace Tests.Domain.Aggregates.Sectors;
 [TestFixture]
 public class SectorTests
 {
+    private const float LengthValue = 10;
+    private const float WidthValue = 15;
+    private const float HeightValue = 8;
+    
     private Core.Results.Result<Sector> _sector;
     private Core.Results.Result<Room> _room;
     private DepartmentId _departmentId;
@@ -22,14 +26,10 @@ public class SectorTests
         _sector = Sector.Create();
         _roomId = new RoomId(Guid.CreateVersion7());
         _workplaceId = new WorkplaceId(Guid.CreateVersion7());
-        _room = Room.Create(
-            Length.Create(5).Value,
-            Height.Create(2).Value,
-            Width.Create(5).Value,
-            new RoomId(Guid.CreateVersion7()));
         _departmentId = new DepartmentId(Guid.CreateVersion7());
         _personId = new PersonId(Guid.CreateVersion7());
-        _workplaceId = new WorkplaceId(_workplaceId);
+        
+        _room = Room.Create(LengthValue, HeightValue, WidthValue, new RoomId(Guid.CreateVersion7()));
     }
     
     [Test]

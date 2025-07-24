@@ -8,10 +8,16 @@ namespace Tests.Domain.Aggregates.Rooms;
 [TestFixture]
 public class RoomTests
 {
+    private const float LengthValue = 10;
+    private const float WidthValue = 15;
+    private const float HeightValue = 8;
+    
     private Length _length;
     private Width _width;
     private Height _height;
+    
     private Core.Results.Result<Room> _room;
+    
     private SectorId _sectorId;
     private PersonId _personId;
     private WorkplaceId _workplaceId;
@@ -19,10 +25,12 @@ public class RoomTests
     [SetUp]
     public void Setup()
     {
-        _length = Length.Create(10).Value;
-        _width = Width.Create(15).Value;
-        _height = Height.Create(8).Value;
-        _room = Room.Create(_length, _height, _width);
+        _length = Length.Create(LengthValue).Value;
+        _width = Width.Create(WidthValue).Value;
+        _height = Height.Create(HeightValue).Value;
+        
+        _room = Room.Create(LengthValue, HeightValue, WidthValue);
+        
         _sectorId = new SectorId(Guid.CreateVersion7());
         _personId = new PersonId(Guid.CreateVersion7());
         _workplaceId = new WorkplaceId(Guid.CreateVersion7());
@@ -52,7 +60,7 @@ public class RoomTests
         var expectedId = new RoomId(Guid.CreateVersion7());
         
         // Act
-        var result = Room.Create(_length, _height, _width, expectedId);
+        var result = Room.Create(LengthValue, HeightValue, WidthValue, expectedId);
 
         //Assert
         using (Assert.EnterMultipleScope())
