@@ -1,3 +1,5 @@
-﻿namespace Core;
+﻿using MediatR;
 
-public interface IIntegrationEvent;
+namespace Core;
+
+public interface IIntegrationEvent : INotification;
