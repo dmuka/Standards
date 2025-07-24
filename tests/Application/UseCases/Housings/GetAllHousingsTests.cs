@@ -24,14 +24,14 @@ public class GetAllHousingsTests
     public void Setup()
     {
         _housing1 = Housing.Create(
-            Name.Create("Housing name 1").Value,
-            ShortName.Create("Housing short name 1").Value,
-            Address.Create("Housing address line 1").Value,
+            "Housing name 1",
+            "Housing short name 1",
+            "Housing address line 1",
             _housingId1).Value;
         _housing2 = Housing.Create(
-            Name.Create("Housing name 2").Value,
-            ShortName.Create("Housing short name 2").Value,
-            Address.Create("Housing address line 2").Value,
+            "Housing name 2",
+            "Housing short name 2",
+            "Housing address line 2",
             _housingId2).Value;
 
         _housingRepositoryMock = new Mock<IHousingRepository>();

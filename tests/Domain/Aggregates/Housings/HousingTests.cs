@@ -7,25 +7,29 @@ namespace Tests.Domain.Aggregates.Housings;
 [TestFixture]
 public class HousingTests
 {
+    private const string HousingNameValue = "Housing name";
+    private const string HousingShortNameValue = "Housing short name";
+    private const string AddressValue = "Housing address";
+    
     private readonly HousingId _housingId = new (Guid.CreateVersion7());
-    private readonly Name _housingName = Name.Create("Valid Housing Name").Value;
-    private readonly ShortName _housingShortName = ShortName.Create("Valid Housing Short Name").Value;
-    private readonly Address _address = Address.Create("Valid Address Value").Value;
+    private readonly HousingName _housingName = HousingName.Create(HousingNameValue).Value;
+    private readonly HousingShortName _housingShortName = HousingShortName.Create(HousingShortNameValue).Value;
+    private readonly Address _address = Address.Create(AddressValue).Value;
     private const string Comments = "Some comments";
     
     [Test]
     public void Create_ShouldReturnSuccess_WhenAllParametersAreValid()
     {
         // Arrange & Act
-        var result = Housing.Create(_housingName, _housingShortName, _address, _housingId, Comments);
+        var result = Housing.Create(HousingNameValue, HousingShortNameValue, AddressValue, _housingId, Comments);
 
         using (Assert.EnterMultipleScope())
         {
             // Assert
             Assert.That(result.IsSuccess, Is.True);
             Assert.That(result.Value.Id, Is.EqualTo(_housingId));
-            Assert.That(result.Value.Name, Is.EqualTo(_housingName));
-            Assert.That(result.Value.ShortName, Is.EqualTo(_housingShortName));
+            Assert.That(result.Value.HousingName, Is.EqualTo(_housingName));
+            Assert.That(result.Value.HousingShortName, Is.EqualTo(_housingShortName));
             Assert.That(result.Value.Address, Is.EqualTo(_address));
             Assert.That(result.Value.Comments, Is.EqualTo(Comments));
         }
@@ -35,7 +39,7 @@ public class HousingTests
     public void Create_ShouldReturnSuccess_WhenCommentsAreNull()
     {
         // Arrange & Act
-        var result = Housing.Create(_housingName, _housingShortName, _address, _housingId);
+        var result = Housing.Create(HousingNameValue, HousingShortNameValue, AddressValue, _housingId);
 
         using (Assert.EnterMultipleScope())
         {

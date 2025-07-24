@@ -33,9 +33,9 @@ public class GetHousingByIdTests
         _invalidHousingId = new HousingId(_invalidHousingIdGuid);
         
         _housing = Housing.Create(
-            Name.Create(HousingNameValue).Value, 
-            ShortName.Create(HousingShortNameValue).Value,
-            Address.Create(AddressValue).Value,
+            HousingNameValue, 
+            HousingShortNameValue,
+            AddressValue,
             _validHousingId,
             "Comments").Value;        
 
@@ -64,8 +64,8 @@ public class GetHousingByIdTests
             Assert.That(result.Value.Id, Is.EqualTo(_validHousingId));
             Assert.That(result.Value.Address.Value, Is.EqualTo(AddressValue));
             Assert.That(result.Value.Address.Value, Is.EqualTo(AddressValue));
-            Assert.That(result.Value.Name.Value, Is.EqualTo(HousingNameValue));
-            Assert.That(result.Value.ShortName!.Value, Is.EqualTo(HousingShortNameValue));
+            Assert.That(result.Value.HousingName.Value, Is.EqualTo(HousingNameValue));
+            Assert.That(result.Value.HousingShortName!.Value, Is.EqualTo(HousingShortNameValue));
         }
     }
 

@@ -22,14 +22,14 @@ internal sealed class HousingConfiguration : IEntityTypeConfiguration<Housing>
                 address => address.Value,
                 value => Address.Create(value).Value);
         
-        builder.Property(housing => housing.Name)
+        builder.Property(housing => housing.HousingName)
             .HasConversion(
                 housingName => housingName.Value,
-                value => Name.Create(value).Value);
+                value => HousingName.Create(value).Value);
         
-        builder.Property(housing => housing.ShortName)
+        builder.Property(housing => housing.HousingShortName)
             .HasConversion(
-                housingShortName => housingShortName == null ? null : housingShortName.Value,
-                value => value == null ? null : ShortName.Create(value).Value);
+                housingShortName => housingShortName.Value,
+                value => HousingShortName.Create(value).Value);
     }
 }

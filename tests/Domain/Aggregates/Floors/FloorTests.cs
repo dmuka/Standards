@@ -1,3 +1,4 @@
+using Core.Results;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
 
@@ -21,7 +22,8 @@ public class FloorTests
         {
             // Assert
             Assert.That(result.IsFailure, Is.True);
-            Assert.That(result.Error, Is.EqualTo(FloorErrors.InvalidFloorCount));
+            Assert.That(result.Error.Type, Is.EqualTo(ErrorType.Validation));
+            Assert.That(result.Error.Description, Is.EqualTo("One or more validation errors occurred"));
         }
     }
 

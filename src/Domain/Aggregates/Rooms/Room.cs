@@ -18,7 +18,6 @@ public class Room : AggregateRoot<RoomId>, ICacheable
     public Width Width { get; private set; } = null!;
     public FloorId FloorId { get; private set; } = null!;
     public SectorId? SectorId { get; private set; }
-    public string? Comments { get; set; }
     
     public IReadOnlyCollection<WorkplaceId> WorkplaceIds => _workplaceIds.AsReadOnly();
     private List<WorkplaceId> _workplaceIds = [];

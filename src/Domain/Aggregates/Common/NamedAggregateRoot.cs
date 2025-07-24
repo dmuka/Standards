@@ -9,7 +9,6 @@ public abstract class NamedAggregateRoot<TId> : AggregateRoot<TId>
 {
     public Name Name { get; protected set; } = null!;
     public ShortName ShortName { get; protected set; } = null!;
-    public string? Comments { get; protected set; }
     
     public Result ChangeName(Name name)
     {

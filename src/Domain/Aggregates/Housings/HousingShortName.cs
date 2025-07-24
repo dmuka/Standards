@@ -10,11 +10,11 @@ public class HousingShortName : ValueObject
     /// <summary>
     /// Gets the housing short name value.
     /// </summary>
-    public string Value { get; } = null!;
+    public string? Value { get; }
 
-    private HousingShortName(string value) => Value = value;
+    private HousingShortName(string? value) => Value = value;
 
-    public static Result<HousingShortName> Create(string housingShortName)
+    public static Result<HousingShortName> Create(string? housingShortName)
     {
         var housingShortNameValidationResult = new HousingShortNameLengthMustBeValid(housingShortName).IsSatisfied();
 
@@ -25,6 +25,6 @@ public class HousingShortName : ValueObject
     
     protected override IEnumerable<object> GetEqualityComponents()
     {
-        yield return Value;
+        yield return Value!;
     }
 }

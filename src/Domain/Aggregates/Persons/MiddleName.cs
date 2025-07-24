@@ -7,7 +7,7 @@ namespace Domain.Aggregates.Persons;
 public class MiddleName : ValueObject
 {
     protected MiddleName() { }
-    public string Value { get; }
+    public string Value { get; } = null!;
 
     private MiddleName(string value) => Value = value;
 

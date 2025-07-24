@@ -1,6 +1,8 @@
 using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Floors;
+using Confluent.Kafka;
+using Core.Results;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
 using Domain.Services;
@@ -75,7 +77,8 @@ public class AddFloorTests
         {
             // Assert
             Assert.That(result.IsFailure, Is.True);
-            Assert.That(result.Error.Code, Is.EqualTo(FloorErrors.InvalidFloorCount.Code));
+            Assert.That(result.Error.Type, Is.EqualTo(ErrorType.Validation));
+            Assert.That(result.Error.Description, Is.EqualTo("One or more validation errors occurred"));
         }
     }
 

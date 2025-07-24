@@ -7,7 +7,7 @@ namespace Domain.Aggregates.Persons;
 public class FirstName : ValueObject
 {
     protected FirstName() { }
-    public string Value { get; }
+    public string Value { get; } = null!;
 
     private FirstName(string value) => Value = value;
 

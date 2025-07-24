@@ -26,12 +26,19 @@ public class Floor : AggregateRoot<FloorId>, ICacheable
         HousingId = housingId;
     }
 
-    public static Result<Floor> Create(int floorNumber, HousingId housingId, FloorId? floorId = null)
+    public static Result<Floor> Create(
+        int floorNumber, 
+        Guid housingId, 
+        Guid? floorId = null)
     {
-        var floorNumberValidationResult = new FloorNumberMustBeGreaterThanZero(floorNumber).IsSatisfied();
-        if (floorNumberValidationResult.IsFailure) return Result.Failure<Floor>(floorNumberValidationResult.Error);
+        var validationResults = ValidateFloorDetails(floorNumber);
+        if (validationResults.Length != 0)
+            return Result<Floor>.ValidationFailure(ValidationError.FromResults(validationResults));
 
-        var floor = new Floor(floorId ?? new FloorId(Guid.CreateVersion7()), floorNumber, housingId);
+        var floor = new Floor(
+            floorId is null ? new FloorId(Guid.CreateVersion7()) : new FloorId(floorId.Value), 
+            floorNumber, 
+            new HousingId(housingId));
             
         return Result.Success(floor);
     }
@@ -39,5 +46,20 @@ public class Floor : AggregateRoot<FloorId>, ICacheable
     public static string GetCacheKey()
     {
         return Cache.Floors;
+    }
+
+    /// <summary>
+    /// Validates floor details.
+    /// </summary>
+    private static Result[] ValidateFloorDetails(int floorNumber)
+    {
+        var validationResults = new []
+        {
+            new FloorNumberMustBeGreaterThanZero(floorNumber).IsSatisfied()
+        };
+            
+        var results = validationResults.Where(result => result.IsFailure);
+
+        return results.ToArray();
     }
 }

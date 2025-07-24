@@ -35,9 +35,9 @@ public class DeleteHousingTests
         _invalidHousingId = new HousingId(_invalidHousingIdGuid);
         
         _housing = Housing.Create(
-                               Name.Create(HousingNameValue).Value, 
-                               ShortName.Create(HousingShortNameValue).Value,
-                               Address.Create(AddressValue).Value,
+                               HousingNameValue, 
+                               HousingShortNameValue,
+                               AddressValue,
                                _validHousingId,
                                "Comments").Value;
         

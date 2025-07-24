@@ -7,10 +7,9 @@ namespace Application.UseCases.DTOs;
 public class HousingDto2 : Entity
 {
     public new required HousingId Id { get; set; }
-    public required Name HousingName { get; set; }
-    public required ShortName HousingShortName { get; set; }
-    public required Address Address { get; set; }
+    public required string HousingName { get; set; }
+    public required string HousingShortName { get; set; }
+    public required string Address { get; set; }
     public IList<Guid> FloorIds { get; set; } = [];
     public IList<int> RoomIds { get; set; } = [];
-    public string? Comments { get; set; }
 }

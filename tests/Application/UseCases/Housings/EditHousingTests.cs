@@ -12,9 +12,6 @@ public class EditHousingTests
 {
     private readonly HousingId _housingId = new (Guid.CreateVersion7());
     private readonly HousingId _nonExistentHousingId = new (Guid.CreateVersion7());
-    private readonly Name _housingName = Name.Create("Housing name").Value;
-    private readonly ShortName _housingShortName = ShortName.Create("Housing short name").Value;
-    private readonly Address _address = Address.Create("Housing test address").Value;
     
     private HousingDto2 _housingDto;
     private Housing _housing;
@@ -31,10 +28,10 @@ public class EditHousingTests
     {
         _housingDto = new HousingDto2
         {
-            HousingName = _housingName,
-            HousingShortName = _housingShortName,
+            HousingName = "Housing name",
+            HousingShortName = "Housing short name",
             Id = _housingId, 
-            Address = _address
+            Address = "Housing test address"
         };
 
         _housing = Housing.Create(

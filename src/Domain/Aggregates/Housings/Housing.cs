@@ -1,15 +1,19 @@
-﻿using Core.Results;
-using Domain.Aggregates.Common;
+﻿using Core;
+using Core.Results;
 using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Floors;
+using Domain.Aggregates.Housings.Specifications;
 using Domain.Constants;
 using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Housings;
 
-public class Housing : NamedAggregateRoot<HousingId>, ICacheable
+public class Housing : AggregateRoot<HousingId>, ICacheable
 {
     protected Housing() { }
+    
+    public HousingName HousingName { get; private set; } = null!;
+    public HousingShortName HousingShortName { get; private set; } = null!;
     public Address Address { get; private set; } = null!;
     public int FloorsCount { get; private set; }
     public IReadOnlyCollection<FloorId> FloorIds => _floorIds.AsReadOnly();
@@ -17,46 +21,47 @@ public class Housing : NamedAggregateRoot<HousingId>, ICacheable
 
     private Housing(
         HousingId housingId, 
-        Name housingName, 
-        ShortName housingShortName, 
+        HousingName housingName, 
+        HousingShortName housingShortName, 
         Address address, 
         string? comments = null)
     {
         Id = housingId;
         Address = address;
-        Name = housingName;
-        ShortName = housingShortName;
+        HousingName = housingName;
+        HousingShortName = housingShortName;
         Comments = comments;
     }
 
     public static Result<Housing> Create(
-        Name housingName,
-        ShortName housingShortName, 
-        Address address,
-        HousingId? housingId = null,
+        string housingName,
+        string housingShortName, 
+        string address,
+        Guid? housingId = null,
         string? comments = null)
     {
-        if (housingName is null) return Result<Housing>.ValidationFailure(HousingErrors.EmptyHousingName);
+        var validationResults = ValidateHousingDetails(housingName, housingShortName, address);
+        if (validationResults.Length != 0)
+            return Result<Housing>.ValidationFailure(ValidationError.FromResults(validationResults));
         
         var housing = new Housing(
-            housingId ?? new HousingId(Guid.CreateVersion7()), 
-            housingName, 
-            housingShortName, 
-            address, 
+            housingId is null ? new HousingId(Guid.CreateVersion7()) : new HousingId(housingId.Value), 
+            HousingName.Create(housingName).Value, 
+            HousingShortName.Create(housingShortName).Value, 
+            Address.Create(address).Value, 
             comments);
             
         return Result.Success(housing);
     }    
     
     public Result Update(
-        Name housingName,
-        ShortName housingShortName,
+        HousingName housingName,
+        HousingShortName housingShortName,
         Address address,
         string? comments = null)
          {
-             if (housingName is null) return Result<Housing>.ValidationFailure(HousingErrors.EmptyHousingName);
-             if (!housingName.Equals(Name)) Name = housingName;
-             if (!housingShortName.Equals(ShortName)) ShortName = housingShortName;
+             if (!housingName.Equals(HousingName)) HousingName = housingName;
+             if (!housingShortName.Equals(HousingShortName)) HousingShortName = housingShortName;
              if (!address.Equals(Address)) Address = address;
              if (comments != Comments) Comments = comments;
                  
@@ -83,5 +88,25 @@ public class Housing : NamedAggregateRoot<HousingId>, ICacheable
     public static string GetCacheKey()
     {
         return Cache.Housings;
+    }
+
+    /// <summary>
+    /// Validates housing details.
+    /// </summary>
+    private static Result[] ValidateHousingDetails(
+        string housingName, 
+        string housingShortName,
+        string address)
+    {
+        var validationResults = new []
+        {
+            new HousingNameLengthMustBeValid(housingName).IsSatisfied(),
+            new HousingShortNameLengthMustBeValid(housingShortName).IsSatisfied(),
+            new AddressLengthMustBeValid(address).IsSatisfied()
+        };
+            
+        var results = validationResults.Where(result => result.IsFailure);
+
+        return results.ToArray();
     }
 }

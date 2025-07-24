@@ -10,13 +10,13 @@ namespace Tests.Application.UseCases.Housings;
 [TestFixture]
 public class AddHousingTests
 {
+    private const string HousingNameValue = "Housing name";
+    private const string HousingShortNameValue = "Housing short name";
+    private const string AddressValue = "Housing address";
+    
     private readonly HousingId _housingId = new (Guid.CreateVersion7());
-    private readonly Name _housingName = Name.Create("Housing name").Value;
-    private readonly ShortName _housingShortName = ShortName.Create("Housing short name").Value;
-    private readonly Address _address = Address.Create("Housing test address").Value;
     
     private HousingDto2 _housingDto;
-    private Housing _housing;
     
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
     
@@ -30,17 +30,11 @@ public class AddHousingTests
     {
         _housingDto = new HousingDto2
         {
-            HousingName = _housingName,
-            HousingShortName = _housingShortName,
+            HousingName = HousingNameValue,
+            HousingShortName = HousingShortNameValue,
             Id = _housingId, 
-            Address = _address
+            Address = AddressValue
         };
-    
-        _housing = Housing.Create(
-            _housingName,
-            _housingShortName,
-            _address,
-            _housingId).Value;
         
         _housingRepositoryMock = new Mock<IHousingRepository>();
         _unitOfWorkMock = new Mock<IUnitOfWork>();

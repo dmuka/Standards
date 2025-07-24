@@ -7,7 +7,6 @@ public abstract class AggregateRoot<TId> : Entity
 {
     [Key] 
     public new TId Id { get; protected set; } = null!;
-    public string? Comments { get; protected set; }
     /// <summary>
     /// A private list to hold domain events associated with this entity.
     /// </summary>
