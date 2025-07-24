@@ -1,5 +1,6 @@
 ﻿using Core.Results;
 using Domain.Aggregates.Common;
+using Domain.Aggregates.Common.Specifications;
 using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Persons;
 using Domain.Aggregates.Sectors;
@@ -31,17 +32,39 @@ public class Department : NamedAggregateRoot<DepartmentId>
     }
 
     protected static Result<Department> Create(
-        Name name, 
-        ShortName shortName,
-        DepartmentId? departmentId = null,
+        string departmentName, 
+        string departmentShortName,
+        Guid? departmentId = null,
         string? comments = null)
     {
+        var validationResults = ValidateDepartmentDetails(
+            departmentName,
+            departmentShortName);
+        if (validationResults.Length != 0)
+            return Result<Department>.ValidationFailure(ValidationError.FromResults(validationResults));
+        
         var department = new Department(
-            departmentId ?? new DepartmentId(Guid.CreateVersion7()), 
-            name, 
-            shortName,
+            departmentId is null ? new DepartmentId(Guid.CreateVersion7()) : new DepartmentId(departmentId.Value), 
+            Name.Create(departmentName).Value, 
+            ShortName.Create(departmentShortName).Value,
             comments);
             
         return Result.Success(department);
+    }
+
+    /// <summary>
+    /// Validates department details.
+    /// </summary>
+    private static Result[] ValidateDepartmentDetails(string departmentName, string departmentShortName)
+    {
+        var validationResults = new []
+        {
+            new NameMustHaveValidLength(departmentName).IsSatisfied(),
+            new ShortNameMustHaveValidLength(departmentShortName).IsSatisfied()
+        };
+            
+        var results = validationResults.Where(result => result.IsFailure);
+
+        return results.ToArray();
     }
 }
