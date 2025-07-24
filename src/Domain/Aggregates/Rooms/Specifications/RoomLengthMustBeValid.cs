@@ -9,7 +9,7 @@ public class RoomLengthMustBeValid(float length) : ISpecification
     public Result IsSatisfied()
     {
         return length < RoomConstants.MinLength 
-                ? Result.Failure<float>(RoomErrors.WrongLengthValue)
+                ? Result<float>.ValidationFailure(RoomErrors.WrongLengthValue)
                 : Result.Success();
     }
 }

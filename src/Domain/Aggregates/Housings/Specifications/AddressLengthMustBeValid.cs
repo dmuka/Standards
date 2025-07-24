@@ -8,12 +8,12 @@ public class AddressLengthMustBeValid(string address) : ISpecification
 {
     public Result IsSatisfied()
     {
-        if (string.IsNullOrEmpty(address)) return Result.Failure<string>(HousingErrors.EmptyAddress);
+        if (string.IsNullOrEmpty(address)) return Result<string>.ValidationFailure(HousingErrors.EmptyAddress);
         
         return address.Length switch
         {
-            < HousingConstants.AddressMinLength => Result.Failure<string>(HousingErrors.TooShortAddress),
-            > HousingConstants.AddressMaxLength => Result.Failure<string>(HousingErrors.TooLargeAddress),
+            < HousingConstants.AddressMinLength => Result<string>.ValidationFailure(HousingErrors.TooShortAddress),
+            > HousingConstants.AddressMaxLength => Result<string>.ValidationFailure(HousingErrors.TooLargeAddress),
             _ => Result.Success()
         };
     }

@@ -9,7 +9,7 @@ public class RoomHeightMustBeValid(float height) : ISpecification
     public Result IsSatisfied()
     {
         return height < RoomConstants.MinHeight 
-                ? Result.Failure<float>(RoomErrors.WrongHeightValue)
+                ? Result<float>.ValidationFailure(RoomErrors.WrongHeightValue)
                 : Result.Success();
     }
 }

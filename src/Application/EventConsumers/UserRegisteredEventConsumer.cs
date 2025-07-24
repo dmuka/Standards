@@ -1,5 +1,5 @@
 using Application.Abstractions.Messaging;
-using Domain.Aggregates.Persons.Events.Integration;
+using Domain.Aggregates.Users.Events.Integration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 

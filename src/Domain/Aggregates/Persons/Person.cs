@@ -1,7 +1,7 @@
 ﻿using Core;
 using Core.Results;
 using Domain.Aggregates.Categories;
-using Domain.Aggregates.Floors;
+using Domain.Aggregates.Persons.Specifications;
 using Domain.Aggregates.Positions;
 using Domain.Aggregates.Sectors;
 using Domain.Aggregates.Users;
@@ -15,14 +15,14 @@ public class Person : AggregateRoot<PersonId>, ICacheable
 {
     protected Person() { }
 
-    public FirstName FirstName { get; private set; }
-    public MiddleName MiddleName { get; private set; }
-    public LastName LastName { get; private set; }
-    public CategoryId CategoryId { get; private set; } 
-    public PositionId PositionId { get; private set; }
-    public BirthdayDate BirthdayDate { get; private set; }
-    public SectorId SectorId { get; private set; }
-    public UserId UserId { get; private set; }
+    public FirstName FirstName { get; private set; } = null!;
+    public MiddleName MiddleName { get; private set; } = null!;
+    public LastName LastName { get; private set; } = null!;
+    public CategoryId CategoryId { get; private set; } = null!;
+    public PositionId PositionId { get; private set; } = null!;
+    public BirthdayDate BirthdayDate { get; private set; } = null!;
+    public SectorId SectorId { get; private set; } = null!;
+    public UserId UserId { get; private set; } = null!;
     
     public IReadOnlyCollection<WorkplaceId> WorkplaceIds => _workplaceIds.AsReadOnly();
     private List<WorkplaceId> _workplaceIds = [];
@@ -46,21 +46,29 @@ public class Person : AggregateRoot<PersonId>, ICacheable
     }
 
     public static Result<Person> Create(
-        FirstName firstName,
-        MiddleName middleName,  
-        LastName lastName,
-        BirthdayDate birthdayDate,
-        UserId userId,
-        PersonId? personId = null,
+        string firstName,
+        string middleName,  
+        string lastName,
+        DateOnly birthdayDate,
+        Guid userId,
+        Guid? personId = null,
         string? comments = null)
     {
-        var person = new Person(
-            personId ?? new PersonId(Guid.CreateVersion7()), 
-            firstName, 
-            middleName, 
+        var validationResults = ValidatePersonDetails(
+            firstName,
+            middleName,
             lastName,
-            birthdayDate,
-            userId,
+            birthdayDate);
+        if (validationResults.Length != 0)
+            return Result<Person>.ValidationFailure(ValidationError.FromResults(validationResults));
+        
+        var person = new Person(
+            personId is null ? new PersonId(Guid.CreateVersion7()) : new PersonId(personId.Value), 
+            FirstName.Create(firstName).Value, 
+            MiddleName.Create(middleName).Value, 
+            LastName.Create(lastName).Value,
+            BirthdayDate.Create(birthdayDate).Value,
+            new UserId(userId),
             comments);
             
         return Result.Success(person);
@@ -139,5 +147,27 @@ public class Person : AggregateRoot<PersonId>, ICacheable
     public static string GetCacheKey()
     {
         return Cache.Persons;
+    }
+
+    /// <summary>
+    /// Validates person details.
+    /// </summary>
+    private static Result[] ValidatePersonDetails(
+        string firstName,
+        string middleName,  
+        string lastName,
+        DateOnly birthdayDate)
+    {
+        var validationResults = new []
+        {
+            new FirstNameMustBeValid(firstName).IsSatisfied(),
+            new MiddleNameMustBeValid(middleName).IsSatisfied(),
+            new LastNameMustBeValid(lastName).IsSatisfied(),
+            new BirthdayDateMustBeValid(birthdayDate).IsSatisfied()
+        };
+            
+        var results = validationResults.Where(result => result.IsFailure);
+
+        return results.ToArray();
     }
 }

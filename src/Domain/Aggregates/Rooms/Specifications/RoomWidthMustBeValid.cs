@@ -9,7 +9,7 @@ public class RoomWidthMustBeValid(float width) : ISpecification
     public Result IsSatisfied()
     {
         return width < RoomConstants.MinWidth 
-                ? Result.Failure<float>(RoomErrors.WrongWidthValue)
+                ? Result<float>.ValidationFailure(RoomErrors.WrongWidthValue)
                 : Result.Success();
     }
 }

@@ -8,7 +8,7 @@ public class FloorNumberMustBeGreaterThanZero(int floorNumber) : ISpecification
     public Result IsSatisfied()
     {
         return floorNumber < 1 
-            ? Result.Failure<int>(FloorErrors.InvalidFloorCount) 
+            ? Result<int>.ValidationFailure(FloorErrors.InvalidFloorCount) 
             : Result.Success();
     }
 }
