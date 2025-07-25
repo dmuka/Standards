@@ -3,10 +3,11 @@ using Application.Abstractions.Data;
 using Core;
 using Infrastructure.Data.Outbox;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.Extensions.Logging;
 
 namespace Infrastructure.Data;
 
-public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
+public class UnitOfWork(ApplicationDbContext context, ILogger<UnitOfWork> logger) : IUnitOfWork
 {
     private IDbContextTransaction? _transaction;
 
@@ -43,8 +44,9 @@ public class UnitOfWork(ApplicationDbContext context) : IUnitOfWork
                 await _transaction.DisposeAsync();
             }
         }
-        catch
+        catch (Exception exception)
         {
+            logger.LogError("Unit of work exception: {Message}", exception.InnerException);
             await RollbackAsync(cancellationToken);
             throw;
         }

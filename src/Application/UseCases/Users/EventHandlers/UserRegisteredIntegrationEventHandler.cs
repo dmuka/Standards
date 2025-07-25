@@ -43,9 +43,9 @@ public sealed class UserRegisteredIntegrationEventHandler(
 
             var personCreationResult = Person.Create(
                 notification.FirstName,
-                "",
+                null,
                 notification.LastName,
-                DateOnly.FromDateTime(DateTime.UtcNow),
+                null,
                 notification.UserId);
             if (personCreationResult.IsFailure)
                 throw new StandardsException(

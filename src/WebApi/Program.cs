@@ -89,7 +89,7 @@ public class Program
         catch (Exception exception)
         {
             // NLog: catch setup errors
-            logger.Error(exception, "Stopped program because of exception");
+            logger.Error(exception, "Stopped program because of exception ({Source}, {Message}, {Trace}, {Inner})", exception.Source, exception.Message, exception.StackTrace, exception.HResult);
             throw;
         }
         finally

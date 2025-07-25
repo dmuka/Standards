@@ -18,7 +18,6 @@ using Infrastructure.Data.ModelBuilderExtensions;
 using Infrastructure.Data.Outbox;
 using Microsoft.EntityFrameworkCore;
 using Department = Domain.Models.Departments.Department;
-using Entity = Core.Entity;
 using Housing = Domain.Models.Housings.Housing;
 using Person = Domain.Models.Persons.Person;
 using Room = Domain.Models.Housings.Room;
@@ -74,7 +73,7 @@ namespace Infrastructure.Data;
         public DbSet<Standard> Standards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {     
+        {
             modelBuilder.Ignore<RoomId>();   
             modelBuilder.Ignore<FloorId>();
             modelBuilder.Ignore<HousingId>();
