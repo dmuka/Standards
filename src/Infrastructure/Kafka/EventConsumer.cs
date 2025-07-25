@@ -54,11 +54,11 @@ public class EventConsumer : IHostedService, IEventConsumer, IDisposable
                 }
                 catch (ConsumeException e)
                 {
-                    _logger.LogError(e, "Error consuming message from topic {Topic}", fullTopic);
+                    _logger.LogError(e, "Error consuming message from topic {Topic}: {Message}", fullTopic, e.Message);
                 }
                 catch (JsonException e)
                 {
-                    _logger.LogError(e, "Error deserializing message from topic {Topic}", fullTopic);
+                    _logger.LogError(e, "Error deserializing message from topic {Topic}: {Message}", fullTopic, e.Message);
                 }
                 catch (OperationCanceledException)
                 {
@@ -66,7 +66,7 @@ public class EventConsumer : IHostedService, IEventConsumer, IDisposable
                 }
                 catch (Exception e)
                 {
-                    _logger.LogError(e, "Unexpected error consuming from topic {Topic}", fullTopic);
+                    _logger.LogError(e, "Unexpected error consuming from topic {Topic}: {Message}", fullTopic, e.Message);
                     await Task.Delay(5000, cancellationToken);
                 }
             }
