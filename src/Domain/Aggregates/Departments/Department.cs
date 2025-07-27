@@ -2,20 +2,14 @@
 using Domain.Aggregates.Common;
 using Domain.Aggregates.Common.Specifications;
 using Domain.Aggregates.Common.ValueObjects;
-using Domain.Aggregates.Persons;
 using Domain.Aggregates.Sectors;
-using Domain.Aggregates.Workplaces;
 
 namespace Domain.Aggregates.Departments;
 
 public class Department : NamedAggregateRoot<DepartmentId>
 {
     protected Department() { }
-    
-    public IReadOnlyCollection<WorkplaceId> WorkplaceIds => _workplaceIds.AsReadOnly();
-    private List<WorkplaceId> _workplaceIds = [];
-    public IReadOnlyCollection<PersonId> PersonIds => _personIds.AsReadOnly();
-    private List<PersonId> _personIds = [];
+    public int SectorsCount { get; private set; }
     public IReadOnlyCollection<SectorId> SectorIds => _sectorIds.AsReadOnly();
     private List<SectorId> _sectorIds = [];
 
@@ -31,7 +25,7 @@ public class Department : NamedAggregateRoot<DepartmentId>
         Comments = comments;
     }
 
-    protected static Result<Department> Create(
+    public static Result<Department> Create(
         string departmentName, 
         string departmentShortName,
         Guid? departmentId = null,
@@ -50,6 +44,23 @@ public class Department : NamedAggregateRoot<DepartmentId>
             comments);
             
         return Result.Success(department);
+    }
+    
+    public void AddSector(SectorId sectorId)
+    {
+        if (!_sectorIds.Contains(sectorId))
+        {
+            _sectorIds.Add(sectorId);
+            SectorsCount++;
+        }
+    }
+    
+    public void AddSectors(IList<SectorId> sectorIds)
+    {
+        if (_sectorIds.Any(sectorIds.Contains)) return;
+        
+        _sectorIds.AddRange(sectorIds);
+        SectorsCount += sectorIds.Count;
     }
 
     /// <summary>

@@ -8,9 +8,9 @@ namespace Application.UseCases.Sectors;
 
 public class EditSector
 {
-    public class Command(SectorDto2 housing) : IRequest<Result>
+    public class Command(SectorDto2 sector) : IRequest<Result>
     {
-        public SectorDto2 SectorDto { get; set; } = housing;
+        public SectorDto2 SectorDto { get; set; } = sector;
     }
 
     public class CommandHandler(
