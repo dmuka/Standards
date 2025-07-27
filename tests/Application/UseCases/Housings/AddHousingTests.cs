@@ -1,7 +1,7 @@
 using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Housings;
-using Domain.Aggregates.Common.ValueObjects;
+using Core.Results;
 using Domain.Aggregates.Housings;
 using Moq;
 
@@ -55,6 +55,27 @@ public class AddHousingTests
         {
             // Assert
             Assert.That(result.IsSuccess, Is.True);
+            _housingRepositoryMock.Verify(repository => repository.AddAsync(It.IsAny<Housing>(), _cancellationToken), Times.Once);
+            _unitOfWorkMock.Verify(unitOfWork => unitOfWork.CommitAsync(_cancellationToken), Times.Once);
+        }
+    }
+
+    [Test]
+    public async Task Handle_HousingCreationFails_ReturnsZero()
+    {
+        // Arrange
+        _housingDto.HousingName = "";
+        var command = new AddHousing.Command(_housingDto);
+
+        // Act
+        var result = await _handler.Handle(command, _cancellationToken);
+
+        using (Assert.EnterMultipleScope())
+        {
+            // Assert
+            Assert.That(result.IsFailure, Is.True);
+            Assert.That(result.Error.Type, Is.EqualTo(ErrorType.Validation));
+            Assert.That(result.Error.Description, Is.EqualTo("One or more validation errors occurred"));
         }
     }
 }

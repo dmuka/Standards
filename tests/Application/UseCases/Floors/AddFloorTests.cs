@@ -1,7 +1,6 @@
 using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Floors;
-using Confluent.Kafka;
 using Core.Results;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;

@@ -1,7 +1,6 @@
 using Application.Abstractions.Data;
 using Application.UseCases.DTOs;
 using Application.UseCases.Housings;
-using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Housings;
 using Moq;
 

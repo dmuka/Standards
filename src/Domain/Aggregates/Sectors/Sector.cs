@@ -1,6 +1,7 @@
 ﻿using Core.Results;
 using Domain.Aggregates.Common;
 using Domain.Aggregates.Common.Specifications;
+using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Departments;
 using Domain.Aggregates.Persons;
 using Domain.Aggregates.Rooms;
@@ -25,11 +26,15 @@ public class Sector : NamedAggregateRoot<SectorId>, ICacheable
     private List<PersonId> _personIds = [];
 
     private Sector(
+        Name name,
+        ShortName shortName,
         SectorId sectorId, 
         DepartmentId? departmentId,
         string? comments)
     {
         Id = sectorId;
+        Name = name;
+        ShortName = shortName;
         DepartmentId = departmentId;
         Comments = comments;
     }
@@ -45,7 +50,9 @@ public class Sector : NamedAggregateRoot<SectorId>, ICacheable
         if (validationResults.Length != 0)
             return Result<Sector>.ValidationFailure(ValidationError.FromResults(validationResults));
         
-        var sector = new Sector( 
+        var sector = new Sector(
+            Name.Create(sectorName).Value,
+            ShortName.Create(shortSectorName).Value,
             sectorId is null ? new SectorId(Guid.CreateVersion7()) : new SectorId(sectorId.Value),
             departmentId is null ? null : new DepartmentId(departmentId.Value),
             comments);

@@ -31,22 +31,22 @@ public interface ISectorRepository
     /// <summary>
     /// Adds a new Sector entity to the repository.
     /// </summary>
-    /// <param name="room">The Sector entity to add.</param>
+    /// <param name="sector">The Sector entity to add.</param>
     /// <param name="cancellationToken">A token to monitor for cancellation requests.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    public Task AddAsync(Sector room, CancellationToken cancellationToken);
+    public Task AddAsync(Sector sector, CancellationToken cancellationToken);
 
     /// <summary>
     /// Removes a Sector entity from the repository.
     /// </summary>
-    /// <param name="room">The Sector entity to remove.</param>
-    public void Remove(Sector room);
+    /// <param name="sector">The Sector entity to remove.</param>
+    public void Remove(Sector sector);
 
     /// <summary>
     /// Updates an existing Sector entity in the repository.
     /// </summary>
-    /// <param name="room">The Sector entity to update.</param>
-    public void Update(Sector room);
+    /// <param name="sector">The Sector entity to update.</param>
+    public void Update(Sector sector);
 
     /// <summary>
     /// Checks if a Sector entity exists in the repository by its unique identifier.
