@@ -1,22 +1,22 @@
 ﻿using Application.Abstractions.Data.Filter.Models;
 using Application.UseCases.Common;
 using Application.UseCases.DTOs;
-using Application.UseCases.Floors;
-using Domain.Aggregates.Floors;
+using Application.UseCases.Persons;
+using Domain.Aggregates.Persons;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers.v2;
 
 [ApiController]
-[Route("api/v2/FloorsController")]
-public class FloorsController(ISender sender) : ApiBaseController
+[Route("api/v2/PersonsController")]
+public class PersonsController(ISender sender) : ApiBaseController
 {
     [HttpGet]
     [Route("list")]
-    public async Task<IActionResult> GetFloors()
+    public async Task<IActionResult> GetPersons()
     {
-        var query = new GetAllFloors.Query();
+        var query = new GetAllPersons.Query();
 
         var result = await sender.Send(query);
 
@@ -25,9 +25,9 @@ public class FloorsController(ISender sender) : ApiBaseController
 
     [HttpGet]
     [Route("{id:Guid}")]
-    public async Task<IActionResult> GetFloor(Guid id)
+    public async Task<IActionResult> GetPerson(Guid id)
     {
-        var query = new GetFloorById.Query(new FloorId(id));
+        var query = new GetPersonById.Query(new PersonId(id));
 
         var result = await sender.Send(query);
 
@@ -36,9 +36,9 @@ public class FloorsController(ISender sender) : ApiBaseController
 
     [HttpPost]
     [Route("add")]
-    public async Task<IActionResult> AddFloor([FromBody] FloorDto floor)
+    public async Task<IActionResult> AddPerson([FromBody] PersonDto2 person)
     {
-        var query = new AddFloor.Command(floor);
+        var query = new AddPerson.Command(person);
 
         var result = await sender.Send(query);
 
@@ -47,9 +47,9 @@ public class FloorsController(ISender sender) : ApiBaseController
 
     [HttpPut]
     [Route("edit")]
-    public async Task<IActionResult> EditFloor([FromBody]FloorDto floor)
+    public async Task<IActionResult> EditPerson([FromBody]PersonDto2 person)
     {
-        var query = new EditFloor.Command(floor);
+        var query = new EditPerson.Command(person);
             
         var result = await sender.Send(query);
 
@@ -58,9 +58,9 @@ public class FloorsController(ISender sender) : ApiBaseController
 
     [HttpDelete]
     [Route("delete/{id:Guid}")]
-    public async Task<IActionResult> DeleteFloor(Guid id)
+    public async Task<IActionResult> DeletePerson(Guid id)
     {
-        var query = new DeleteFloor.Command(new FloorId(id));
+        var query = new DeletePerson.Command(new PersonId(id));
 
         var result = await sender.Send(query);
 
@@ -69,9 +69,9 @@ public class FloorsController(ISender sender) : ApiBaseController
 
     [HttpPost]
     [Route("filter")]
-    public async Task<IActionResult> GetFloorsByFilter([FromBody] QueryParameters parameters)
+    public async Task<IActionResult> GetPersonsByFilter([FromBody] QueryParameters parameters)
     {
-        var query = new GetFiltered<Floor>.Query(parameters);
+        var query = new GetFiltered<Person>.Query(parameters);
 
         var result = await sender.Send(query);
 

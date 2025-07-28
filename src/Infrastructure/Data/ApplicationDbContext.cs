@@ -1,4 +1,5 @@
-﻿using Domain.Aggregates.Common.ValueObjects;
+﻿using Domain.Aggregates.Categories;
+using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Departments;
 using Domain.Aggregates.Floors;
 using Domain.Aggregates.Housings;
@@ -17,6 +18,7 @@ using Domain.Models.Users;
 using Infrastructure.Data.ModelBuilderExtensions;
 using Infrastructure.Data.Outbox;
 using Microsoft.EntityFrameworkCore;
+using Category = Domain.Models.Persons.Category;
 using Department = Domain.Models.Departments.Department;
 using Housing = Domain.Models.Housings.Housing;
 using Person = Domain.Models.Persons.Person;
@@ -61,6 +63,7 @@ namespace Infrastructure.Data;
         public DbSet<Domain.Aggregates.Users.User> Users2 { get; set; }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Domain.Aggregates.Categories.Category> Categories2 { get; set; }
         public DbSet<Position> Positions { get; set; }
 
         public DbSet<Material> Materials { get; set; }
@@ -81,6 +84,7 @@ namespace Infrastructure.Data;
             modelBuilder.Ignore<DepartmentId>();
             modelBuilder.Ignore<WorkplaceId>();
             modelBuilder.Ignore<PersonId>();
+            modelBuilder.Ignore<CategoryId>();
             modelBuilder.Ignore<Name>();
             modelBuilder.Ignore<ShortName>();
             

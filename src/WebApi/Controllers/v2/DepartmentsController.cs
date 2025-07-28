@@ -1,11 +1,10 @@
 ﻿using Application.Abstractions.Data.Filter.Models;
-using Application.UseCases.Common.GenericCRUD;
+using Application.UseCases.Common;
 using Application.UseCases.DTOs;
 using Application.UseCases.Departments;
 using Domain.Aggregates.Departments;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Department = Domain.Models.Departments.Department;
 
 namespace WebApi.Controllers.v2;
 

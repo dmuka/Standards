@@ -11,5 +11,5 @@ public class HousingDto2 : Entity
     public required string HousingShortName { get; set; }
     public required string Address { get; set; }
     public IList<Guid> FloorIds { get; set; } = [];
-    public IList<int> RoomIds { get; set; } = [];
+    public IList<Guid> RoomIds { get; set; } = [];
 }

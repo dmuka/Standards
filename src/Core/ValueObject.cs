@@ -37,8 +37,20 @@ public abstract class ValueObject : IEquatable<ValueObject>
 
         return GetEqualityComponents().SequenceEqual(other.GetEqualityComponents());
     }
+    public static bool operator ==(ValueObject? left, ValueObject? right)
+    {
+        if (ReferenceEquals(left, null) && ReferenceEquals(right, null))
+        {
+            return true;
+        }
 
-    public static bool operator ==(ValueObject left, ValueObject right) => left.Equals(right);
+        if (ReferenceEquals(left, null) || ReferenceEquals(right, null))
+        {
+            return false;
+        }
+
+        return left.Equals(right);
+    }
 
     public static bool operator !=(ValueObject left, ValueObject right) => !(left == right);
 

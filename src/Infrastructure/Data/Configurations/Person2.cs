@@ -22,20 +22,20 @@ internal sealed class Person2Configuration : IEntityTypeConfiguration<Person>
         
         builder.Property(person => person.CategoryId)
             .HasConversion(
-                typedId => typedId.Value,
-                guid => new CategoryId(guid))
+                typedId => typedId == null ? (Guid?)null : typedId.Value,
+                guid => guid.HasValue ? new CategoryId(guid.Value) : null)
             .ValueGeneratedNever();
         
         builder.Property(person => person.PositionId)
             .HasConversion(
-                typedId => typedId.Value,
-                guid => new PositionId(guid))
+                typedId => typedId == null ? (Guid?)null : typedId.Value,
+                guid => guid.HasValue ? new PositionId(guid.Value) : null)
             .ValueGeneratedNever();
         
         builder.Property(person => person.SectorId)
             .HasConversion(
-                typedId => typedId.Value,
-                guid => new SectorId(guid))
+                typedId => typedId == null ? (Guid?)null : typedId.Value,
+                guid => guid.HasValue ? new SectorId(guid.Value) : null)
             .ValueGeneratedNever();
         
         builder.Property(person => person.UserId)
@@ -56,12 +56,12 @@ internal sealed class Person2Configuration : IEntityTypeConfiguration<Person>
         
         builder.Property(person => person.MiddleName)
             .HasConversion(
-                middleName => middleName.Value,
-                value => MiddleName.Create(value).Value);
+                middleName => middleName == null ? null : middleName.Value,
+                value => value != null ? MiddleName.Create(value).Value : null );
         
         builder.Property(person => person.BirthdayDate)
             .HasConversion(
-                birthDate => birthDate.Value,
-                value => BirthdayDate.Create(value).Value);
+                birthDate => birthDate == null ? (DateOnly?)null : birthDate.Value,
+                date => date != null ?  BirthdayDate.Create(date.Value).Value : null);
     }
 }

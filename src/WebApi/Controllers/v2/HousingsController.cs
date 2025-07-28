@@ -1,12 +1,10 @@
-﻿using Application.Abstractions.Data.Filter;
-using Application.Abstractions.Data.Filter.Models;
-using Application.UseCases.Common.GenericCRUD;
+﻿using Application.Abstractions.Data.Filter.Models;
+using Application.UseCases.Common;
 using Application.UseCases.DTOs;
 using Application.UseCases.Housings;
 using Domain.Aggregates.Housings;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using Housing = Domain.Models.Housings.Housing;
 
 namespace WebApi.Controllers.v2;
 

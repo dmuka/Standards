@@ -3,10 +3,12 @@ using Domain.Aggregates.Common;
 using Domain.Aggregates.Common.Specifications;
 using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Sectors;
+using Domain.Constants;
+using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Departments;
 
-public class Department : NamedAggregateRoot<DepartmentId>
+public class Department : NamedAggregateRoot<DepartmentId>, ICacheable
 {
     protected Department() { }
     public int SectorsCount { get; private set; }
@@ -61,6 +63,11 @@ public class Department : NamedAggregateRoot<DepartmentId>
         
         _sectorIds.AddRange(sectorIds);
         SectorsCount += sectorIds.Count;
+    }
+
+    public static string GetCacheKey()
+    {
+        return Cache.Departments;
     }
 
     /// <summary>

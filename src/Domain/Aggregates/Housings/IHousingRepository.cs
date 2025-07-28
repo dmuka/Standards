@@ -39,14 +39,14 @@ namespace Domain.Aggregates.Housings
         /// <summary>
         /// Removes a Housing entity from the repository.
         /// </summary>
-        /// <param name="floor">The Housing entity to remove.</param>
-        public void Remove(Housing floor);
+        /// <param name="housing">The Housing entity to remove.</param>
+        public void Remove(Housing housing);
 
         /// <summary>
         /// Updates an existing Housing entity in the repository.
         /// </summary>
-        /// <param name="floor">The Housing entity to update.</param>
-        public void Update(Housing floor);
+        /// <param name="housing">The Housing entity to update.</param>
+        public void Update(Housing housing);
 
         /// <summary>
         /// Checks if a Housing entity exists in the repository by its unique identifier.
