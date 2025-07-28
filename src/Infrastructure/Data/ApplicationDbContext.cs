@@ -65,6 +65,7 @@ namespace Infrastructure.Data;
         public DbSet<Category> Categories { get; set; }
         public DbSet<Domain.Aggregates.Categories.Category> Categories2 { get; set; }
         public DbSet<Position> Positions { get; set; }
+        public DbSet<Domain.Aggregates.Positions.Position> Positions2 { get; set; }
 
         public DbSet<Material> Materials { get; set; }
         public DbSet<Service> Services { get; set; }
