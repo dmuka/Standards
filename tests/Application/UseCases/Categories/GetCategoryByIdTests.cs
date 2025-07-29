@@ -1,5 +1,5 @@
-using Application.UseCases.Departments;
-using Domain.Aggregates.Departments;
+using Application.UseCases.Categories;
+using Domain.Aggregates.Categories;
 using Moq;
 
 namespace Tests.Application.UseCases.Categories;
@@ -7,49 +7,49 @@ namespace Tests.Application.UseCases.Categories;
 [TestFixture]
 public class GetCategoryByIdTests
 {
-    private const string DepartmentNameValue = "Department name";
-    private const string DepartmentShortNameValue = "Department short name";
+    private const string CategoryNameValue = "Category name";
+    private const string CategoryShortNameValue = "Category short name";
     
-    private readonly Guid _invalidDepartmentIdGuid = Guid.CreateVersion7();
-    private DepartmentId _invalidDepartmentId;
+    private readonly Guid _invalidCategoryIdGuid = Guid.CreateVersion7();
+    private CategoryId _invalidCategoryId;
     
-    private readonly Guid _validDepartmentIdGuid = Guid.CreateVersion7();
-    private DepartmentId _validDepartmentId;
+    private readonly Guid _validCategoryIdGuid = Guid.CreateVersion7();
+    private CategoryId _validCategoryId;
 
-    private Department _department;
+    private Category _category;
     
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
     
-    private Mock<IDepartmentRepository> _departmentRepositoryMock;
+    private Mock<ICategoryRepository> _categoryRepositoryMock;
     
-    private GetDepartmentById.QueryHandler _handler;
+    private GetCategoryById.QueryHandler _handler;
 
     [SetUp]
     public void Setup()
     {
-        _validDepartmentId = new DepartmentId(_validDepartmentIdGuid);
-        _invalidDepartmentId = new DepartmentId(_invalidDepartmentIdGuid);
+        _validCategoryId = new CategoryId(_validCategoryIdGuid);
+        _invalidCategoryId = new CategoryId(_invalidCategoryIdGuid);
         
-        _department = Department.Create(
-            DepartmentNameValue, 
-            DepartmentShortNameValue,
-            _validDepartmentId,
+        _category = Category.Create(
+            CategoryNameValue, 
+            CategoryShortNameValue,
+            _validCategoryId,
             "Comments").Value;        
 
-        _departmentRepositoryMock = new Mock<IDepartmentRepository>();
-        _departmentRepositoryMock.Setup(repository => repository.ExistsAsync(_validDepartmentId, _cancellationToken))
+        _categoryRepositoryMock = new Mock<ICategoryRepository>();
+        _categoryRepositoryMock.Setup(repository => repository.ExistsAsync(_validCategoryId, _cancellationToken))
             .ReturnsAsync(true);
-        _departmentRepositoryMock.Setup(repository => repository.GetByIdAsync(_validDepartmentId, _cancellationToken))
-            .ReturnsAsync(_department);
+        _categoryRepositoryMock.Setup(repository => repository.GetByIdAsync(_validCategoryId, _cancellationToken))
+            .ReturnsAsync(_category);
         
-        _handler = new GetDepartmentById.QueryHandler(_departmentRepositoryMock.Object);
+        _handler = new GetCategoryById.QueryHandler(_categoryRepositoryMock.Object);
     }
 
     [Test]
-    public async Task Handle_DepartmentExists_ReturnsDepartment()
+    public async Task Handle_CategoryExists_ReturnsCategory()
     {
         // Arrange
-        var query = new GetDepartmentById.Query(_validDepartmentId);
+        var query = new GetCategoryById.Query(_validCategoryId);
 
         // Act
         var result = await _handler.Handle(query, _cancellationToken);
@@ -58,17 +58,17 @@ public class GetCategoryByIdTests
         {
             // Assert
             Assert.That(result.IsSuccess, Is.True);
-            Assert.That(result.Value.Id, Is.EqualTo(_validDepartmentId));
-            Assert.That(result.Value.Name.Value, Is.EqualTo(DepartmentNameValue));
-            Assert.That(result.Value.ShortName.Value, Is.EqualTo(DepartmentShortNameValue));
+            Assert.That(result.Value.Id, Is.EqualTo(_validCategoryId));
+            Assert.That(result.Value.Name.Value, Is.EqualTo(CategoryNameValue));
+            Assert.That(result.Value.ShortName.Value, Is.EqualTo(CategoryShortNameValue));
         }
     }
 
     [Test]
-    public async Task Handle_DepartmentDoesNotExist_ReturnsNull()
+    public async Task Handle_CategoryDoesNotExist_ReturnsNull()
     {
         // Arrange
-        var query = new GetDepartmentById.Query(_invalidDepartmentId);
+        var query = new GetCategoryById.Query(_invalidCategoryId);
 
         // Act
         var result = await _handler.Handle(query, _cancellationToken);
@@ -77,7 +77,7 @@ public class GetCategoryByIdTests
         {
             // Assert
             Assert.That(result.IsFailure, Is.True);
-            Assert.That(result.Error, Is.EqualTo(DepartmentErrors.NotFound(_invalidDepartmentId)));
+            Assert.That(result.Error, Is.EqualTo(CategoryErrors.NotFound(_invalidCategoryId)));
         }
     }
 }

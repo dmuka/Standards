@@ -1,5 +1,5 @@
-using Application.UseCases.Departments;
-using Domain.Aggregates.Departments;
+using Application.UseCases.Categories;
+using Domain.Aggregates.Categories;
 using Moq;
 
 namespace Tests.Application.UseCases.Categories;
@@ -7,44 +7,44 @@ namespace Tests.Application.UseCases.Categories;
 [TestFixture]
 public class GetAllCategoriesTests
 {
-    private readonly DepartmentId _departmentId1 = new (Guid.CreateVersion7());
-    private readonly DepartmentId _departmentId2 = new (Guid.CreateVersion7());
+    private readonly CategoryId _categoryId1 = new (Guid.CreateVersion7());
+    private readonly CategoryId _categoryId2 = new (Guid.CreateVersion7());
  
-    private Department _department1;
-    private Department _department2;
+    private Category _category1;
+    private Category _category2;
     
     private readonly CancellationToken _cancellationToken = CancellationToken.None;
     
-    private Mock<IDepartmentRepository> _departmentRepositoryMock;
+    private Mock<ICategoryRepository> _categoryRepositoryMock;
     
-    private GetAllDepartments.QueryHandler _handler;
+    private GetAllCategories.QueryHandler _handler;
 
     [SetUp]
     public void Setup()
     {
-        _department1 = Department.Create(
-            "Department name 1",
-            "Department short name 1",
-            _departmentId1,
+        _category1 = Category.Create(
+            "Category name 1",
+            "Category short name 1",
+            _categoryId1,
             "").Value;
-        _department2 = Department.Create(
-            "Department name 2",
-            "Department short name 2",
-            _departmentId2,
+        _category2 = Category.Create(
+            "Category name 2",
+            "Category short name 2",
+            _categoryId2,
             "").Value;
 
-        _departmentRepositoryMock = new Mock<IDepartmentRepository>();
-        _departmentRepositoryMock.Setup(repository => repository.GetAllAsync(_cancellationToken))
-            .ReturnsAsync([_department1, _department2]);
+        _categoryRepositoryMock = new Mock<ICategoryRepository>();
+        _categoryRepositoryMock.Setup(repository => repository.GetAllAsync(_cancellationToken))
+            .ReturnsAsync([_category1, _category2]);
         
-        _handler = new GetAllDepartments.QueryHandler(_departmentRepositoryMock.Object);
+        _handler = new GetAllCategories.QueryHandler(_categoryRepositoryMock.Object);
     }
 
     [Test]
-    public async Task Handle_WhenCalled_ReturnsAllDepartments()
+    public async Task Handle_WhenCalled_ReturnsAllCategorys()
     {
         // Arrange
-        var query = new GetAllDepartments.Query();
+        var query = new GetAllCategories.Query();
 
         // Act
         var result = await _handler.Handle(query, _cancellationToken);
@@ -53,17 +53,17 @@ public class GetAllCategoriesTests
         {
             // Assert
             Assert.That(result, Has.Count.EqualTo(2));
-            Assert.That(result, Has.Exactly(1).Matches<Department>(h => h.Id == _department1.Id));
-            Assert.That(result, Has.Exactly(1).Matches<Department>(h => h.Id == _department2.Id));
+            Assert.That(result, Has.Exactly(1).Matches<Category>(h => h.Id == _category1.Id));
+            Assert.That(result, Has.Exactly(1).Matches<Category>(h => h.Id == _category2.Id));
         }
     }
 
     [Test]
-    public async Task Handle_WhenNoDepartmentsExist_ReturnsEmptyList()
+    public async Task Handle_WhenNoCategorysExist_ReturnsEmptyList()
     {
         // Arrange
-        var query = new GetAllDepartments.Query();
-        _departmentRepositoryMock.Setup(repository => repository.GetAllAsync(_cancellationToken))
+        var query = new GetAllCategories.Query();
+        _categoryRepositoryMock.Setup(repository => repository.GetAllAsync(_cancellationToken))
             .ReturnsAsync([]);
 
         // Act

@@ -74,6 +74,7 @@ namespace Infrastructure.Data;
 
         public DbSet<Characteristic> Characteristics { get; set; }
         public DbSet<Grade> Grades { get; set; }
+        public DbSet<Domain.Aggregates.Grades.Grade> Grades2 { get; set; }
         public DbSet<Standard> Standards { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
