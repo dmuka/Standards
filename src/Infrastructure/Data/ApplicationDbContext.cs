@@ -24,6 +24,7 @@ using Housing = Domain.Models.Housings.Housing;
 using Person = Domain.Models.Persons.Person;
 using Room = Domain.Models.Housings.Room;
 using Sector = Domain.Models.Departments.Sector;
+using Workplace = Domain.Models.Departments.Workplace;
 
 namespace Infrastructure.Data;
 
