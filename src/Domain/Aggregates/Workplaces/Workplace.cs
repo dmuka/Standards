@@ -1,15 +1,18 @@
-﻿using Core;
-using Core.Results;
+﻿using Core.Results;
+using Domain.Aggregates.Common;
+using Domain.Aggregates.Common.Specifications;
+using Domain.Aggregates.Common.ValueObjects;
 using Domain.Aggregates.Persons;
 using Domain.Aggregates.Rooms;
 using Domain.Aggregates.Sectors;
+using Domain.Aggregates.Standards;
 using Domain.Aggregates.Workplaces.Specifications;
 using Domain.Constants;
 using Domain.Models.Interfaces;
 
 namespace Domain.Aggregates.Workplaces;
 
-public class Workplace : AggregateRoot<WorkplaceId>, ICacheable
+public class Workplace : NamedAggregateRoot<WorkplaceId>, ICacheable
 {
     protected Workplace() { }
 
@@ -19,9 +22,13 @@ public class Workplace : AggregateRoot<WorkplaceId>, ICacheable
     public ImagePath? ImagePath { get; private set; }
     public IReadOnlyCollection<PersonId> PersonIds => _personIds.AsReadOnly();
     private readonly List<PersonId> _personIds = [];
+    public IReadOnlyCollection<StandardId> StandardIds => _standardIds.AsReadOnly();
+    private readonly List<StandardId> _standardIds = [];
 
     private Workplace(
-        WorkplaceId workplaceId, 
+        WorkplaceId workplaceId,
+        Name workplaceName,
+        ShortName workplaceShortName,
         RoomId roomId,
         PersonId responsibleId,
         SectorId sectorId,
@@ -29,6 +36,8 @@ public class Workplace : AggregateRoot<WorkplaceId>, ICacheable
         string? comments = null)
     {
         Id = workplaceId;
+        Name = workplaceName;
+        ShortName = workplaceShortName;
         RoomId = roomId;
         ResponsibleId = responsibleId;
         SectorId = sectorId;
@@ -37,6 +46,8 @@ public class Workplace : AggregateRoot<WorkplaceId>, ICacheable
     }
 
     public static Result<Workplace> Create( 
+        string workplaceName,
+        string workplaceShortName,
         Guid roomId,
         Guid responsibleId,
         Guid sectorId,
@@ -44,15 +55,14 @@ public class Workplace : AggregateRoot<WorkplaceId>, ICacheable
         string? imagePath = null, 
         string? comments = null)
     {
-        if (imagePath is not null)
-        {
-            var validationResults = ValidateWorkplaceDetails(imagePath);
-            if (validationResults.Length != 0)
-                return Result<Workplace>.ValidationFailure(ValidationError.FromResults(validationResults));
-        }
+        var validationResults = ValidateWorkplaceDetails(workplaceName, workplaceShortName, imagePath);
+        if (validationResults.Length != 0)
+            return Result<Workplace>.ValidationFailure(ValidationError.FromResults(validationResults));
 
         var workplace = new Workplace(
             workplaceId is null ? new WorkplaceId(Guid.CreateVersion7()) : new WorkplaceId(workplaceId.Value), 
+            Name.Create(workplaceName).Value,
+            ShortName.Create(workplaceShortName).Value,
             new RoomId(roomId),
             new PersonId(responsibleId), 
             new SectorId(sectorId), 
@@ -98,6 +108,42 @@ public class Workplace : AggregateRoot<WorkplaceId>, ICacheable
         return Result.Success();
     }
     
+    public Result AddStandard(StandardId standardId)
+    {
+        if (_standardIds.Contains(standardId))
+        {
+            return Result.Failure(WorkplaceErrors.StandardAlreadyExist);
+        }
+        
+        _standardIds.Add(standardId);
+        
+        return Result.Success();
+    }
+    
+    public Result RemoveStandard(StandardId standardId)
+    {
+        if (!_standardIds.Contains(standardId))
+        {
+            return Result.Failure(WorkplaceErrors.StandardNotFound(standardId));
+        }
+        
+        _standardIds.Remove(standardId);
+        
+        return Result.Success();
+    }
+    
+    public Result AddStandards(IList<StandardId> standardIds)
+    {
+        if (_standardIds.Any(standardIds.Contains))
+        {
+            return Result.Failure(WorkplaceErrors.OneOfTheStandardAlreadyExist);
+        }
+        
+        _standardIds.AddRange(standardIds);
+        
+        return Result.Success();
+    }
+    
     public Result ChangeSector(SectorId sectorId)
     {
         if (sectorId == SectorId) return Result.Failure(RoomErrors.ThisSectorAlreadySetForThisRoom);
@@ -133,12 +179,21 @@ public class Workplace : AggregateRoot<WorkplaceId>, ICacheable
     /// <summary>
     /// Validates workplace details.
     /// </summary>
-    private static Result[] ValidateWorkplaceDetails(string imagePath)
+    private static Result[] ValidateWorkplaceDetails(
+        string workplaceName, 
+        string workplaceShortName, 
+        string? imagePath)
     {
         var validationResults = new []
         {
-            new ImagePathMustBeValid(imagePath).IsSatisfied()
+            new NameMustHaveValidLength(workplaceName).IsSatisfied(),
+            new ShortNameMustHaveValidLength(workplaceShortName).IsSatisfied()
         };
+        
+        if (imagePath is not null)
+        {
+            validationResults = validationResults.Append(new ImagePathMustBeValid(imagePath).IsSatisfied()).ToArray();
+        }
             
         var results = validationResults.Where(result => result.IsFailure);
 

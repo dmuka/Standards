@@ -37,6 +37,7 @@ namespace Infrastructure.Data;
         public DbSet<Domain.Aggregates.Rooms.Room> Rooms2 { get; set; }
         public DbSet<Unit> Units { get; set; }
         public DbSet<Workplace> WorkPlaces { get; set; }
+        public DbSet<Domain.Aggregates.Workplaces.Workplace> Workplaces2 { get; set; }
 
         public DbSet<Housing> Housings { get; set; }
         public DbSet<Domain.Aggregates.Housings.Housing> Housings2 { get; set; }

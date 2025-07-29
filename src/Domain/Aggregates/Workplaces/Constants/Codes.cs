@@ -10,6 +10,8 @@ public static class Codes
     public const string SpecifiedImageFileDoesntExist = "SpecifiedImageFileDoesntExist";
     public const string PersonAlreadyExist = "PersonAlreadyExist";
     public const string OneOfThePersonAlreadyExist = "OneOfThePersonAlreadyExist";
+    public const string StandardAlreadyExist = "StandardAlreadyExist";
+    public const string OneOfTheStandardAlreadyExist = "OneOfTheStandardAlreadyExist";
     public const string ThisImageAlreadySetForThisWorkplace = "ThisImageAlreadySetForThisWorkplace";
     public const string ThisPersonAlreadySetAsResponsibleForThisWorkplace = "ThisPersonAlreadySetAsResponsibleForThisWorkplace";
 }

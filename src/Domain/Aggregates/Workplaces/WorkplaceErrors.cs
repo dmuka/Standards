@@ -41,6 +41,18 @@ public static class WorkplaceErrors
     public static readonly Error OneOfThePersonAlreadyExist = Error.Problem(
         Codes.OneOfThePersonAlreadyExist,
         "One of the provided person already exist in the room.");
+    
+    public static Error StandardNotFound(Guid standardId) => Error.NotFound(
+        Codes.NotFound, 
+        $"The standard with the id = '{standardId}' was not found.");
+
+    public static readonly Error StandardAlreadyExist = Error.Problem(
+        Codes.StandardAlreadyExist,
+        "This standard already exist in the workplace.");
+
+    public static readonly Error OneOfTheStandardAlreadyExist = Error.Problem(
+        Codes.OneOfTheStandardAlreadyExist,
+        "One of the provided standard already exist in the room.");
 
     public static Error ThisImageAlreadySetForThisWorkplace(string imagePath) => Error.Problem(
         Codes.ThisImageAlreadySetForThisWorkplace,
